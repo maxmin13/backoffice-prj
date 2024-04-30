@@ -64,13 +64,6 @@
 						"Description": "SSH access"
 					},
 					{
-						"FromPort": 8080,
-						"ToPort": 8080,
-						"Protocol": "tcp",
-						"Cidr": "0.0.0.0/0",
-						"Description": "Tomcat HTTP access"
-					},
-					{
 						"FromPort": 8443,
 						"ToPort": 8443,
 						"Protocol": "tcp",
