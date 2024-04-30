@@ -64,8 +64,8 @@
 						"Description": "SSH access"
 					},
 					{
-						"FromPort": 8443,
-						"ToPort": 8443,
+						"FromPort": 8444,
+						"ToPort": 8444  ,
 						"Protocol": "tcp",
 						"Cidr": "0.0.0.0/0",
 						"Description": "Tomcat HTTPS access"
@@ -94,6 +94,10 @@
 					{
 						"Key": "program",
 						"Value": "java"
+					},
+					{
+						"Key": "webserver",
+						"Value": "tomcat"
 					}
 				]
 			}
