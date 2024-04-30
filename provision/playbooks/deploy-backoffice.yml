@@ -1,0 +1,321 @@
+- name: Deploy backoffice web application
+  hosts:
+    - class_webservices
+    
+  gather_facts: false
+  
+  vars_files:
+    - variables/vars.yml
+    - variables/provision.yml
+    - variables/secrets.yml
+          
+  pre_tasks:
+  
+    - name: 'Get datacenter.json content'
+      set_fact:
+        datacenter_config: "{{ lookup('file', '{{ messageboard_dir }}/config/datacenter.json') | from_json }}"
+        
+    - name: 'Get instance DNS domain'
+      set_fact:
+        instance_dns_domain: "{{ datacenter_config | json_query(jquery) }}"
+      vars:
+        jquery: "Datacenter.Instances[?Name=='{{ instance_name }}'] | [0].DnsDomain"    
+
+    - name: 'Controller host configuration'
+      ansible.builtin.debug:
+        msg:
+          - 'SSH port: {{ ansible_port }}'
+          - 'SSH user: {{ ansible_user }}'
+          - 'SSH key: {{ ansible_private_key_file }}'
+          - 'AWS instance domain: {{ instance_dns_domain }}'
+          - 'Django project name: {{ aws.instance.project.name }}' 
+          - 'Django super user name: {{ aws.instance.project.superuser.name }}' 
+          - 'Django super user email address: {{ aws.instance.project.superuser.email.address }}' 
+                 
+    - name: Delete download directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.download.dir.path }}"
+        state: absent       
+                  
+  tasks:
+   
+    - name: Create download directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.download.dir.path }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 488   
+        
+    - name: Delete virtualenv directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.project.venv.dir.path }}"
+        state: absent          
+   
+    - name: Create virtualenv
+      become: true
+      ansible.builtin.pip:
+        name:
+          - pip
+          - wheel
+          - setuptools
+        state: latest
+        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+        virtualenv_command: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }} -m venv"      
+
+    - name: Upload requirements
+      copy:
+        src: requirements.txt
+        dest: "{{ aws.instance.download.dir.path }}"
+        mode: '0644'
+
+    - name: Install required packages
+      become: true
+      ansible.builtin.pip:
+        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+        requirements: "{{ aws.instance.download.dir.path }}/requirements.txt"
+
+    - name: Install psycopg2 for ansible to be able to create postgresql users
+      become: true
+      pip: name=psycopg2-binary
+      
+    - name: Create database user
+      become: true
+      become_user: "{{ aws.instance.postgresql.superuser }}"       
+      community.general.postgresql_user:
+        state: present
+        name: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        password: "{{ postgresql_admin_user_password }}"
+     
+    - name: Create the database
+      become: true
+      become_user: "{{ aws.instance.postgresql.superuser }}"
+      community.general.postgresql_db:
+        name: "{{ aws.instance.postgresql.database.name }}"
+        owner: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        encoding: UTF8
+   
+    - name: Grant user access
+      become: true
+      become_user: "{{ aws.instance.postgresql.superuser }}"      
+      community.general.postgresql_privs:
+        type: database
+        database: "{{ aws.instance.postgresql.database.name }}"
+        roles: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        grant_option: no
+        privs: all  
+
+    - name: Restart PostgreSql services
+      become: true
+      ansible.builtin.service:
+        name: '{{ aws.instance.postgresql.systemd.service.name }}'
+        state: restarted
+        enabled: true         
+ 
+    - name: Delete download directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.download.dir.path }}"
+        state: absent 
+        
+    - name: Create download directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.download.dir.path }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 488        
+             
+    - name: Get the project from Github (with agent forwarding)
+      become: false
+      ansible.builtin.git:
+        repo: "{{ aws.instance.project.github.repository.url }}"
+        dest: "{{ aws.instance.download.dir.path }}"
+        version: master
+        accept_hostkey: true
+        update: false
+ 
+    - name: Delete project directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.project.dir.path }}"
+        state: absent 
+        
+    - name: Create project directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.project.dir.path }}"
+        state: directory               
+ 
+    - name: Copy project files
+      become: true
+      ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
+      with_items:
+      - "{{ aws.instance.download.dir.path }}/project/manage.py"
+      - "{{ aws.instance.download.dir.path }}/project/{{ aws.instance.project.name }}" 
+      - "{{ aws.instance.download.dir.path }}/project/apps" 
+      - "{{ aws.instance.download.dir.path }}/project/templates" 
+              
+    - name: Copy environment file
+      become: true
+      ansible.builtin.template:
+        src: env/env.j2
+        dest: "{{ aws.instance.project.dir.path }}/{{ aws.instance.project.name }}/.env"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0400                
+      
+    - name: Run database migrations
+      community.general.django_manage:
+        command: migrate
+        project_path: "{{ aws.instance.project.dir.path }}"  
+        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+      environment:   
+        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"      
+
+    - name: Collect static files
+      become: true
+      community.general.django_manage:
+        command: collectstatic
+        project_path: "{{ aws.instance.project.dir.path }}"  
+        virtualenv: "{{ aws.instance.project.venv.dir.path }}"                  
+        
+    - name: Remove the Nginx config file
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.nginx.config.file.path }}"
+        state: absent
+
+    - name: Copy Nginx config file
+      become: true
+      ansible.builtin.template:
+        src: nginx/nginx.conf.j2
+        dest: '{{ aws.instance.nginx.config.file.path }}'
+        mode: 436
+
+    - name: Remove Gunicorn systemd socket file
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.gunicorn.systemd.socket.file.path }}"
+        state: absent
+              
+    - name: Copy Gunicorn systemd socket file
+      become: true
+      ansible.builtin.template:
+        src: gunicorn/gunicorn.socket.j2
+        dest: "{{ aws.instance.gunicorn.systemd.socket.file.path }}"
+        mode: 0400 
+        
+    - name: Remove Gunicorn systemd service file
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.gunicorn.systemd.service.file.path }}"
+        state: absent        
+        
+    - name: Copy Gunicorn service file
+      become: true
+      ansible.builtin.template:
+        src: gunicorn/gunicorn.service.j2
+        dest: "{{ aws.instance.gunicorn.systemd.service.file.path }}"
+        mode: 0400   
+        
+    - name: Delete Gunicorn configuration directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.gunicorn.config.dir.path }}"
+        state: absent                             
+        
+    - name: Create Gunicorn configuration directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.gunicorn.config.dir.path }}"
+        state: directory         
+   
+    - name: Copy Gunicorn config file
+      become: true
+      ansible.builtin.template:
+        src: gunicorn/gunicorn.conf.py.j2
+        dest: "{{ aws.instance.gunicorn.config.dir.path }}/{{ aws.instance.gunicorn.config.file }}"
+        mode: 0400  
+        
+    - name: Restart Gunicorn socket
+      become: true 
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: true
+        enabled: true
+        name: gunicorn.socket
+      
+    - name: Restart Gunicorn
+      become: true 
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: true
+        enabled: true
+        name: gunicorn
+   
+    - name: Restart Nginx
+      become: true 
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: true
+        name: nginx
+    
+    - name: 'Test it: https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}/admin'
+      become: false  
+      ansible.builtin.uri:
+        url: 'https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}/admin'
+        method: GET
+        status_code: 200
+        validate_certs: false
+        return_content: true
+      register: result
+      failed_when: "'Django site admin' not in result.content"  
+      ignore_errors: true  
+      
+    - name: 'Test it: https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}'
+      become: false  
+      ansible.builtin.uri:
+        url: 'https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}'
+        method: GET
+        status_code: 200
+        validate_certs: false
+        return_content: true
+      register: result
+      failed_when: "'Message board posts' not in result.content" 
+      ignore_errors: true         
+      
+    - name: Check Django admin app superuser exists
+      become: true
+      community.general.django_manage:
+        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+        project_path: "{{ aws.instance.project.dir.path }}"
+        command: shell -c 'import sys; from django.contrib.auth.models import User; sys.exit(0 if User.objects.filter(username="{{ aws.instance.project.superuser.name }}").count() > 0 else 1)'
+      register: checksuperuser
+      ignore_errors: True
+      changed_when: False      
+
+    - name: Create Django admin app superuser
+      become: true
+      community.general.django_manage:
+        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+        project_path: "{{ aws.instance.project.dir.path }}"
+        command: "createsuperuser --noinput --username={{ aws.instance.project.superuser.name }} --email={{ aws.instance.project.superuser.email.address }}"     
+      ignore_errors: True
+      environment: 
+        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"
+        DJANGO_SUPERUSER_PASSWORD: "{{ django_superuser_password }}" 
+      when: checksuperuser is not succeeded
+      
+  post_tasks:
+  
+    - name: Delete download directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.download.dir.path }}"
+        state: absent 
+         

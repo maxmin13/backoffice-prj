@@ -1,0 +1,178 @@
+
+Configure a local development environment with Eclipse to develop the Java backoffice web application.
+
+###################################################################
+# clone the project from github
+###################################################################
+
+git clone git@github.com:maxmin13/backoffice-prj.git
+
+###################################################################
+# configure the project in eclipse
+###################################################################
+
+In Eclipse for Enterprise Java developers:
+menu File, import, Existing Maven project
+in the Root Directory input box, select the directory that contains the parent pom of the project,
+ex:
+/home/vagrant/workspace/backoffice-prj/project
+click Finish 
+
+
+###################################################################
+# Install Tomcat webserver Eclipse plugin:
+###################################################################
+
+cd /opt
+wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.20/bin/apache-tomcat-10.1.20.tar.gz
+tar xvzf apache-tomcat-10.1.20.tar.gz              
+
+click on servers tab at the bottom side of the IDE, right click on blank area, New, Servers, 
+select Tomcat v10.1 Server,
+click next, click on Add.. link, click Browse button, select root folder of the previously installed Tomcat server, 
+click Open, click Finish, next, addAll, Finish.
+
+###################################################################
+# Run MariaDB in a Docker container:
+###################################################################
+
+cd backoffice-prj/mariadb
+
+# create the container image:
+
+----
+docker build -t prospring6-mariadb:1.0 .
+----
+
+# start the container:
+
+----
+docker run --name local-mariadb -d -p 3306:3306 prospring6-mariadb:1.0
+----
+
+get the container IP address:
+
+----
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' local-mariadb 
+----
+
+###################################################################
+# Connect to the database from bash console:
+###################################################################
+
+
+mysql -u root -p -h 172.17.0.2 musicdb
+mainpass
+
+select * from album;
+
+exit
+
+###################################################################
+# Connect to the database with phpMyAdmin client:
+###################################################################
+
+docker pull phpmyadmin 
+docker images
+
+docker run --name myphpadmin -d --link local-mariadb:db -p 8000:80 phpmyadmin
+
+access the phpMyAdmin using the URL:
+
+http://localhost:8000/
+root
+mainpass
+
+###################################################################
+# Run the backoffice web application locally:
+###################################################################
+
+in Eclipse, servers tab, edit contex.xml file, add:
+
+        <Resource name="jdbc/musicdb" auth="Container" type="javax.sql.DataSource" 
+                 driverClassName="org.mariadb.jdbc.Driver"
+                 factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" 
+                 url="jdbc:mariadb://localhost:3306/musicdb"
+                 username="prospring6" password="prospring6"
+                 maxActive="20" maxIdle="10" maxWait="-1" />  
+
+start the Tomcat server plugin.
+
+in the browser enter: 
+
+http://localhost:8080/backoffice/home
+
+###################################################################
+# AWS credentials:
+###################################################################
+
+Login in AWS management console as root,
+go to Iam, Users,
+create a new user, for ex: awsadmin/awsadmin
+provide the user with access to the AWS Management Console.
+Select the user and create an access key for Command Line Interface (CLI).
+Associate the user with an identity-based policy that allows access to route53 webservices,
+for ex: AmazonRoute53FullAccess
+Associate the user with an identity-based policy that allows access to ec2 webservices,
+for ex: AmazonEC2FullAccess.
+e
+In you terminal, install AWS Command Line Interface (CLI)
+
+enter the access key, the secret access key, your AWS region:
+
+aws configure
+
+###################################################################
+# Deploy the web application on AWS:
+###################################################################
+
+edit config/datacenter.json and config/hostedzone.json and set the Vpc and DNS values according to your AWS account: 
+
+VPC CIDR (eg: "Cidr": "10.0.0.0/16")
+VPC region (eg: "Region": "eu-west-1")
+Availability zone (eg: "Az": "eu-west-1a")
+Subnet CIDR (eg: "Cidr": "10.0.20.0/24")
+Instance private IP (eg: "PrivateIp": "10.0.20.35")
+Set instance user name and instance user password with your AWS user credentials
+(Not mandatory) DNS registered domain (your domain registered with the AWS registrar, eg: "RegisteredDomain": "maxmin.it")
+
+cd backoffice-prj/bin
+
+export AWS_REMOTE_USER=awsadmin
+export AWS_REMOTE_USER_PASSWORD=awsadmin
+
+run:
+
+chmod +x make.sh
+./make.sh
+
+
+###################################################################
+# Log in the remote AWS instance:
+###################################################################
+
+cd backoffice-prj/access
+
+rm -f ~/.ssh/known_hosts && ssh -v -i backoffice-box -p 22 <remote AWS instance user pwd, eg: awsadmin>@<remote AWS instance IP address>
+
+###################################################################
+# Access Java web site at:
+###################################################################
+
+https://backoffice.maxmin.it:8443/admin 
+
+or:
+
+https://AWS-instance-public-IP-address:8443/admin
+
+userid: admin
+password: admin
+
+###################################################################
+# Delete the datacenter and the web application:
+###################################################################
+
+cd backoffice-prj/bin
+chmod +x delete.sh
+
+./delete.sh

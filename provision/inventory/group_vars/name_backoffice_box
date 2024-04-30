@@ -1,0 +1,18 @@
+# expected environment variables:
+#
+# DATACENTER_DIR
+# BACKOFFICE_DIR
+
+# tag 'Name' in the backoffice AWS instance 
+instance_name: "backoffice-box"
+
+# directory where the datacenter project is downloaded from github, used in the datacenter playbooks, see: nginx.yml
+datacenter_dir: "{{ lookup('env','DATACENTER_DIR') }}"
+
+# directory where the backoffice project is downloaded from github, used in the backoffice playbooks
+backoffice_dir: "{{ lookup('env','BACKOFFICE_DIR') }}"
+
+ansible_ssh_private_key_file: "{{ backoffice_dir }}/access/{{ instance_name }}"
+ansible_user: "backadmin" 
+ansible_password: "backadmin"
+ansible_sudo_pass: "backadmin"

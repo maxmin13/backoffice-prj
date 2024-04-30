@@ -1,0 +1,11 @@
+
+DOCKER
+
+docker rmi $(docker images -a -q)
+docker rm $(docker ps -a)
+
+docker build -t prospring6-mariadb:1.4 . 
+
+docker run --name mariadb -d -p 3307:3306 prospring6-mariadb:1.4
+
+docker restart mariadb

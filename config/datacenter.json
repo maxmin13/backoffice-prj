@@ -1,0 +1,121 @@
+{
+	"Datacenter": {
+		"VPC": {
+			"Description": "AWS VPC",
+			"Name": "backoffice-vpc",
+			"Cidr": "10.0.0.0/16",
+			"Region": "eu-west-1",
+			"Tags": [
+				{
+					"Key": "class",
+					"Value": "webservices"
+				}
+			]
+		},
+		"InternetGateway": {
+			"Name": "backoffice-gateway",
+			"Tags": [
+				{
+					"Key": "class",
+					"Value": "webservices"
+				}
+			]
+		},
+		"RouteTable": {
+			"Name": "backoffice-routetable",
+			"Tags": [
+				{
+					"Key": "class",
+					"Value": "webservices"
+				}
+			]
+		},
+		"Subnets": [
+			{
+				"Description": "AWS network shared by the instances.",
+				"Name": "backoffice-subnet",
+				"Az": "eu-west-1a",
+				"Cidr": "10.0.20.0/24",
+				"Tags": [
+					{
+						"Key": "class",
+						"Value": "webservices"
+					}
+				]
+			}
+		],
+		"SecurityGroups": [
+			{
+				"Description": "Backoffice instance security group.",
+				"Name": "backoffice-sgp",
+				"Rules": [
+					{
+						"FromPort": -1,
+						"ToPort": -1,
+						"Protocol": "icmp",
+						"Cidr": "0.0.0.0/0",
+						"Description": "Ping access"
+					},
+					{
+						"FromPort": 22,
+						"ToPort": 22,
+						"Protocol": "tcp",
+						"Cidr": "0.0.0.0/0",
+						"Description": "SSH access"
+					},
+					{
+						"FromPort": 8080,
+						"ToPort": 8080,
+						"Protocol": "tcp",
+						"Cidr": "0.0.0.0/0",
+						"Description": "Tomcat HTTP access"
+					},
+					{
+						"FromPort": 8443,
+						"ToPort": 8443,
+						"Protocol": "tcp",
+						"Cidr": "0.0.0.0/0",
+						"Description": "Tomcat HTTPS access"
+					}
+				],
+				"Tags": [
+					{
+						"Key": "class",
+						"Value": "webservices"
+					}
+				]
+			}
+		],
+		"Instances": [
+			{
+				"Name": "backoffice-box",
+				"UserName": "backadmin",
+				"UserPassword": "backadmin",
+				"PrivateIp": "10.0.20.35",
+				"SecurityGroup": "backoffice-sgp",
+				"Subnet": "backoffice-subnet",
+				"ParentImage": "amzn2-ami-kernel-5.10-hvm-2.0.20230719.0-x86_64-gp2",
+				"DnsDomain": "backoffice.maxmin.it",
+				"HostName": "local.backoffice.maxmin.it",
+				"Tags": [
+					{
+						"Key": "database",
+						"Value": "mariadb"
+					},
+					{
+						"Key": "program",
+						"Value": "java"
+					},
+					{
+						"Key": "security",
+						"Value": "openssl"
+					},
+					{
+						"Key": "webserver",
+						"Value": "tomcat"
+					}
+				]
+			}
+		]
+	}
+}

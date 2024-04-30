@@ -1,0 +1,15 @@
+
+CREATE A NEW MAVEN MODULE:
+
+cd project
+mvn archetype:generate -DgroupId=com.maxmin.config  -DartifactId=backoffice-config
+
+LOCAL DEPLOY:
+
+TOMCAT_HOME=/opt/apache-tomcat-10.1.18
+${TOMCAT_HOME}/bin/shutdown.sh
+rm -rf ${TOMCAT_HOME}/webapps/backoffice-webapp  ${TOMCAT_HOME}/webapps/backoffice-webapp.war
+
+mvn clean package
+
+${TOMCAT_HOME}/bin/startup.sh
