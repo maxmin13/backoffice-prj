@@ -99,20 +99,8 @@
 				"HostName": "local.backoffice.maxmin.it",
 				"Tags": [
 					{
-						"Key": "database",
-						"Value": "mariadb"
-					},
-					{
 						"Key": "program",
 						"Value": "java"
-					},
-					{
-						"Key": "security",
-						"Value": "openssl"
-					},
-					{
-						"Key": "webserver",
-						"Value": "tomcat"
 					}
 				]
 			}
