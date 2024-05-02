@@ -13,7 +13,10 @@
 
 	<modules>
 		<module>ui/backoffice-webapp</module>
-		<module>configuration/backoffice-config</module>
+		<module>config/backoffice-config</module>
+		<module>persistence/backoffice-dao</module>
+		<module>domain/backoffice-model</module>
+		<module>service/backoffice-service</module>
 	</modules>
 
 	<properties>
@@ -54,6 +57,21 @@
 			<dependency>
 				<groupId>it.maxmin.ui</groupId>
 				<artifactId>backoffice-webapp</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>it.maxmin.persistence</groupId>
+				<artifactId>backoffice-dao</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>it.maxmin.domain</groupId>
+				<artifactId>backoffice-model</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>it.maxmin.service</groupId>
+				<artifactId>backoffice-service</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 
@@ -258,6 +276,11 @@
 					<artifactId>maven-war-plugin</artifactId>
 					<version>3.4.0</version>
 				</plugin>
+				<plugin>
+	                <groupId>org.codehaus.mojo</groupId>
+	                <artifactId>build-helper-maven-plugin</artifactId>
+	                <version>3.2.0</version>
+            	</plugin>				
 
 				<!-- site lifecycle
 				<plugin>

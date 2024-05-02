@@ -24,6 +24,14 @@
 			<groupId>it.maxmin.config</groupId>
 			<artifactId>backoffice-config</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>it.maxmin.persistence</groupId>
+			<artifactId>backoffice-dao</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>it.maxmin.domain</groupId>
+			<artifactId>backoffice-model</artifactId>
+		</dependency>
 
 		<!-- servlet library -->
 		<dependency>
@@ -159,7 +167,8 @@
 				<resources>
 					<resource>
 						<directory>
-							../../configuration/backoffice-config/src/main/resources/${env}</directory>
+							../../config/backoffice-config/src/main/resources/${env}
+						</directory>
 						<includes>
 							<include>**/jndi.properties</include>
 						</includes>
@@ -186,12 +195,11 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<warName>backoffice</warName>
 					<warSourceDirectory>WebContent</warSourceDirectory>
 					<warSourceExcludes>config/</warSourceExcludes>
 				</configuration>
-			</plugin>
-		</plugins>
+			</plugin>		
+		</plugins>		
 	</build>
 
 </project>

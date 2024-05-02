@@ -18,7 +18,6 @@ ex:
 /home/vagrant/workspace/backoffice-prj/project
 click Finish 
 
-
 ###################################################################
 # Install Tomcat webserver Eclipse plugin:
 ###################################################################
@@ -40,42 +39,59 @@ cd backoffice-prj/mariadb
 
 # create the container image:
 
-----
+----------------------------------------------------
 docker build -t prospring6-mariadb:1.0 .
-----
+----------------------------------------------------
 
 # start the container:
 
-----
+----------------------------------------------------
 docker run --name local-mariadb -d -p 3306:3306 prospring6-mariadb:1.0
-----
+----------------------------------------------------
 
-get the container IP address:
+# list all containers and images:
+----------------------------------------------------
+docker ps -a
+docker image ls
+----------------------------------------------------
 
-----
+# get the container IP address:
+
+----------------------------------------------------
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' local-mariadb 
-----
+----------------------------------------------------
+
+# remove all the containers and images
+
+----------------------------------------------------
+docker rm -v -f $(docker ps -qa)
+docker rmi -f $(docker images -aq)
+----------------------------------------------------
 
 ###################################################################
 # Connect to the database from bash console:
 ###################################################################
 
+Access the container terminal:
 
-mysql -u root -p -h 172.17.0.2 musicdb
-mainpass
+----------------------------------------------------
+docker exec -it local-mariadb bash
+mariadb -u root -pmainpass -h 172.17.0.2 musicdb
 
-select * from album;
+select * from ALBUM;
 
 exit
+----------------------------------------------------
 
 ###################################################################
 # Connect to the database with phpMyAdmin client:
 ###################################################################
 
+----------------------------------------------------
 docker pull phpmyadmin 
 docker images
-
 docker run --name myphpadmin -d --link local-mariadb:db -p 8000:80 phpmyadmin
+----------------------------------------------------
 
 access the phpMyAdmin using the URL:
 

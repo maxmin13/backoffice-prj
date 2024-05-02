@@ -95,7 +95,7 @@
 						"Key": "common",
 						"Value": "programs"
 					},
-										{
+					{					{
 						"Key": "jdk",
 						"Value": "install"
 					},
