@@ -8,15 +8,12 @@
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <!--  %d{HH:mm:ss} [%thread] %-5p %class{0}.%method:%L - %m%n  -->
-            <pattern> %-5level: %class{0} - %msg%n</pattern>
+            <pattern> %d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n </pattern>
         </encoder>
     </appender>
 
     <logger name="it.maxmin" level="debug"/>
-
-  <!--  <logger name="org.springframework.data" level="trace"/>
-    <logger name="org.springframework.transaction" level="trace"/>
-    <logger name="org.hibernate" level="trace"/>-->
+    <logger name="org.springframework" level="debug"/>
 
     <root level="info">
         <appender-ref ref="console" />

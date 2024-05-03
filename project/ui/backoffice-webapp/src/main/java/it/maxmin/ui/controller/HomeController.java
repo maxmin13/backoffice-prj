@@ -11,11 +11,10 @@ public class HomeController {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
-	
-    @GetMapping(path = "home")
-    public String home(Model model) {
-    	LOGGER.debug("CALLED HELLO ENDPOINT");
-        model.addAttribute("message", "Spring MVC JspExample!!");
-        return "home";
-    }
+	@GetMapping(path = "home")
+	public String home(Model model) {
+		LOGGER.debug("CALLED HELLO ENDPOINT");
+		model.addAttribute("message", "Spring MVC JspExample!!");
+		return "home";
+	}
 }

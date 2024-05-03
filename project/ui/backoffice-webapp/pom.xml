@@ -24,14 +24,6 @@
 			<groupId>it.maxmin.config</groupId>
 			<artifactId>backoffice-config</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>it.maxmin.persistence</groupId>
-			<artifactId>backoffice-dao</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>it.maxmin.domain</groupId>
-			<artifactId>backoffice-model</artifactId>
-		</dependency>
 
 		<!-- servlet library -->
 		<dependency>
@@ -50,92 +42,6 @@
 			<artifactId>spring-webmvc</artifactId>
 		</dependency>
 
-		<!-- connection pooling libs
-		<dependency>
-			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP</artifactId>
-		</dependency> -->
-
-		<!-- db driver lib -->
-		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-jpa</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-agroal</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-ant</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-c3p0</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-community-dialects</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-envers</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-graalvm</artifactId>
-		</dependency>
-		<!-- <dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-hikaricp</artifactId>
-		</dependency>-->
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-jcache</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-jpamodelgen</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-micrometer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-proxool</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-spatial</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-testing</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-vibur</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.validator</groupId>
-			<artifactId>hibernate-validator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.validator</groupId>
-			<artifactId>hibernate-validator-annotation-processor</artifactId>
-		</dependency>
-
 		<!-- logging lib -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -143,18 +49,7 @@
 		</dependency>
 
 		<!-- test dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
+		
 	</dependencies>
 
 	<profiles>
@@ -165,6 +60,12 @@
 			</activation>
 			<build>
 				<resources>
+					<resource>
+			            <directory>src/main/resources</directory>
+			            <includes>
+			                <include>**/*.properties</include>
+			            </includes>
+			        </resource>					
 					<resource>
 						<directory>
 							../../config/backoffice-config/src/main/resources/${env}
@@ -198,8 +99,8 @@
 					<warSourceDirectory>WebContent</warSourceDirectory>
 					<warSourceExcludes>config/</warSourceExcludes>
 				</configuration>
-			</plugin>		
-		</plugins>		
+			</plugin>
+		</plugins>
 	</build>
 
 </project>

@@ -31,7 +31,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
-	
+
 	@Bean
 	public ViewResolver templateResolver() {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -39,14 +39,12 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		viewResolver.setSuffix(".jsp");
 		return viewResolver;
 	}
-	
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(localeChangeInterceptor()).addPathPatterns("/*");
-	//	registry.addInterceptor(themeChangeInterceptor());
-	//	registry.addInterceptor(webChangeInterceptor());
 	}
-	
+
 	@Bean
 	MessageSource messageSource() {
 		var messageResource = new ReloadableResourceBundleMessageSource();
@@ -58,14 +56,14 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		// messageResource.setCacheSeconds(0);
 		return messageResource;
 	}
-	
+
 	@Bean
 	LocaleChangeInterceptor localeChangeInterceptor() {
 		var localeChangeInterceptor = new LocaleChangeInterceptor();
 		localeChangeInterceptor.setParamName("lang");
 		return localeChangeInterceptor;
 	}
-	
+
 	@Bean
 	CookieLocaleResolver localeResolver() {
 		var cookieLocaleResolver = new CookieLocaleResolver("locale");
@@ -73,77 +71,5 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		cookieLocaleResolver.setCookieMaxAge(Duration.ofSeconds(3600));
 		return cookieLocaleResolver;
 	}
-
-	/*
-	 * @Override public void configureDefaultServletHandling(final
-	 * DefaultServletHandlerConfigurer configurer) { configurer.enable(); }
-	 */
- 
- 	/*
-	@Bean(name = DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME)
-	StandardServletMultipartResolver multipartResolver() {
-		StandardServletMultipartResolver multipartResolver = new StandardServletMultipartResolver();
-		return multipartResolver;
-	}
-
-	
-	@Bean
-	ResourceBundleThemeSource themeSource() {
-		return new ResourceBundleThemeSource();
-	}
-
-	@Bean
-	public Validator validator() {
-		final var validator = new LocalValidatorFactoryBean();
-		validator.setValidationMessageSource(messageSource());
-		return validator;
-	}
-
-	@Override
-	public Validator getValidator() {
-		return validator();
-	}*/
-
-	// Declare our static resources. I added cache to the java config but it?s not
-	// required.
-	/*
-	@Override
-	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-		WebMvcConfigurer.super.addResourceHandlers(registry);
-		registry.addResourceHandler("/images/**", "/styles/**").addResourceLocations("/images/", "/styles/");
-	}
- 
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addRedirectViewController("/", "/home");
-	}
-
-	
-
-	@Bean
-	ThemeChangeInterceptor themeChangeInterceptor() {
-		var themeChangeInterceptor = new ThemeChangeInterceptor();
-		themeChangeInterceptor.setParamName("theme");
-		return themeChangeInterceptor;
-	}
-
-	
-
-	@Bean
-	CookieThemeResolver themeResolver() {
-		var cookieThemeResolver = new CookieThemeResolver();
-		cookieThemeResolver.setDefaultThemeName("green");
-		cookieThemeResolver.setCookieMaxAge(3600);
-		cookieThemeResolver.setCookieName("theme");
-		return cookieThemeResolver;
-	}
-
-	@Bean
-	WebContentInterceptor webChangeInterceptor() {
-		var webContentInterceptor = new WebContentInterceptor();
-		webContentInterceptor.setCacheSeconds(0);
-		webContentInterceptor.setSupportedMethods("GET", "POST", "PUT", "DELETE");
-		return webContentInterceptor;
-	}*/
 
 }
