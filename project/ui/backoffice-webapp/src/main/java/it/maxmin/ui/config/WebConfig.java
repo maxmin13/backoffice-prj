@@ -40,11 +40,6 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		return viewResolver;
 	}
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(localeChangeInterceptor()).addPathPatterns("/*");
-	}
-
 	@Bean
 	MessageSource messageSource() {
 		var messageResource = new ReloadableResourceBundleMessageSource();
@@ -55,6 +50,11 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		// # -1 : never reload, 0 always reload
 		// messageResource.setCacheSeconds(0);
 		return messageResource;
+	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(localeChangeInterceptor()).addPathPatterns("/*");
 	}
 
 	@Bean

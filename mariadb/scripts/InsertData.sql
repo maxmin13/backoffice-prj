@@ -1,15 +1,13 @@
-insert into SINGER (id, first_name, last_name, birth_date) values (1, 'John', 'Mayer', '1977-10-16');
-insert into SINGER (id, first_name, last_name, birth_date) values (2, 'Ben', 'Barnes', '1981-08-20');
-insert into SINGER (id, first_name, last_name, birth_date) values (3, 'John', 'Butler', '1975-04-01');
 
-insert into ALBUM (id, singer_id, title, release_date) values (1, 1, 'The Search For Everything', '2017-01-20');
-insert into ALBUM (id, singer_id, title, release_date) values (2, 1, 'Battle Studies', '2009-11-17');
-insert into ALBUM (id, singer_id, title, release_date) values (3, 2, ' 11:11 ', '2021-09-18');
+insert into UserRole (RoleName, Active) values ('administrator', 1);
+insert into UserRole (RoleName, Active) values ('user', 1);
 
+insert into User (AccountName, FirstName, LastName, BirthDate) values ('maxmin13', 'Max', 'Minardi', '1977-10-16');
+insert into UserUserRole (UserId, UserRoleId) values ((select UserId from User where AccountName = 'maxmin13'), (select UserRoleId from UserRole where RoleName = 'administrator'));
+insert into Password (UserId, Active, Value) values ((select UserId from User where AccountName = 'maxmin13'), 1, 'default'); 
+   
 /* view the inserted data */
-SELECT * FROM SINGER;
-SELECT * FROM ALBUM;
+SELECT * FROM User;
+SELECT * FROM UserRole;
+SELECT * FROM Password;
 
-/* simple join sample */
-SELECT * FROM ALBUM A, SINGER S
-WHERE SINGER_ID = S.ID AND S.ID=1;

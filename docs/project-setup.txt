@@ -35,21 +35,32 @@ click Open, click Finish, next, addAll, Finish.
 # Run MariaDB in a Docker container:
 ###################################################################
 
-cd backoffice-prj/mariadb
-
 # create the container image:
 
 ----------------------------------------------------
-docker build -t prospring6-mariadb:1.0 .
+cd backoffice-prj/mariadb
+
+docker build --build-arg DB_ROOT_PASSWORD=rootpwd \
+             --build-arg DB_USER=dbadmin \
+             --build-arg DB_PASSWORD=dbadminpwd \
+             --build-arg DB_DATABASE=backofficedb \
+                -t backoffice-mariadb:1.4 . 
 ----------------------------------------------------
 
 # start the container:
 
 ----------------------------------------------------
-docker run --name local-mariadb -d -p 3306:3306 prospring6-mariadb:1.0
+docker run --name local-mariadb -d -p 3306:3306 backoffice-mariadb:1.4
+----------------------------------------------------
+
+# check the container logs:
+
+----------------------------------------------------
+docker logs --follow local-mariadb
 ----------------------------------------------------
 
 # list all containers and images:
+
 ----------------------------------------------------
 docker ps -a
 docker image ls
@@ -76,9 +87,11 @@ Access the container terminal:
 
 ----------------------------------------------------
 docker exec -it local-mariadb bash
-mariadb -u root -pmainpass -h 172.17.0.2 musicdb
 
-select * from ALBUM;
+mariadb -u root -prootpwd -h 172.17.0.2 backofficedb
+mariadb -u dbadmin -pdbadminpwd -h 172.17.0.2 backofficedb
+
+select * from User;
 
 exit
 ----------------------------------------------------
@@ -97,7 +110,7 @@ access the phpMyAdmin using the URL:
 
 http://localhost:8000/
 root
-mainpass
+rootpwd
 
 ###################################################################
 # Run the backoffice web application locally:
