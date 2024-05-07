@@ -89,6 +89,6 @@ echo "Instances upgraded."
 
 echo "Installing Backoffice web application ..."
 
-"${ANSIBLE_PLAYBOOK_CMD}" playbooks/deploy-backoffice-app.yml
+"${ANSIBLE_PLAYBOOK_CMD}" playbooks/deploy-backoffice.yml
 
 echo "Backoffice application deployed."

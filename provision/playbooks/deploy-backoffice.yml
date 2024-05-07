@@ -57,7 +57,7 @@
         login_user: root
         login_password: "{{ mariadb_root_user_password }}"         
               
-    - name: Create a new database with name 'bobdata'
+    - name: Create a new database
       community.mysql.mysql_db:
         name: "{{ aws.instance.mariadb.database.name }}"
         state: present
