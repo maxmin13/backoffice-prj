@@ -95,21 +95,17 @@
 						"Key": "common",
 						"Value": "programs"
 					},
-					{					{
+					{
 						"Key": "jdk",
 						"Value": "install"
-					},
-					{
-						"Key": "webserver",
-						"Value": "tomcat"
 					},
 					{
 						"Key": "database",
 						"Value": "mariadb"
 					},
 					{
-						"Key": "class",
-						"Value": "javawebservices"
+						"Key": "webserver",
+						"Value": "tomcat"
 					}
 				]
 			}
