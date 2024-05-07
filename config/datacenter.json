@@ -106,6 +106,10 @@
 					{
 						"Key": "webserver",
 						"Value": "tomcat"
+					},
+					{
+						"Key": "class",
+						"Value": "javawebservices"
 					}
 				]
 			}
