@@ -2,7 +2,7 @@
 	"Datacenter": {
 		"VPC": {
 			"Description": "AWS VPC",
-			"Name": "backoffice-vpc",
+			"Name": "backoffice-datacenter",
 			"Cidr": "10.0.0.0/16",
 			"Region": "eu-west-1",
 			"Tags": [
@@ -46,7 +46,7 @@
 		],
 		"SecurityGroups": [
 			{
-				"Description": "Backoffice instance security group.",
+				"Description": "Datacenter instance security group.",
 				"Name": "backoffice-sgp",
 				"Rules": [
 					{
@@ -65,7 +65,7 @@
 					},
 					{
 						"FromPort": 8444,
-						"ToPort": 8444  ,
+						"ToPort": 8444,
 						"Protocol": "tcp",
 						"Cidr": "0.0.0.0/0",
 						"Description": "Tomcat HTTPS access"
@@ -82,8 +82,8 @@
 		"Instances": [
 			{
 				"Name": "backoffice-box",
-				"UserName": "backadmin",
-				"UserPassword": "backadmin",
+				"UserName": "backofficeadmin",
+				"UserPassword": "backofficeadmin",
 				"PrivateIp": "10.0.20.35",
 				"SecurityGroup": "backoffice-sgp",
 				"Subnet": "backoffice-subnet",
