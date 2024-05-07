@@ -89,7 +89,7 @@ echo "Deploying backoffice application ..."
 cd "${BACKOFFICE_DIR}"/bin
 
 chmod 755 provision.sh
-##########./provision.sh
+./provision.sh
 
 if [[ -d "${DATACENTER_DIR}" ]]
 then

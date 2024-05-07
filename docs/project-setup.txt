@@ -38,7 +38,25 @@ click Open, click Finish, next, addAll, Finish.
 # create the container image:
 
 ----------------------------------------------------
-cd backoffice-prj/mariadb
+mkdir mariadb  
+cd mariadb
+mkdir scripts
+cp /home/vagrant/workspace/backoffice-prj/provision/playbooks/files/mariadb/migration/* scripts/
+
+{  
+ printf '%s\n' "FROM mariadb:11.1.2" 
+ printf '%s\n' "COPY scripts /docker-entrypoint-initdb.d/" 
+ printf '%s\n' "ARG DB_ROOT_PASSWORD"
+ printf '%s\n' "ARG DB_USER"  
+ printf '%s\n' "ARG DB_PASSWORD"
+ printf '%s\n' "ARG DB_DATABASE"
+ printf '%s\n' "ENV MARIADB_ROOT_PASSWORD=$DB_ROOT_PASSWORD"
+ printf '%s\n' "ENV MARIADB_USER=$DB_USER"
+ printf '%s\n' "ENV MARIADB_PASSWORD=$DB_PASSWORD"
+ printf '%s\n' "ENV MARIADB_DATABASE=$DB_DATABASE"
+ printf '%s\n' "ENV PORT 3306"  
+ printf '%s\n' "EXPOSE 3306"      
+} >> Dockerfile  
 
 docker build --build-arg DB_ROOT_PASSWORD=rootpwd \
              --build-arg DB_USER=dbadmin \

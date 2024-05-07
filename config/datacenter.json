@@ -106,6 +106,10 @@
 					{
 						"Key": "database",
 						"Value": "mariadb"
+					},
+					{
+						"Key": "class",
+						"Value": "javawebservices"
 					}
 				]
 			}
