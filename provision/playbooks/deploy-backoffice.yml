@@ -61,6 +61,8 @@
       community.mysql.mysql_db:
         name: "{{ aws.instance.mariadb.database.name }}"
         state: present
+        login_user: "{{ mariadb_admin_user }}"
+        login_password: "{{ mariadb_admin_user_password }}"
                    
     - name: Start MariaDB server
       become: true  
