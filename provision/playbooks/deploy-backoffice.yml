@@ -70,7 +70,22 @@
         state: restarted
         enabled: true
         name: mariadb        
- 
+
+    - name: Run migrations
+      mysql_database_migration:
+        login_user: "{{ mariadb_admin_user }}"
+        login_password: "{{ mariadb_admin_user_password }}"      
+        source: mariadb/migration
+        database_name: "{{ aws.instance.mariadb.database.name }}"
+        up: 0 
+        
+ #   "login_user": "test",
+ #   "login_password" : "password" ,
+ #   "login_host": "192.168.94.100",
+
+  #  "source" : "library/test",
+  #  "database_name": "test",
+   # "goto" : 10        
       
   post_tasks:
   
