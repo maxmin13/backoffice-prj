@@ -74,19 +74,13 @@
     - name: Run migrations
       mysql_database_migration:
         login_user: "{{ mariadb_admin_user }}"
-        login_password: "{{ mariadb_admin_user_password }}"      
-        source: mariadb/migration
+        login_password: "{{ mariadb_admin_user_password }}"     
+        login_host: 172.17.0.2 
         database_name: "{{ aws.instance.mariadb.database.name }}"
-        up: 0 
-        
- #   "login_user": "test",
- #   "login_password" : "password" ,
- #   "login_host": "192.168.94.100",
-
-  #  "source" : "library/test",
-  #  "database_name": "test",
-   # "goto" : 10        
-      
+        migration_table: migration
+        source: database/migration
+        goto: 0 
+           
   post_tasks:
   
     - name: Delete download directory
