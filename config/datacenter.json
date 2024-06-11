@@ -69,6 +69,13 @@
 						"Protocol": "tcp",
 						"Cidr": "0.0.0.0/0",
 						"Description": "Tomcat HTTPS access"
+					},
+					{
+						"FromPort": 3306,
+						"ToPort": 3306,
+						"Protocol": "tcp",
+						"Cidr": "0.0.0.0/0",
+						"Description": "Mariadb database access"
 					}
 				],
 				"Tags": [
