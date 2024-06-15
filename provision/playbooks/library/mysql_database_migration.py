@@ -205,9 +205,9 @@ class Database:
         self.migrations = self.load_metadata_migration_files(
             self.source_folder
         )
+        self.create_migration_table()
         self.starting_version = self.get_current_version()
         self.final_version = self.starting_version
-        self.create_migration_table()
         self.validate_new_with_older_run()
 
 

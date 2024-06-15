@@ -10,6 +10,12 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 ##############################
+## Pydev
+##############################
+
+.pydevproject
+
+##############################
 ## Eclipse
 ##############################
 .settings/
@@ -29,4 +35,5 @@ local.properties
 ## Miscellaneous
 ##############################
 *.log
-         
+        
+ 
