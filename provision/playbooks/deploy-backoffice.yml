@@ -75,7 +75,7 @@
       mysql_database_migration:
         login_user: "{{ mariadb_admin_user }}"
         login_password: "{{ mariadb_admin_user_password }}"     
-        login_host: "3.249.57.65"
+        login_host: "34.245.236.31"
         database_name: "{{ aws.instance.mariadb.database.name }}"
         migration_table: migration
         source: database/migration
