@@ -46,6 +46,9 @@ aws:
         dir: /usr/bin/
     mariadb:
       version: "10.5"
+      user:
+        admin:
+          name: "mariadbadmin" 
       database:
         name: "backofficedb"
 
