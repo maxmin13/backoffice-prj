@@ -50,7 +50,7 @@
  
     - name: Create database user with all database privileges
       community.mysql.mysql_user:
-        name: "{{ aws.instance.user.admin.name }}@{{ instance_dns_domain }}"
+        name: "{{ aws.instance.mariadb.user.admin.name }}@{{ instance_dns_domain }}"
         password: "{{ mariadb_admin_user_password }}"
         priv: '*.*:ALL'
         state: present
@@ -61,7 +61,7 @@
       community.mysql.mysql_db:
         name: "{{ aws.instance.mariadb.database.name }}"
         state: present
-        login_user: "{{ aws.instance.user.admin.name }}@{{ instance_dns_domain }}"
+        login_user: "{{ aws.instance.mariadb.user.admin.name }}@{{ instance_dns_domain }}"
         login_password: "{{ mariadb_admin_user_password }}"
                    
     - name: Start MariaDB server
@@ -73,16 +73,16 @@
 
     - name: Run migrations
       mysql_database_migration:
-        login_user: "{{ aws.instance.user.admin.name }}@{{ instance_dns_domain }}"
+        login_user: "{{ aws.instance.mariadb.user.admin.name }}@{{ instance_dns_domain }}"
         login_password: "{{ mariadb_admin_user_password }}"     
         login_host: "{{ instance_dns_domain }}"
         database_name: "{{ aws.instance.mariadb.database.name }}"
         migration_table: migration
         source: database/migration
         goto: 3
-           
+
   post_tasks:
-  
+
     - name: Delete download directory
       become: true
       ansible.builtin.file:
