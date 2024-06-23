@@ -72,3 +72,4 @@ urllib3==2.2.1
 Werkzeug==3.0.1
 wrapt==1.16.0
 xmltodict==0.13.0
+PyMySQL==1.1.1

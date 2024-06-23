@@ -1,0 +1,44 @@
+
+################################################################
+https://docs.ansible.com/ansible/latest/dev_guide/debugging.html
+################################################################
+
+cd backoffice-prj
+
+source .venv/bin/activate
+
+cd provision
+
+ANSIBLE_KEEP_REMOTE_FILES=1 ansible class_javawebservices -m mysql_database_migration  -a '{"login_user": "mariadbadmin@%", "login_password" : "mariadbadminsecret" , "source" : "migrations/", "database_name": "backofficedb", "goto" : 3}' -vvv
+
+rm -f ~/.ssh/known_hosts && ssh -v -i backoffice-box -p 22 backofficeadmin@backoffice.maxmin.it
+
+cd  /home/backofficeadmin/.ansible/tmp/ansible-tmp-1719144021.0803266-464147-217208713697014
+python AnsiballZ_mysql_database_migration.py explode
+
+ls debug_dir
+
+## The args file contains a JSON string. 
+## The string is a dictionary containing the module arguments and other variables that Ansible passes into the module to change its behavior. 
+## Modify this file to change the parameters passed to the module.
+
+ls debug_dir/ansible/modules
+
+## mysql_database_migration.py is the code for the module itself. 
+## You can modify this code to see what effect it would have on your module, or for debugging purposes.
+
+## Once you edit the code or arguments in the exploded tree, use the execute subcommand to run it:
+
+					
+# create virtual environment
+/usr/local/bin/python3.11 -m venv .venv
+source .venv/bin/activate
+vim requirements.txt
+# paste the content of the project's requirements.txt
+sudo chown -R backofficeadmin:backofficeadmin .venv/
+python -m pip install -r requirements.txt
+
+python AnsiballZ_mysql_database_migration.py execute
+
+
+
