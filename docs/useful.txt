@@ -2,11 +2,3 @@
 find . -type f -name "*.*" -exec sed -i 's/datacenter-prj/datacenter-prj/g' {} \;
 
 rm -f ~/.ssh/known_hosts && ssh -v -i ../datacenter-prj/access/admin-key -p 22 awsadmin@52.49.230.147 
-
-/home/vagrant/workspace/datacenter-prj/.venv/bin/ansible-playbook  -b -K playbooks/deploy-django.yml  
-
---start-at-task  'django create superuser'
-
-python manage.py makemigrations posts
-
-python manage.py runserver

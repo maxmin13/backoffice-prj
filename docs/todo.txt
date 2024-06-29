@@ -1,4 +1,0 @@
-
-
-
-in datacenter-prj, add playbook to install java, tomcat, mariadb
