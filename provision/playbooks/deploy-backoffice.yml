@@ -69,7 +69,22 @@
       ansible.builtin.systemd_service:
         state: restarted
         enabled: true
-        name: mariadb        
+        name: mariadb   
+        
+    - name: Create the source directory on the server
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.download.dir.path }}/migration"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 488 
+        
+    - name: Upload the migration scripts to the server
+      copy:
+        src: "files/database/migration/"
+        dest: "{{ aws.instance.download.dir.path }}/migration"
+        remote_src: false                        
 
     - name: Run migrations
       mysql_database_migration:
