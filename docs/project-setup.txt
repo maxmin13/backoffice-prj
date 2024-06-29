@@ -123,7 +123,7 @@ exit
 ----------------------------------------------------
 docker pull phpmyadmin 
 docker images
-docker run --name myphpadmin -d --link local-mariadb:db -p 8000:80 phpmyadmin
+docker run --name myphpadmin -d --link local-mariadb:backofficedb -p 8000:80 phpmyadmin
 ----------------------------------------------------
 
 access the phpMyAdmin using the URL:
