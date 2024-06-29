@@ -28,8 +28,7 @@ ls debug_dir/ansible/modules
 ## You can modify this code to see what effect it would have on your module, or for debugging purposes.
 
 ## Once you edit the code or arguments in the exploded tree, use the execute subcommand to run it:
-
-					
+				
 # create virtual environment
 /usr/local/bin/python3.11 -m venv .venv
 source .venv/bin/activate
