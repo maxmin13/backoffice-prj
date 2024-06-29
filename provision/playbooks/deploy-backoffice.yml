@@ -71,7 +71,7 @@
         enabled: true
         name: mariadb   
         
-    - name: Create the source directory on the server
+    - name: Create the migration source directory on the server
       become: true
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}/migration"
@@ -86,10 +86,10 @@
         dest: "{{ aws.instance.download.dir.path }}/migration"
         remote_src: false                        
 
-    - name: Run migrations
+    - name: Run the database migrations
       mysql_database_migration:
-        login_user: "{{ aws.instance.mariadb.user.admin.name }}"
-        login_password: "{{ mariadb_admin_user_password }}"     
+        login_user: "root"
+        login_password: "{{ mariadb_root_user_password }}"     
         database_name: "{{ aws.instance.mariadb.database.name }}"
         migration_table: migration
         source: "{{ aws.instance.download.dir.path }}/migration"

@@ -1,0 +1,8 @@
+
+
+
+
+
+
+
+ansible install docker phpmyadmin

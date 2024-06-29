@@ -48,7 +48,7 @@ aws:
       version: "10.5"
       user:
         admin:
-          name: "mariadbadmin@%" 
+          name: "mariadbadmin" 
       database:
         name: "backofficedb"
 
