@@ -103,6 +103,10 @@
 						"Value": "programs"
 					},
 					{
+						"Key": "utility",
+						"Value": "programs"
+					},
+					{
 						"Key": "jdk",
 						"Value": "install"
 					},
