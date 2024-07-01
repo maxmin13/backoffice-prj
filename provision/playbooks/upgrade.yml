@@ -5,6 +5,9 @@
 
   vars_files:
     - variables/provision.yml
+    
+  vars:
+    ansible_python_interpreter: "{{ aws.instance.venv.dir.path }}/bin/python"     
       
   pre_tasks:
   
