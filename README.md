@@ -48,20 +48,26 @@ chmod +x make.sh
 ./make.sh
 ```
 
-## Log in the remote AWS instance: ##
+## ssh in the remote AWS instance: ##
 
 ```
-// log into the remote instance, with your AWS user and the public IP assigned to the AWS instance, ex:
+// ssh into the remote instance, with the instance private key and the instance user:
 cd backoffice-prj/access
 
-rm -f ~/.ssh/known_hosts && ssh -v -i <instance private key, eg: backoffice-box> -p 22 <instance user, see datacenter.json, eg: msgadmin>@176.34.196.38
+rm -f ~/.ssh/known_hosts && ssh -v -i backoffice-box -p 22 backofficeadmin@backoffice.maxmin.it
 ```
+
+
+## Access the database: ##
+
+http://backoffice.maxmin.it
+root
+mariadbrootsecret
+
 
 ## Access the web site at: ##
 
 *https://backoffice.maxmin.it:8443/home*
-<br>
-*https://AWS-instance-public-IP-address:8443/home*
 
 
 ## Delete the datacenter and the application: ##
