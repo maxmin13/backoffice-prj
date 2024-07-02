@@ -60,9 +60,9 @@ rm -f ~/.ssh/known_hosts && ssh -v -i backoffice-box -p 22 backofficeadmin@backo
 
 ## Access the database: ##
 
-http://backoffice.maxmin.it
-root
-mariadbrootsecret
+http://backoffice.maxmin.it<br>
+root<br>
+mariadbrootsecret<br>
 
 
 ## Access the web site at: ##
