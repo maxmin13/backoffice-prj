@@ -14,7 +14,7 @@
 	<modules>
 		<module>ui/backoffice-webapp</module>
 		<module>config/backoffice-config</module>
-		<module>persistence/backoffice-dao</module>
+		<module>persistence/backoffice-jdbc-dao</module>
 		<module>domain/backoffice-model</module>
 		<module>service/backoffice-service</module>
 	</modules>
@@ -58,7 +58,7 @@
 			</dependency>
 			<dependency>
 				<groupId>it.maxmin.persistence</groupId>
-				<artifactId>backoffice-dao</artifactId>
+				<artifactId>backoffice-jdbc-dao</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 			<dependency>

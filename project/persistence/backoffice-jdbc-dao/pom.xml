@@ -15,8 +15,8 @@
 	</parent>
 
 	<groupId>it.maxmin.persistence</groupId>
-	<artifactId>backoffice-dao</artifactId>
-	<name>backoffice-dao</name>
+	<artifactId>backoffice-jdbc-dao</artifactId>
+	<name>backoffice-jdbc-dao</name>
 
 	<dependencies>
 
