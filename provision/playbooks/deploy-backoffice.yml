@@ -36,6 +36,17 @@
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
         state: absent      
+                          
+  tasks:
+   
+    - name: Create download directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.download.dir.path }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 488   
         
     - name: Create virtualenv
       become: true
@@ -58,18 +69,7 @@
       become: true
       ansible.builtin.pip:
         virtualenv: "{{ aws.instance.venv.dir.path }}"
-        requirements: "{{ aws.instance.download.dir.path }}/requirements.txt"           
-                  
-  tasks:
-   
-    - name: Create download directory
-      become: true
-      ansible.builtin.file:
-        path: "{{ aws.instance.download.dir.path }}"
-        state: directory
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-        mode: 488   
+        requirements: "{{ aws.instance.download.dir.path }}/requirements.txt"        
  
     - name: Create database user with all database privileges
       community.mysql.mysql_user:
