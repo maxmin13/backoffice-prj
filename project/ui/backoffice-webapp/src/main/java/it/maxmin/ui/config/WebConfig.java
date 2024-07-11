@@ -12,19 +12,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "it.maxmin" })
+@ComponentScan(basePackages = { "it.maxmin.ui.controller" })
 public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
-
+	@SuppressWarnings("unused")
 	private ApplicationContext applicationContext;
 
 	@Override
@@ -32,12 +36,44 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		this.applicationContext = applicationContext;
 	}
 
+	@Bean(name = DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME)
+	StandardServletMultipartResolver multipartResolver() {
+		StandardServletMultipartResolver multipartResolver = new StandardServletMultipartResolver();
+		return multipartResolver;
+	}
+
 	@Bean
-	public ViewResolver templateResolver() {
-		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-		viewResolver.setPrefix("/WEB-INF/views/");
-		viewResolver.setSuffix(".jsp");
-		return viewResolver;
+	public InternalResourceViewResolver resolver() {
+		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+		resolver.setViewClass(JstlView.class);
+		resolver.setPrefix("/WEB-INF/views/");
+		resolver.setSuffix(".jsp");
+		return resolver;
+	}
+
+	// Declare our static resources. I added cache to the java config but it?s not
+	// required.
+	/*
+	 * @Override public void addResourceHandlers(final ResourceHandlerRegistry
+	 * registry) { WebMvcConfigurer.super.addResourceHandlers(registry);
+	 * registry.addResourceHandler("/images/**", "/styles/**")
+	 * .addResourceLocations("/images/", "/styles/"); }
+	 */
+
+	/*
+	 * @Override public void configureDefaultServletHandling(final
+	 * DefaultServletHandlerConfigurer configurer) { configurer.enable(); }
+	 */
+
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+		registry.addRedirectViewController("/", "/home");
+	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(localeChangeInterceptor()).addPathPatterns("/*");
+		registry.addInterceptor(webChangeInterceptor());
 	}
 
 	@Bean
@@ -52,11 +88,6 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		return messageResource;
 	}
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(localeChangeInterceptor()).addPathPatterns("/*");
-	}
-
 	@Bean
 	LocaleChangeInterceptor localeChangeInterceptor() {
 		var localeChangeInterceptor = new LocaleChangeInterceptor();
@@ -66,10 +97,19 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 
 	@Bean
 	CookieLocaleResolver localeResolver() {
-		var cookieLocaleResolver = new CookieLocaleResolver("locale");
+		var cookieLocaleResolver = new CookieLocaleResolver();
 		cookieLocaleResolver.setDefaultLocale(Locale.ENGLISH);
 		cookieLocaleResolver.setCookieMaxAge(Duration.ofSeconds(3600));
+		cookieLocaleResolver.setCookieName("locale");
 		return cookieLocaleResolver;
+	}
+
+	@Bean
+	WebContentInterceptor webChangeInterceptor() {
+		var webContentInterceptor = new WebContentInterceptor();
+		webContentInterceptor.setCacheSeconds(0);
+		webContentInterceptor.setSupportedMethods("GET", "POST", "PUT", "DELETE");
+		return webContentInterceptor;
 	}
 
 }

@@ -31,6 +31,7 @@
 		<hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
 		<logback.version>1.4.8</logback.version>
 		<slf4j.version>2.0.7</slf4j.version>
+		<jakarta.servlet.jsp.jstl.version>3.0.0</jakarta.servlet.jsp.jstl.version>
 	</properties>
 
 	<profiles>
@@ -80,6 +81,12 @@
 				<scope>provided</scope>
 			</dependency>
 
+			<dependency>
+				<groupId>jakarta.servlet.jsp.jstl</groupId>
+				<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+				<version>${jakarta.servlet.jsp.jstl.version}</version>
+			</dependency>
+
 			<!-- core Spring dependencies -->
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -91,7 +98,7 @@
 				<artifactId>spring-webmvc</artifactId>
 				<version>${org.springframework.version}</version>
 			</dependency>
-			
+
 			<!-- mariadb driver lib -->
 			<dependency>
 				<groupId>org.mariadb.jdbc</groupId>
@@ -114,7 +121,7 @@
 			</dependency>
 
 			<!-- test dependencies -->
-						
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -163,10 +170,10 @@
 					<version>3.4.0</version>
 				</plugin>
 				<plugin>
-	                <groupId>org.codehaus.mojo</groupId>
-	                <artifactId>build-helper-maven-plugin</artifactId>
-	                <version>3.2.0</version>
-            	</plugin>				
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>3.2.0</version>
+				</plugin>
 
 			</plugins>
 		</pluginManagement>

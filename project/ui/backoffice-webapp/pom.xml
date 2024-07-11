@@ -31,6 +31,11 @@
 			<artifactId>jakarta.servlet-api</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>jakarta.servlet.jsp.jstl</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+		</dependency>
+
 		<!-- core Spring dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -49,7 +54,7 @@
 		</dependency>
 
 		<!-- test dependencies -->
-		
+
 	</dependencies>
 
 	<profiles>
@@ -61,11 +66,11 @@
 			<build>
 				<resources>
 					<resource>
-			            <directory>src/main/resources</directory>
-			            <includes>
-			                <include>**/*.properties</include>
-			            </includes>
-			        </resource>					
+						<directory>src/main/resources</directory>
+						<includes>
+							<include>**/*.properties</include>
+						</includes>
+					</resource>
 					<resource>
 						<directory>
 							../../config/backoffice-config/src/main/resources/${env}
