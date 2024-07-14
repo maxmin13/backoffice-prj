@@ -38,10 +38,11 @@ click Open, click Finish, next, addAll, Finish.
 # create the container image:
 
 ----------------------------------------------------
-mkdir mariadb  
-cd mariadb
+mkdir /home/vagrant/workspace/mariadb  
+cd /home/vagrant/workspace/mariadb
 mkdir scripts
-cp /home/vagrant/workspace/backoffice-prj/provision/playbooks/files/mariadb/migration/* scripts/
+cp /home/vagrant/workspace/backoffice-prj/provision/playbooks/files/database/migration/* scripts/
+rm script/*.down.sql
 
 {  
  printf '%s\n' 'FROM mariadb:11.1.2' 
@@ -202,17 +203,13 @@ chmod +x make.sh
 
 cd backoffice-prj/access
 
-rm -f ~/.ssh/known_hosts && ssh -v -i backoffice-box -p 22 <remote AWS instance user pwd, eg: awsadmin>@<remote AWS instance IP address>
+rm -f ~/.ssh/known_hosts && ssh -v -i backoffice-box -p 22 <remote AWS instance user pwd, eg: awsadmin>@backoffice.maxmin.it
 
 ###################################################################
 # Access Java web site at:
 ###################################################################
 
 https://backoffice.maxmin.it:8443/admin 
-
-or:
-
-https://AWS-instance-public-IP-address:8443/admin
 
 userid: admin
 password: admin

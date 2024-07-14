@@ -16,6 +16,7 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
@@ -51,14 +52,11 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		return resolver;
 	}
 
-	// Declare our static resources. I added cache to the java config but it?s not
-	// required.
-	/*
-	 * @Override public void addResourceHandlers(final ResourceHandlerRegistry
-	 * registry) { WebMvcConfigurer.super.addResourceHandlers(registry);
-	 * registry.addResourceHandler("/images/**", "/styles/**")
-	 * .addResourceLocations("/images/", "/styles/"); }
-	 */
+	@Override
+	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+		WebMvcConfigurer.super.addResourceHandlers(registry);
+		registry.addResourceHandler("/images/**", "/styles/**").addResourceLocations("/images/", "/styles/");
+	}
 
 	/*
 	 * @Override public void configureDefaultServletHandling(final
@@ -97,10 +95,9 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 
 	@Bean
 	CookieLocaleResolver localeResolver() {
-		var cookieLocaleResolver = new CookieLocaleResolver();
+		var cookieLocaleResolver = new CookieLocaleResolver("locale");
 		cookieLocaleResolver.setDefaultLocale(Locale.ENGLISH);
 		cookieLocaleResolver.setCookieMaxAge(Duration.ofSeconds(3600));
-		cookieLocaleResolver.setCookieName("locale");
 		return cookieLocaleResolver;
 	}
 
