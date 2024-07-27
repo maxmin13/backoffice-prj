@@ -14,9 +14,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<groupId>it.maxmin.service</groupId>
-	<artifactId>backoffice-service</artifactId>
-	<name>backoffice-service</name>
+	<groupId>it.maxmin.domain</groupId>
+	<artifactId>backoffice-jdbc-model</artifactId>
 
 	<dependencies>
 		<!-- logging lib -->

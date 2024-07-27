@@ -1,0 +1,8 @@
+
+a Java application and a database cannot communicate directly, so they need a translator, which in software is called a DRIVER.
+• We usually need one translator, the driver.
+• We might use two, if we want to introduce a persistence layer such as Hibernate.
+• We might use three, if we add Spring Data to easily map records to POJOs and handle transactions easily.
+
+You can use Spring to manage the database connection for you by providing a bean that implements javax.sql.DataSource. 
+The difference between a DataSource and a Connection is that a DataSource provides and manages connections.
