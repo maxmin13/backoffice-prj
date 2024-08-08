@@ -24,11 +24,11 @@ public class DaoTestUtil {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(DaoTestUtil.class);
 	
-	public static void stopDB(MariaDB4jSpringService mariaDB4jSpringService) {
+	public static void stopTestDB(MariaDB4jSpringService mariaDB4jSpringService) {
 		mariaDB4jSpringService.stop();
 	}
-
-	public static void runScripts(String[] scripts, NamedParameterJdbcTemplate jdbcTemplate) {
+	
+	public static void runDBScripts(String[] scripts, NamedParameterJdbcTemplate jdbcTemplate) {
 		for (String script : scripts) {
 			try {
 				Files.readAllLines(Paths.get("src/test/resources/embedded/" + script))

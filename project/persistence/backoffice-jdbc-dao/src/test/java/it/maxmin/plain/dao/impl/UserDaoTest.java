@@ -2,8 +2,8 @@ package it.maxmin.plain.dao.impl;
 
 import static it.maxmin.plain.dao.DaoTestUtil.findUserByUserId;
 import static it.maxmin.plain.dao.DaoTestUtil.insertUser;
-import static it.maxmin.plain.dao.DaoTestUtil.runScripts;
-import static it.maxmin.plain.dao.DaoTestUtil.stopDB;
+import static it.maxmin.plain.dao.DaoTestUtil.runDBScripts;
+import static it.maxmin.plain.dao.DaoTestUtil.stopTestDB;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -53,18 +53,18 @@ public class UserDaoTest {
 		userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 		String[] scripts = { "create_tables.sql", "insert_roles.sql", "insert_users.sql" };
-		runScripts(scripts, jdbcTemplate);
+		runDBScripts(scripts, jdbcTemplate);
 	}
 
 	@AfterEach
 	public void cleanUp() {
 		String[] scripts = { "delete_users.sql", "delete_roles.sql", "drop_tables.sql" };
-		runScripts(scripts, jdbcTemplate);
+		runDBScripts(scripts, jdbcTemplate);
 	}
 	
 	@AfterAll
 	public static void clear() {
-		stopDB(mariaDB4jSpringService);
+		stopTestDB(mariaDB4jSpringService);
 	}
 
 	@Test

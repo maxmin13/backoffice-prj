@@ -14,9 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import it.maxmin.plain.dao.JndiTestSupport;
-
-public class SpringJdbcTemplateCfgTest extends JndiTestSupport {
+/**
+ * Verifies that by loading SpringJdbcTemplateCfg.class, in the Spring context a JdbcTemplate object is present.
+ * The test relies on simple-jndi library to create a JNDI directory sevice in the background.
+ * */
+public class SpringJdbcTemplateCfgTest { 
 
 	private static Logger LOGGER = LoggerFactory.getLogger(JndiDataSourceCfgTest.class);
 

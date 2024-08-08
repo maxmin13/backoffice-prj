@@ -13,16 +13,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import it.maxmin.plain.dao.JndiTestSupport;
-
-public class JndiDataSourceCfgTest extends JndiTestSupport {
+/**
+ * Verifies that by loading JndiDataSourceCfg.class, in the Spring context a DataSource object is present.
+ * The test relies on simple-jndi library to create a JNDI directory sevice in the background.
+ * */
+public class JndiDataSourceCfgTest {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(JndiDataSourceCfgTest.class);
 
 	@Test
 	public void testJndiDataSource() throws SQLException, IllegalStateException, NamingException {
 
-		var springJdbcCtx = new AnnotationConfigApplicationContext(SpringJdbcTemplateCfg.class);
+		var springJdbcCtx = new AnnotationConfigApplicationContext(JndiDataSourceCfg.class);
 		var dataSource = springJdbcCtx.getBean("dataSource", DataSource.class);
 
 		assertNotNull(dataSource);

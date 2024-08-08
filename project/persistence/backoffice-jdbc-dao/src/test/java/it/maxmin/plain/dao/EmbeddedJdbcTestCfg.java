@@ -7,7 +7,6 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
@@ -19,7 +18,6 @@ import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
  * Starts an embedded database and exposes it as a NamedParameterJdbcTemplate for the application.
  * */
 
-@Configuration
 public class EmbeddedJdbcTestCfg {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(EmbeddedJdbcTestCfg.class);
