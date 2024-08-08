@@ -26,6 +26,11 @@ public class EmbeddedJdbcTestCfg {
 	public MariaDB4jSpringService mariaDB4jSpringService() {
 		return new MariaDB4jSpringService();
 	}
+	
+	@Bean
+	public DaoTestUtil daoTestUtil() {
+		return new DaoTestUtil();
+	}
 
 	@Bean
 	public DataSource dataSource(MariaDB4jSpringService mariaDB4jSpringService) {

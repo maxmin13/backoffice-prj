@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -24,11 +25,17 @@ public class DaoTestUtil {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(DaoTestUtil.class);
 	
-	public static void stopTestDB(MariaDB4jSpringService mariaDB4jSpringService) {
+	@Autowired
+	private MariaDB4jSpringService mariaDB4jSpringService;
+	
+	@Autowired
+	private NamedParameterJdbcTemplate jdbcTemplate;
+	
+	public void stopTestDB() {
 		mariaDB4jSpringService.stop();
 	}
 	
-	public static void runDBScripts(String[] scripts, NamedParameterJdbcTemplate jdbcTemplate) {
+	public void runDBScripts(String[] scripts) {
 		for (String script : scripts) {
 			try {
 				Files.readAllLines(Paths.get("src/test/resources/embedded/" + script))
@@ -41,12 +48,12 @@ public class DaoTestUtil {
 		}
 	}
 	
-	public static User findUserByUserId(long userId, NamedParameterJdbcTemplate jdbcTemplate) {
+	public User findUserByUserId(long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
 		return jdbcTemplate.queryForObject(FIND_USER_BY_USER_ID, param, BeanPropertyRowMapper.newInstance(User.class));
 	}
 	
-	public static User insertUser(User user, NamedParameterJdbcTemplate jdbcTemplate) {
+	public User insertUser(User user) {
 		notNull(user, "The user must not be null");
 
 		SimpleJdbcInsert insertUser = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate().getDataSource());

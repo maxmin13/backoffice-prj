@@ -1,9 +1,5 @@
 package it.maxmin.plain.dao.impl;
 
-import static it.maxmin.plain.dao.DaoTestUtil.findUserByUserId;
-import static it.maxmin.plain.dao.DaoTestUtil.insertUser;
-import static it.maxmin.plain.dao.DaoTestUtil.runDBScripts;
-import static it.maxmin.plain.dao.DaoTestUtil.stopTestDB;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -29,6 +25,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
 import it.maxmin.model.plain.pojos.User;
+import it.maxmin.plain.dao.DaoTestUtil;
 import it.maxmin.plain.dao.EmbeddedJdbcTestCfg;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,14 +35,14 @@ public class UserDaoTest {
 
 	private static AnnotationConfigApplicationContext springJdbcCtx;
 	private static NamedParameterJdbcTemplate jdbcTemplate;
-	private static MariaDB4jSpringService mariaDB4jSpringService;
+	private static DaoTestUtil daoTestUtil;
 	private UserDaoImpl userDao;
 
 	@BeforeAll
 	public static void setup() {
 		springJdbcCtx = new AnnotationConfigApplicationContext(EmbeddedJdbcTestCfg.class);
 		jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
-		mariaDB4jSpringService = springJdbcCtx.getBean("mariaDB4jSpringService", MariaDB4jSpringService.class);
+		daoTestUtil = springJdbcCtx.getBean("daoTestUtil", DaoTestUtil.class);
 	}
 
 	@BeforeEach
@@ -53,18 +50,18 @@ public class UserDaoTest {
 		userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 		String[] scripts = { "create_tables.sql", "insert_roles.sql", "insert_users.sql" };
-		runDBScripts(scripts, jdbcTemplate);
+		daoTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterEach
 	public void cleanUp() {
 		String[] scripts = { "delete_users.sql", "delete_roles.sql", "drop_tables.sql" };
-		runDBScripts(scripts, jdbcTemplate);
+		daoTestUtil.runDBScripts(scripts);
 	}
 	
 	@AfterAll
 	public static void clear() {
-		stopTestDB(mariaDB4jSpringService);
+		daoTestUtil.stopTestDB();
 	}
 
 	@Test
@@ -165,7 +162,7 @@ public class UserDaoTest {
 		assertNull(newUser.getCreatedDate());
 		assertNotNull(newUser.getUserId());
 		
-		User created = findUserByUserId(newUser.getUserId(), jdbcTemplate);
+		User created = daoTestUtil.findUserByUserId(newUser.getUserId());
 		assertNotNull(created.getCreatedDate());
 	}
 
@@ -194,8 +191,8 @@ public class UserDaoTest {
 		user.setFirstName("Reginald");
 		user.setLastName("Regi");
 
-		long userId = insertUser(user, jdbcTemplate).getUserId();
-		LocalDateTime createdDate = findUserByUserId(userId, jdbcTemplate).getCreatedDate();
+		long userId = daoTestUtil.insertUser(user).getUserId();
+		LocalDateTime createdDate = daoTestUtil.findUserByUserId(userId).getCreatedDate();
 		
 		user = new User();
 		user.setUserId(userId);
@@ -206,7 +203,7 @@ public class UserDaoTest {
 
 		userDao.update(user);
 		
-		User updated = findUserByUserId(userId, jdbcTemplate);
+		User updated = daoTestUtil.findUserByUserId(userId);
 		
 		assertEquals("regUpdated", updated.getAccountName());
 		assertEquals("ReginaldUpdated", updated.getFirstName());
