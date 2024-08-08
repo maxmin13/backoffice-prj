@@ -222,3 +222,14 @@ cd backoffice-prj/bin
 chmod +x delete.sh
 
 ./delete.sh
+
+###################################################################
+# Unit tests:
+###################################################################
+
+sudo yum install libncurses*
+
+cd project
+
+mvn clean install
+

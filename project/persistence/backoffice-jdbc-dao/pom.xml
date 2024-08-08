@@ -51,8 +51,8 @@
 
 		<!-- Test dependencies -->
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
+			<groupId>org.craftercms.mariaDB4j</groupId>
+			<artifactId>mariaDB4j-springboot</artifactId>
 		</dependency>
 
 		<dependency>

@@ -6,3 +6,6 @@ a Java application and a database cannot communicate directly, so they need a tr
 
 You can use Spring to manage the database connection for you by providing a bean that implements javax.sql.DataSource. 
 The difference between a DataSource and a Connection is that a DataSource provides and manages connections.
+
+Instances of the JdbcTemplate class are thread-safe, once configured. 
+This is important because it means that you can configure a single instance of a JdbcTemplate and then safely inject this shared reference into multiple DAOs (or repositories). The JdbcTemplate is stateful, in that it maintains a reference to a DataSource, but this state is not conversational state.

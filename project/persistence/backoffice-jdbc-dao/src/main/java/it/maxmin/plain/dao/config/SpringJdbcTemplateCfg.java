@@ -8,23 +8,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-
-import it.maxmin.plain.dao.api.UserDao;
-import it.maxmin.plain.dao.impl.UserDaoImpl;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Import(JndiDataSourceCfg.class)
 @Configuration
-public class SpringDatasourceCfg {
+public class SpringJdbcTemplateCfg {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(SpringDatasourceCfg.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(SpringJdbcTemplateCfg.class);
 
 	@Autowired
 	DataSource dataSource;
 
 	@Bean
-	public UserDao userDao() {
-		UserDaoImpl dao = new UserDaoImpl();
-		dao.setDataSource(dataSource);
-		return dao;
+	public JdbcTemplate jdbcTemplate() {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		jdbcTemplate.setDataSource(dataSource);
+		return jdbcTemplate;
 	}
 }

@@ -13,7 +13,7 @@ public class User implements Serializable {
 	private String firstName;
 	private String lastName;
 	private LocalDate birthDate;
-	private LocalDateTime createDate;
+	private LocalDateTime createdDate;
 
 	public Long getUserId() {
 		return userId;
@@ -55,11 +55,11 @@ public class User implements Serializable {
 		this.birthDate = birthDate;
 	}
 
-	public LocalDateTime getCreateDate() {
-		return createDate;
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setCreateDate(LocalDateTime createDate) {
-		this.createDate = createDate;
+	public void setCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
 	}
 }

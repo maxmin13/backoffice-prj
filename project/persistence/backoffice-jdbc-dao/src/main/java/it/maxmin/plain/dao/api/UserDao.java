@@ -1,16 +1,16 @@
 package it.maxmin.plain.dao.api;
 
-import java.util.Set;
+import java.util.List;
 
 import it.maxmin.model.plain.pojos.User;
 
 public interface UserDao {
 	
-	Set<User> findAll();
+	List<User> findAll();
 	
-	User findByAccountName(String accountName);
+	String findByAccountName(String accountName);
 
-	Set<User> findByFirstName(String firstName);
+	List<User> findByFirstName(String firstName);
 
 	User create(User user);
 
