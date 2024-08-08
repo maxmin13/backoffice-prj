@@ -2,6 +2,7 @@ package it.maxmin.plain.dao.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static it.maxmin.plain.dao.DaoTestUtil.runScripts;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,6 +10,7 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,52 +32,40 @@ public class UserDaoTest {
 	private static Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);
 
 	private static AnnotationConfigApplicationContext springJdbcCtx;
+	private static NamedParameterJdbcTemplate jdbcTemplate;
 	private UserDaoImpl userDao;
 
 	@BeforeAll
 	public static void setup() {
 		springJdbcCtx = new AnnotationConfigApplicationContext(EmbeddedJdbcTestCfg.class);
+		jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
+		String[] scripts = { "create_tables.sql" };
+		runScripts(scripts, jdbcTemplate);
 	}
 
 	@BeforeEach
 	public void init() {
-		var jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
 		userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
-
-		String[] scripts = { "create_tables.sql", "insert_roles.sql", "insert_users.sql" };
-		for (String script : scripts) {
-			try {
-				Files.readAllLines(Paths.get("src/test/resources/embedded/" + script))
-						.forEach(jdbcTemplate.getJdbcTemplate()::update);
-			}
-			catch (IOException e) {
-				LOGGER.error("Error creating DB tables", e);
-				throw new DaoTestException("Error creating DB tables", e);
-			}
-		}
+		String[] scripts = { "insert_roles.sql", "insert_users.sql" };
+		runScripts(scripts, jdbcTemplate);
 	}
 
 	@AfterEach
 	public void cleanUp() {
-		var jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
-		String[] scripts = { "delete_users.sql", "delete_roles.sql",  "drop_tables.sql"};
-		for (String script : scripts) {
-			try {
-				Files.readAllLines(Paths.get("src/test/resources/embedded/" + script))
-						.forEach(jdbcTemplate.getJdbcTemplate()::update);
-			}
-			catch (IOException e) {
-				LOGGER.error("Error dopping DB tabels", e);
-				throw new DaoTestException("Error dropping DB tables", e);
-			}
-		}
+		String[] scripts = { "delete_users.sql", "delete_roles.sql"};
+		runScripts(scripts, jdbcTemplate);
+	}
+
+	@AfterAll
+	public static void clean() {
+		String[] scripts = { "drop_tables.sql" };
+		runScripts(scripts, jdbcTemplate);
 	}
 
 	@Test
 	public void nullCreateThrowsException() {
 
-		var jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
 		userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
@@ -88,7 +78,6 @@ public class UserDaoTest {
 	@Test
 	public void testCreate() throws SQLException {
 
-		var jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
 		userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
