@@ -43,7 +43,7 @@ public class UserDaoTest {
 		userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
-		String[] scripts = { "create_tables.sql", "roles.sql", "users.sql" };
+		String[] scripts = { "create_tables.sql", "insert_roles.sql", "insert_users.sql" };
 		for (String script : scripts) {
 			try {
 				Files.readAllLines(Paths.get("src/test/resources/embedded/" + script))
@@ -59,7 +59,7 @@ public class UserDaoTest {
 	@AfterEach
 	public void cleanUp() {
 		var jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
-		String[] scripts = { "drop_tables.sql" };
+		String[] scripts = { "delete_users.sql", "delete_roles.sql",  "drop_tables.sql"};
 		for (String script : scripts) {
 			try {
 				Files.readAllLines(Paths.get("src/test/resources/embedded/" + script))

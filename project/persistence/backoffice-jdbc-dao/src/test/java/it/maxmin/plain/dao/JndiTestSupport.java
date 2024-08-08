@@ -16,13 +16,4 @@ public abstract class JndiTestSupport {
 		new InitialContext();
 	}
 	
-//	@AfterEach
-//	public void clearup() throws NamingException {
-//		
-//		if (jndiContext != null) {
-//			jndiContext.destroySubcontext("mydatasource");
-//			jndiContext.close();	
-//		}
-//	}
-
 }
