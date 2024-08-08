@@ -8,13 +8,11 @@ public interface UserDao {
 	
 	List<User> findAll();
 	
-	String findByAccountName(String accountName);
+	User findByAccountName(String accountName);
 
 	List<User> findByFirstName(String firstName);
 
 	User create(User user);
 
 	void update(User user);
-
-	void delete(Long userId);
 }
