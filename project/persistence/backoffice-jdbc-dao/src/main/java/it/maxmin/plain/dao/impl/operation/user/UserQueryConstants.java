@@ -1,6 +1,6 @@
-package it.maxmin.plain.dao;
+package it.maxmin.plain.dao.impl.operation.user;
 
-public enum QueryConstants {
+public enum UserQueryConstants {
     ;
 
 	public static final String SELECT_ALL_USERS = "select UserId, AccountName, FirstName, LastName, BirthDate, CreatedDate from User";

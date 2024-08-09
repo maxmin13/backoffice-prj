@@ -1,6 +1,6 @@
-package it.maxmin.plain.dao.impl.operation;
+package it.maxmin.plain.dao.impl.operation.user;
 
-import static it.maxmin.plain.dao.QueryConstants.FIND_USER_BY_FIRST_NAME;
+import static it.maxmin.plain.dao.impl.operation.user.UserQueryConstants.FIND_USER_BY_FIRST_NAME;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;

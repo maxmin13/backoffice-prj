@@ -13,11 +13,11 @@ import org.springframework.stereotype.Repository;
 
 import it.maxmin.model.plain.pojos.User;
 import it.maxmin.plain.dao.api.repo.UserDao;
-import it.maxmin.plain.dao.impl.operation.InsertUser;
-import it.maxmin.plain.dao.impl.operation.SelectAllUsers;
-import it.maxmin.plain.dao.impl.operation.SelectUserByAccountName;
-import it.maxmin.plain.dao.impl.operation.SelectUserByFirstName;
-import it.maxmin.plain.dao.impl.operation.UpdateUser;
+import it.maxmin.plain.dao.impl.operation.user.InsertUser;
+import it.maxmin.plain.dao.impl.operation.user.SelectAllUsers;
+import it.maxmin.plain.dao.impl.operation.user.SelectUserByAccountName;
+import it.maxmin.plain.dao.impl.operation.user.SelectUserByFirstName;
+import it.maxmin.plain.dao.impl.operation.user.UpdateUser;
 
 @Repository
 public class UserDaoImpl implements UserDao {

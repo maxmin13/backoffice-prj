@@ -1,6 +1,6 @@
-package it.maxmin.plain.dao.impl.operation;
+package it.maxmin.plain.dao.impl.operation.user;
 
-import static it.maxmin.plain.dao.QueryConstants.UPDATE_USER;
+import static it.maxmin.plain.dao.impl.operation.user.UserQueryConstants.UPDATE_USER;
 import static org.springframework.util.Assert.notNull;
 
 import java.sql.Types;

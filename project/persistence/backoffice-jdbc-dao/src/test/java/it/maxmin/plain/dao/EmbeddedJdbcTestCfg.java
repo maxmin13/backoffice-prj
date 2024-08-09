@@ -15,7 +15,7 @@ import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
 
 /*
- * Starts an embedded MariaDB database and exposes it as a NamedParameterJdbcTemplate for the application.
+ * Starts an embedded MariaDB database and creates a Spring context for the unit tests.
  * */
 
 public class EmbeddedJdbcTestCfg {

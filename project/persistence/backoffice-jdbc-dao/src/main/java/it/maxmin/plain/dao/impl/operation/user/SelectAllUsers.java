@@ -1,6 +1,6 @@
-package it.maxmin.plain.dao.impl.operation;
+package it.maxmin.plain.dao.impl.operation.user;
 
-import static it.maxmin.plain.dao.QueryConstants.SELECT_ALL_USERS;
+import static it.maxmin.plain.dao.impl.operation.user.UserQueryConstants.SELECT_ALL_USERS;
 
 import java.util.List;
 
