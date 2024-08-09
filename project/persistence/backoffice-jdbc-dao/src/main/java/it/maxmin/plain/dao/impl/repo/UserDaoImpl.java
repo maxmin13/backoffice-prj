@@ -24,7 +24,6 @@ public class UserDaoImpl implements UserDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
 
-	private NamedParameterJdbcTemplate jdbcTemplate;
 	private UpdateUser updateUser;
 	private InsertUser insertUser;
 	private SelectUserByFirstName selectUserByFirstName;
@@ -33,7 +32,6 @@ public class UserDaoImpl implements UserDao {
 
 	@Autowired
 	public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
 		this.updateUser = new UpdateUser(jdbcTemplate);
 		this.insertUser = new InsertUser(jdbcTemplate);
 		this.selectUserByFirstName = new SelectUserByFirstName(jdbcTemplate);
@@ -63,7 +61,7 @@ public class UserDaoImpl implements UserDao {
 	public User create(User user) {
 		notNull(user, "The user must not be null");
 		User newUser = this.insertUser.execute(user);
-		LOGGER.info("New user  {} {} inserted with id {}  ", user.getFirstName(), user.getLastName(),
+		LOGGER.info("New user  {} {} inserted with id: {}", user.getFirstName(), user.getLastName(),
 				newUser.getUserId());
 		return user;
 	}
