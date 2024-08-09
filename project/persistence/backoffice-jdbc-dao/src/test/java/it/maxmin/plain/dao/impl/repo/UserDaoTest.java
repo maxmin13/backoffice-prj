@@ -1,4 +1,4 @@
-package it.maxmin.plain.dao.impl;
+package it.maxmin.plain.dao.impl.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
 import it.maxmin.model.plain.pojos.User;
 import it.maxmin.plain.dao.DaoTestUtil;
 import it.maxmin.plain.dao.EmbeddedJdbcTestCfg;
@@ -58,14 +57,14 @@ public class UserDaoTest {
 		String[] scripts = { "delete_users.sql", "delete_roles.sql", "drop_tables.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
-	
+
 	@AfterAll
 	public static void clear() {
 		daoTestUtil.stopTestDB();
 	}
 
 	@Test
-	public void testFindAll() throws SQLException {
+	public void testFindAll() {
 
 		userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
@@ -93,23 +92,48 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void findByAccountName() throws SQLException {
+	public void testFindAllNotFound() {
+
+		String[] scripts = { "delete_users.sql" };
+		daoTestUtil.runDBScripts(scripts);
 
 		userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
-		User user = userDao.findByAccountName("maxmin13");
+		List<User> users = userDao.findAll();
 
-		assertEquals("maxmin13", user.getAccountName());
-		assertEquals("Max", user.getFirstName());
-		assertEquals("Minardi", user.getLastName());
-		assertEquals(LocalDate.of(1977, 10, 16), user.getBirthDate());
-		assertNotNull(user.getCreatedDate());
-		assertNotNull(user.getUserId());
+		assertTrue(users.size() == 0);
 	}
 
 	@Test
-	public void findByFirstName() throws SQLException {
+	public void findByAccountName() {
+
+		userDao = new UserDaoImpl();
+		userDao.setJdbcTemplate(jdbcTemplate);
+
+		Optional<User> user = userDao.findByAccountName("maxmin13");
+
+		assertEquals("maxmin13", user.get().getAccountName());
+		assertEquals("Max", user.get().getFirstName());
+		assertEquals("Minardi", user.get().getLastName());
+		assertEquals(LocalDate.of(1977, 10, 16), user.get().getBirthDate());
+		assertNotNull(user.get().getCreatedDate());
+		assertNotNull(user.get().getUserId());
+	}
+
+	@Test
+	public void findByAccountNameNotFound() {
+
+		userDao = new UserDaoImpl();
+		userDao.setJdbcTemplate(jdbcTemplate);
+
+		Optional<User> user = userDao.findByAccountName("franz");
+
+		assertTrue(user.isEmpty());
+	}
+
+	@Test
+	public void findByFirstName() {
 
 		userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
@@ -126,6 +150,17 @@ public class UserDaoTest {
 		assertEquals(LocalDate.of(1923, 10, 12), second.getBirthDate());
 		assertNotNull(second.getCreatedDate());
 		assertNotNull(second.getUserId());
+	}
+
+	@Test
+	public void findByFirstNameNotFound() {
+
+		userDao = new UserDaoImpl();
+		userDao.setJdbcTemplate(jdbcTemplate);
+
+		List<User> users = userDao.findByFirstName("franco");
+
+		assertTrue(users.size() == 0);
 	}
 
 	@Test
@@ -154,14 +189,14 @@ public class UserDaoTest {
 		user.setLastName("Red");
 
 		User newUser = userDao.create(user);
-		
+
 		assertEquals("franc", newUser.getAccountName());
 		assertEquals("Franco", newUser.getFirstName());
 		assertEquals("Red", newUser.getLastName());
 		assertEquals(LocalDate.of(1981, 11, 12), newUser.getBirthDate());
 		assertNull(newUser.getCreatedDate());
 		assertNotNull(newUser.getUserId());
-		
+
 		User created = daoTestUtil.findUserByUserId(newUser.getUserId());
 		assertNotNull(created.getCreatedDate());
 	}
@@ -178,7 +213,7 @@ public class UserDaoTest {
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
-	
+
 	@Test
 	public void update() {
 
@@ -193,7 +228,7 @@ public class UserDaoTest {
 
 		long userId = daoTestUtil.insertUser(user).getUserId();
 		LocalDateTime createdDate = daoTestUtil.findUserByUserId(userId).getCreatedDate();
-		
+
 		user = new User();
 		user.setUserId(userId);
 		user.setAccountName("regUpdated");
@@ -202,9 +237,9 @@ public class UserDaoTest {
 		user.setLastName("RegiUpdated");
 
 		userDao.update(user);
-		
+
 		User updated = daoTestUtil.findUserByUserId(userId);
-		
+
 		assertEquals("regUpdated", updated.getAccountName());
 		assertEquals("ReginaldUpdated", updated.getFirstName());
 		assertEquals("RegiUpdated", updated.getLastName());
