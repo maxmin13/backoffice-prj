@@ -3,11 +3,14 @@ package it.maxmin.plain.dao;
 import static it.maxmin.plain.dao.QueryTestConstants.FIND_STATE_BY_NAME;
 import static it.maxmin.plain.dao.QueryTestConstants.FIND_ADDRESS_BY_ADDRESS_ID;
 import static it.maxmin.plain.dao.QueryTestConstants.FIND_USER_BY_USER_ID;
+import static it.maxmin.plain.dao.impl.operation.user.UserQueryConstants.SELECT_ALL_USERS;
+import static it.maxmin.plain.dao.QueryTestConstants.FIND_ALL_ADDRESSES;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +63,10 @@ public class DaoTestUtil {
 	public Address findAddressByAddressId(long addressId) {
 		SqlParameterSource param = new MapSqlParameterSource("addressId", addressId);
 		return jdbcTemplate.queryForObject(FIND_ADDRESS_BY_ADDRESS_ID, param, BeanPropertyRowMapper.newInstance(Address.class));
+	}
+	
+	public List<Address> findAllAddresses() {
+		return jdbcTemplate.query(FIND_ALL_ADDRESSES, BeanPropertyRowMapper.newInstance(Address.class));
 	}
 	
 	public State findStateByName(String name) {

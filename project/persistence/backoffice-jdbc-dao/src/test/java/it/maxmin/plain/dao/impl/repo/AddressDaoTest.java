@@ -3,6 +3,9 @@ package it.maxmin.plain.dao.impl.repo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -59,9 +62,10 @@ public class AddressDaoTest {
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
 		addressDao.setJdbcTemplate(jdbcTemplate);
+		Address address = null;
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
-			addressDao.create(null);
+			addressDao.create(address);
 		});
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
@@ -90,6 +94,40 @@ public class AddressDaoTest {
 		assertEquals("Veneto", newAddress.getRegion());
 		assertEquals("30033", newAddress.getPostalCode());
 		assertNotNull(newAddress.getAddressId());
+	}
+
+	@Test
+	public void create_list() {
+		
+		String[] scripts = { "delete_addresses.sql" };
+		daoTestUtil.runDBScripts(scripts);
+
+		AddressDaoImpl addressDao = new AddressDaoImpl();
+		addressDao.setJdbcTemplate(jdbcTemplate);
+
+		State state = daoTestUtil.findStateByName("Italy");
+
+		Address address1 = new Address();
+		address1.setAddress("Via Nuova");
+		address1.setCity("Venice");
+		address1.setStateId(state.getStateId());
+		address1.setRegion("Veneto");
+		address1.setPostalCode("30033");
+		
+		Address address2 = new Address();
+		address2.setAddress("Via Vecchia");
+		address2.setCity("Milano");
+		address2.setStateId(state.getStateId());
+		address2.setRegion("Lombardia");
+		address2.setPostalCode("43123");
+
+		List<Address> addresses = List.of(address1, address2);
+
+		addressDao.create(addresses);
+		
+		List<Address> newAddresses = daoTestUtil.findAllAddresses();
+		
+		assertTrue(newAddresses.size() == 2);
 	}
 
 	@Test

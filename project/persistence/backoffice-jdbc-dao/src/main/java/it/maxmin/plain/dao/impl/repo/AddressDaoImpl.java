@@ -2,6 +2,8 @@ package it.maxmin.plain.dao.impl.repo;
 
 import static org.springframework.util.Assert.notNull;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,14 @@ public class AddressDaoImpl implements AddressDao {
 		Address newAddress = this.insertAddress.execute(address);
 		LOGGER.info("New address  {} inserted with id: {}", newAddress.getAddress(), newAddress.getAddressId());
 		return address;
+	}
+	
+	@Override
+	public List<Address> create(List<Address> addresses) {
+		notNull(addresses, "The addresses must not be null");
+		this.insertAddress.execute(addresses);
+		//LOGGER.info("New address  {} inserted with id: {}", newAddress.getAddress(), newAddress.getAddressId());
+		return null;
 	}
 
 	@Override
