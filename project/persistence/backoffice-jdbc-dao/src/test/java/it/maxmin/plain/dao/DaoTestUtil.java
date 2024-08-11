@@ -1,5 +1,7 @@
 package it.maxmin.plain.dao;
 
+import static it.maxmin.plain.dao.QueryTestConstants.FIND_STATE_BY_NAME;
+import static it.maxmin.plain.dao.QueryTestConstants.FIND_ADDRESS_BY_ADDRESS_ID;
 import static it.maxmin.plain.dao.QueryTestConstants.FIND_USER_BY_USER_ID;
 import static org.springframework.util.Assert.notNull;
 
@@ -19,6 +21,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
 
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
+import it.maxmin.model.plain.pojos.Address;
+import it.maxmin.model.plain.pojos.State;
 import it.maxmin.model.plain.pojos.User;
 
 public class DaoTestUtil {
@@ -53,6 +57,16 @@ public class DaoTestUtil {
 		return jdbcTemplate.queryForObject(FIND_USER_BY_USER_ID, param, BeanPropertyRowMapper.newInstance(User.class));
 	}
 	
+	public Address findAddressByAddressId(long addressId) {
+		SqlParameterSource param = new MapSqlParameterSource("addressId", addressId);
+		return jdbcTemplate.queryForObject(FIND_ADDRESS_BY_ADDRESS_ID, param, BeanPropertyRowMapper.newInstance(Address.class));
+	}
+	
+	public State findStateByName(String name) {
+		SqlParameterSource param = new MapSqlParameterSource("name", name);
+		return jdbcTemplate.queryForObject(FIND_STATE_BY_NAME, param, BeanPropertyRowMapper.newInstance(State.class));
+	}
+	
 	public User insertUser(User user) {
 		notNull(user, "The user must not be null");
 
@@ -63,5 +77,17 @@ public class DaoTestUtil {
 		user.setUserId(result.getKey().longValue());
 		
 		return user;
+	}
+	
+	public Address insertAddress(Address address) {
+		notNull(address, "The address must not be null");
+
+		SimpleJdbcInsert insertAddress = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate().getDataSource());
+		insertAddress.withTableName("Address").usingGeneratedKeyColumns("addressId");
+		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(address);
+		KeyHolder result = insertAddress.executeAndReturnKeyHolder(paramSource);
+		address.setAddressId(result.getKey().longValue());
+		
+		return address;
 	}
 }

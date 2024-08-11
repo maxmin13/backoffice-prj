@@ -1,12 +1,9 @@
 package it.maxmin.model.plain.pojos;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class User implements Serializable {
-	
-	private static final long serialVersionUID = -2542404911295961805L;
+public class User {
 
 	private Long userId;
 	private String accountName;

@@ -35,7 +35,6 @@ public class UserDaoTest {
 	private static AnnotationConfigApplicationContext springJdbcCtx;
 	private static NamedParameterJdbcTemplate jdbcTemplate;
 	private static DaoTestUtil daoTestUtil;
-	private UserDaoImpl userDao;
 
 	@BeforeAll
 	public static void setup() {
@@ -46,15 +45,14 @@ public class UserDaoTest {
 
 	@BeforeEach
 	public void init() {
-		userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
-		String[] scripts = { "create_tables.sql", "insert_roles.sql", "insert_users.sql" };
+		String[] scripts = { "create_tables.sql", "insert_roles.sql", "insert_states.sql",
+				"insert_addresses.sql", "insert_users.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterEach
 	public void cleanUp() {
-		String[] scripts = { "delete_users.sql", "delete_roles.sql", "drop_tables.sql" };
+		String[] scripts = { "delete_users.sql", "delete_addresses.sql", "delete_states.sql", "delete_roles.sql", "drop_tables.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
@@ -66,7 +64,7 @@ public class UserDaoTest {
 	@Test
 	public void testFindAll() {
 
-		userDao = new UserDaoImpl();
+		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
 		List<User> users = userDao.findAll();
@@ -97,7 +95,7 @@ public class UserDaoTest {
 		String[] scripts = { "delete_users.sql" };
 		daoTestUtil.runDBScripts(scripts);
 
-		userDao = new UserDaoImpl();
+		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
 		List<User> users = userDao.findAll();
@@ -108,7 +106,7 @@ public class UserDaoTest {
 	@Test
 	public void findByAccountName() {
 
-		userDao = new UserDaoImpl();
+		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
 		Optional<User> user = userDao.findByAccountName("maxmin13");
@@ -124,7 +122,7 @@ public class UserDaoTest {
 	@Test
 	public void findByAccountNameNotFound() {
 
-		userDao = new UserDaoImpl();
+		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
 		Optional<User> user = userDao.findByAccountName("franz");
@@ -135,7 +133,7 @@ public class UserDaoTest {
 	@Test
 	public void findByFirstName() {
 
-		userDao = new UserDaoImpl();
+		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
 		List<User> users = userDao.findByFirstName("art");
@@ -155,7 +153,7 @@ public class UserDaoTest {
 	@Test
 	public void findByFirstNameNotFound() {
 
-		userDao = new UserDaoImpl();
+		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
 		List<User> users = userDao.findByFirstName("franco");
@@ -166,7 +164,7 @@ public class UserDaoTest {
 	@Test
 	public void nullCreateThrowsException() {
 
-		userDao = new UserDaoImpl();
+		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
@@ -179,7 +177,7 @@ public class UserDaoTest {
 	@Test
 	public void create() {
 
-		userDao = new UserDaoImpl();
+		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
 		User user = new User();
@@ -204,7 +202,7 @@ public class UserDaoTest {
 	@Test
 	public void nullUpdateThrowsException() {
 
-		userDao = new UserDaoImpl();
+		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
@@ -217,7 +215,7 @@ public class UserDaoTest {
 	@Test
 	public void update() {
 
-		userDao = new UserDaoImpl();
+		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
 		User user = new User();

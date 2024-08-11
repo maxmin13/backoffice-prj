@@ -1,8 +1,10 @@
-insert into User (AccountName, FirstName, LastName, BirthDate) values ('maxmin13', 'Max', 'Minardi', '1977-10-16');
-insert into UserUserRole (UserId, UserRoleId) values ((select UserId from User where AccountName = 'maxmin13'), (select UserRoleId from UserRole where RoleName = 'administrator'));
-insert into UserStatus (UserId, Active) values ((select UserId from User where AccountName = 'maxmin13'), 1);
-insert into UserPassword (UserId, Password) values ((select UserId from User where AccountName = 'maxmin13'), 'secret');
-insert into User (AccountName, FirstName, LastName, BirthDate) values ('artur', 'art', 'artur', '1923-10-12');
-insert into UserUserRole (UserId, UserRoleId) values ((select UserId from User where AccountName = 'artur'), (select UserRoleId from UserRole where RoleName = 'administrator'));
-insert into UserStatus (UserId, Active) values ((select UserId from User where AccountName = 'artur'), 1);
-insert into UserPassword (UserId, Password) values ((select UserId from User where AccountName = 'artur'), 'secret');
+INSERT INTO User (AccountName, FirstName, LastName, BirthDate) VALUES ('maxmin13', 'Max', 'Minardi', '1977-10-16');
+INSERT INTO UserUserRole (UserId, UserRoleId) VALUES ((SELECT UserId FROM User WHERE AccountName = 'maxmin13'), (SELECT UserRoleId FROM UserRole WHERE RoleName = 'administrator'));
+INSERT INTO UserStatus (UserId, Active) VALUES ((SELECT UserId FROM User WHERE AccountName = 'maxmin13'), 1);
+INSERT INTO UserPassword (UserId, Password) VALUES ((SELECT UserId FROM User WHERE AccountName = 'maxmin13'), 'secret');
+INSERT INTO UserAddress (UserId, AddressId) VALUE ((SELECT UserId FROM User WHERE AccountName = 'maxmin13'),(SELECT AddressId FROM Address WHERE Address = 'Via borgo di sotto'));
+INSERT INTO User (AccountName, FirstName, LastName, BirthDate) VALUES ('artur', 'art', 'artur', '1923-10-12');
+INSERT INTO UserUserRole (UserId, UserRoleId) VALUES ((SELECT UserId FROM User WHERE AccountName = 'artur'), (SELECT UserRoleId FROM UserRole WHERE RoleName = 'administrator'));
+INSERT INTO UserStatus (UserId, Active) VALUES ((SELECT UserId FROM User WHERE AccountName = 'artur'), 1);
+INSERT INTO UserPassword (UserId, Password) VALUES ((SELECT UserId FROM User WHERE AccountName = 'artur'), 'secret');
+INSERT INTO UserAddress (UserId, AddressId) VALUE ((SELECT UserId FROM User WHERE AccountName = 'artur'),(SELECT AddressId FROM Address WHERE Address = 'Connolly street'));

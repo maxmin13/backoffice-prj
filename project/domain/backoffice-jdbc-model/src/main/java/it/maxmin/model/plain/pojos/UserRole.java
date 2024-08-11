@@ -1,11 +1,8 @@
 package it.maxmin.model.plain.pojos;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class UserRole implements Serializable {
-	
-	private static final long serialVersionUID = 7930838172341521178L;
+public class UserRole {
 	
 	private Long userRoleId;
 	private String roleName;
@@ -36,8 +33,5 @@ public class UserRole implements Serializable {
 	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	
+		
 }

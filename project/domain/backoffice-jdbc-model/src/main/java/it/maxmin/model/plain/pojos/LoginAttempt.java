@@ -1,12 +1,9 @@
 package it.maxmin.model.plain.pojos;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class LoginAttempt implements Serializable {
+public class LoginAttempt {
 
-	private static final long serialVersionUID = -3392566545933917819L;
-	
 	private Long loginAttemptId;
 	private String accountName;
 	private boolean success;

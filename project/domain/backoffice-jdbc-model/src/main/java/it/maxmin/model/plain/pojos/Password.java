@@ -1,11 +1,8 @@
 package it.maxmin.model.plain.pojos;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Password implements Serializable {
-
-	private static final long serialVersionUID = 6363392891972889778L;
+public class Password {
 
 	private Long passwordId;
 	private Long userId;

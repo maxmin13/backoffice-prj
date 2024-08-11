@@ -70,6 +70,6 @@ public class UserDaoImpl implements UserDao {
 	public void update(User user) {
 		notNull(user, "The user must not be null");
 		updateUser.execute(user);
-		LOGGER.info("Existing user updated with id: " + user.getUserId());
+		LOGGER.info("Existing user updated with id: {}", user.getUserId());
 	}
 }
