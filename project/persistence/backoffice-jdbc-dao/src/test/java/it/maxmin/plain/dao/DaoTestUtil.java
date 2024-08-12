@@ -1,10 +1,9 @@
 package it.maxmin.plain.dao;
 
-import static it.maxmin.plain.dao.QueryTestConstants.FIND_STATE_BY_NAME;
 import static it.maxmin.plain.dao.QueryTestConstants.FIND_ADDRESS_BY_ADDRESS_ID;
-import static it.maxmin.plain.dao.QueryTestConstants.FIND_USER_BY_USER_ID;
-import static it.maxmin.plain.dao.impl.operation.user.UserQueryConstants.SELECT_ALL_USERS;
 import static it.maxmin.plain.dao.QueryTestConstants.FIND_ALL_ADDRESSES;
+import static it.maxmin.plain.dao.QueryTestConstants.FIND_STATE_BY_NAME;
+import static it.maxmin.plain.dao.QueryTestConstants.FIND_USER_BY_USER_ID;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.IOException;

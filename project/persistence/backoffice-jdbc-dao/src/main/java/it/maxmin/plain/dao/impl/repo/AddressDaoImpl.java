@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import it.maxmin.model.plain.pojos.Address;
 import it.maxmin.plain.dao.api.repo.AddressDao;
 import it.maxmin.plain.dao.impl.operation.address.InsertAddress;
+import it.maxmin.plain.dao.impl.operation.address.InsertAddresses;
 import it.maxmin.plain.dao.impl.operation.address.UpdateAddress;
 
 @Repository
@@ -22,11 +23,13 @@ public class AddressDaoImpl implements AddressDao {
 
 	private UpdateAddress updateAddress;
 	private InsertAddress insertAddress;
+	private InsertAddresses insertAddresses;
 
 	@Autowired
 	public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.updateAddress = new UpdateAddress(jdbcTemplate);
 		this.insertAddress = new InsertAddress(jdbcTemplate);
+		this.insertAddresses = new InsertAddresses(jdbcTemplate);
 	}
 
 	@Override
@@ -40,8 +43,8 @@ public class AddressDaoImpl implements AddressDao {
 	@Override
 	public List<Address> create(List<Address> addresses) {
 		notNull(addresses, "The addresses must not be null");
-		this.insertAddress.execute(addresses);
-		//LOGGER.info("New address  {} inserted with id: {}", newAddress.getAddress(), newAddress.getAddressId());
+		this.insertAddresses.execute(addresses);
+		LOGGER.info("New addresses inserted");
 		return null;
 	}
 

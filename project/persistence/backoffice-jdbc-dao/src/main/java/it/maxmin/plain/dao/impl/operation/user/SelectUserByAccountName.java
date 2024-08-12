@@ -1,6 +1,6 @@
 package it.maxmin.plain.dao.impl.operation.user;
 
-import static it.maxmin.plain.dao.impl.operation.user.UserQueryConstants.FIND_USER_BY_ACCOUNT_NAME;
+import static it.maxmin.plain.dao.impl.operation.user.UserQueryConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class SelectUserByAccountName {
 	public User execute(String accountName) {
 		notNull(accountName, "The account name must not be null");
 		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
-		List<User> users = jdbcTemplate.query(FIND_USER_BY_ACCOUNT_NAME, param, BeanPropertyRowMapper.newInstance(User.class));
+		List<User> users = jdbcTemplate.query(SELECT_USER_BY_ACCOUNT_NAME, param, BeanPropertyRowMapper.newInstance(User.class));
 		return users.isEmpty() ? null : users.get(0);
 	}
 }

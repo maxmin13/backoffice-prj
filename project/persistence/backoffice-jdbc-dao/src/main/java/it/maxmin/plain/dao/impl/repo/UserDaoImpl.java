@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import it.maxmin.model.plain.pojos.User;
 import it.maxmin.plain.dao.api.repo.UserDao;
 import it.maxmin.plain.dao.impl.operation.user.InsertUser;
+import it.maxmin.plain.dao.impl.operation.user.InsertUserWithAddress;
 import it.maxmin.plain.dao.impl.operation.user.SelectAllUsers;
 import it.maxmin.plain.dao.impl.operation.user.SelectUserByAccountName;
 import it.maxmin.plain.dao.impl.operation.user.SelectUserByFirstName;
@@ -25,15 +26,15 @@ public class UserDaoImpl implements UserDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
 
 	private UpdateUser updateUser;
-	private InsertUser insertUser;
 	private SelectUserByFirstName selectUserByFirstName;
 	private SelectUserByAccountName selectUserByAccountName;
 	private SelectAllUsers selectAllUsers;
+	private InsertUserWithAddress insertUserWithAddress;
 
 	@Autowired
 	public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.updateUser = new UpdateUser(jdbcTemplate);
-		this.insertUser = new InsertUser(jdbcTemplate);
+		this.insertUserWithAddress = new InsertUserWithAddress(jdbcTemplate);
 		this.selectUserByFirstName = new SelectUserByFirstName(jdbcTemplate);
 		this.selectUserByAccountName = new SelectUserByAccountName(jdbcTemplate);
 		this.selectAllUsers = new SelectAllUsers(jdbcTemplate);
@@ -58,12 +59,10 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public User create(User user) {
+	public void create(User user) {
 		notNull(user, "The user must not be null");
-		User newUser = this.insertUser.execute(user);
-		LOGGER.info("New user  {} {} inserted with id: {}", user.getFirstName(), user.getLastName(),
-				newUser.getUserId());
-		return user;
+		this.insertUserWithAddress.execute(user);
+		LOGGER.info("New user  {} {} inserted", user.getFirstName(), user.getLastName());
 	}
 
 	@Override

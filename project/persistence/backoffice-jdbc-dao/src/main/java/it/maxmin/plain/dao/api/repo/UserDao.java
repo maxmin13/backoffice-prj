@@ -13,7 +13,7 @@ public interface UserDao {
 
 	List<User> findByFirstName(String firstName);
 
-	User create(User user);
+	void create(User user);
 
 	void update(User user);
 }

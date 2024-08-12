@@ -42,13 +42,13 @@ public class AddressDaoTest {
 
 	@BeforeEach
 	public void init() {
-		String[] scripts = { "create_tables.sql", "insert_states.sql", "insert_addresses.sql" };
+		String[] scripts = { "1_create_database.up.sql", "2_state.up.sql", "2_address.up.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterEach
 	public void cleanUp() {
-		String[] scripts = { "delete_addresses.sql", "delete_states.sql", "drop_tables.sql" };
+		String[] scripts = { "2_address.down.sql", "2_state.down.sql", "1_create_database.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
@@ -98,8 +98,8 @@ public class AddressDaoTest {
 
 	@Test
 	public void create_list() {
-		
-		String[] scripts = { "delete_addresses.sql" };
+
+		String[] scripts = { "2_address.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
@@ -113,7 +113,7 @@ public class AddressDaoTest {
 		address1.setStateId(state.getStateId());
 		address1.setRegion("Veneto");
 		address1.setPostalCode("30033");
-		
+
 		Address address2 = new Address();
 		address2.setAddress("Via Vecchia");
 		address2.setCity("Milano");
@@ -124,9 +124,9 @@ public class AddressDaoTest {
 		List<Address> addresses = List.of(address1, address2);
 
 		addressDao.create(addresses);
-		
+
 		List<Address> newAddresses = daoTestUtil.findAllAddresses();
-		
+
 		assertTrue(newAddresses.size() == 2);
 	}
 

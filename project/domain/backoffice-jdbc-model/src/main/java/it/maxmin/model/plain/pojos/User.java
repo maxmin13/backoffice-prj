@@ -2,6 +2,8 @@ package it.maxmin.model.plain.pojos;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
 
@@ -11,6 +13,7 @@ public class User {
 	private String lastName;
 	private LocalDate birthDate;
 	private LocalDateTime createdDate;
+	private List<Address> addresses;
 
 	public Long getUserId() {
 		return userId;
@@ -58,5 +61,28 @@ public class User {
 
 	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	public List<Address> getAddresses() {
+		return addresses;
+	}
+
+	public void setAddresses(List<Address> addresses) {
+		this.addresses = addresses;
+	}
+
+	public boolean addAddress(Address address) {
+		if (addresses == null) {
+			addresses = new ArrayList<>();
+			addresses.add(address);
+			return true;
+		}
+		else {
+			if (addresses.contains(address)) {
+				return false;
+			}
+		}
+		addresses.add(address);
+		return true;
 	}
 }
