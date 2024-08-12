@@ -12,8 +12,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import it.maxmin.model.plain.pojos.User;
+import it.maxmin.model.plain.pojos.UserAddress;
 import it.maxmin.plain.dao.api.repo.UserDao;
-import it.maxmin.plain.dao.impl.operation.user.InsertUser;
+import it.maxmin.plain.dao.impl.operation.user.InsertUserAddress;
 import it.maxmin.plain.dao.impl.operation.user.InsertUserWithAddress;
 import it.maxmin.plain.dao.impl.operation.user.SelectAllUsers;
 import it.maxmin.plain.dao.impl.operation.user.SelectUserByAccountName;
@@ -30,11 +31,13 @@ public class UserDaoImpl implements UserDao {
 	private SelectUserByAccountName selectUserByAccountName;
 	private SelectAllUsers selectAllUsers;
 	private InsertUserWithAddress insertUserWithAddress;
+	private InsertUserAddress insertUserAddress;
 
 	@Autowired
 	public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.updateUser = new UpdateUser(jdbcTemplate);
 		this.insertUserWithAddress = new InsertUserWithAddress(jdbcTemplate);
+		this.insertUserAddress = new InsertUserAddress(jdbcTemplate);
 		this.selectUserByFirstName = new SelectUserByFirstName(jdbcTemplate);
 		this.selectUserByAccountName = new SelectUserByAccountName(jdbcTemplate);
 		this.selectAllUsers = new SelectAllUsers(jdbcTemplate);
@@ -63,6 +66,13 @@ public class UserDaoImpl implements UserDao {
 		notNull(user, "The user must not be null");
 		this.insertUserWithAddress.execute(user);
 		LOGGER.info("New user  {} {} inserted", user.getFirstName(), user.getLastName());
+	}
+
+	@Override
+	public void associate(UserAddress userAddress) {
+		notNull(userAddress, "The user address must not be null");
+		this.insertUserAddress.execute(userAddress);
+		LOGGER.info("User {} associated with address  {}", userAddress.getUserId(), userAddress.getAddressId());
 	}
 
 	@Override

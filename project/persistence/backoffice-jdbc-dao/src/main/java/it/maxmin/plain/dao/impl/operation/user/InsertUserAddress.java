@@ -1,4 +1,4 @@
-package it.maxmin.plain.dao.impl.operation.address;
+package it.maxmin.plain.dao.impl.operation.user;
 
 import static org.springframework.util.Assert.notNull;
 

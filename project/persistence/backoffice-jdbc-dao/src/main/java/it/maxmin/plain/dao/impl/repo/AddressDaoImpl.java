@@ -14,6 +14,7 @@ import it.maxmin.model.plain.pojos.Address;
 import it.maxmin.plain.dao.api.repo.AddressDao;
 import it.maxmin.plain.dao.impl.operation.address.InsertAddress;
 import it.maxmin.plain.dao.impl.operation.address.InsertAddresses;
+import it.maxmin.plain.dao.impl.operation.address.SelectAddressesByUserId;
 import it.maxmin.plain.dao.impl.operation.address.UpdateAddress;
 
 @Repository
@@ -24,12 +25,20 @@ public class AddressDaoImpl implements AddressDao {
 	private UpdateAddress updateAddress;
 	private InsertAddress insertAddress;
 	private InsertAddresses insertAddresses;
+	private SelectAddressesByUserId selectAddressesByUserId;
 
 	@Autowired
 	public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.updateAddress = new UpdateAddress(jdbcTemplate);
 		this.insertAddress = new InsertAddress(jdbcTemplate);
 		this.insertAddresses = new InsertAddresses(jdbcTemplate);
+		this.selectAddressesByUserId = new SelectAddressesByUserId(jdbcTemplate);
+	}
+
+	@Override
+	public List<Address> findAddressesByUserId(Long userId) {
+		notNull(userId, "The user ID must not be null");
+		return this.selectAddressesByUserId.execute(userId);
 	}
 
 	@Override
@@ -39,13 +48,12 @@ public class AddressDaoImpl implements AddressDao {
 		LOGGER.info("New address  {} inserted with id: {}", newAddress.getAddress(), newAddress.getAddressId());
 		return address;
 	}
-	
+
 	@Override
-	public List<Address> create(List<Address> addresses) {
+	public void create(List<Address> addresses) {
 		notNull(addresses, "The addresses must not be null");
 		this.insertAddresses.execute(addresses);
 		LOGGER.info("New addresses inserted");
-		return null;
 	}
 
 	@Override

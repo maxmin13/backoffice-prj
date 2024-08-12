@@ -3,6 +3,7 @@ INSERT INTO UserUserRole (UserId, UserRoleId) VALUES ((SELECT UserId FROM User W
 INSERT INTO UserStatus (UserId, Active) VALUES ((SELECT UserId FROM User WHERE AccountName = 'maxmin13'), 1);
 INSERT INTO UserPassword (UserId, Password) VALUES ((SELECT UserId FROM User WHERE AccountName = 'maxmin13'), 'secret');
 INSERT INTO UserAddress (UserId, AddressId) VALUE ((SELECT UserId FROM User WHERE AccountName = 'maxmin13'),(SELECT AddressId FROM Address WHERE Address = 'Via borgo di sotto'));
+INSERT INTO UserAddress (UserId, AddressId) VALUE ((SELECT UserId FROM User WHERE AccountName = 'maxmin13'),(SELECT AddressId FROM Address WHERE Address = 'Connolly street'));
 INSERT INTO User (AccountName, FirstName, LastName, BirthDate) VALUES ('artur', 'art', 'artur', '1923-10-12');
 INSERT INTO UserUserRole (UserId, UserRoleId) VALUES ((SELECT UserId FROM User WHERE AccountName = 'artur'), (SELECT UserRoleId FROM UserRole WHERE RoleName = 'administrator'));
 INSERT INTO UserStatus (UserId, Active) VALUES ((SELECT UserId FROM User WHERE AccountName = 'artur'), 1);

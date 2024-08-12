@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import it.maxmin.model.plain.pojos.Address;
 import it.maxmin.model.plain.pojos.State;
+import it.maxmin.model.plain.pojos.User;
 import it.maxmin.plain.dao.DaoTestUtil;
 import it.maxmin.plain.dao.EmbeddedJdbcTestCfg;
 
@@ -35,6 +36,7 @@ public class AddressDaoTest {
 
 	@BeforeAll
 	public static void setup() {
+		LOGGER.info("Running AddressDaoTest tests");
 		springJdbcCtx = new AnnotationConfigApplicationContext(EmbeddedJdbcTestCfg.class);
 		jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
 		daoTestUtil = springJdbcCtx.getBean("daoTestUtil", DaoTestUtil.class);
@@ -42,19 +44,85 @@ public class AddressDaoTest {
 
 	@BeforeEach
 	public void init() {
-		String[] scripts = { "1_create_database.up.sql", "2_state.up.sql", "2_address.up.sql" };
+		String[] scripts = { "1_create_database.up.sql", "2_userrole.up.sql", "2_state.up.sql", "2_address.up.sql",
+				"2_user.up.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterEach
 	public void cleanUp() {
-		String[] scripts = { "2_address.down.sql", "2_state.down.sql", "1_create_database.down.sql" };
+		String[] scripts = { "2_user.down.sql", "2_useraddress.down.sql", "2_address.down.sql", "2_state.down.sql",
+				"2_userrole.down.sql", "1_create_database.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterAll
 	public static void clear() {
 		daoTestUtil.stopTestDB();
+	}
+
+	@Test
+	public void findAddressesByUserId() {
+
+		AddressDaoImpl addressDao = new AddressDaoImpl();
+		addressDao.setJdbcTemplate(jdbcTemplate);
+
+		User user = daoTestUtil.findUserByAccountName("maxmin13");
+
+		// run the test
+		List<Address> addresses = addressDao.findAddressesByUserId(user.getUserId());
+
+		assertTrue(addresses.size() == 2);
+
+		State state1 = daoTestUtil.findStateByName("Italy");
+
+		assertEquals("Via borgo di sotto", addresses.get(0).getAddress());
+		assertEquals("Rome", addresses.get(0).getCity());
+		assertEquals(state1.getStateId(), addresses.get(0).getStateId());
+		assertEquals("Lazio", addresses.get(0).getRegion());
+		assertEquals("30010", addresses.get(0).getPostalCode());
+
+		State state2 = daoTestUtil.findStateByName("Ireland");
+
+		assertEquals("Connolly street", addresses.get(1).getAddress());
+		assertEquals("Dublin", addresses.get(1).getCity());
+		assertEquals(state2.getStateId(), addresses.get(1).getStateId());
+		assertEquals("County Dublin", addresses.get(1).getRegion());
+		assertEquals("A65TF12", addresses.get(1).getPostalCode());
+	}
+
+	@Test
+	public void findAddressesByUserId_none_associated_found() {
+
+		String[] scripts = { "2_useraddress.down.sql" };
+		daoTestUtil.runDBScripts(scripts);
+
+		AddressDaoImpl addressDao = new AddressDaoImpl();
+		addressDao.setJdbcTemplate(jdbcTemplate);
+
+		User user = daoTestUtil.findUserByAccountName("maxmin13");
+
+		// run the test
+		List<Address> addresses = addressDao.findAddressesByUserId(user.getUserId());
+
+		assertTrue(addresses.size() == 0);
+	}
+	
+	@Test
+	public void findAddressesByUserId_none_found() {
+
+		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
+		daoTestUtil.runDBScripts(scripts);
+
+		AddressDaoImpl addressDao = new AddressDaoImpl();
+		addressDao.setJdbcTemplate(jdbcTemplate);
+
+		User user = daoTestUtil.findUserByAccountName("maxmin13");
+
+		// run the test
+		List<Address> addresses = addressDao.findAddressesByUserId(user.getUserId());
+
+		assertTrue(addresses.size() == 0);
 	}
 
 	@Test
@@ -105,19 +173,21 @@ public class AddressDaoTest {
 		AddressDaoImpl addressDao = new AddressDaoImpl();
 		addressDao.setJdbcTemplate(jdbcTemplate);
 
-		State state = daoTestUtil.findStateByName("Italy");
+		State state1 = daoTestUtil.findStateByName("Italy");
 
 		Address address1 = new Address();
 		address1.setAddress("Via Nuova");
 		address1.setCity("Venice");
-		address1.setStateId(state.getStateId());
+		address1.setStateId(state1.getStateId());
 		address1.setRegion("Veneto");
 		address1.setPostalCode("30033");
+
+		State state2 = daoTestUtil.findStateByName("Ireland");
 
 		Address address2 = new Address();
 		address2.setAddress("Via Vecchia");
 		address2.setCity("Milano");
-		address2.setStateId(state.getStateId());
+		address2.setStateId(state2.getStateId());
 		address2.setRegion("Lombardia");
 		address2.setPostalCode("43123");
 
@@ -128,6 +198,18 @@ public class AddressDaoTest {
 		List<Address> newAddresses = daoTestUtil.findAllAddresses();
 
 		assertTrue(newAddresses.size() == 2);
+
+		assertEquals("Via Nuova", newAddresses.get(0).getAddress());
+		assertEquals("Venice", newAddresses.get(0).getCity());
+		assertEquals(state1.getStateId(), newAddresses.get(0).getStateId());
+		assertEquals("Veneto", newAddresses.get(0).getRegion());
+		assertEquals("30033", newAddresses.get(0).getPostalCode());
+
+		assertEquals("Via Vecchia", newAddresses.get(1).getAddress());
+		assertEquals("Milano", newAddresses.get(1).getCity());
+		assertEquals(state2.getStateId(), newAddresses.get(1).getStateId());
+		assertEquals("Lombardia", newAddresses.get(1).getRegion());
+		assertEquals("43123", newAddresses.get(1).getPostalCode());
 	}
 
 	@Test
@@ -158,7 +240,7 @@ public class AddressDaoTest {
 		address.setRegion("Emilia Romagna");
 		address.setPostalCode("12333");
 
-		long addressId = daoTestUtil.insertAddress(address).getAddressId();
+		long addressId = daoTestUtil.createAddress(address).getAddressId();
 
 		address = new Address();
 		address.setAddressId(addressId);
@@ -178,4 +260,5 @@ public class AddressDaoTest {
 		assertEquals("Romagna", updated.getRegion());
 		assertEquals("11111", updated.getPostalCode());
 	}
+
 }

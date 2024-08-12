@@ -1,9 +1,11 @@
 package it.maxmin.plain.dao;
 
-import static it.maxmin.plain.dao.QueryTestConstants.FIND_ADDRESS_BY_ADDRESS_ID;
-import static it.maxmin.plain.dao.QueryTestConstants.FIND_ALL_ADDRESSES;
-import static it.maxmin.plain.dao.QueryTestConstants.FIND_STATE_BY_NAME;
-import static it.maxmin.plain.dao.QueryTestConstants.FIND_USER_BY_USER_ID;
+import static it.maxmin.plain.dao.QueryTestConstants.SELECT_ADDRESSES_BY_USER_ID;
+import static it.maxmin.plain.dao.QueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
+import static it.maxmin.plain.dao.QueryTestConstants.SELECT_ALL_ADDRESSES;
+import static it.maxmin.plain.dao.QueryTestConstants.SELECT_STATE_BY_NAME;
+import static it.maxmin.plain.dao.QueryTestConstants.SELECT_USER_BY_USER_ID;
+import static it.maxmin.plain.dao.QueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.IOException;
@@ -26,25 +28,26 @@ import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
 import it.maxmin.model.plain.pojos.Address;
 import it.maxmin.model.plain.pojos.State;
 import it.maxmin.model.plain.pojos.User;
+import it.maxmin.model.plain.pojos.UserAddress;
 
 public class DaoTestUtil {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(DaoTestUtil.class);
-	
+
 	@Autowired
 	private MariaDB4jSpringService mariaDB4jSpringService;
-	
+
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
-	
+
 	public void stopTestDB() {
 		mariaDB4jSpringService.stop();
 	}
-	
+
 	public void runDBScripts(String[] scripts) {
 		for (String script : scripts) {
 			try {
-				Files.readAllLines(Paths.get("src/test/resources/embedded/" + script))
+				Files.readAllLines(Paths.get("src/test/resources/database/" + script))
 						.forEach(jdbcTemplate.getJdbcTemplate()::update);
 			}
 			catch (IOException e) {
@@ -53,27 +56,20 @@ public class DaoTestUtil {
 			}
 		}
 	}
-	
+
 	public User findUserByUserId(long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
-		return jdbcTemplate.queryForObject(FIND_USER_BY_USER_ID, param, BeanPropertyRowMapper.newInstance(User.class));
+		return jdbcTemplate.queryForObject(SELECT_USER_BY_USER_ID, param,
+				BeanPropertyRowMapper.newInstance(User.class));
 	}
 	
-	public Address findAddressByAddressId(long addressId) {
-		SqlParameterSource param = new MapSqlParameterSource("addressId", addressId);
-		return jdbcTemplate.queryForObject(FIND_ADDRESS_BY_ADDRESS_ID, param, BeanPropertyRowMapper.newInstance(Address.class));
+	public User findUserByAccountName(String accountName) {
+		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
+		return jdbcTemplate.queryForObject(SELECT_USER_BY_ACCOUNT_NAME, param,
+				BeanPropertyRowMapper.newInstance(User.class));
 	}
-	
-	public List<Address> findAllAddresses() {
-		return jdbcTemplate.query(FIND_ALL_ADDRESSES, BeanPropertyRowMapper.newInstance(Address.class));
-	}
-	
-	public State findStateByName(String name) {
-		SqlParameterSource param = new MapSqlParameterSource("name", name);
-		return jdbcTemplate.queryForObject(FIND_STATE_BY_NAME, param, BeanPropertyRowMapper.newInstance(State.class));
-	}
-	
-	public User insertUser(User user) {
+
+	public User createUser(User user) {
 		notNull(user, "The user must not be null");
 
 		SimpleJdbcInsert insertUser = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate().getDataSource());
@@ -81,11 +77,26 @@ public class DaoTestUtil {
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(user);
 		KeyHolder result = insertUser.executeAndReturnKeyHolder(paramSource);
 		user.setUserId(result.getKey().longValue());
-		
+
 		return user;
 	}
-	
-	public Address insertAddress(Address address) {
+
+	public List<Address> findAddressesByUserId(long userId) {
+		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
+		return jdbcTemplate.query(SELECT_ADDRESSES_BY_USER_ID, param, BeanPropertyRowMapper.newInstance(Address.class));
+	}
+
+	public Address findAddressByAddressId(long addressId) {
+		SqlParameterSource param = new MapSqlParameterSource("addressId", addressId);
+		return jdbcTemplate.queryForObject(SELECT_ADDRESS_BY_ADDRESS_ID, param,
+				BeanPropertyRowMapper.newInstance(Address.class));
+	}
+
+	public List<Address> findAllAddresses() {
+		return jdbcTemplate.query(SELECT_ALL_ADDRESSES, BeanPropertyRowMapper.newInstance(Address.class));
+	}
+
+	public Address createAddress(Address address) {
 		notNull(address, "The address must not be null");
 
 		SimpleJdbcInsert insertAddress = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate().getDataSource());
@@ -93,7 +104,23 @@ public class DaoTestUtil {
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(address);
 		KeyHolder result = insertAddress.executeAndReturnKeyHolder(paramSource);
 		address.setAddressId(result.getKey().longValue());
-		
+
 		return address;
 	}
+
+	public void associateUserAddress(UserAddress userAddress) {
+		notNull(userAddress, "The user address must not be null");
+
+		SimpleJdbcInsert insertUserAddress = new SimpleJdbcInsert(this.jdbcTemplate.getJdbcTemplate().getDataSource());
+		insertUserAddress.withTableName("UserAddress");
+		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(userAddress);
+		insertUserAddress.execute(paramSource);
+		LOGGER.info("User {} associated with address  {}", userAddress.getUserId(), userAddress.getAddressId());
+	}
+
+	public State findStateByName(String name) {
+		SqlParameterSource param = new MapSqlParameterSource("name", name);
+		return jdbcTemplate.queryForObject(SELECT_STATE_BY_NAME, param, BeanPropertyRowMapper.newInstance(State.class));
+	}
+
 }

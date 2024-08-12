@@ -25,6 +25,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import it.maxmin.model.plain.pojos.Address;
 import it.maxmin.model.plain.pojos.State;
 import it.maxmin.model.plain.pojos.User;
+import it.maxmin.model.plain.pojos.UserAddress;
 import it.maxmin.plain.dao.DaoTestUtil;
 import it.maxmin.plain.dao.EmbeddedJdbcTestCfg;
 
@@ -39,6 +40,7 @@ public class UserDaoTest {
 
 	@BeforeAll
 	public static void setup() {
+		LOGGER.info("Running UserDaoTest tests");
 		springJdbcCtx = new AnnotationConfigApplicationContext(EmbeddedJdbcTestCfg.class);
 		jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
 		daoTestUtil = springJdbcCtx.getBean("daoTestUtil", DaoTestUtil.class);
@@ -53,8 +55,8 @@ public class UserDaoTest {
 
 	@AfterEach
 	public void cleanUp() {
-		String[] scripts = { "2_user.down.sql", "2_address.down.sql", "2_state.down.sql", "2_userrole.down.sql",
-				"1_create_database.down.sql" };
+		String[] scripts = { "2_user.down.sql", "2_useraddress.down.sql", "2_address.down.sql", "2_state.down.sql",
+				"2_userrole.down.sql", "1_create_database.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
@@ -69,6 +71,7 @@ public class UserDaoTest {
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
+		// run the test
 		List<User> users = userDao.findAll();
 
 		assertTrue(users.size() == 2);
@@ -100,6 +103,7 @@ public class UserDaoTest {
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
+		// run the test
 		List<User> users = userDao.findAll();
 
 		assertTrue(users.size() == 0);
@@ -111,6 +115,7 @@ public class UserDaoTest {
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
+		// run the test
 		Optional<User> user = userDao.findByAccountName("maxmin13");
 
 		assertEquals("maxmin13", user.get().getAccountName());
@@ -127,6 +132,7 @@ public class UserDaoTest {
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
+		// run the test
 		Optional<User> user = userDao.findByAccountName("franz");
 
 		assertTrue(user.isEmpty());
@@ -138,6 +144,7 @@ public class UserDaoTest {
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
+		// run the test
 		List<User> users = userDao.findByFirstName("art");
 
 		assertTrue(users.size() == 1);
@@ -158,9 +165,63 @@ public class UserDaoTest {
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
+		// run the test
 		List<User> users = userDao.findByFirstName("franco");
 
 		assertTrue(users.size() == 0);
+	}
+
+	@Test
+	public void nullAssociateThrowsException() {
+
+		UserDaoImpl userDao = new UserDaoImpl();
+		userDao.setJdbcTemplate(jdbcTemplate);
+		UserAddress userAddress = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.associate(userAddress);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	public void associate() {
+
+		UserDaoImpl userDao = new UserDaoImpl();
+		userDao.setJdbcTemplate(jdbcTemplate);
+
+		User user = new User();
+		user.setAccountName("franc");
+		user.setBirthDate(LocalDate.of(1981, 11, 12));
+		user.setFirstName("Franco");
+		user.setLastName("Red");
+
+		User newUser = daoTestUtil.createUser(user);
+		State state = daoTestUtil.findStateByName("Italy");
+
+		Address address = new Address();
+		address.setAddress("Via Nuova");
+		address.setCity("Venice");
+		address.setStateId(state.getStateId());
+		address.setRegion("Veneto");
+		address.setPostalCode("30033");
+
+		Address newAddress = daoTestUtil.createAddress(address);
+
+		// run the test
+		userDao.associate(
+				UserAddress.newInstance().withUserId(newUser.getUserId()).withAddressId(newAddress.getAddressId()));
+
+		List<Address> addresses = daoTestUtil.findAddressesByUserId(newUser.getUserId());
+
+		assertTrue(addresses.size() == 1);
+
+		assertEquals("Via Nuova", addresses.get(0).getAddress());
+		assertEquals("Venice", addresses.get(0).getCity());
+		assertEquals(state.getStateId(), addresses.get(0).getStateId());
+		assertEquals("Veneto", addresses.get(0).getRegion());
+		assertEquals("30033", addresses.get(0).getPostalCode());
 	}
 
 	@Test
@@ -188,18 +249,21 @@ public class UserDaoTest {
 		user.setFirstName("Franco");
 		user.setLastName("Red");
 
+		// run the test
 		userDao.create(user);
 
-		/*
-		 * assertEquals("franc", newUser.getAccountName()); assertEquals("Franco",
-		 * newUser.getFirstName()); assertEquals("Red", newUser.getLastName());
-		 * assertEquals(LocalDate.of(1981, 11, 12), newUser.getBirthDate());
-		 * assertNull(newUser.getCreatedDate()); assertNotNull(newUser.getUserId());
-		 * assertTrue(newUser.getAddresses().size() == 0);
-		 * 
-		 * User created = daoTestUtil.findUserByUserId(newUser.getUserId());
-		 * assertNotNull(created.getCreatedDate());
-		 */
+		User newUser = daoTestUtil.findUserByAccountName("franc");
+
+		assertEquals("franc", newUser.getAccountName());
+		assertEquals("Franco", newUser.getFirstName());
+		assertEquals("Red", newUser.getLastName());
+		assertEquals(LocalDate.of(1981, 11, 12), newUser.getBirthDate());
+		assertNotNull(newUser.getCreatedDate());
+		assertNotNull(newUser.getUserId());
+
+		List<Address> addresses = daoTestUtil.findAddressesByUserId(newUser.getUserId());
+
+		assertTrue(addresses.size() == 0);
 	}
 
 	@Test
@@ -234,32 +298,37 @@ public class UserDaoTest {
 		address2.setPostalCode("32133");
 		user.addAddress(address2);
 
+		// run the test
 		userDao.create(user);
 
-		/*
-		 * assertEquals("franc", newUser.getAccountName()); assertEquals("Franco",
-		 * newUser.getFirstName()); assertEquals("Red", newUser.getLastName());
-		 * assertEquals(LocalDate.of(1981, 11, 12), newUser.getBirthDate());
-		 * assertNull(newUser.getCreatedDate()); assertNotNull(newUser.getUserId());
-		 * assertTrue(newUser.getAddresses().size() == 2);
-		 * 
-		 * User created = daoTestUtil.findUserByUserId(newUser.getUserId());
-		 * assertNotNull(created.getCreatedDate());
-		 * 
-		 * Address newAddress1 = user.getAddresses().get(0);
-		 * 
-		 * assertEquals("Via Nuova", newAddress1.getAddress()); assertEquals("Venice",
-		 * newAddress1.getCity()); assertEquals(state1.getStateId(),
-		 * newAddress1.getStateId()); assertEquals("Veneto", newAddress1.getRegion());
-		 * assertEquals("30033", newAddress1.getPostalCode());
-		 * 
-		 * Address newAddress2 = user.getAddresses().get(1);
-		 * 
-		 * assertEquals("Via Vecchia", newAddress2.getAddress()); assertEquals("Padova",
-		 * newAddress2.getCity()); assertEquals(state2.getStateId(),
-		 * newAddress2.getStateId()); assertEquals("Romagna", newAddress2.getRegion());
-		 * assertEquals("32133", newAddress2.getPostalCode());
-		 */
+		User newUser = daoTestUtil.findUserByAccountName("franc");
+
+		assertEquals("franc", newUser.getAccountName());
+		assertEquals("Franco", newUser.getFirstName());
+		assertEquals("Red", newUser.getLastName());
+		assertEquals(LocalDate.of(1981, 11, 12), newUser.getBirthDate());
+		assertNotNull(newUser.getCreatedDate());
+		assertNotNull(newUser.getUserId());
+
+		List<Address> addresses = daoTestUtil.findAddressesByUserId(newUser.getUserId());
+
+		assertTrue(addresses.size() == 2);
+
+		Address newAddress1 = addresses.get(0);
+
+		assertEquals("Via Nuova", newAddress1.getAddress());
+		assertEquals("Venice", newAddress1.getCity());
+		assertEquals(state1.getStateId(), newAddress1.getStateId());
+		assertEquals("Veneto", newAddress1.getRegion());
+		assertEquals("30033", newAddress1.getPostalCode());
+
+		Address newAddress2 = addresses.get(1);
+
+		assertEquals("Via Vecchia", newAddress2.getAddress());
+		assertEquals("Padova", newAddress2.getCity());
+		assertEquals(state2.getStateId(), newAddress2.getStateId());
+		assertEquals("Romagna", newAddress2.getRegion());
+		assertEquals("32133", newAddress2.getPostalCode());
 	}
 
 	@Test
@@ -287,7 +356,7 @@ public class UserDaoTest {
 		user.setFirstName("Reginald");
 		user.setLastName("Regi");
 
-		long userId = daoTestUtil.insertUser(user).getUserId();
+		long userId = daoTestUtil.createUser(user).getUserId();
 		LocalDateTime createdDate = daoTestUtil.findUserByUserId(userId).getCreatedDate();
 
 		user = new User();
@@ -297,6 +366,7 @@ public class UserDaoTest {
 		user.setFirstName("ReginaldUpdated");
 		user.setLastName("RegiUpdated");
 
+		// run the test
 		userDao.update(user);
 
 		User updated = daoTestUtil.findUserByUserId(userId);

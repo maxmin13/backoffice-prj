@@ -16,6 +16,7 @@ import it.maxmin.model.plain.pojos.User;
 
 public class SelectUserByAccountName {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectUserByAccountName.class);
 
 	private NamedParameterJdbcTemplate jdbcTemplate;

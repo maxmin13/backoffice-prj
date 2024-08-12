@@ -12,23 +12,20 @@ import it.maxmin.model.plain.pojos.Address;
 import it.maxmin.model.plain.pojos.User;
 import it.maxmin.model.plain.pojos.UserAddress;
 import it.maxmin.plain.dao.impl.operation.address.InsertAddress;
-import it.maxmin.plain.dao.impl.operation.address.InsertUserAddress;
-import it.maxmin.plain.dao.impl.operation.address.SelectAddressesByUserId;
 
 public class InsertUserWithAddress {
 
+	@SuppressWarnings("unused")
 	private static Logger LOGGER = LoggerFactory.getLogger(InsertUserWithAddress.class);
 
 	private InsertUser insertUser;
 	private InsertUserAddress insertUserAddress;
 	private InsertAddress insertAddress;
-	private SelectAddressesByUserId selectAddressesByUserId;
 
 	public InsertUserWithAddress(NamedParameterJdbcTemplate jdbcTemplate) {
 		insertUser = new InsertUser(jdbcTemplate);
 		insertAddress = new InsertAddress(jdbcTemplate);
 		insertUserAddress = new InsertUserAddress(jdbcTemplate);
-		selectAddressesByUserId = new SelectAddressesByUserId(jdbcTemplate);
 	}
 
 	public void execute(User user) {
