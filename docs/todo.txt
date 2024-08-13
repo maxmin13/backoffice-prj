@@ -1,8 +1,3 @@
+Yes, the exceptions should be handled, but in Spring design, on higher level then the each DAO method. In fact the design where in every method there is SQLException handling is unclean copy-paste design, and when you change something, you must apply the change in every place.
 
-
-
-
-
-
-
-ansible install docker phpmyadmin
+There are various demands, and various places where you handle unchecked exceptions. One of these are aspects, where you can for example convert Spring's exceptions to your exceptions (uncatched exceptions need not be declared in method signature, so this convertion is very elegant). In REST method you can add generic handler that will return the error responce to the caller, and you write exception handling in only one place. In JSF/JSP based technologies you can add own error page whenever error occures.

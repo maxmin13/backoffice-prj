@@ -3,18 +3,17 @@ package it.maxmin.plain.dao.impl.operation.user;
 import static it.maxmin.plain.dao.impl.operation.user.UserQueryConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static org.springframework.util.Assert.notNull;
 
+import java.sql.Types;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import it.maxmin.model.plain.pojos.User;
 
-public class SelectUserByAccountName {
+public class SelectUserByAccountName extends SelectUser {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectUserByAccountName.class);
@@ -24,11 +23,16 @@ public class SelectUserByAccountName {
 	public SelectUserByAccountName(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
-
+	
 	public User execute(String accountName) {
+
 		notNull(accountName, "The account name must not be null");
-		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
-		List<User> users = jdbcTemplate.query(SELECT_USER_BY_ACCOUNT_NAME, param, BeanPropertyRowMapper.newInstance(User.class));
+		
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		param.addValue("accountName", accountName, Types.VARCHAR);
+
+		List<User> users = jdbcTemplate.query(SELECT_USER_BY_ACCOUNT_NAME, param, usersExtractor);
+		 
 		return users.isEmpty() ? null : users.get(0);
 	}
 }
