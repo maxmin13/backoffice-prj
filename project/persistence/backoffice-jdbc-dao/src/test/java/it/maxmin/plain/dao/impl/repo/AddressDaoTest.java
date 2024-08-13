@@ -74,19 +74,19 @@ public class AddressDaoTest {
 
 		assertTrue(addresses.size() == 2);
 
-		State state1 = daoTestUtil.findStateByName("Italy");
+		State italy = daoTestUtil.findStateByName("Italy");
 
 		assertEquals("Via borgo di sotto", addresses.get(0).getAddress());
 		assertEquals("Rome", addresses.get(0).getCity());
-		assertEquals(state1.getStateId(), addresses.get(0).getStateId());
+		assertEquals(italy.getStateId(), addresses.get(0).getStateId());
 		assertEquals("Lazio", addresses.get(0).getRegion());
 		assertEquals("30010", addresses.get(0).getPostalCode());
 
-		State state2 = daoTestUtil.findStateByName("Ireland");
+		State ireland = daoTestUtil.findStateByName("Ireland");
 
 		assertEquals("Connolly street", addresses.get(1).getAddress());
 		assertEquals("Dublin", addresses.get(1).getCity());
-		assertEquals(state2.getStateId(), addresses.get(1).getStateId());
+		assertEquals(ireland.getStateId(), addresses.get(1).getStateId());
 		assertEquals("County Dublin", addresses.get(1).getRegion());
 		assertEquals("A65TF12", addresses.get(1).getPostalCode());
 	}
@@ -107,7 +107,7 @@ public class AddressDaoTest {
 
 		assertTrue(addresses.size() == 0);
 	}
-	
+
 	@Test
 	public void findAddressesByUserId_none_found() {
 
@@ -145,12 +145,12 @@ public class AddressDaoTest {
 		AddressDaoImpl addressDao = new AddressDaoImpl();
 		addressDao.setJdbcTemplate(jdbcTemplate);
 
-		State state = daoTestUtil.findStateByName("Italy");
+		State italy = daoTestUtil.findStateByName("Italy");
 
 		Address address = new Address();
 		address.setAddress("Via Nuova");
 		address.setCity("Venice");
-		address.setStateId(state.getStateId());
+		address.setStateId(italy.getStateId());
 		address.setRegion("Veneto");
 		address.setPostalCode("30033");
 
@@ -158,7 +158,7 @@ public class AddressDaoTest {
 
 		assertEquals("Via Nuova", newAddress.getAddress());
 		assertEquals("Venice", newAddress.getCity());
-		assertEquals(state.getStateId(), newAddress.getStateId());
+		assertEquals(italy.getStateId(), newAddress.getStateId());
 		assertEquals("Veneto", newAddress.getRegion());
 		assertEquals("30033", newAddress.getPostalCode());
 		assertNotNull(newAddress.getAddressId());
@@ -173,25 +173,25 @@ public class AddressDaoTest {
 		AddressDaoImpl addressDao = new AddressDaoImpl();
 		addressDao.setJdbcTemplate(jdbcTemplate);
 
-		State state1 = daoTestUtil.findStateByName("Italy");
+		State italy = daoTestUtil.findStateByName("Italy");
 
-		Address address1 = new Address();
-		address1.setAddress("Via Nuova");
-		address1.setCity("Venice");
-		address1.setStateId(state1.getStateId());
-		address1.setRegion("Veneto");
-		address1.setPostalCode("30033");
+		Address venice = new Address();
+		venice.setAddress("Via Nuova");
+		venice.setCity("Venice");
+		venice.setStateId(italy.getStateId());
+		venice.setRegion("Veneto");
+		venice.setPostalCode("30033");
 
-		State state2 = daoTestUtil.findStateByName("Ireland");
+		State ireand = daoTestUtil.findStateByName("Ireland");
 
-		Address address2 = new Address();
-		address2.setAddress("Via Vecchia");
-		address2.setCity("Milano");
-		address2.setStateId(state2.getStateId());
-		address2.setRegion("Lombardia");
-		address2.setPostalCode("43123");
+		Address ireland = new Address();
+		ireland.setAddress("Connolly street");
+		ireland.setCity("Dublin");
+		ireland.setStateId(ireand.getStateId());
+		ireland.setRegion("County Dublin");
+		ireland.setPostalCode("A65TF12");
 
-		List<Address> addresses = List.of(address1, address2);
+		List<Address> addresses = List.of(venice, ireland);
 
 		addressDao.create(addresses);
 
@@ -201,15 +201,15 @@ public class AddressDaoTest {
 
 		assertEquals("Via Nuova", newAddresses.get(0).getAddress());
 		assertEquals("Venice", newAddresses.get(0).getCity());
-		assertEquals(state1.getStateId(), newAddresses.get(0).getStateId());
+		assertEquals(venice.getStateId(), newAddresses.get(0).getStateId());
 		assertEquals("Veneto", newAddresses.get(0).getRegion());
 		assertEquals("30033", newAddresses.get(0).getPostalCode());
 
-		assertEquals("Via Vecchia", newAddresses.get(1).getAddress());
-		assertEquals("Milano", newAddresses.get(1).getCity());
-		assertEquals(state2.getStateId(), newAddresses.get(1).getStateId());
-		assertEquals("Lombardia", newAddresses.get(1).getRegion());
-		assertEquals("43123", newAddresses.get(1).getPostalCode());
+		assertEquals("Connolly street", addresses.get(1).getAddress());
+		assertEquals("Dublin", addresses.get(1).getCity());
+		assertEquals(ireland.getStateId(), addresses.get(1).getStateId());
+		assertEquals("County Dublin", addresses.get(1).getRegion());
+		assertEquals("A65TF12", addresses.get(1).getPostalCode());
 	}
 
 	@Test
@@ -231,12 +231,12 @@ public class AddressDaoTest {
 		AddressDaoImpl addressDao = new AddressDaoImpl();
 		addressDao.setJdbcTemplate(jdbcTemplate);
 
-		State state = daoTestUtil.findStateByName("Ireland");
+		State ireland = daoTestUtil.findStateByName("Ireland");
 
 		Address address = new Address();
 		address.setAddress("Via Vecchia");
 		address.setCity("Ferrara");
-		address.setStateId(state.getStateId());
+		address.setStateId(ireland.getStateId());
 		address.setRegion("Emilia Romagna");
 		address.setPostalCode("12333");
 
@@ -244,21 +244,21 @@ public class AddressDaoTest {
 
 		address = new Address();
 		address.setAddressId(addressId);
-		address.setAddress("Via Nuova");
-		address.setCity("Modena");
-		address.setStateId(state.getStateId());
-		address.setRegion("Romagna");
-		address.setPostalCode("11111");
+		address.setAddress("Connolly street");
+		address.setCity("Dublin");
+		address.setStateId(ireland.getStateId());
+		address.setRegion("County Dublin");
+		address.setPostalCode("A65TF12");
 
 		addressDao.update(address);
 
 		Address updated = daoTestUtil.findAddressByAddressId(addressId);
 
-		assertEquals("Via Nuova", updated.getAddress());
-		assertEquals("Modena", updated.getCity());
-		assertEquals(state.getStateId(), updated.getStateId());
-		assertEquals("Romagna", updated.getRegion());
-		assertEquals("11111", updated.getPostalCode());
+		assertEquals("Connolly street", updated.getAddress());
+		assertEquals("Dublin", updated.getCity());
+		assertEquals(ireland.getStateId(), updated.getStateId());
+		assertEquals("County Dublin", updated.getRegion());
+		assertEquals("A65TF12", updated.getPostalCode());
 	}
 
 }
