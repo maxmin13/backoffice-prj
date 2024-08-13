@@ -4,14 +4,15 @@ import static it.maxmin.plain.dao.QueryTestConstants.SELECT_ADDRESSES_BY_USER_ID
 import static it.maxmin.plain.dao.QueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
 import static it.maxmin.plain.dao.QueryTestConstants.SELECT_ALL_ADDRESSES;
 import static it.maxmin.plain.dao.QueryTestConstants.SELECT_STATE_BY_NAME;
-import static it.maxmin.plain.dao.QueryTestConstants.SELECT_USER_BY_USER_ID;
 import static it.maxmin.plain.dao.QueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
+import static it.maxmin.plain.dao.QueryTestConstants.SELECT_USER_BY_USER_ID;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,8 @@ public class DaoTestUtil {
 	public void runDBScripts(String[] scripts) {
 		for (String script : scripts) {
 			try {
-				Files.readAllLines(Paths.get("src/test/resources/database/" + script))
+				Files.readAllLines(Paths.get("src/test/resources/database/" + script)).stream()
+						.filter(line -> !line.trim().isEmpty()).collect(Collectors.toList())
 						.forEach(jdbcTemplate.getJdbcTemplate()::update);
 			}
 			catch (IOException e) {
@@ -62,7 +64,7 @@ public class DaoTestUtil {
 		return jdbcTemplate.queryForObject(SELECT_USER_BY_USER_ID, param,
 				BeanPropertyRowMapper.newInstance(User.class));
 	}
-	
+
 	public User findUserByAccountName(String accountName) {
 		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
 		return jdbcTemplate.queryForObject(SELECT_USER_BY_ACCOUNT_NAME, param,

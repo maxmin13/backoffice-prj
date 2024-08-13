@@ -8,6 +8,10 @@ public class Address {
 	private Long stateId;
 	private String region;
 	private String postalCode;
+	
+	public static Address newInstance() {
+		return new Address();
+	}
 
 	public Long getAddressId() {
 		return addressId;
@@ -15,6 +19,11 @@ public class Address {
 
 	public void setAddressId(Long addressId) {
 		this.addressId = addressId;
+	}
+	
+	public Address withAddressId(Long addressId) {
+		this.addressId = addressId;
+		return this;
 	}
 
 	public String getAddress() {
@@ -24,6 +33,11 @@ public class Address {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+	
+	public Address withAddress(String address) {
+		this.address = address;
+		return this;
+	}
 
 	public String getCity() {
 		return city;
@@ -31,6 +45,11 @@ public class Address {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+	
+	public Address withCity(String city) {
+		this.city = city;
+		return this;
 	}
 
 	public Long getStateId() {
@@ -40,6 +59,11 @@ public class Address {
 	public void setStateId(Long stateId) {
 		this.stateId = stateId;
 	}
+	
+	public Address withStateId(Long stateId) {
+		this.stateId = stateId;
+		return this;
+	}
 
 	public String getRegion() {
 		return region;
@@ -48,6 +72,11 @@ public class Address {
 	public void setRegion(String region) {
 		this.region = region;
 	}
+	
+	public Address withRegion(String region) {
+		this.region = region;
+		return this;
+	}
 
 	public String getPostalCode() {
 		return postalCode;
@@ -55,5 +84,10 @@ public class Address {
 
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
+	}
+	
+	public Address withPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+		return this;
 	}
 }

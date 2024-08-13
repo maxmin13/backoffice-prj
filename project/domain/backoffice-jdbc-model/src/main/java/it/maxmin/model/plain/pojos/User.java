@@ -13,7 +13,11 @@ public class User {
 	private String lastName;
 	private LocalDate birthDate;
 	private LocalDateTime createdDate;
-	private List<Address> addresses;
+	private List<Address> addresses = new ArrayList<>();;
+
+	public static User newInstance() {
+		return new User();
+	}
 
 	public Long getUserId() {
 		return userId;
@@ -21,6 +25,11 @@ public class User {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public User withUserId(Long userId) {
+		this.userId = userId;
+		return this;
 	}
 
 	public String getAccountName() {
@@ -31,12 +40,22 @@ public class User {
 		this.accountName = accountName;
 	}
 
+	public User withAccountName(String accountName) {
+		this.accountName = accountName;
+		return this;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+
+	public User withFirstName(String firstName) {
+		this.firstName = firstName;
+		return this;
 	}
 
 	public String getLastName() {
@@ -47,6 +66,11 @@ public class User {
 		this.lastName = lastName;
 	}
 
+	public User withLastName(String lastName) {
+		this.lastName = lastName;
+		return this;
+	}
+
 	public LocalDate getBirthDate() {
 		return birthDate;
 	}
@@ -55,12 +79,22 @@ public class User {
 		this.birthDate = birthDate;
 	}
 
+	public User withBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+		return this;
+	}
+
 	public LocalDateTime getCreatedDate() {
 		return createdDate;
 	}
 
 	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	public User withCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
+		return this;
 	}
 
 	public List<Address> getAddresses() {
@@ -72,17 +106,12 @@ public class User {
 	}
 
 	public boolean addAddress(Address address) {
-		if (addresses == null) {
-			addresses = new ArrayList<>();
+		if (addresses.contains(address)) {
+			return false;
+		}
+		else {
 			addresses.add(address);
 			return true;
 		}
-		else {
-			if (addresses.contains(address)) {
-				return false;
-			}
-		}
-		addresses.add(address);
-		return true;
 	}
 }
