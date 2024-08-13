@@ -68,6 +68,7 @@ public class UserDaoTest {
 	@Test
 	public void testFindAllNotFound() {
 
+		// delete all users
 		String[] scripts = { "2_user.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 
@@ -147,7 +148,11 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void findByAccountName() {
+	public void findByAccountNameNotFound() {
+
+		// delete all users
+		String[] scripts = { "2_user.down.sql" };
+		daoTestUtil.runDBScripts(scripts);
 
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
@@ -155,24 +160,57 @@ public class UserDaoTest {
 		// run the test
 		Optional<User> user = userDao.findByAccountName("maxmin13");
 
-		assertEquals("maxmin13", user.get().getAccountName());
-		assertEquals("Max", user.get().getFirstName());
-		assertEquals("Minardi", user.get().getLastName());
-		assertEquals(LocalDate.of(1977, 10, 16), user.get().getBirthDate());
-		assertNotNull(user.get().getCreatedDate());
-		assertNotNull(user.get().getUserId());
+		assertTrue(user.isEmpty());
 	}
 
 	@Test
-	public void findByAccountNameNotFound() {
+	public void findByAccountName() {
 
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(jdbcTemplate);
 
 		// run the test
-		Optional<User> user = userDao.findByAccountName("franz");
+		User maxmin = userDao.findByAccountName("maxmin13").get();
 
-		assertTrue(user.isEmpty());
+		assertEquals("maxmin13", maxmin.getAccountName());
+		assertEquals("Max", maxmin.getFirstName());
+		assertEquals("Minardi", maxmin.getLastName());
+		assertEquals(LocalDate.of(1977, 10, 16), maxmin.getBirthDate());
+		assertNotNull(maxmin.getCreatedDate());
+		assertNotNull(maxmin.getUserId());
+
+		assertTrue(maxmin.getAddresses().size() == 2);
+
+		State ireland = daoTestUtil.findStateByName("Ireland");
+		State italy = daoTestUtil.findStateByName("Italy");
+
+		assertEquals("Via borgo di sotto", maxmin.getAddresses().get(0).getAddress());
+		assertEquals("Rome", maxmin.getAddresses().get(0).getCity());
+		assertEquals(italy.getStateId(), maxmin.getAddresses().get(0).getStateId());
+		assertEquals("Lazio", maxmin.getAddresses().get(0).getRegion());
+		assertEquals("30010", maxmin.getAddresses().get(0).getPostalCode());
+
+		assertEquals("Connolly street", maxmin.getAddresses().get(1).getAddress());
+		assertEquals("Dublin", maxmin.getAddresses().get(1).getCity());
+		assertEquals(ireland.getStateId(), maxmin.getAddresses().get(1).getStateId());
+		assertEquals("County Dublin", maxmin.getAddresses().get(1).getRegion());
+		assertEquals("A65TF12", maxmin.getAddresses().get(1).getPostalCode());
+	}
+
+	@Test
+	public void findByFirstNameNotFound() {
+
+		// delete all users
+		String[] scripts = { "2_user.down.sql" };
+		daoTestUtil.runDBScripts(scripts);
+
+		UserDaoImpl userDao = new UserDaoImpl();
+		userDao.setJdbcTemplate(jdbcTemplate);
+
+		// run the test
+		List<User> users = userDao.findByFirstName("art");
+
+		assertTrue(users.size() == 0);
 	}
 
 	@Test
@@ -194,18 +232,6 @@ public class UserDaoTest {
 		assertEquals(LocalDate.of(1923, 10, 12), user.getBirthDate());
 		assertNotNull(user.getCreatedDate());
 		assertNotNull(user.getUserId());
-	}
-
-	@Test
-	public void findByFirstNameNotFound() {
-
-		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
-
-		// run the test
-		List<User> users = userDao.findByFirstName("franco");
-
-		assertTrue(users.size() == 0);
 	}
 
 	@Test
