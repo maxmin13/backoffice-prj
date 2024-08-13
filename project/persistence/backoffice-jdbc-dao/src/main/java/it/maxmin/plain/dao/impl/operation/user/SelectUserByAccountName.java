@@ -33,6 +33,6 @@ public class SelectUserByAccountName extends SelectUser {
 
 		List<User> users = jdbcTemplate.query(SELECT_USER_BY_ACCOUNT_NAME, param, usersExtractor);
 		 
-		return users.isEmpty() ? null : users.get(0);
+		return (users == null || users.isEmpty()) ? null : users.get(0);
 	}
 }
