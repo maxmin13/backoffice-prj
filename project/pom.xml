@@ -14,8 +14,8 @@
 	<modules>
 		<module>ui/backoffice-webapp</module>
 		<module>config/backoffice-config</module>
-		<!-- <module>persistence/backoffice-jdbc-dao</module> -->
-		<module>persistence/backoffice-spring-dao</module>
+		<module>persistence/backoffice-jdbc-dao</module>
+		<!--<module>persistence/backoffice-spring-dao</module>-->
 		<module>domain/backoffice-jdbc-model</module>
 		<module>service/backoffice-service</module>
 	</modules>
@@ -67,21 +67,11 @@
 				<artifactId>backoffice-webapp</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-			
-			<!--
 			<dependency>
 				<groupId>it.maxmin.persistence</groupId>
 				<artifactId>backoffice-jdbc-dao</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-			-->
-			
-			<dependency>
-				<groupId>it.maxmin.persistence</groupId>
-				<artifactId>backoffice-spring-dao</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-			
 			<dependency>
 				<groupId>it.maxmin.domain</groupId>
 				<artifactId>backoffice-jdbc-model</artifactId>
