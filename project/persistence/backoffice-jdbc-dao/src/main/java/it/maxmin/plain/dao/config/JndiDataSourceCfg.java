@@ -52,4 +52,5 @@ public class JndiDataSourceCfg {
 			return null;
 		}
 	}
-}
+
+ }

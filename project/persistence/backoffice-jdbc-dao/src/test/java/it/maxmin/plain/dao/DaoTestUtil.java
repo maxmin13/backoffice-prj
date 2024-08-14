@@ -52,7 +52,6 @@ public class DaoTestUtil {
 						.forEach(jdbcTemplate.getJdbcTemplate()::update);
 			}
 			catch (IOException e) {
-				LOGGER.error("Error running DB scripts", e);
 				throw new DaoTestException("Error running DB scripts", e);
 			}
 		}

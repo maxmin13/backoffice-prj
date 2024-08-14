@@ -158,6 +158,7 @@ class AddressDaoTest {
 		address.setRegion("Veneto");
 		address.setPostalCode("30033");
 
+		// run the test
 		Address newAddress = addressDao.create(address);
 
 		assertEquals("Via Nuova", newAddress.getAddress());
