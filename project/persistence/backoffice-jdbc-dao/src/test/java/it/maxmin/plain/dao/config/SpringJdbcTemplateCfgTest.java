@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Verifies that by loading SpringJdbcTemplateCfg.class, in the Spring context a JdbcTemplate object is present.
- * The test relies on simple-jndi library to create a JNDI directory sevice in the background.
+ * The test relies on simple-jndi library to create a JNDI directory service in the background.
  * */
 class SpringJdbcTemplateCfgTest { 
 
