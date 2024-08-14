@@ -5,6 +5,8 @@ import static org.springframework.util.Assert.notNull;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +36,10 @@ public class UserDaoImpl implements UserDao {
 	private InsertUserAddress insertUserAddress;
 
 	@Autowired
-	public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
-		this.updateUser = new UpdateUser(jdbcTemplate);
-		this.insertUserWithAddress = new InsertUserWithAddress(jdbcTemplate);
-		this.insertUserAddress = new InsertUserAddress(jdbcTemplate);
+	public void setJdbcTemplate(DataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
+		this.updateUser = new UpdateUser(dataSource);
+		this.insertUserWithAddress = new InsertUserWithAddress(dataSource);
+		this.insertUserAddress = new InsertUserAddress(dataSource);
 		this.selectUserByFirstName = new SelectUserByFirstName(jdbcTemplate);
 		this.selectUserByAccountName = new SelectUserByAccountName(jdbcTemplate);
 		this.selectAllUsers = new SelectAllUsers(jdbcTemplate);

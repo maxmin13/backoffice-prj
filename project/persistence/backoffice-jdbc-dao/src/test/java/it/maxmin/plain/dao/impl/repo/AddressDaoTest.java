@@ -3,9 +3,10 @@ package it.maxmin.plain.dao.impl.repo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -26,53 +27,55 @@ import it.maxmin.plain.dao.DaoTestUtil;
 import it.maxmin.plain.dao.EmbeddedJdbcTestCfg;
 
 @ExtendWith(MockitoExtension.class)
-public class AddressDaoTest {
+class AddressDaoTest {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
 
 	private static AnnotationConfigApplicationContext springJdbcCtx;
 	private static NamedParameterJdbcTemplate jdbcTemplate;
+	private static DataSource dataSource;
 	private static DaoTestUtil daoTestUtil;
 
 	@BeforeAll
-	public static void setup() {
+	static void setup() {
 		LOGGER.info("Running AddressDaoTest tests");
 		springJdbcCtx = new AnnotationConfigApplicationContext(EmbeddedJdbcTestCfg.class);
 		jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
+		dataSource = springJdbcCtx.getBean("dataSource", DataSource.class);
 		daoTestUtil = springJdbcCtx.getBean("daoTestUtil", DaoTestUtil.class);
 	}
 
 	@BeforeEach
-	public void init() {
+	void init() {
 		String[] scripts = { "1_create_database.up.sql", "2_userrole.up.sql", "2_state.up.sql", "2_address.up.sql",
 				"2_user.up.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterEach
-	public void cleanUp() {
+	void cleanUp() {
 		String[] scripts = { "2_user.down.sql", "2_useraddress.down.sql", "2_address.down.sql", "2_state.down.sql",
 				"2_userrole.down.sql", "1_create_database.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterAll
-	public static void clear() {
+	static void clear() {
 		daoTestUtil.stopTestDB();
 	}
 
 	@Test
-	public void findAddressesByUserId() {
+	void findAddressesByUserId() {
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
-		addressDao.setJdbcTemplate(jdbcTemplate);
+		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		User user = daoTestUtil.findUserByAccountName("maxmin13");
 
 		// run the test
 		List<Address> addresses = addressDao.findAddressesByUserId(user.getUserId());
 
-		assertTrue(addresses.size() == 2);
+		assertEquals(2, addresses.size());
 
 		State italy = daoTestUtil.findStateByName("Italy");
 
@@ -92,44 +95,45 @@ public class AddressDaoTest {
 	}
 
 	@Test
-	public void findAddressesByUserId_none_associated_found() {
+	void findAddressesByUserId_none_associated_found() {
 
 		String[] scripts = { "2_useraddress.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
-		addressDao.setJdbcTemplate(jdbcTemplate);
+		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		User user = daoTestUtil.findUserByAccountName("maxmin13");
 
 		// run the test
 		List<Address> addresses = addressDao.findAddressesByUserId(user.getUserId());
 
-		assertTrue(addresses.size() == 0);
+		assertEquals(0, addresses.size());
 	}
 
 	@Test
-	public void findAddressesByUserId_none_found() {
+	void findAddressesByUserId_none_found() {
 
+		// delete all the addresses
 		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
-		addressDao.setJdbcTemplate(jdbcTemplate);
+		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		User user = daoTestUtil.findUserByAccountName("maxmin13");
 
 		// run the test
 		List<Address> addresses = addressDao.findAddressesByUserId(user.getUserId());
 
-		assertTrue(addresses.size() == 0);
+		assertEquals(0, addresses.size());
 	}
 
 	@Test
-	public void nullCreateThrowsException() {
+	void nullCreateThrowsException() {
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
-		addressDao.setJdbcTemplate(jdbcTemplate);
+		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
 		Address address = null;
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
@@ -140,10 +144,10 @@ public class AddressDaoTest {
 	}
 
 	@Test
-	public void create() {
+	void create() {
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
-		addressDao.setJdbcTemplate(jdbcTemplate);
+		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		State italy = daoTestUtil.findStateByName("Italy");
 
@@ -165,13 +169,13 @@ public class AddressDaoTest {
 	}
 
 	@Test
-	public void create_list() {
+	void create_list() {
 
 		String[] scripts = { "2_address.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
-		addressDao.setJdbcTemplate(jdbcTemplate);
+		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		State italy = daoTestUtil.findStateByName("Italy");
 
@@ -197,7 +201,7 @@ public class AddressDaoTest {
 
 		List<Address> newAddresses = daoTestUtil.findAllAddresses();
 
-		assertTrue(newAddresses.size() == 2);
+		assertEquals(2, newAddresses.size());
 
 		assertEquals("Via Nuova", newAddresses.get(0).getAddress());
 		assertEquals("Venice", newAddresses.get(0).getCity());
@@ -213,10 +217,10 @@ public class AddressDaoTest {
 	}
 
 	@Test
-	public void nullUpdateThrowsException() {
+	void nullUpdateThrowsException() {
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
-		addressDao.setJdbcTemplate(jdbcTemplate);
+		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
 			addressDao.update(null);
@@ -226,10 +230,10 @@ public class AddressDaoTest {
 	}
 
 	@Test
-	public void update() {
+	void update() {
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
-		addressDao.setJdbcTemplate(jdbcTemplate);
+		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		State ireland = daoTestUtil.findStateByName("Ireland");
 

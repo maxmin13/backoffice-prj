@@ -15,10 +15,11 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 
 import it.maxmin.model.plain.pojos.Address;
 import it.maxmin.model.plain.pojos.User;
-import it.maxmin.plain.dao.exception.DataAccessException;
+import it.maxmin.plain.dao.exception.DATAAccessException;
 
 public abstract class SelectUser {
 	
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectUser.class);
 
 	ResultSetExtractor<List<User>> usersExtractor = (ResultSetExtractor<List<User>>) rs ->  {
@@ -28,17 +29,14 @@ public abstract class SelectUser {
 			var userId = rs.getLong("UserId");
 			user = map.computeIfAbsent(userId, u -> {
 				try {
-					User us = User.newInstance().withUserId(rs.getLong("UserId"))
+					return User.newInstance().withUserId(rs.getLong("UserId"))
 							.withAccountName(rs.getString("AccountName")).withFirstName(rs.getString("FirstName"))
 							.withLastName(rs.getString("LastName"))
 							.withBirthDate(rs.getDate("BirthDate").toLocalDate()).withCreatedDate(
 									LocalDateTime.of(rs.getDate("CreatedDate").toLocalDate(), LocalTime.of(0, 0)));
-
-					return us;
 				}
 				catch (SQLException ex) {
-					LOGGER.error("Malformed data!", ex);
-					throw new DataAccessException("Malformed data!", ex);
+					throw new DATAAccessException("Malformed data!", ex);
 				}
 			});
 			var addressId = rs.getLong("AddressId");

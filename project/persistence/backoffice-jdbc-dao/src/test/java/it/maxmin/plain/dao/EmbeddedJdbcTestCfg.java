@@ -20,7 +20,7 @@ import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
 
 public class EmbeddedJdbcTestCfg {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(EmbeddedJdbcTestCfg.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedJdbcTestCfg.class);
 
 	@Bean
 	public MariaDB4jSpringService mariaDB4jSpringService() {
@@ -32,6 +32,7 @@ public class EmbeddedJdbcTestCfg {
 		return new DaoTestUtil();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Bean
 	public DataSource dataSource(MariaDB4jSpringService mariaDB4jSpringService) {
 		try {

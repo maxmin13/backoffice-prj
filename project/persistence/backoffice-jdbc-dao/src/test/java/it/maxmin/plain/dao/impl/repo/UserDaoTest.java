@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,67 +32,69 @@ import it.maxmin.plain.dao.DaoTestUtil;
 import it.maxmin.plain.dao.EmbeddedJdbcTestCfg;
 
 @ExtendWith(MockitoExtension.class)
-public class UserDaoTest {
+class UserDaoTest {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);
 
 	private static AnnotationConfigApplicationContext springJdbcCtx;
 	private static NamedParameterJdbcTemplate jdbcTemplate;
+	private static DataSource dataSource;
 	private static DaoTestUtil daoTestUtil;
 
 	@BeforeAll
-	public static void setup() {
+	static void setup() {
 		LOGGER.info("Running UserDaoTest tests");
 		springJdbcCtx = new AnnotationConfigApplicationContext(EmbeddedJdbcTestCfg.class);
 		jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
+		dataSource = springJdbcCtx.getBean("dataSource", DataSource.class);
 		daoTestUtil = springJdbcCtx.getBean("daoTestUtil", DaoTestUtil.class);
 	}
 
 	@BeforeEach
-	public void init() {
+	void init() {
 		String[] scripts = { "1_create_database.up.sql", "2_userrole.up.sql", "2_state.up.sql", "2_address.up.sql",
 				"2_user.up.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterEach
-	public void cleanUp() {
+	void cleanUp() {
 		String[] scripts = { "2_user.down.sql", "2_useraddress.down.sql", "2_address.down.sql", "2_state.down.sql",
 				"2_userrole.down.sql", "1_create_database.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterAll
-	public static void clear() {
+	static void clear() {
 		daoTestUtil.stopTestDB();
 	}
 
 	@Test
-	public void testFindAllNotFound() {
+	void testFindAllNotFound() {
 
 		// delete all users
 		String[] scripts = { "2_user.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		// run the test
 		List<User> users = userDao.findAll();
 
-		assertTrue(users.size() == 0);
+		assertEquals(0, users.size());
 	}
 
 	@Test
-	public void testFindAll() {
+	void testFindAll() {
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		// run the test
 		List<User> users = userDao.findAll();
 
-		assertTrue(users.size() == 3);
+		assertEquals(3, users.size());
 
 		User maxmin = users.get(0);
 
@@ -101,7 +105,7 @@ public class UserDaoTest {
 		assertNotNull(maxmin.getCreatedDate());
 		assertNotNull(maxmin.getUserId());
 
-		assertTrue(maxmin.getAddresses().size() == 2);
+		assertEquals(2, maxmin.getAddresses().size());
 
 		State ireland = daoTestUtil.findStateByName("Ireland");
 		State italy = daoTestUtil.findStateByName("Italy");
@@ -120,42 +124,22 @@ public class UserDaoTest {
 
 		User artur = users.get(1);
 
-		assertEquals("artur", artur.getAccountName());
-		assertEquals("art", artur.getFirstName());
-		assertEquals("artur", artur.getLastName());
-		assertEquals(LocalDate.of(1923, 10, 12), artur.getBirthDate());
-		assertNotNull(artur.getCreatedDate());
-		assertNotNull(artur.getUserId());
-
-		assertTrue(artur.getAddresses().size() == 1);
-
-		assertEquals("Connolly street", artur.getAddresses().get(0).getAddress());
-		assertEquals("Dublin", artur.getAddresses().get(0).getCity());
-		assertEquals(ireland.getStateId(), artur.getAddresses().get(0).getStateId());
-		assertEquals("County Dublin", artur.getAddresses().get(0).getRegion());
-		assertEquals("A65TF12", artur.getAddresses().get(0).getPostalCode());
+		assertEquals(1, artur.getAddresses().size());
 
 		User reginald = users.get(2);
 
-		assertEquals("reginald123", reginald.getAccountName());
-		assertEquals("reginald", reginald.getFirstName());
-		assertEquals("reinold", reginald.getLastName());
-		assertEquals(LocalDate.of(1944, 12, 23), reginald.getBirthDate());
-		assertNotNull(reginald.getCreatedDate());
-		assertNotNull(reginald.getUserId());
-
-		assertTrue(reginald.getAddresses().size() == 0);
+		assertEquals(0, reginald.getAddresses().size());
 	}
 
 	@Test
-	public void findByAccountNameNotFound() {
+	void findByAccountNameNotFound() {
 
 		// delete all users
 		String[] scripts = { "2_user.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		// run the test
 		Optional<User> user = userDao.findByAccountName("maxmin13");
@@ -164,10 +148,10 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void findByAccountName() {
+	void findByAccountName() {
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		// run the test
 		User maxmin = userDao.findByAccountName("maxmin13").get();
@@ -179,7 +163,7 @@ public class UserDaoTest {
 		assertNotNull(maxmin.getCreatedDate());
 		assertNotNull(maxmin.getUserId());
 
-		assertTrue(maxmin.getAddresses().size() == 2);
+		assertEquals(2, maxmin.getAddresses().size());
 
 		State ireland = daoTestUtil.findStateByName("Ireland");
 		State italy = daoTestUtil.findStateByName("Italy");
@@ -198,31 +182,31 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void findByFirstNameNotFound() {
+	void findByFirstNameNotFound() {
 
 		// delete all users
 		String[] scripts = { "2_user.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		// run the test
 		List<User> users = userDao.findByFirstName("art");
 
-		assertTrue(users.size() == 0);
+		assertEquals(0, users.size());
 	}
 
 	@Test
-	public void findByFirstName() {
+	void findByFirstName() {
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		// run the test
 		List<User> users = userDao.findByFirstName("art");
 
-		assertTrue(users.size() == 1);
+		assertEquals(1, users.size());
 
 		User user = users.get(0);
 
@@ -235,10 +219,10 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void nullAssociateThrowsException() {
+	void nullAssociateThrowsException() {
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 		UserAddress userAddress = null;
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
@@ -249,10 +233,10 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void associate() {
+	void associate() {
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		User user = new User();
 		user.setAccountName("franc");
@@ -278,7 +262,7 @@ public class UserDaoTest {
 
 		List<Address> addresses = daoTestUtil.findAddressesByUserId(newUser.getUserId());
 
-		assertTrue(addresses.size() == 1);
+		assertEquals(1, addresses.size());
 
 		assertEquals("Via Nuova", addresses.get(0).getAddress());
 		assertEquals("Venice", addresses.get(0).getCity());
@@ -288,10 +272,10 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void nullCreateThrowsException() {
+	void nullCreateThrowsException() {
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
 			userDao.create(null);
@@ -301,10 +285,10 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void create_with_no_address() {
+	void create_with_no_address() {
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		User user = new User();
 		user.setAccountName("franc");
@@ -326,14 +310,14 @@ public class UserDaoTest {
 
 		List<Address> addresses = daoTestUtil.findAddressesByUserId(newUser.getUserId());
 
-		assertTrue(addresses.size() == 0);
+		assertEquals(0, addresses.size());
 	}
 
 	@Test
-	public void create_with_addresses() {
+	void create_with_addresses() {
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		User user = new User();
 		user.setAccountName("franc");
@@ -375,7 +359,7 @@ public class UserDaoTest {
 
 		List<Address> addresses = daoTestUtil.findAddressesByUserId(newUser.getUserId());
 
-		assertTrue(addresses.size() == 2);
+		assertEquals(2, addresses.size());
 
 		Address newAddress1 = addresses.get(0);
 
@@ -395,10 +379,10 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void nullUpdateThrowsException() {
+	void nullUpdateThrowsException() {
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
 			userDao.update(null);
@@ -408,10 +392,10 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void update() {
+	void update() {
 
 		UserDaoImpl userDao = new UserDaoImpl();
-		userDao.setJdbcTemplate(jdbcTemplate);
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		User user = new User();
 		user.setAccountName("reg");

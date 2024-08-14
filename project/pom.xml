@@ -40,6 +40,7 @@
 		<org.mockito.version>4.0.0</org.mockito.version>
 		<org.craftercms.mariaDB4j.version>2.4.2.3</org.craftercms.mariaDB4j.version>
 		<com.h2database.version>2.1.214</com.h2database.version>
+		<com.google.code.findbugs.version>3.0.2</com.google.code.findbugs.version>
 	</properties>
 
 	<profiles>
@@ -137,6 +138,12 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
 				<version>${org.apache.commons.lang.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>${com.google.code.findbugs.version}</version>
 			</dependency>
 
 			<!-- test dependencies -->

@@ -4,6 +4,8 @@ import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +30,10 @@ public class AddressDaoImpl implements AddressDao {
 	private SelectAddressesByUserId selectAddressesByUserId;
 
 	@Autowired
-	public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
-		this.updateAddress = new UpdateAddress(jdbcTemplate);
-		this.insertAddress = new InsertAddress(jdbcTemplate);
-		this.insertAddresses = new InsertAddresses(jdbcTemplate);
+	public void setJdbcTemplate(DataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
+		this.updateAddress = new UpdateAddress(dataSource);
+		this.insertAddress = new InsertAddress(dataSource);
+		this.insertAddresses = new InsertAddresses(dataSource);
 		this.selectAddressesByUserId = new SelectAddressesByUserId(jdbcTemplate);
 	}
 

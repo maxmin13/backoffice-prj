@@ -6,16 +6,19 @@ import static org.springframework.util.Assert.notNull;
 import java.sql.Types;
 import java.util.Map;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.sql.DataSource;
+
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.object.SqlUpdate;
 
 import it.maxmin.model.plain.pojos.User;
 
 public class UpdateUser extends SqlUpdate {
 
-	public UpdateUser(NamedParameterJdbcTemplate jdbcTemplate) {
-		super(jdbcTemplate.getJdbcTemplate().getDataSource(), UPDATE_USER);
+	@ParametersAreNonnullByDefault 
+	public UpdateUser(DataSource dataSource) {
+		super(dataSource, UPDATE_USER);
 		super.declareParameter(new SqlParameter("accountName", Types.VARCHAR));
 		super.declareParameter(new SqlParameter("firstName", Types.VARCHAR));
 		super.declareParameter(new SqlParameter("lastName", Types.VARCHAR));

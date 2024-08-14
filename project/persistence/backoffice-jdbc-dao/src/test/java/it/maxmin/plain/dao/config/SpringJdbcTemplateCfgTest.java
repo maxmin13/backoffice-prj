@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.SQLException;
 
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.Test;
@@ -18,12 +17,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * Verifies that by loading SpringJdbcTemplateCfg.class, in the Spring context a JdbcTemplate object is present.
  * The test relies on simple-jndi library to create a JNDI directory sevice in the background.
  * */
-public class SpringJdbcTemplateCfgTest { 
+class SpringJdbcTemplateCfgTest { 
 
-	private static Logger LOGGER = LoggerFactory.getLogger(JndiDataSourceCfgTest.class);
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = LoggerFactory.getLogger(JndiDataSourceCfgTest.class);
 
 	@Test
-	public void testSpringJdbcTemplate() throws SQLException, IllegalStateException, NamingException {
+	void testSpringJdbcTemplate() throws SQLException, IllegalStateException {
 
 		var springJdbcCtx = new AnnotationConfigApplicationContext(SpringJdbcTemplateCfg.class);
 		var jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", JdbcTemplate.class);

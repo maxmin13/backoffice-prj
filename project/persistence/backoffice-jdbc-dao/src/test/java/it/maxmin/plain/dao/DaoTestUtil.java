@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,7 @@ import it.maxmin.model.plain.pojos.UserAddress;
 
 public class DaoTestUtil {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(DaoTestUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DaoTestUtil.class);
 
 	@Autowired
 	private MariaDB4jSpringService mariaDB4jSpringService;
@@ -49,7 +48,7 @@ public class DaoTestUtil {
 		for (String script : scripts) {
 			try {
 				Files.readAllLines(Paths.get("src/test/resources/database/" + script)).stream()
-						.filter(line -> !line.trim().isEmpty()).collect(Collectors.toList())
+						.filter(line -> !line.trim().isEmpty()).toList()
 						.forEach(jdbcTemplate.getJdbcTemplate()::update);
 			}
 			catch (IOException e) {
