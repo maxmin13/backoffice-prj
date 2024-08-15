@@ -1,0 +1,2 @@
+DELETE FROM UserAddress;
+DELETE FROM Address;
