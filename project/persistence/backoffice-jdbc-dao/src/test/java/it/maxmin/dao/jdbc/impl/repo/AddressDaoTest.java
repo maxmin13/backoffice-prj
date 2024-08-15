@@ -21,7 +21,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import it.maxmin.dao.jdbc.DaoTestUtil;
-import it.maxmin.dao.jdbc.EmbeddedJdbcTestCfg;
+import it.maxmin.dao.jdbc.JdbcTestCfg;
 import it.maxmin.model.jdbc.Address;
 import it.maxmin.model.jdbc.State;
 import it.maxmin.model.jdbc.User;
@@ -39,7 +39,7 @@ class AddressDaoTest {
 	@BeforeAll
 	static void setup() {
 		LOGGER.info("Running AddressDaoTest tests");
-		springJdbcCtx = new AnnotationConfigApplicationContext(EmbeddedJdbcTestCfg.class);
+		springJdbcCtx = new AnnotationConfigApplicationContext(JdbcTestCfg.class);
 		jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
 		dataSource = springJdbcCtx.getBean("dataSource", DataSource.class);
 		daoTestUtil = springJdbcCtx.getBean("daoTestUtil", DaoTestUtil.class);

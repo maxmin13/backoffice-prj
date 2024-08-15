@@ -16,10 +16,10 @@
 		<module>config/backoffice-config</module>
 		<module>persistence/backoffice-hibernate-dao</module>
 		<module>domain/backoffice-hibernate-model</module>
-		
+
 		<module>persistence/backoffice-jdbc-dao</module>
 		<module>domain/backoffice-jdbc-model</module>
-		
+
 		<module>service/backoffice-service</module>
 	</modules>
 
@@ -45,6 +45,8 @@
 		<org.craftercms.mariaDB4j.version>2.4.2.3</org.craftercms.mariaDB4j.version>
 		<com.h2database.version>2.1.214</com.h2database.version>
 		<com.google.code.findbugs.version>3.0.2</com.google.code.findbugs.version>
+		<hibernate.version>6.6.0.Final</hibernate.version>
+		<jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 	</properties>
 
 	<profiles>
@@ -70,7 +72,7 @@
 				<artifactId>backoffice-webapp</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>it.maxmin.persistence</groupId>
 				<artifactId>backoffice-jdbc-dao</artifactId>
@@ -81,7 +83,7 @@
 				<artifactId>backoffice-jdbc-model</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>it.maxmin.persistence</groupId>
 				<artifactId>backoffice-hibernate-dao</artifactId>
@@ -112,7 +114,7 @@
 				<version>${jakarta.servlet.jsp.jstl.version}</version>
 			</dependency>
 
-			<!-- core Spring dependencies -->
+			<!-- Spring dependencies -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
@@ -128,6 +130,24 @@
 				<artifactId>spring-jdbc</artifactId>
 				<version>${org.springframework.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			
+			<!-- Hibernate lib -->
+			<dependency>
+	            <groupId>org.hibernate.orm</groupId>
+	            <artifactId>hibernate-core</artifactId>
+	            <version>${hibernate.version}</version>
+        	</dependency>    
+        	      	
+			<dependency>
+	            <groupId>jakarta.annotation</groupId>
+	            <artifactId>jakarta.annotation-api</artifactId>
+	            <version>${jakarta.annotation.version}</version>
+	        </dependency>
 
 			<!-- mariadb driver lib -->
 			<dependency>

@@ -18,9 +18,10 @@ import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
  * Starts an embedded MariaDB database and creates a Spring context for the unit tests.
  * */
 
-public class EmbeddedJdbcTestCfg {
+public class JdbcTestCfg {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedJdbcTestCfg.class);
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcTestCfg.class);
 
 	@Bean
 	public MariaDB4jSpringService mariaDB4jSpringService() {
@@ -39,8 +40,7 @@ public class EmbeddedJdbcTestCfg {
 			mariaDB4jSpringService.getDB().createDB("testDB");
 		}
 		catch (ManagedProcessException e) {
-			LOGGER.error("Error creating DB", e);
-			throw new DaoTestException("Error creating DB", e);
+			throw new DaoTestException("Error creating the data source", e);
 		}
 
 		DBConfigurationBuilder config = mariaDB4jSpringService.getConfiguration();
@@ -51,7 +51,6 @@ public class EmbeddedJdbcTestCfg {
 			driver = (Class<? extends Driver>) Class.forName("org.mariadb.jdbc.Driver");
 		}
 		catch (ClassNotFoundException e) {
-			LOGGER.error("Error loading DB driver", e);
 			throw new DaoTestException("Error loading DB driver", e);
 		}
 		dataSource.setDriverClass(driver);

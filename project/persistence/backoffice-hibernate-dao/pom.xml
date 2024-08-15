@@ -34,8 +34,14 @@
 
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
+			<artifactId>spring-orm</artifactId>
 		</dependency>
+		
+		<!-- Hibernate lib -->
+		<dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency> 
 
 		<!-- logging lib -->
 		<dependency>

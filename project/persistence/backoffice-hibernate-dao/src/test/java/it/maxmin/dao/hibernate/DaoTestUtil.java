@@ -6,12 +6,16 @@ import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_STATE_BY_NAME;
 import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_USER_BY_USER_ID;
 import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_ADDRESSES_BY_USER_ID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +57,18 @@ public class DaoTestUtil {
 			}
 			catch (IOException e) {
 				throw new DaoTestException("Error running DB scripts", e);
+			}
+		}
+	}
+	
+
+	public void testDataSource(DataSource dataSource) throws SQLException {
+		try (var connection = dataSource.getConnection();
+				var statement = connection.prepareStatement("SELECT 1");
+				var resultSet = statement.executeQuery()) {
+			while (resultSet.next()) {
+				int mockVal = resultSet.getInt("1");
+				assertEquals(1, mockVal);
 			}
 		}
 	}
