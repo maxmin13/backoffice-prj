@@ -204,6 +204,7 @@ class AddressDaoTest {
 
 		List<Address> addresses = List.of(venice, ireland);
 
+		// run the test
 		addressDao.create(addresses);
 
 		List<Address> newAddresses = daoTestUtil.findAllAddresses();
@@ -259,8 +260,9 @@ class AddressDaoTest {
 		address.setCity("Dublin");
 		address.setStateId(ireland.getId());
 		address.setRegion("County Dublin");
-		address.setPostalCode("A65TF12");
+		address.setPostalCode("A65TF23");
 
+		// run the test
 		addressDao.update(address);
 
 		Address updated = daoTestUtil.findAddressByAddressId(addressId);
@@ -269,7 +271,7 @@ class AddressDaoTest {
 		assertEquals("Dublin", updated.getCity());
 		assertEquals(ireland.getId(), updated.getStateId());
 		assertEquals("County Dublin", updated.getRegion());
-		assertEquals("A65TF12", updated.getPostalCode());
+		assertEquals("A65TF23", updated.getPostalCode());
 	}
 
 }

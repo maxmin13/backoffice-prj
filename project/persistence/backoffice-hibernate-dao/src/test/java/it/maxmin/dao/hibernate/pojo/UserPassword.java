@@ -4,16 +4,16 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Password implements Serializable {
+public class UserPassword implements Serializable {
 
 	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private Long id;
-	private Long userId;
+	private String userId;
 	private String value;
-	private boolean active;
-	private LocalDateTime createDate;
+	private LocalDateTime effDate;
+	private LocalDateTime endDate;
 
 	public Long getId() {
 		return id;
@@ -23,11 +23,11 @@ public class Password implements Serializable {
 		this.id = id;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
@@ -39,20 +39,20 @@ public class Password implements Serializable {
 		this.value = value;
 	}
 
-	public boolean isActive() {
-		return active;
+	public LocalDateTime getEffDate() {
+		return effDate;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setEffDate(LocalDateTime effDate) {
+		this.effDate = effDate;
 	}
 
-	public LocalDateTime getCreateDate() {
-		return createDate;
+	public LocalDateTime getEndDate() {
+		return endDate;
 	}
 
-	public void setCreateDate(LocalDateTime createDate) {
-		this.createDate = createDate;
+	public void setEndDate(LocalDateTime endDate) {
+		this.endDate = endDate;
 	}
 
 }

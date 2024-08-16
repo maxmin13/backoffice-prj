@@ -6,14 +6,15 @@ import java.time.LocalDateTime;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class LoginAttempt extends AbstractEntity {
+public class UserPassword extends AbstractEntity {
 
 	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private String userId;
-	private boolean success;
-	private LocalDateTime createdDate;
+	private String value;
+	private LocalDateTime effDate;
+	private LocalDateTime endDate;
 
 	public String getUserId() {
 		return userId;
@@ -23,26 +24,34 @@ public class LoginAttempt extends AbstractEntity {
 		this.userId = userId;
 	}
 
-	public boolean isSuccess() {
-		return success;
+	public String getValue() {
+		return value;
 	}
 
-	public void setSuccess(boolean success) {
-		this.success = success;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
+	public LocalDateTime getEffDate() {
+		return effDate;
 	}
 
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+	public void setEffDate(LocalDateTime effDate) {
+		this.effDate = effDate;
+	}
+
+	public LocalDateTime getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDateTime endDate) {
+		this.endDate = endDate;
 	}
 
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(userId).append(createdDate);
+		hcb.append(userId).append(effDate);
 		return hcb.toHashCode();
 	}
 
@@ -51,12 +60,12 @@ public class LoginAttempt extends AbstractEntity {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof LoginAttempt)) {
+		if (!(obj instanceof UserPassword)) {
 			return false;
 		}
-		LoginAttempt that = (LoginAttempt) obj;
+		UserPassword that = (UserPassword) obj;
 		EqualsBuilder eb = new EqualsBuilder();
-		eb.append(userId, that.userId).append(createdDate, createdDate);
+		eb.append(userId, that.userId).append(effDate, that.effDate);
 		return eb.isEquals();
 	}
 }
