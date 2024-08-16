@@ -1,22 +1,17 @@
 package com.maxmin.domain.hibernate.entities;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
-public class Password {
+public class Password extends AbstractEntity {
 
-	private Long passwordId;
+	@Serial
+	private static final long serialVersionUID = 7632536256395423354L;
+
 	private Long userId;
 	private String value;
 	private boolean active;
 	private LocalDateTime createDate;
-
-	public Long getPasswordId() {
-		return passwordId;
-	}
-
-	public void setPasswordId(Long passwordId) {
-		this.passwordId = passwordId;
-	}
 
 	public Long getUserId() {
 		return userId;

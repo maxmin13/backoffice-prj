@@ -32,13 +32,13 @@ public class InsertUserWithAddress {
 	public void execute(User user) {
 		notNull(user, "The user must not be null");
 		User newUser = this.insertUser.execute(user);
-		var newUserId = Objects.requireNonNull(newUser.getUserId()).longValue();
+		var newUserId = Objects.requireNonNull(newUser.getId()).longValue();
 		var addresses = user.getAddresses();
 		if (addresses != null) {
 			addresses.stream().forEach(address -> {
 				Address newAddress = this.insertAddress.execute(address);
 				this.insertUserAddress.execute(
-						UserAddress.newInstance().withAddressId(newAddress.getAddressId()).withUserId(newUserId));
+						UserAddress.newInstance().withAddressId(newAddress.getId()).withUserId(newUserId));
 			});
 		}
 	}

@@ -4,15 +4,15 @@ public enum AddressQueryConstants {
 	;
 
 	public static final String SELECT_ADDRESSES_BY_USER_ID = ""
-			+ "SELECT a.AddressId, a.Address, a.City, a.StateId, a.Region, a.PostalCode "
+			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode, ua.UserId "
 			+ "FROM Address a "
-			+ "INNER JOIN UserAddress u ON a.AddressId = u.AddressId "
-			+ "WHERE u.UserId = :userId "
-			+ "ORDER BY a.addressId";
+			+ "INNER JOIN UserAddress ua ON a.Id = ua.AddressId "
+			+ "WHERE ua.UserId = :userId "
+			+ "ORDER BY a.Id, ua.UserId";
 	
 	public static final String UPDATE_ADDRESS = ""
 			+ "UPDATE Address "
-			+ "SET Address=:address, City=:city, StateId=:stateId, Region=:region, PostalCode=:postalCode "
-			+ "WHERE AddressId=:addressId";
+			+ "SET Description=:description, City=:city, StateId=:stateId, Region=:region, PostalCode=:postalCode "
+			+ "WHERE Id=:addressId";
 
 }

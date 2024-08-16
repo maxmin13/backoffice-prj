@@ -29,10 +29,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
 
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
-import it.maxmin.dao.hibernate.pojo.Address;
-import it.maxmin.dao.hibernate.pojo.State;
-import it.maxmin.dao.hibernate.pojo.User;
-import it.maxmin.dao.hibernate.pojo.UserAddress;
+import it.maxmin.model.jdbc.Address;
+import it.maxmin.model.jdbc.State;
+import it.maxmin.model.jdbc.User;
+import it.maxmin.model.jdbc.UserAddress;
 
 public class DaoTestUtil {
 
@@ -60,7 +60,6 @@ public class DaoTestUtil {
 			}
 		}
 	}
-	
 
 	public void testDataSource(DataSource dataSource) throws SQLException {
 		try (var connection = dataSource.getConnection();
@@ -89,10 +88,10 @@ public class DaoTestUtil {
 		notNull(user, "The user must not be null");
 
 		SimpleJdbcInsert insertUser = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate().getDataSource());
-		insertUser.withTableName("User").usingGeneratedKeyColumns("userId");
+		insertUser.withTableName("User").usingGeneratedKeyColumns("Id");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(user);
 		KeyHolder result = insertUser.executeAndReturnKeyHolder(paramSource);
-		user.setUserId(result.getKey().longValue());
+		user.setId(result.getKey().longValue());
 
 		return user;
 	}
@@ -116,10 +115,10 @@ public class DaoTestUtil {
 		notNull(address, "The address must not be null");
 
 		SimpleJdbcInsert insertAddress = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate().getDataSource());
-		insertAddress.withTableName("Address").usingGeneratedKeyColumns("addressId");
+		insertAddress.withTableName("Address").usingGeneratedKeyColumns("Id");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(address);
 		KeyHolder result = insertAddress.executeAndReturnKeyHolder(paramSource);
-		address.setAddressId(result.getKey().longValue());
+		address.setId(result.getKey().longValue());
 
 		return address;
 	}

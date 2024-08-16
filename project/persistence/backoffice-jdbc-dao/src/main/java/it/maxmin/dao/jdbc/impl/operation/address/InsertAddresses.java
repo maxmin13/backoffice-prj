@@ -23,7 +23,7 @@ public class InsertAddresses {
 		notNull(addresses, "The addresses must not be null");
 
 		SimpleJdbcInsert insertAddress = new SimpleJdbcInsert(dataSource);
-		insertAddress.withTableName("Address").usingGeneratedKeyColumns("addressId");
+		insertAddress.withTableName("Address").usingGeneratedKeyColumns("Id");
 		insertAddress.executeBatch(SqlParameterSourceUtils.createBatch(addresses));
 	}
 }

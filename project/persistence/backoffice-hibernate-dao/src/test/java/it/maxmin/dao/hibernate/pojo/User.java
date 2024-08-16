@@ -1,34 +1,39 @@
 package it.maxmin.dao.hibernate.pojo;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
 
-	private Long userId;
+	@Serial
+	private static final long serialVersionUID = 7632536256395423354L;
+
+	private Long id;
 	private String accountName;
 	private String firstName;
 	private String lastName;
 	private LocalDate birthDate;
 	private LocalDateTime createdDate;
-	private List<Address> addresses = new ArrayList<>();;
+	private List<Address> addresses = new ArrayList<>();
 
 	public static User newInstance() {
 		return new User();
 	}
 
-	public Long getUserId() {
-		return userId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public User withUserId(Long userId) {
-		this.userId = userId;
+	public User withId(Long id) {
+		this.id = id;
 		return this;
 	}
 
@@ -114,4 +119,5 @@ public class User {
 			return true;
 		}
 	}
+	
 }

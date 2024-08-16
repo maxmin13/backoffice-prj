@@ -1,8 +1,13 @@
 package it.maxmin.dao.hibernate.pojo;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class LoginAttempt {
+public class LoginAttempt implements Serializable {
+
+	@Serial
+	private static final long serialVersionUID = 7632536256395423354L;
 
 	private Long loginAttemptId;
 	private String accountName;

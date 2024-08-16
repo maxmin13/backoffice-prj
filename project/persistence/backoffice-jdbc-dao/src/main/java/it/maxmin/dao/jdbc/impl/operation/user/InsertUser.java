@@ -26,12 +26,12 @@ public class InsertUser {
 		notNull(user, "The user must not be null");
 
 		SimpleJdbcInsert insertUser = new SimpleJdbcInsert(dataSource);
-		insertUser.withTableName("User").usingGeneratedKeyColumns("userId");
+		insertUser.withTableName("User").usingGeneratedKeyColumns("Id");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(user);
 		KeyHolder result = insertUser.executeAndReturnKeyHolder(paramSource);
 		Number keyValue = result.getKey();
 		if (keyValue != null) {
-			user.setUserId(keyValue.longValue());
+			user.setId(keyValue.longValue());
 		}
 		else {
 			LOGGER.warn("User primary key not found");

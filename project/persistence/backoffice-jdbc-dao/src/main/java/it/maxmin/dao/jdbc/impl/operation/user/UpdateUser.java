@@ -29,6 +29,6 @@ public class UpdateUser extends SqlUpdate {
 	public void execute(User user) {
 		notNull(user, "The user must not be null");
 		updateByNamedParam(Map.of("accountName", user.getAccountName(), "firstName", user.getFirstName(), "lastName",
-				user.getLastName(), "birthData", user.getBirthDate(), "userId", user.getUserId()));
+				user.getLastName(), "birthData", user.getBirthDate(), "userId", user.getId()));
 	}
 }

@@ -1,34 +1,35 @@
 package com.maxmin.domain.hibernate.entities;
 
+import java.io.Serial;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-	private Long userId;
+import jakarta.persistence.Column;
+
+public class User extends AbstractEntity {
+
+	@Serial
+	private static final long serialVersionUID = 7632536256395423354L;
+
+	@Column(unique = true, updatable = false)
 	private String accountName;
 	private String firstName;
 	private String lastName;
 	private LocalDate birthDate;
 	private LocalDateTime createdDate;
-	private List<Address> addresses = new ArrayList<>();;
+	private List<Address> addresses = new ArrayList<>();
 
 	public static User newInstance() {
 		return new User();
 	}
 
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public User withUserId(Long userId) {
-		this.userId = userId;
+	public User withId(Long id) {
+		this.id = id;
 		return this;
 	}
 
@@ -114,4 +115,25 @@ public class User {
 			return true;
 		}
 	}
+	
+    @Override
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder();
+        hcb.append(accountName);
+        return hcb.toHashCode();
+    }
+ 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof User)) {
+            return false;
+        }
+        User that = (User) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+        eb.append(accountName, that.accountName);
+        return eb.isEquals();
+    }
 }

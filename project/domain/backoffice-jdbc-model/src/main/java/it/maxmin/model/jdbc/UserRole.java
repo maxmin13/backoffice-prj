@@ -1,19 +1,24 @@
 package it.maxmin.model.jdbc;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class UserRole {
+public class UserRole implements Serializable {
+
+	@Serial
+	private static final long serialVersionUID = 7632536256395423354L;
 	
-	private Long userRoleId;
+	private Long id;
 	private String roleName;
 	private boolean active;
 	private LocalDateTime createdDate;
 	
-	public Long getUserRoleId() {
-		return userRoleId;
+	public Long getId() {
+		return id;
 	}
-	public void setUserRoleId(Long userRoleId) {
-		this.userRoleId = userRoleId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public String getRoleName() {
 		return roleName;

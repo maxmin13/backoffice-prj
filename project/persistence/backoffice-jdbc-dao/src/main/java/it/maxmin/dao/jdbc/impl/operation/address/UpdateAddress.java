@@ -17,7 +17,7 @@ public class UpdateAddress extends SqlUpdate {
 
 	public UpdateAddress(DataSource dataSource) {
 		super(dataSource, UPDATE_ADDRESS);
-		super.declareParameter(new SqlParameter("address", Types.VARCHAR));
+		super.declareParameter(new SqlParameter("description", Types.VARCHAR));
 		super.declareParameter(new SqlParameter("city", Types.VARCHAR));
 		super.declareParameter(new SqlParameter("stateId", Types.INTEGER));
 		super.declareParameter(new SqlParameter("region", Types.VARCHAR));
@@ -27,7 +27,7 @@ public class UpdateAddress extends SqlUpdate {
 
 	public void execute(Address address) {
 		notNull(address, "The address must not be null");
-		updateByNamedParam(Map.of("addressId", address.getAddressId(), "address", address.getAddress(), "city",
+		updateByNamedParam(Map.of("addressId", address.getId(), "description", address.getDescription(), "city",
 				address.getCity(), "stateId", address.getStateId(), "region", address.getRegion(), "postalCode",
 				address.getPostalCode()));
 	}

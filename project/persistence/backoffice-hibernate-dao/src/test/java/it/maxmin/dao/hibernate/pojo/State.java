@@ -1,17 +1,23 @@
 package it.maxmin.dao.hibernate.pojo;
 
-public class State {
+import java.io.Serial;
+import java.io.Serializable;
 
-	private Long stateId;
+public class State implements Serializable {
+
+	@Serial
+	private static final long serialVersionUID = 7632536256395423354L;
+
+	private Long id;
 	private String name;
 	private String code;
 
-	public Long getStateId() {
-		return stateId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setStateId(Long stateId) {
-		this.stateId = stateId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {

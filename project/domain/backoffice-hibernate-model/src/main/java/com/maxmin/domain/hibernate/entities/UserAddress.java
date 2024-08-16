@@ -1,6 +1,12 @@
 package com.maxmin.domain.hibernate.entities;
 
-public class UserAddress {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class UserAddress implements Serializable {
+
+	@Serial
+	private static final long serialVersionUID = 7632536256395423354L;
 
 	private Long userId;
 	private Long addressId;

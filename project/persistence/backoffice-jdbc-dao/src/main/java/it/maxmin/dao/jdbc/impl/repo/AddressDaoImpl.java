@@ -47,7 +47,7 @@ public class AddressDaoImpl implements AddressDao {
 	public Address create(Address address) {
 		notNull(address, "The address must not be null");
 		Address newAddress = this.insertAddress.execute(address);
-		LOGGER.info("New address  {} inserted with id: {}", newAddress.getAddress(), newAddress.getAddressId());
+		LOGGER.info("New address  {} inserted with id: {}", newAddress.getDescription(), newAddress.getId());
 		return address;
 	}
 
@@ -62,7 +62,7 @@ public class AddressDaoImpl implements AddressDao {
 	public void update(Address address) {
 		notNull(address, "The address must not be null");
 		updateAddress.execute(address);
-		LOGGER.info("Existing address updated with id: {}", address.getAddressId());
+		LOGGER.info("Existing address updated with id: {}", address.getId());
 	}
 
 }

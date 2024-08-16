@@ -26,12 +26,12 @@ public class InsertAddress {
 		notNull(address, "The address must not be null");
 
 		SimpleJdbcInsert insertAddress = new SimpleJdbcInsert(dataSource);
-		insertAddress.withTableName("Address").usingGeneratedKeyColumns("addressId");
+		insertAddress.withTableName("Address").usingGeneratedKeyColumns("Id");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(address);
 		KeyHolder result = insertAddress.executeAndReturnKeyHolder(paramSource);
 		Number keyValue = result.getKey();
 		if (keyValue != null) {
-			address.setAddressId(keyValue.longValue());
+			address.setId(keyValue.longValue());
 		}
 		else {
 			LOGGER.warn("Address primary key not generated");

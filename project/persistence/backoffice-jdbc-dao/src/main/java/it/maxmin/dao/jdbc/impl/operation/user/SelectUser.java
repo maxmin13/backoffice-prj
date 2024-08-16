@@ -26,25 +26,28 @@ public abstract class SelectUser {
 		Map<Long, User> map = new HashMap<>();
 		User user = null;
 		while (rs.next()) {
-			var userId = rs.getLong("UserId");
+			var userId = rs.getLong("Id");
 			user = map.computeIfAbsent(userId, u -> {
 				try {
-					return User.newInstance().withUserId(rs.getLong("UserId"))
-							.withAccountName(rs.getString("AccountName")).withFirstName(rs.getString("FirstName"))
+					return User.newInstance().withId(userId)
+							.withAccountName(rs.getString("AccountName"))
+							.withFirstName(rs.getString("FirstName"))
 							.withLastName(rs.getString("LastName"))
-							.withBirthDate(rs.getDate("BirthDate").toLocalDate()).withCreatedDate(
-									LocalDateTime.of(rs.getDate("CreatedDate").toLocalDate(), LocalTime.of(0, 0)));
+							.withBirthDate(rs.getDate("BirthDate").toLocalDate())
+							.withCreatedDate(LocalDateTime.of(rs.getDate("CreatedDate").toLocalDate(), LocalTime.of(0, 0)));
 				}
 				catch (SQLException ex) {
 					throw new DATAAccessException("Malformed data!", ex);
 				}
 			});
 			var addressId = rs.getLong("AddressId");
-			if (addressId > 0) { // if a record is found
+			if (addressId > 0) { // if a record is found (outer join)
 				Objects.requireNonNull(user)
-						.addAddress(Address.newInstance().withAddressId(rs.getLong("AddressId"))
-								.withAddress(rs.getString("Address")).withCity(rs.getString("City"))
-								.withStateId(rs.getLong("StateId")).withRegion(rs.getString("Region"))
+						.addAddress(Address.newInstance().withId(addressId)
+								.withDescription(rs.getString("Description"))
+								.withCity(rs.getString("City"))
+								.withStateId(rs.getLong("StateId"))
+								.withRegion(rs.getString("Region"))
 								.withPostalCode(rs.getString("PostalCode")));
 			}
 		}

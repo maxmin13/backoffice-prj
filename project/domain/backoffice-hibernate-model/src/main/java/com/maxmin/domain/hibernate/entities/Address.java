@@ -1,9 +1,13 @@
 package com.maxmin.domain.hibernate.entities;
 
-public class Address {
+import java.io.Serial;
 
-	private Long addressId;
-	private String address;
+public class Address extends AbstractEntity {
+
+	@Serial
+	private static final long serialVersionUID = 7632536256395423354L;
+
+	private String description;
 	private String city;
 	private Long stateId;
 	private String region;
@@ -12,30 +16,22 @@ public class Address {
 	public static Address newInstance() {
 		return new Address();
 	}
-
-	public Long getAddressId() {
-		return addressId;
-	}
-
-	public void setAddressId(Long addressId) {
-		this.addressId = addressId;
-	}
 	
-	public Address withAddressId(Long addressId) {
-		this.addressId = addressId;
+	public Address withId(Long id) {
+		this.id = id;
 		return this;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
-	public Address withAddress(String address) {
-		this.address = address;
+	public Address withDescription(String description) {
+		this.description = description;
 		return this;
 	}
 

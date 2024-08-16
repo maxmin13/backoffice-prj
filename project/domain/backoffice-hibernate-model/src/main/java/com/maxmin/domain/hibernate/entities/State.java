@@ -1,18 +1,14 @@
 package com.maxmin.domain.hibernate.entities;
 
-public class State {
+import java.io.Serial;
 
-	private Long stateId;
+public class State extends AbstractEntity {
+
+	@Serial
+	private static final long serialVersionUID = 7632536256395423354L;
+
 	private String name;
 	private String code;
-
-	public Long getStateId() {
-		return stateId;
-	}
-
-	public void setStateId(Long stateId) {
-		this.stateId = stateId;
-	}
 
 	public String getName() {
 		return name;

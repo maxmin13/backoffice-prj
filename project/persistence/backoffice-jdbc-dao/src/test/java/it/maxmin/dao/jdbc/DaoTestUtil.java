@@ -88,10 +88,10 @@ public class DaoTestUtil {
 		notNull(user, "The user must not be null");
 
 		SimpleJdbcInsert insertUser = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate().getDataSource());
-		insertUser.withTableName("User").usingGeneratedKeyColumns("userId");
+		insertUser.withTableName("User").usingGeneratedKeyColumns("Id");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(user);
 		KeyHolder result = insertUser.executeAndReturnKeyHolder(paramSource);
-		user.setUserId(result.getKey().longValue());
+		user.setId(result.getKey().longValue());
 
 		return user;
 	}
@@ -115,10 +115,10 @@ public class DaoTestUtil {
 		notNull(address, "The address must not be null");
 
 		SimpleJdbcInsert insertAddress = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate().getDataSource());
-		insertAddress.withTableName("Address").usingGeneratedKeyColumns("addressId");
+		insertAddress.withTableName("Address").usingGeneratedKeyColumns("Id");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(address);
 		KeyHolder result = insertAddress.executeAndReturnKeyHolder(paramSource);
-		address.setAddressId(result.getKey().longValue());
+		address.setId(result.getKey().longValue());
 
 		return address;
 	}

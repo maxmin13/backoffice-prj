@@ -16,10 +16,8 @@
 		<module>config/backoffice-config</module>
 		<module>persistence/backoffice-hibernate-dao</module>
 		<module>domain/backoffice-hibernate-model</module>
-
 		<module>persistence/backoffice-jdbc-dao</module>
 		<module>domain/backoffice-jdbc-model</module>
-
 		<module>service/backoffice-service</module>
 	</modules>
 
@@ -47,6 +45,7 @@
 		<com.google.code.findbugs.version>3.0.2</com.google.code.findbugs.version>
 		<hibernate.version>6.6.0.Final</hibernate.version>
 		<jakarta.annotation.version>3.0.0</jakarta.annotation.version>
+		<org.apache.commons.version>3.16.0</org.apache.commons.version>
 	</properties>
 
 	<profiles>
@@ -141,13 +140,19 @@
 	            <groupId>org.hibernate.orm</groupId>
 	            <artifactId>hibernate-core</artifactId>
 	            <version>${hibernate.version}</version>
-        	</dependency>    
-        	      	
+        	</dependency> 
+        	        	      	
 			<dependency>
 	            <groupId>jakarta.annotation</groupId>
 	            <artifactId>jakarta.annotation-api</artifactId>
 	            <version>${jakarta.annotation.version}</version>
 	        </dependency>
+	        
+	        <dependency>
+			    <groupId>org.apache.commons</groupId>
+			    <artifactId>commons-lang3</artifactId>
+			    <version>${org.apache.commons.version}</version>
+			</dependency>
 
 			<!-- mariadb driver lib -->
 			<dependency>
