@@ -1,6 +1,5 @@
 package it.maxmin.dao.hibernate.pojo;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,7 +8,6 @@ import java.util.List;
 
 public class User implements Serializable {
 
-	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private Long id;

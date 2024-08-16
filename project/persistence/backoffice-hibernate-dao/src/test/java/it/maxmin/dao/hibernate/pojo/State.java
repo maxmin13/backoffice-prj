@@ -1,11 +1,9 @@
 package it.maxmin.dao.hibernate.pojo;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 public class State implements Serializable {
 
-	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private Long id;

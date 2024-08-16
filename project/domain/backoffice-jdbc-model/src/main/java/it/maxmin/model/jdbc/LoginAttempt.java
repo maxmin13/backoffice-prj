@@ -1,12 +1,10 @@
 package it.maxmin.model.jdbc;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class LoginAttempt implements Serializable {
 
-	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private String userId;
