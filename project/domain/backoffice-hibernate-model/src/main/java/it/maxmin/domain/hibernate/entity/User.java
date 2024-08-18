@@ -29,6 +29,7 @@ public class User extends AbstractEntity {
 	private LocalDate birthDate;
 	private LocalDateTime createdAt;
 	private Department department;
+	private Set<UserRole> roles = new HashSet<>();
 	private Set<Address> addresses = new HashSet<>();
 
 	public static User newInstance() {
@@ -141,6 +142,26 @@ public class User extends AbstractEntity {
 		}
 		else {
 			addresses.add(address);
+			return true;
+		}
+	}
+	
+	@ManyToMany
+	@JoinTable(name = "UserUserRole", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "UserRoleId"))
+	public Set<UserRole> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<UserRole> roles) {
+		this.roles = roles;
+	}
+
+	public boolean addRoles(UserRole role) {
+		if (roles.contains(role)) {
+			return false;
+		}
+		else {
+			roles.add(role);
 			return true;
 		}
 	}
