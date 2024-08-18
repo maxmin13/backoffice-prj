@@ -2,11 +2,12 @@ package it.maxmin.domain.hibernate.entity;
 
 import java.io.Serial;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -59,7 +60,8 @@ public class Address extends AbstractEntity {
 		return this;
 	}
 
-//	@Column(name = "StateId")
+	@OneToOne
+	@JoinColumn(name = "StateId")
 	public State getState() {
 		return state;
 	}
@@ -87,7 +89,7 @@ public class Address extends AbstractEntity {
 		return this;
 	}
 
-	@Column(name = "PostalCode", unique = true, updatable = false)
+	@Column(name = "PostalCode")
 	public String getPostalCode() {
 		return postalCode;
 	}
@@ -113,12 +115,23 @@ public class Address extends AbstractEntity {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof Address)) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		if (!super.equals(obj)) {
 			return false;
 		}
 		Address that = (Address) obj;
-		EqualsBuilder eb = new EqualsBuilder();
-		eb.append(postalCode, that.postalCode);
-		return eb.isEquals();
+		if (that.getId() != null && this.getId() != null) {
+			return super.equals(obj);
+		}
+		return postalCode.equals(that.postalCode);
 	}
+
+	@Override
+	public String toString() {
+		return "Address [id=" + id + ", description=" + description + ", city=" + city + ", state=" + state
+				+ ", region=" + region + ", postalCode=" + postalCode + "]";
+	}
+
 }

@@ -3,11 +3,12 @@ package it.maxmin.domain.hibernate.entity;
 import java.io.Serial;
 import java.time.LocalDateTime;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,23 +18,34 @@ public class UserPassword extends AbstractEntity {
 	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
 
-	private String userId;
+	private User user;
 	private String value;
 	private LocalDateTime effDate;
 	private LocalDateTime endDate;
 
-	@Column(name = "UserId")
-	public String getUserId() {
-		return userId;
+	@OneToOne
+	@JoinColumn(name = "UserId")
+	public User getUser() {
+		return user;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public UserPassword withUser(User user) {
+		this.user = user;
+		return this;
 	}
 
 	@Column(name = "Value")
 	public String getValue() {
 		return value;
+	}
+
+	public UserPassword withValue(String value) {
+		this.value = value;
+		return this;
 	}
 
 	public void setValue(String value) {
@@ -49,6 +61,11 @@ public class UserPassword extends AbstractEntity {
 		this.effDate = effDate;
 	}
 
+	public UserPassword withEffDate(LocalDateTime effDate) {
+		this.effDate = effDate;
+		return this;
+	}
+
 	@Column(name = "EndDate")
 	public LocalDateTime getEndDate() {
 		return endDate;
@@ -58,10 +75,15 @@ public class UserPassword extends AbstractEntity {
 		this.endDate = endDate;
 	}
 
+	public UserPassword withEndDate(LocalDateTime endDate) {
+		this.endDate = endDate;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(userId).append(effDate);
+		hcb.append(user.id).append(effDate);
 		return hcb.toHashCode();
 	}
 
@@ -70,12 +92,22 @@ public class UserPassword extends AbstractEntity {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof UserPassword)) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		if (!super.equals(obj)) {
 			return false;
 		}
 		UserPassword that = (UserPassword) obj;
-		EqualsBuilder eb = new EqualsBuilder();
-		eb.append(userId, that.userId).append(effDate, that.effDate);
-		return eb.isEquals();
+		if (that.getId() != null && this.getId() != null) {
+			return super.equals(obj);
+		}
+		return user.id.equals(that.user.id) && effDate.equals(that.effDate);
 	}
+
+	@Override
+	public String toString() {
+		return  "UserPassword [id=" + id + ", user=" + user + ", value=xxxx, effDate=" + effDate + ", endDate=" + endDate + "]";
+	}
+
 }

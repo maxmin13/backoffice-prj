@@ -2,7 +2,6 @@ package it.maxmin.domain.hibernate.entity;
 
 import java.io.Serial;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import jakarta.persistence.Column;
@@ -19,7 +18,7 @@ public class State extends AbstractEntity {
 	private String name;
 	private String code;
 
-	@Column(name = "Name", unique = true, updatable = false)
+	@Column(name = "Name")
 	public String getName() {
 		return name;
 	}
@@ -28,7 +27,7 @@ public class State extends AbstractEntity {
 		this.name = name;
 	}
 
-	@Column(name = "Code", unique = true, updatable = false)
+	@Column(name = "Code")
 	public String getCode() {
 		return code;
 	}
@@ -49,12 +48,22 @@ public class State extends AbstractEntity {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof State)) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		if (!super.equals(obj)) {
 			return false;
 		}
 		State that = (State) obj;
-		EqualsBuilder eb = new EqualsBuilder();
-		eb.append(code, that.code);
-		return eb.isEquals();
+		if (that.getId() != null && this.getId() != null) {
+			return super.equals(obj);
+		}
+		return code.equals(that.code);
 	}
+
+	@Override
+	public String toString() {
+		return  "State [id=" + id + ", name=" + name + ", code=" + code + "]";
+	}
+	
 }

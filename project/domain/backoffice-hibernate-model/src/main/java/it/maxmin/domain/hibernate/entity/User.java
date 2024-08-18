@@ -6,11 +6,14 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,9 +26,9 @@ public class User extends AbstractEntity {
 	private String accountName;
 	private String firstName;
 	private String lastName;
-	private Department department;
 	private LocalDate birthDate;
 	private LocalDateTime createdDate;
+	private Department department;
 	private Set<Address> addresses = new HashSet<>();
 
 	public static User newInstance() {
@@ -37,7 +40,7 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
-	@Column(name = "AccountName", unique = true, updatable = false)
+	@Column(name = "AccountName")
 	public String getAccountName() {
 		return accountName;
 	}
@@ -79,7 +82,8 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
-//	@Column(name = "Department")
+	@ManyToOne
+	@JoinColumn(name = "DepartmentId")
 	public Department getDepartment() {
 		return department;
 	}
@@ -87,7 +91,7 @@ public class User extends AbstractEntity {
 	public void setDepartment(Department department) {
 		this.department = department;
 	}
-	
+
 	public User withDepartment(Department department) {
 		this.department = department;
 		return this;
@@ -121,6 +125,8 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
+	@ManyToMany
+	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "AddressId"))
 	public Set<Address> getAddresses() {
 		return addresses;
 	}
@@ -151,12 +157,24 @@ public class User extends AbstractEntity {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof User)) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		if (!super.equals(obj)) {
 			return false;
 		}
 		User that = (User) obj;
-		EqualsBuilder eb = new EqualsBuilder();
-		eb.append(accountName, that.accountName);
-		return eb.isEquals();
+		if (that.getId() != null && this.getId() != null) {
+			return super.equals(obj);
+		}
+		return accountName.equals(that.accountName);
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", accountName=" + accountName + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", birthDate=" + birthDate + ", createdDate=" + createdDate + ", department=" + department
+				+ ", addresses=" + addresses + "]";
+	}
+
 }

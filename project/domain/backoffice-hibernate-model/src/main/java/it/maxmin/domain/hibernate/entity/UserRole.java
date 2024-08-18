@@ -3,7 +3,6 @@ package it.maxmin.domain.hibernate.entity;
 import java.io.Serial;
 import java.time.LocalDateTime;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import jakarta.persistence.Column;
@@ -17,7 +16,6 @@ public class UserRole extends AbstractEntity {
 	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
 
-	@Column(unique = true, updatable = false)
 	private String roleName;
 	private boolean active;
 	private LocalDateTime createdDate;
@@ -61,12 +59,22 @@ public class UserRole extends AbstractEntity {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof UserRole)) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		if (!super.equals(obj)) {
 			return false;
 		}
 		UserRole that = (UserRole) obj;
-		EqualsBuilder eb = new EqualsBuilder();
-		eb.append(roleName, that.roleName);
-		return eb.isEquals();
+		if (that.getId() != null && this.getId() != null) {
+			return super.equals(obj);
+		}
+		return roleName.equals(that.roleName);
 	}
+
+	@Override
+	public String toString() {
+		return  "UserRole [id=" + id + ", roleName=" + roleName + ", active=" + active + ", createdDate=" + createdDate + "]";
+	}
+
 }
