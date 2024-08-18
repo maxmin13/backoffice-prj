@@ -17,7 +17,7 @@ import it.maxmin.dao.jdbc.impl.operation.address.InsertAddress;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddresses;
 import it.maxmin.dao.jdbc.impl.operation.address.SelectAddressesByUserId;
 import it.maxmin.dao.jdbc.impl.operation.address.UpdateAddress;
-import it.maxmin.model.jdbc.Address;
+import it.maxmin.model.jdbc.domain.entity.Address;
 
 @Repository
 public class AddressDaoImpl implements AddressDao {

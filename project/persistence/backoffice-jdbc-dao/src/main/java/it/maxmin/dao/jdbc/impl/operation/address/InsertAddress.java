@@ -1,41 +1,48 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
+import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.INSERT_ADDRESS;
 import static org.springframework.util.Assert.notNull;
+
+import java.sql.Types;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.SqlUpdate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
-import it.maxmin.model.jdbc.Address;
+import it.maxmin.model.jdbc.domain.entity.Address;
 
-public class InsertAddress {
+public class InsertAddress extends SqlUpdate {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertAddress.class);
-	
-	private DataSource dataSource;
 
 	public InsertAddress(DataSource dataSource) {
-		this.dataSource = dataSource;
+		super(dataSource, INSERT_ADDRESS);
+		super.declareParameter(new SqlParameter("description", Types.VARCHAR));
+		super.declareParameter(new SqlParameter("city", Types.VARCHAR));
+		super.declareParameter(new SqlParameter("stateId", Types.INTEGER));
+		super.declareParameter(new SqlParameter("region", Types.VARCHAR));
+		super.declareParameter(new SqlParameter("postalCode", Types.VARCHAR));
+		super.setGeneratedKeysColumnNames("id");
+		super.setReturnGeneratedKeys(true);
 	}
 
 	public Address execute(Address address) {
 		notNull(address, "The address must not be null");
 
-		SimpleJdbcInsert insertAddress = new SimpleJdbcInsert(dataSource);
-		insertAddress.withTableName("Address").usingGeneratedKeyColumns("Id");
-		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(address);
-		KeyHolder result = insertAddress.executeAndReturnKeyHolder(paramSource);
-		Number keyValue = result.getKey();
-		if (keyValue != null) {
-			address.setId(keyValue.longValue());
-		}
-		else {
-			LOGGER.warn("Address primary key not generated");
-		}
+		var keyHolder = new GeneratedKeyHolder();
+		updateByNamedParam(Map.of("description", address.getDescription(), "city",
+				address.getCity(), "stateId", address.getState().getId(), "region", address.getRegion(), "postalCode",
+				address.getPostalCode()), keyHolder);
+
+		var addressId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+		address.setId(addressId);
 
 		return address;
 	}

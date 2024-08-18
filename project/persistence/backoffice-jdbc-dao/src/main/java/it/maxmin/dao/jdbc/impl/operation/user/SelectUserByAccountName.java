@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import it.maxmin.model.jdbc.User;
+import it.maxmin.model.jdbc.domain.entity.User;
 
 public class SelectUserByAccountName extends SelectUser {
 
@@ -31,7 +31,7 @@ public class SelectUserByAccountName extends SelectUser {
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		param.addValue("accountName", accountName, Types.VARCHAR);
 
-		List<User> users = jdbcTemplate.query(SELECT_USER_BY_ACCOUNT_NAME, param, usersExtractor);
+		List<User> users = jdbcTemplate.query(SELECT_USER_BY_ACCOUNT_NAME, param, userExtractor);
 		 
 		return (users == null || users.isEmpty()) ? null : users.get(0);
 	}

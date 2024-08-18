@@ -24,12 +24,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import it.maxmin.dao.jdbc.DaoTestUtil;
+import it.maxmin.dao.jdbc.JdbcDaoTestUtil;
 import it.maxmin.dao.jdbc.JdbcTestCfg;
-import it.maxmin.model.jdbc.Address;
-import it.maxmin.model.jdbc.State;
-import it.maxmin.model.jdbc.User;
-import it.maxmin.model.jdbc.UserAddress;
+import it.maxmin.model.jdbc.domain.entity.Address;
+import it.maxmin.model.jdbc.domain.entity.Department;
+import it.maxmin.model.jdbc.domain.entity.State;
+import it.maxmin.model.jdbc.domain.entity.User;
+import it.maxmin.model.jdbc.domain.entity.UserAddress;
+import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
+import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 
 @ExtendWith(MockitoExtension.class)
 class UserDaoTest {
@@ -39,33 +42,51 @@ class UserDaoTest {
 	private static AnnotationConfigApplicationContext springJdbcCtx;
 	private static NamedParameterJdbcTemplate jdbcTemplate;
 	private static DataSource dataSource;
-	private static DaoTestUtil daoTestUtil;
+	private static JdbcDaoTestUtil daoTestUtil;
+	private static State ireland;
+	private static State italy;
+	private static Department accounts;
+	private static Department legal;
+	private static Department production;
 
 	@BeforeAll
 	static void setup() {
-		LOGGER.info("Running UserDaoTest tests");
+
+		LOGGER.info("Running AddressDaoTest tests");
+
 		springJdbcCtx = new AnnotationConfigApplicationContext(JdbcTestCfg.class);
 		jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
 		dataSource = springJdbcCtx.getBean("dataSource", DataSource.class);
-		daoTestUtil = springJdbcCtx.getBean("daoTestUtil", DaoTestUtil.class);
+		daoTestUtil = springJdbcCtx.getBean("daoTestUtil", JdbcDaoTestUtil.class);
+
+		String[] scripts = { "1_create_database.up.sql", "2_userrole.up.sql", "2_state.up.sql", "2_department.up.sql" };
+		daoTestUtil.runDBScripts(scripts);
+
+		ireland = daoTestUtil.findStateByName("Ireland");
+		italy = daoTestUtil.findStateByName("Italy");
+
+		accounts = daoTestUtil.findDepartmentByName("Accounts");
+		legal = daoTestUtil.findDepartmentByName("Legal");
+		production = daoTestUtil.findDepartmentByName("Production");
 	}
 
 	@BeforeEach
 	void init() {
-		String[] scripts = { "1_create_database.up.sql", "2_userrole.up.sql", "2_state.up.sql", "2_address.up.sql",
-				"2_user.up.sql" };
+		String[] scripts = { "2_address.up.sql", "2_user.up.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterEach
 	void cleanUp() {
-		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql", "2_address.down.sql", "2_state.down.sql",
-				"2_userrole.down.sql", "1_create_database.down.sql" };
+		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql", "2_address.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterAll
 	static void clear() {
+		String[] scripts = { "2_state.down.sql", "2_department.down.sql", "2_userrole.down.sql",
+				"1_create_database.down.sql" };
+		daoTestUtil.runDBScripts(scripts);
 		daoTestUtil.stopTestDB();
 	}
 
@@ -103,30 +124,97 @@ class UserDaoTest {
 		assertEquals("Minardi", maxmin.getLastName());
 		assertEquals(LocalDate.of(1977, 10, 16), maxmin.getBirthDate());
 		assertNotNull(maxmin.getCreatedDate());
+		assertNotNull(maxmin.getDepartment());
+		assertNotNull(maxmin.getAddresses());
 		assertNotNull(maxmin.getId());
 
-		assertEquals(3, maxmin.getAddresses().size());
+		assertEquals(production.getId(), maxmin.getDepartment().getId());
+		assertEquals(production.getName(), maxmin.getDepartment().getName());
 
-		State ireland = daoTestUtil.findStateByName("Ireland");
-		State italy = daoTestUtil.findStateByName("Italy");
+		assertEquals(2, maxmin.getAddresses().size());
 
+		assertNotNull(maxmin.getAddresses().get(0).getId());
 		assertEquals("Via borgo di sotto", maxmin.getAddresses().get(0).getDescription());
-		assertEquals(italy.getId(), maxmin.getAddresses().get(0).getStateId());
+		assertEquals("Rome", maxmin.getAddresses().get(0).getCity());
+		assertEquals("Lazio", maxmin.getAddresses().get(0).getRegion());
+		assertEquals("30010", maxmin.getAddresses().get(0).getPostalCode());
 
-		assertEquals("Via Roma", maxmin.getAddresses().get(1).getDescription());
-		assertEquals(italy.getId(), maxmin.getAddresses().get(1).getStateId());
+		assertEquals(italy.getId(), maxmin.getAddresses().get(0).getState().getId());
+		assertEquals(italy.getName(), maxmin.getAddresses().get(0).getState().getName());
 
-		assertEquals("Connolly street", maxmin.getAddresses().get(2).getDescription());
-		assertEquals(ireland.getId(), maxmin.getAddresses().get(2).getStateId());
+		assertNotNull(maxmin.getAddresses().get(1).getId());
+		assertEquals("Connolly street", maxmin.getAddresses().get(1).getDescription());
+
+		assertEquals(ireland.getId(), maxmin.getAddresses().get(1).getState().getId());
+		assertEquals(ireland.getName(), maxmin.getAddresses().get(1).getState().getName());
 
 		User artur = users.get(1);
 
 		assertEquals("artur", artur.getAccountName());
+		assertEquals("Arturo", artur.getFirstName());
+		assertEquals("Art", artur.getLastName());
+		assertEquals(LocalDate.of(1923, 10, 12), artur.getBirthDate());
+		assertNotNull(artur.getCreatedDate());
+		assertNotNull(artur.getDepartment());
+		assertNotNull(artur.getAddresses());
+		assertNotNull(artur.getId());
+
+		assertEquals(legal.getId(), artur.getDepartment().getId());
+		assertEquals(legal.getName(), artur.getDepartment().getName());
+
 		assertEquals(1, artur.getAddresses().size());
+
+		assertNotNull(artur.getAddresses().get(0).getId());
+		assertEquals("Connolly street", artur.getAddresses().get(0).getDescription());
+		assertEquals("Dublin", artur.getAddresses().get(0).getCity());
+		assertEquals("County Dublin", artur.getAddresses().get(0).getRegion());
+		assertEquals("A65TF12", artur.getAddresses().get(0).getPostalCode());
+
+		assertEquals(ireland.getId(), artur.getAddresses().get(0).getState().getId());
+		assertEquals(ireland.getName(), artur.getAddresses().get(0).getState().getName());
 
 		User reginald = users.get(2);
 
 		assertEquals("reginald123", reginald.getAccountName());
+		assertEquals(accounts.getName(), reginald.getDepartment().getName());
+		assertEquals(0, reginald.getAddresses().size());
+	}
+
+	@Test
+	void testFindAll_with_no_address() {
+
+		// delete all the addresses
+		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
+		daoTestUtil.runDBScripts(scripts);
+
+		UserDaoImpl userDao = new UserDaoImpl();
+		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
+
+		// run the test
+		List<User> users = userDao.findAll();
+
+		assertEquals(3, users.size());
+
+		User maxmin = users.get(0);
+
+		assertEquals("maxmin13", maxmin.getAccountName());
+		assertEquals(production.getName(), maxmin.getDepartment().getName());
+		assertEquals(0, maxmin.getAddresses().size());
+
+		assertEquals(0, maxmin.getAddresses().size());
+
+		User artur = users.get(1);
+
+		assertEquals("artur", artur.getAccountName());
+		assertEquals(legal.getName(), artur.getDepartment().getName());
+		assertEquals(0, artur.getAddresses().size());
+
+		assertEquals(0, artur.getAddresses().size());
+
+		User reginald = users.get(2);
+
+		assertEquals("reginald123", reginald.getAccountName());
+		assertEquals(accounts.getName(), reginald.getDepartment().getName());
 		assertEquals(0, reginald.getAddresses().size());
 	}
 
@@ -153,37 +241,30 @@ class UserDaoTest {
 		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		// run the test
-		User maxmin = userDao.findByAccountName("maxmin13").get();
+		User artur = userDao.findByAccountName("artur").get();
 
-		assertEquals("maxmin13", maxmin.getAccountName());
-		assertEquals("Max", maxmin.getFirstName());
-		assertEquals("Minardi", maxmin.getLastName());
-		assertEquals(LocalDate.of(1977, 10, 16), maxmin.getBirthDate());
-		assertNotNull(maxmin.getCreatedDate());
-		assertNotNull(maxmin.getId());
+		assertEquals("artur", artur.getAccountName());
+		assertEquals("Arturo", artur.getFirstName());
+		assertEquals("Art", artur.getLastName());
+		assertEquals(LocalDate.of(1923, 10, 12), artur.getBirthDate());
+		assertNotNull(artur.getCreatedDate());
+		assertNotNull(artur.getDepartment());
+		assertNotNull(artur.getAddresses());
+		assertNotNull(artur.getId());
 
-		assertEquals(3, maxmin.getAddresses().size());
+		assertEquals(legal.getId(), artur.getDepartment().getId());
+		assertEquals(legal.getName(), artur.getDepartment().getName());
 
-		State ireland = daoTestUtil.findStateByName("Ireland");
-		State italy = daoTestUtil.findStateByName("Italy");
+		assertEquals(1, artur.getAddresses().size());
 
-		assertEquals("Via borgo di sotto", maxmin.getAddresses().get(0).getDescription());
-		assertEquals("Rome", maxmin.getAddresses().get(0).getCity());
-		assertEquals(italy.getId(), maxmin.getAddresses().get(0).getStateId());
-		assertEquals("Lazio", maxmin.getAddresses().get(0).getRegion());
-		assertEquals("30010", maxmin.getAddresses().get(0).getPostalCode());
+		assertNotNull(artur.getAddresses().get(0).getId());
+		assertEquals("Connolly street", artur.getAddresses().get(0).getDescription());
+		assertEquals("Dublin", artur.getAddresses().get(0).getCity());
+		assertEquals("County Dublin", artur.getAddresses().get(0).getRegion());
+		assertEquals("A65TF12", artur.getAddresses().get(0).getPostalCode());
 
-		assertEquals("Via Roma", maxmin.getAddresses().get(1).getDescription());
-		assertEquals("Venice", maxmin.getAddresses().get(1).getCity());
-		assertEquals(italy.getId(), maxmin.getAddresses().get(1).getStateId());
-		assertEquals("Veneto", maxmin.getAddresses().get(1).getRegion());
-		assertEquals("31210", maxmin.getAddresses().get(1).getPostalCode());
-
-		assertEquals("Connolly street", maxmin.getAddresses().get(2).getDescription());
-		assertEquals("Dublin", maxmin.getAddresses().get(2).getCity());
-		assertEquals(ireland.getId(), maxmin.getAddresses().get(2).getStateId());
-		assertEquals("County Dublin", maxmin.getAddresses().get(2).getRegion());
-		assertEquals("A65TF12", maxmin.getAddresses().get(2).getPostalCode());
+		assertEquals(ireland.getId(), artur.getAddresses().get(0).getState().getId());
+		assertEquals(ireland.getName(), artur.getAddresses().get(0).getState().getName());
 	}
 
 	@Test
@@ -209,18 +290,34 @@ class UserDaoTest {
 		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
 		// run the test
-		List<User> users = userDao.findByFirstName("art");
+		List<User> users = userDao.findByFirstName("Arturo");
 
 		assertEquals(1, users.size());
 
-		User user = users.get(0);
+		User artur = users.get(0);
 
-		assertEquals("artur", user.getAccountName());
-		assertEquals("art", user.getFirstName());
-		assertEquals("artur", user.getLastName());
-		assertEquals(LocalDate.of(1923, 10, 12), user.getBirthDate());
-		assertNotNull(user.getCreatedDate());
-		assertNotNull(user.getId());
+		assertEquals("artur", artur.getAccountName());
+		assertEquals("Arturo", artur.getFirstName());
+		assertEquals("Art", artur.getLastName());
+		assertEquals(LocalDate.of(1923, 10, 12), artur.getBirthDate());
+		assertNotNull(artur.getCreatedDate());
+		assertNotNull(artur.getDepartment());
+		assertNotNull(artur.getAddresses());
+		assertNotNull(artur.getId());
+
+		assertEquals(legal.getId(), artur.getDepartment().getId());
+		assertEquals(legal.getName(), artur.getDepartment().getName());
+
+		assertEquals(1, artur.getAddresses().size());
+
+		assertNotNull(artur.getAddresses().get(0).getId());
+		assertEquals("Connolly street", artur.getAddresses().get(0).getDescription());
+		assertEquals("Dublin", artur.getAddresses().get(0).getCity());
+		assertEquals("County Dublin", artur.getAddresses().get(0).getRegion());
+		assertEquals("A65TF12", artur.getAddresses().get(0).getPostalCode());
+
+		assertEquals(ireland.getId(), artur.getAddresses().get(0).getState().getId());
+		assertEquals(ireland.getName(), artur.getAddresses().get(0).getState().getName());
 	}
 
 	@Test
@@ -243,28 +340,21 @@ class UserDaoTest {
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
-		User user = new User();
-		user.setAccountName("franc");
-		user.setBirthDate(LocalDate.of(1981, 11, 12));
-		user.setFirstName("Franco");
-		user.setLastName("Red");
+		PojoUser franco = PojoUser.newInstance().withAccountName("franc").withBirthDate(LocalDate.of(1981, 11, 12))
+				.withFirstName("Franco").withLastName("Red").withDepartmentId(legal.getId());
 
-		User newUser = daoTestUtil.createUser(user);
+		PojoUser newUser = daoTestUtil.createUser(franco);
 		State state = daoTestUtil.findStateByName("Italy");
 
-		Address address = new Address();
-		address.setDescription("Via Nuova");
-		address.setCity("Venice");
-		address.setStateId(state.getId());
-		address.setRegion("Veneto");
-		address.setPostalCode("30033");
+		PojoAddress address = PojoAddress.newInstance().withDescription("Via Nuova").withCity("Venice")
+				.withStateId(italy.getId()).withRegion("Veneto").withPostalCode("30033");
 
-		Address newAddress = daoTestUtil.createAddress(address);
+		PojoAddress newAddress = daoTestUtil.createAddress(address);
 
 		// run the test
 		userDao.associate(UserAddress.newInstance().withUserId(newUser.getId()).withAddressId(newAddress.getId()));
 
-		List<Address> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
 
 		assertEquals(1, addresses.size());
 
@@ -294,25 +384,23 @@ class UserDaoTest {
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
-		User user = new User();
-		user.setAccountName("franc");
-		user.setBirthDate(LocalDate.of(1981, 11, 12));
-		user.setFirstName("Franco");
-		user.setLastName("Red");
+		User franco = User.newInstance().withAccountName("franc").withBirthDate(LocalDate.of(1981, 11, 12))
+				.withFirstName("Franco").withLastName("Red").withDepartment(legal).withId(accounts.getId());
 
 		// run the test
-		userDao.create(user);
+		userDao.create(franco);
 
-		User newUser = daoTestUtil.findUserByAccountName("franc");
+		PojoUser newUser = daoTestUtil.findUserByAccountName("franc");
 
 		assertEquals("franc", newUser.getAccountName());
 		assertEquals("Franco", newUser.getFirstName());
 		assertEquals("Red", newUser.getLastName());
+		assertEquals(legal.getId(), newUser.getDepartmentId());
 		assertEquals(LocalDate.of(1981, 11, 12), newUser.getBirthDate());
 		assertNotNull(newUser.getCreatedDate());
 		assertNotNull(newUser.getId());
 
-		List<Address> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
 
 		assertEquals(0, addresses.size());
 	}
@@ -323,63 +411,50 @@ class UserDaoTest {
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
-		User user = new User();
-		user.setAccountName("franc");
-		user.setBirthDate(LocalDate.of(1981, 11, 12));
-		user.setFirstName("Franco");
-		user.setLastName("Red");
+		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
+				.withFirstName("Carlo").withLastName("Rossi").withDepartment(accounts);
 
-		State italy = daoTestUtil.findStateByName("Italy");
+		Address address1 = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
+				.withState(State.newInstance().withId(italy.getId())).withRegion("Emilia Romagna")
+				.withPostalCode("33456");
+		carl.addAddress(address1);
 
-		Address address1 = new Address();
-		address1.setDescription("Via Nuova");
-		address1.setCity("Venice");
-		address1.setStateId(italy.getId());
-		address1.setRegion("Veneto");
-		address1.setPostalCode("30033");
-		user.addAddress(address1);
-
-		State ireland = daoTestUtil.findStateByName("Ireland");
-
-		Address address2 = new Address();
-		address2.setDescription("Via Vecchia");
-		address2.setCity("Padova");
-		address2.setStateId(ireland.getId());
-		address2.setRegion("Romagna");
-		address2.setPostalCode("32133");
-		user.addAddress(address2);
+		Address address2 = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
+				.withState(State.newInstance().withId(ireland.getId())).withRegion("County Dublin")
+				.withPostalCode("A65TF14");
+		carl.addAddress(address2);
 
 		// run the test
-		userDao.create(user);
+		userDao.create(carl);
 
-		User newUser = daoTestUtil.findUserByAccountName("franc");
+		PojoUser newUser = daoTestUtil.findUserByAccountName("carl23");
 
-		assertEquals("franc", newUser.getAccountName());
-		assertEquals("Franco", newUser.getFirstName());
-		assertEquals("Red", newUser.getLastName());
-		assertEquals(LocalDate.of(1981, 11, 12), newUser.getBirthDate());
+		assertEquals("carl23", newUser.getAccountName());
+		assertEquals("Carlo", newUser.getFirstName());
+		assertEquals("Rossi", newUser.getLastName());
+		assertEquals(LocalDate.of(1982, 9, 1), newUser.getBirthDate());
 		assertNotNull(newUser.getCreatedDate());
 		assertNotNull(newUser.getId());
 
-		List<Address> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
 
 		assertEquals(2, addresses.size());
 
-		Address newAddress1 = addresses.get(0);
+		PojoAddress newAddress1 = addresses.get(0);
 
 		assertEquals("Via Nuova", newAddress1.getDescription());
 		assertEquals("Venice", newAddress1.getCity());
 		assertEquals(italy.getId(), newAddress1.getStateId());
-		assertEquals("Veneto", newAddress1.getRegion());
-		assertEquals("30033", newAddress1.getPostalCode());
+		assertEquals("Emilia Romagna", newAddress1.getRegion());
+		assertEquals("33456", newAddress1.getPostalCode());
 
-		Address newAddress2 = addresses.get(1);
+		PojoAddress newAddress2 = addresses.get(1);
 
 		assertEquals("Via Vecchia", newAddress2.getDescription());
-		assertEquals("Padova", newAddress2.getCity());
+		assertEquals("Dublin", newAddress2.getCity());
 		assertEquals(ireland.getId(), newAddress2.getStateId());
-		assertEquals("Romagna", newAddress2.getRegion());
-		assertEquals("32133", newAddress2.getPostalCode());
+		assertEquals("County Dublin", newAddress2.getRegion());
+		assertEquals("A65TF14", newAddress2.getPostalCode());
 	}
 
 	@Test
@@ -401,31 +476,24 @@ class UserDaoTest {
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
-		User user = new User();
-		user.setAccountName("reg");
-		user.setBirthDate(LocalDate.of(1983, 12, 13));
-		user.setFirstName("Reginald");
-		user.setLastName("Regi");
+		PojoUser stephan = PojoUser.newInstance().withAccountName("stephan123").withBirthDate(LocalDate.of(1970, 2, 3))
+				.withFirstName("Stephano").withLastName("Regi").withDepartmentId(accounts.getId());
 
-		long userId = daoTestUtil.createUser(user).getId();
-		LocalDateTime createdDate = daoTestUtil.findUserByUserId(userId).getCreatedDate();
+		long stephanId = daoTestUtil.createUser(stephan).getId();
+		LocalDateTime createdDate = daoTestUtil.findUserByUserId(stephanId).getCreatedDate();
 
-		user = new User();
-		user.setId(userId);
-		user.setAccountName("regUpdated");
-		user.setBirthDate(LocalDate.of(1984, 9, 1));
-		user.setFirstName("ReginaldUpdated");
-		user.setLastName("RegiUpdated");
+		User stephanUpdated = User.newInstance().withAccountName("stephan123").withBirthDate(LocalDate.of(1980, 12, 4))
+				.withFirstName("Stephano juniur").withLastName("Reginaldo").withDepartment(legal).withId(stephanId);
 
 		// run the test
-		userDao.update(user);
+		userDao.update(stephanUpdated);
 
-		User updated = daoTestUtil.findUserByUserId(userId);
+		PojoUser updated = daoTestUtil.findUserByUserId(stephanId);
 
-		assertEquals("regUpdated", updated.getAccountName());
-		assertEquals("ReginaldUpdated", updated.getFirstName());
-		assertEquals("RegiUpdated", updated.getLastName());
-		assertEquals(LocalDate.of(1984, 9, 1), updated.getBirthDate());
+		assertEquals("stephan123", updated.getAccountName());
+		assertEquals("Stephano juniur", updated.getFirstName());
+		assertEquals("Reginaldo", updated.getLastName());
+		assertEquals(LocalDate.of(1980, 12, 4), updated.getBirthDate());
 		assertEquals(createdDate, updated.getCreatedDate());
 	}
 }

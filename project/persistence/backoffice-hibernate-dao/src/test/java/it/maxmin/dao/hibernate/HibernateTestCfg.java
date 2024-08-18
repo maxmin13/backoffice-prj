@@ -30,19 +30,61 @@ import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
 
-/*
- * Starts an embedded MariaDB database and creates a Spring context for the unit tests.
- * */
+/**
+ * Starts an embedded MariaDB database and creates a Spring context for the unit
+ * tests.
+ */
 
 public class HibernateTestCfg {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateTestCfg.class);
-	
+
 	private DataSource dataSource;
 
-	@Bean("mariaDB4jSpringService")
+	@Bean
 	public MariaDB4jSpringService mariaDB4jSpringService() {
 		return new MariaDB4jSpringService();
+	}
+
+	@Bean
+	public HibernateDaoTestUtil daoTestUtil(MariaDB4jSpringService mariaDB4jSpringService,
+			NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+		return new HibernateDaoTestUtil(mariaDB4jSpringService, jdbcTemplate, dataSource);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Bean
+	public DataSource dataSource(MariaDB4jSpringService mariaDB4jSpringService) {
+		try {
+			mariaDB4jSpringService.getDB().createDB("testDB");
+		}
+		catch (ManagedProcessException e) {
+			throw new DaoTestException("Error creating the data source", e);
+		}
+
+		DBConfigurationBuilder config = mariaDB4jSpringService.getConfiguration();
+
+		var ds = new SimpleDriverDataSource();
+		Class<? extends Driver> driver;
+		try {
+			driver = (Class<? extends Driver>) Class.forName("org.mariadb.jdbc.Driver");
+		}
+		catch (ClassNotFoundException e) {
+			throw new DaoTestException("Error loading DB driver", e);
+		}
+		ds.setDriverClass(driver);
+		ds.setUrl("jdbc:mariadb://localhost:" + config.getPort() + "/testDB");
+		ds.setUsername("root");
+		ds.setPassword("root");
+		dataSource = ds;
+
+		return dataSource;
+	}
+
+	@Bean
+	public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
+		return new NamedParameterJdbcTemplate(dataSource);
 	}
 
 	@Bean
@@ -60,55 +102,15 @@ public class HibernateTestCfg {
 		return hibernateProp;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Bean("dataSource")
-	public DataSource dataSource(MariaDB4jSpringService mariaDB4jSpringService) {
-		try {
-			mariaDB4jSpringService.getDB().createDB("testDB");
-		}
-		catch (ManagedProcessException e) {
-			throw new DaoTestException("Error creating the data source", e);
-		}
-
-		DBConfigurationBuilder config = mariaDB4jSpringService.getConfiguration();
-
-		var ds = new SimpleDriverDataSource();
-		Class<? extends Driver> driver;
-		try {
-			driver = (Class<? extends Driver>) Class.forName("org.mariadb.jdbc.Driver");
-		}
-		catch (ClassNotFoundException e) {
-			LOGGER.error("Error loading DB driver", e);
-			throw new DaoTestException("Error loading DB driver", e);
-		}
-		ds.setDriverClass(driver);
-		ds.setUrl("jdbc:mariadb://localhost:" + config.getPort() + "/testDB");
-		ds.setUsername("root");
-		ds.setPassword("root");
-		dataSource = ds;
-		return ds;
-	}
-
 	@Bean
-	@DependsOn( "dataSource" )
+	@DependsOn("dataSource")
 	public SessionFactory sessionFactory() {
-		return new LocalSessionFactoryBuilder(dataSource).scanPackages("com.maxmin.domain.hibernate.entities")
+		return new LocalSessionFactoryBuilder(dataSource).scanPackages("com.maxmin.domain.hibernate.entity")
 				.addProperties(hibernateProperties()).buildSessionFactory();
 	}
 
 	@Bean
 	public PlatformTransactionManager transactionManager() {
 		return new HibernateTransactionManager(sessionFactory());
-	}
-
-	@Bean("jdbcTemplate")
-	public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
-		return new NamedParameterJdbcTemplate(dataSource);
-	}
-	
-	@Bean
-	@DependsOn({"mariaDB4jSpringService", "jdbcTemplate"})
-	public DaoTestUtil daoTestUtil() {
-		return new DaoTestUtil();
 	}
 }

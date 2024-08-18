@@ -1,41 +1,49 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
+import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.INSERT_USER;
 import static org.springframework.util.Assert.notNull;
+
+import java.sql.Types;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.SqlUpdate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
-import it.maxmin.model.jdbc.User;
+import it.maxmin.model.jdbc.domain.entity.User;
 
-public class InsertUser {
+public class InsertUser extends SqlUpdate {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertUser.class);
 
-	private DataSource dataSource;
-
 	public InsertUser(DataSource dataSource) {
-		this.dataSource = dataSource;
+		super(dataSource, INSERT_USER);
+		super.declareParameter(new SqlParameter("accountName", Types.VARCHAR));
+		super.declareParameter(new SqlParameter("firstName", Types.VARCHAR));
+		super.declareParameter(new SqlParameter("lastName", Types.VARCHAR));
+		super.declareParameter(new SqlParameter("departmentId", Types.INTEGER));
+		super.declareParameter(new SqlParameter("birtDate", Types.DATE));
+		super.setGeneratedKeysColumnNames("id");
+		super.setReturnGeneratedKeys(true);
 	}
 
 	public User execute(User user) {
 		notNull(user, "The user must not be null");
 
-		SimpleJdbcInsert insertUser = new SimpleJdbcInsert(dataSource);
-		insertUser.withTableName("User").usingGeneratedKeyColumns("Id");
-		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(user);
-		KeyHolder result = insertUser.executeAndReturnKeyHolder(paramSource);
-		Number keyValue = result.getKey();
-		if (keyValue != null) {
-			user.setId(keyValue.longValue());
-		}
-		else {
-			LOGGER.warn("User primary key not found");
-		}
+		var keyHolder = new GeneratedKeyHolder();
+		updateByNamedParam(
+				Map.of("accountName", user.getAccountName(), "firstName", user.getFirstName(), "lastName",
+						user.getLastName(), "departmentId", user.getDepartment().getId(), "birtDate", user.getBirthDate()),
+				keyHolder);
+
+		var userId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+		user.setId(userId);
 
 		return user;
 	}

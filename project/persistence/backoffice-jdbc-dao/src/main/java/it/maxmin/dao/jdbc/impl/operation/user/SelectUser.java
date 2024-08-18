@@ -14,15 +14,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import it.maxmin.dao.jdbc.exception.DATAAccessException;
-import it.maxmin.model.jdbc.Address;
-import it.maxmin.model.jdbc.User;
+import it.maxmin.model.jdbc.domain.entity.Address;
+import it.maxmin.model.jdbc.domain.entity.Department;
+import it.maxmin.model.jdbc.domain.entity.State;
+import it.maxmin.model.jdbc.domain.entity.User;
 
 public abstract class SelectUser {
 	
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectUser.class);
 
-	ResultSetExtractor<List<User>> usersExtractor = (ResultSetExtractor<List<User>>) rs ->  {
+	ResultSetExtractor<List<User>> userExtractor = (ResultSetExtractor<List<User>>) rs ->  {
 		Map<Long, User> map = new HashMap<>();
 		User user = null;
 		while (rs.next()) {
@@ -40,15 +42,28 @@ public abstract class SelectUser {
 					throw new DATAAccessException("Malformed data!", ex);
 				}
 			});
+			
 			var addressId = rs.getLong("AddressId");
-			if (addressId > 0) { // if a record is found (outer join)
+			if (addressId > 0) { // if found
+				Address address = Address.newInstance();
 				Objects.requireNonNull(user)
-						.addAddress(Address.newInstance().withId(addressId)
+						.addAddress(address.withId(addressId)
 								.withDescription(rs.getString("Description"))
 								.withCity(rs.getString("City"))
-								.withStateId(rs.getLong("StateId"))
 								.withRegion(rs.getString("Region"))
 								.withPostalCode(rs.getString("PostalCode")));
+						var stateId = rs.getLong("StateId");
+						if (stateId > 0) { // if found
+							Objects.requireNonNull(address)
+									.withState(State.newInstance().withId(stateId)
+											.withName(rs.getString("StateName")));
+						}
+			}
+			var departmentId = rs.getLong("DepartmentId");
+			if (departmentId > 0) { // if found
+				Objects.requireNonNull(user)
+						.withDepartment(Department.newInstance().withId(departmentId)
+								.withName(rs.getString("DepartmentName")));
 			}
 		}
 		return new ArrayList<>(map.values());

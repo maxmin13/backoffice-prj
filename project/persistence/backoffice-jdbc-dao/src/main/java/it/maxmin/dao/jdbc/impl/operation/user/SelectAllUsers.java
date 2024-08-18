@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import it.maxmin.model.jdbc.User;
+import it.maxmin.model.jdbc.domain.entity.User;
 
 public class SelectAllUsers extends SelectUser {
 
@@ -22,7 +22,7 @@ public class SelectAllUsers extends SelectUser {
 	}
 
 	public List<User> execute() {
-		return jdbcTemplate.getJdbcTemplate().query(SELECT_ALL_USERS, usersExtractor);
+		return jdbcTemplate.getJdbcTemplate().query(SELECT_ALL_USERS, userExtractor);
 	}
 
 }

@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-import it.maxmin.model.jdbc.UserAddress;
+import it.maxmin.model.jdbc.domain.entity.UserAddress;
 
 public class InsertUserAddress {
 

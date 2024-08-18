@@ -9,7 +9,7 @@ import java.util.List;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import it.maxmin.model.jdbc.User;
+import it.maxmin.model.jdbc.domain.entity.User;
 
 public class SelectUserByFirstName extends SelectUser {
 
@@ -26,6 +26,6 @@ public class SelectUserByFirstName extends SelectUser {
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		param.addValue("firstName", firstName, Types.VARCHAR);
 
-		return jdbcTemplate.query(SELECT_USERS_BY_FIRST_NAME, param, usersExtractor);
+		return jdbcTemplate.query(SELECT_USERS_BY_FIRST_NAME, param, userExtractor);
 	}
 }

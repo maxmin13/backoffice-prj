@@ -14,8 +14,10 @@
 	<modules>
 		<module>ui/backoffice-webapp</module>
 		<module>config/backoffice-config</module>
+		<!--
 		<module>persistence/backoffice-hibernate-dao</module>
 		<module>domain/backoffice-hibernate-model</module>
+		-->
 		<module>persistence/backoffice-jdbc-dao</module>
 		<module>domain/backoffice-jdbc-model</module>
 		<module>service/backoffice-service</module>
@@ -82,7 +84,7 @@
 				<artifactId>backoffice-jdbc-model</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-
+<!--
 			<dependency>
 				<groupId>it.maxmin.persistence</groupId>
 				<artifactId>backoffice-hibernate-dao</artifactId>
@@ -93,6 +95,7 @@
 				<artifactId>backoffice-hibernate-model</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
+-->
 			<dependency>
 				<groupId>it.maxmin.service</groupId>
 				<artifactId>backoffice-service</artifactId>

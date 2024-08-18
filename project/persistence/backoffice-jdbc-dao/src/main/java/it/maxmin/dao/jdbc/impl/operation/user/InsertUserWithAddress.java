@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddress;
-import it.maxmin.model.jdbc.Address;
-import it.maxmin.model.jdbc.User;
-import it.maxmin.model.jdbc.UserAddress;
+import it.maxmin.model.jdbc.domain.entity.Address;
+import it.maxmin.model.jdbc.domain.entity.User;
+import it.maxmin.model.jdbc.domain.entity.UserAddress;
 
 public class InsertUserWithAddress {
 

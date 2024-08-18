@@ -14,9 +14,10 @@ import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
 
-/*
- * Starts an embedded MariaDB database and creates a Spring context for the unit tests.
- * */
+/**
+ * Starts an embedded MariaDB database and creates a Spring context for the unit
+ * tests.
+ */
 
 public class JdbcTestCfg {
 
@@ -27,10 +28,11 @@ public class JdbcTestCfg {
 	public MariaDB4jSpringService mariaDB4jSpringService() {
 		return new MariaDB4jSpringService();
 	}
-	
+
 	@Bean
-	public DaoTestUtil daoTestUtil() {
-		return new DaoTestUtil();
+	public JdbcDaoTestUtil daoTestUtil(MariaDB4jSpringService mariaDB4jSpringService,
+			NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+		return new JdbcDaoTestUtil(mariaDB4jSpringService, jdbcTemplate, dataSource);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -44,7 +46,7 @@ public class JdbcTestCfg {
 		}
 
 		DBConfigurationBuilder config = mariaDB4jSpringService.getConfiguration();
-		
+
 		var dataSource = new SimpleDriverDataSource();
 		Class<? extends Driver> driver;
 		try {
@@ -54,7 +56,7 @@ public class JdbcTestCfg {
 			throw new DaoTestException("Error loading DB driver", e);
 		}
 		dataSource.setDriverClass(driver);
-		dataSource.setUrl("jdbc:mariadb://localhost:"+config.getPort()+"/testDB");
+		dataSource.setUrl("jdbc:mariadb://localhost:" + config.getPort() + "/testDB");
 		dataSource.setUsername("root");
 		dataSource.setPassword("root");
 		return dataSource;

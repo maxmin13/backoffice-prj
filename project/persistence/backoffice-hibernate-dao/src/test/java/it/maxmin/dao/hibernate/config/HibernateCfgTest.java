@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 
-import it.maxmin.dao.hibernate.DaoTestUtil;
+import it.maxmin.dao.hibernate.HibernateDaoTestUtil;
 import it.maxmin.dao.hibernate.HibernateTestCfg;
 
 /**
@@ -40,12 +40,12 @@ class HibernateCfgTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateCfgTest.class);
 
 	private static AnnotationConfigApplicationContext hibernateTestCfg;
-	private static DaoTestUtil daoTestUtil;
+	private static HibernateDaoTestUtil daoTestUtil;
 
 	@BeforeAll
 	public static void init() {
 		hibernateTestCfg = new AnnotationConfigApplicationContext(HibernateTestCfg.class);
-		daoTestUtil = hibernateTestCfg.getBean("daoTestUtil", DaoTestUtil.class);
+		daoTestUtil = hibernateTestCfg.getBean("daoTestUtil", HibernateDaoTestUtil.class);
 	}
 	
 	@AfterAll

@@ -2,7 +2,7 @@ package it.maxmin.dao.jdbc.api.repo;
 
 import java.util.List;
 
-import it.maxmin.model.jdbc.Address;
+import it.maxmin.model.jdbc.domain.entity.Address;
 
 public interface AddressDao {
 
