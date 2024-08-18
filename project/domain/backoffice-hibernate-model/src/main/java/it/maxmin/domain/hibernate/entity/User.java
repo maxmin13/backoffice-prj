@@ -27,7 +27,7 @@ public class User extends AbstractEntity {
 	private String firstName;
 	private String lastName;
 	private LocalDate birthDate;
-	private LocalDateTime createdDate;
+	private LocalDateTime createdAt;
 	private Department department;
 	private Set<Address> addresses = new HashSet<>();
 
@@ -111,17 +111,17 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
-	@Column(name = "CreatedDate")
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
+	@Column(name = "CeatedAt")
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
-	public User withCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+	public User withCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 		return this;
 	}
 
@@ -173,7 +173,7 @@ public class User extends AbstractEntity {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", accountName=" + accountName + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", birthDate=" + birthDate + ", createdDate=" + createdDate + ", department=" + department
+				+ ", birthDate=" + birthDate + ", createdAt=" + createdAt + ", department=" + department
 				+ ", addresses=" + addresses + "]";
 	}
 

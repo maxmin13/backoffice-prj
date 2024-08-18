@@ -20,7 +20,7 @@ public class LoginAttempt extends AbstractEntity {
 
 	private User user;
 	private boolean success;
-	private LocalDateTime createdDate;
+	private LocalDateTime createdAt;
 
 	@OneToOne
 	@JoinColumn(name = "UserId")
@@ -51,24 +51,24 @@ public class LoginAttempt extends AbstractEntity {
 		return this;
 	}
 
-	@Column(name = "CreatedDate")
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
+	@Column(name = "CreatedAt")
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
-	public LoginAttempt withCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+	public LoginAttempt withCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 		return this;
 	}
 
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(user.id).append(createdDate);
+		hcb.append(user.id).append(createdAt);
 		return hcb.toHashCode();
 	}
 
@@ -87,12 +87,12 @@ public class LoginAttempt extends AbstractEntity {
 		if (that.getId() != null && this.getId() != null) {
 			return super.equals(obj);
 		}
-		return user.id.equals(that.user.id) && createdDate.equals(that.createdDate);
+		return user.id.equals(that.user.id) && createdAt.equals(that.createdAt);
 	}
 
 	@Override
 	public String toString() {
-		return "LoginAttempt [id=" + id + ", user=" + user + ", success=" + success + ", createdDate=" + createdDate + "]";
+		return "LoginAttempt [id=" + id + ", user=" + user + ", success=" + success + ", createdAt=" + createdAt + "]";
 	}
 	
 }

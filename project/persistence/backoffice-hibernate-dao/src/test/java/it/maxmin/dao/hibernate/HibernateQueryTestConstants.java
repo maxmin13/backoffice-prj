@@ -21,12 +21,12 @@ public enum HibernateQueryTestConstants {
 			+ "ORDER BY Id";
 	
 	public static final String SELECT_USER_BY_USER_ID = ""
-			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedDate, DepartmentId "
+			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt, DepartmentId "
 			+ "FROM User WHERE Id = :userId "
 			+ "ORDER BY Id";
 	
 	public static final String SELECT_USER_BY_ACCOUNT_NAME = ""
-			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedDate, DepartmentId "
+			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt, DepartmentId "
 			+ "FROM User "
 			+ "WHERE AccountName = :accountName "
 			+ "ORDER BY Id";

@@ -480,7 +480,7 @@ class UserDaoTest {
 				.withFirstName("Stephano").withLastName("Regi").withDepartmentId(accounts.getId());
 
 		long stephanId = daoTestUtil.createUser(stephan).getId();
-		LocalDateTime createdDate = daoTestUtil.findUserByUserId(stephanId).getCreatedAt();
+		LocalDateTime createdAt = daoTestUtil.findUserByUserId(stephanId).getCreatedAt();
 
 		User stephanUpdated = User.newInstance().withAccountName("stephan123").withBirthDate(LocalDate.of(1980, 12, 4))
 				.withFirstName("Stephano juniur").withLastName("Reginaldo").withDepartment(legal).withId(stephanId);
@@ -494,6 +494,6 @@ class UserDaoTest {
 		assertEquals("Stephano juniur", updated.getFirstName());
 		assertEquals("Reginaldo", updated.getLastName());
 		assertEquals(LocalDate.of(1980, 12, 4), updated.getBirthDate());
-		assertEquals(createdDate, updated.getCreatedAt());
+		assertEquals(createdAt, updated.getCreatedAt());
 	}
 }

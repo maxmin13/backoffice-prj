@@ -18,7 +18,7 @@ public class UserRole extends AbstractEntity {
 
 	private String roleName;
 	private boolean active;
-	private LocalDateTime createdDate;
+	private LocalDateTime createdAt;
 
 	@Column(name = "RoleName")
 	public String getRoleName() {
@@ -38,13 +38,13 @@ public class UserRole extends AbstractEntity {
 		this.active = active;
 	}
 
-	@Column(name = "CreatedDate")
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
+	@Column(name = "CreatedAt")
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class UserRole extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return  "UserRole [id=" + id + ", roleName=" + roleName + ", active=" + active + ", createdDate=" + createdDate + "]";
+		return  "UserRole [id=" + id + ", roleName=" + roleName + ", active=" + active + ", createdAt=" + createdAt + "]";
 	}
 
 }

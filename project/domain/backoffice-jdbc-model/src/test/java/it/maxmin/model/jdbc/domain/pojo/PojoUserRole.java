@@ -10,7 +10,7 @@ public class PojoUserRole implements Serializable {
 	private Long id;
 	private String roleName;
 	private boolean active;
-	private LocalDateTime createdDate;
+	private LocalDateTime createdAt;
 	
 	public Long getId() {
 		return id;
@@ -30,11 +30,12 @@ public class PojoUserRole implements Serializable {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
+        public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 		
 }
