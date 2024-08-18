@@ -29,11 +29,16 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
 
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
-import it.maxmin.domain.hibernate.entity.Department;
+import it.maxmin.domain.hibernate.pojo.PojoAddress;
+import it.maxmin.domain.hibernate.pojo.PojoDepartment;
+import it.maxmin.domain.hibernate.pojo.PojoState;
+import it.maxmin.domain.hibernate.pojo.PojoUser;
+import it.maxmin.domain.hibernate.pojo.PojoUserAddress;
 
 
 public class HibernateDaoTestUtil {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateDaoTestUtil.class);
 
 	private MariaDB4jSpringService mariaDB4jSpringService;
@@ -126,14 +131,14 @@ public class HibernateDaoTestUtil {
 		return address;
 	}
 
-//	public void associateUserAddress(UserAddress userAddress) {
-//		notNull(userAddress, "The user address must not be null");
-//
-//		simpleJdbcInsert.withTableName("UserAddress");
-//		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(userAddress);
-//		simpleJdbcInsert.execute(paramSource);
-//		LOGGER.info("User {} associated with address  {}", userAddress.getUserId(), userAddress.getAddressId());
-//	}
+	public void associateUserAddress(PojoUserAddress userAddress) {
+		notNull(userAddress, "The user address must not be null");
+
+		simpleJdbcInsert.withTableName("UserAddress");
+		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(userAddress);
+		simpleJdbcInsert.execute(paramSource);
+		LOGGER.info("User {} associated with address  {}", userAddress.getUserId(), userAddress.getAddressId());
+	}
 
 	public PojoState findStateByName(String name) {
 		SqlParameterSource param = new MapSqlParameterSource("name", name);

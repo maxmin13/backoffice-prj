@@ -31,9 +31,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
 import it.maxmin.model.jdbc.domain.entity.Department;
 import it.maxmin.model.jdbc.domain.entity.State;
-import it.maxmin.model.jdbc.domain.entity.UserAddress;
 import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
 import it.maxmin.model.jdbc.domain.pojo.PojoUser;
+import it.maxmin.model.jdbc.domain.pojo.PojoUserAddress;
 
 public class JdbcDaoTestUtil {
 
@@ -132,7 +132,7 @@ public class JdbcDaoTestUtil {
 		return address;
 	}
 
-	public void associateUserAddress(UserAddress userAddress) {
+	public void associateUserAddress(PojoUserAddress userAddress) {
 		notNull(userAddress, "The user address must not be null");
 
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
