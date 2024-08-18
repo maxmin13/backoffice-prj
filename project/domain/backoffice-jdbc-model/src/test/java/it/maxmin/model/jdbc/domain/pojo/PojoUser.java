@@ -14,7 +14,7 @@ public class PojoUser implements Serializable {
 	private String lastName;
 	private Long departmentId;
 	private LocalDate birthDate;
-	private LocalDateTime createdDate;
+	private LocalDateTime createdAt;
 	
 	public static PojoUser newInstance() {
 		return new PojoUser();
@@ -98,16 +98,16 @@ public class PojoUser implements Serializable {
 		return this;
 	}
 
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
-	public PojoUser withCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+	public PojoUser withCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 		return this;
 	}
 	

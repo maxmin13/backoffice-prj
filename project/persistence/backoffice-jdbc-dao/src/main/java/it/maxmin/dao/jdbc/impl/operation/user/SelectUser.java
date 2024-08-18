@@ -36,7 +36,7 @@ public abstract class SelectUser {
 							.withFirstName(rs.getString("FirstName"))
 							.withLastName(rs.getString("LastName"))
 							.withBirthDate(rs.getDate("BirthDate").toLocalDate())
-							.withCreatedDate(LocalDateTime.of(rs.getDate("CreatedDate").toLocalDate(), LocalTime.of(0, 0)));
+							.withCreatedAt(LocalDateTime.of(rs.getDate("CreatedAt").toLocalDate(), LocalTime.of(0, 0)));
 				}
 				catch (SQLException ex) {
 					throw new DATAAccessException("Malformed data!", ex);

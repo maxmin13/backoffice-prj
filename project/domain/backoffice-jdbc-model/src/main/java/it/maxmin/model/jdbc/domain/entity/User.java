@@ -16,7 +16,7 @@ public class User implements Serializable {
 	private String lastName;
 	private Department department;
 	private LocalDate birthDate;
-	private LocalDateTime createdDate;
+	private LocalDateTime createdAt;
 	private List<Address> addresses = new ArrayList<>();
 
 	public static User newInstance() {
@@ -101,16 +101,16 @@ public class User implements Serializable {
 		return this;
 	}
 
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
-	public User withCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+	public User withCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 		return this;
 	}
 

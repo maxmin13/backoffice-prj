@@ -123,7 +123,7 @@ class UserDaoTest {
 		assertEquals("Max", maxmin.getFirstName());
 		assertEquals("Minardi", maxmin.getLastName());
 		assertEquals(LocalDate.of(1977, 10, 16), maxmin.getBirthDate());
-		assertNotNull(maxmin.getCreatedDate());
+		assertNotNull(maxmin.getCreatedAt());
 		assertNotNull(maxmin.getDepartment());
 		assertNotNull(maxmin.getAddresses());
 		assertNotNull(maxmin.getId());
@@ -154,7 +154,7 @@ class UserDaoTest {
 		assertEquals("Arturo", artur.getFirstName());
 		assertEquals("Art", artur.getLastName());
 		assertEquals(LocalDate.of(1923, 10, 12), artur.getBirthDate());
-		assertNotNull(artur.getCreatedDate());
+		assertNotNull(artur.getCreatedAt());
 		assertNotNull(artur.getDepartment());
 		assertNotNull(artur.getAddresses());
 		assertNotNull(artur.getId());
@@ -247,7 +247,7 @@ class UserDaoTest {
 		assertEquals("Arturo", artur.getFirstName());
 		assertEquals("Art", artur.getLastName());
 		assertEquals(LocalDate.of(1923, 10, 12), artur.getBirthDate());
-		assertNotNull(artur.getCreatedDate());
+		assertNotNull(artur.getCreatedAt());
 		assertNotNull(artur.getDepartment());
 		assertNotNull(artur.getAddresses());
 		assertNotNull(artur.getId());
@@ -300,7 +300,7 @@ class UserDaoTest {
 		assertEquals("Arturo", artur.getFirstName());
 		assertEquals("Art", artur.getLastName());
 		assertEquals(LocalDate.of(1923, 10, 12), artur.getBirthDate());
-		assertNotNull(artur.getCreatedDate());
+		assertNotNull(artur.getCreatedAt());
 		assertNotNull(artur.getDepartment());
 		assertNotNull(artur.getAddresses());
 		assertNotNull(artur.getId());
@@ -397,7 +397,7 @@ class UserDaoTest {
 		assertEquals("Red", newUser.getLastName());
 		assertEquals(legal.getId(), newUser.getDepartmentId());
 		assertEquals(LocalDate.of(1981, 11, 12), newUser.getBirthDate());
-		assertNotNull(newUser.getCreatedDate());
+		assertNotNull(newUser.getCreatedAt());
 		assertNotNull(newUser.getId());
 
 		List<PojoAddress> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
@@ -433,7 +433,7 @@ class UserDaoTest {
 		assertEquals("Carlo", newUser.getFirstName());
 		assertEquals("Rossi", newUser.getLastName());
 		assertEquals(LocalDate.of(1982, 9, 1), newUser.getBirthDate());
-		assertNotNull(newUser.getCreatedDate());
+		assertNotNull(newUser.getCreatedAt());
 		assertNotNull(newUser.getId());
 
 		List<PojoAddress> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
@@ -480,7 +480,7 @@ class UserDaoTest {
 				.withFirstName("Stephano").withLastName("Regi").withDepartmentId(accounts.getId());
 
 		long stephanId = daoTestUtil.createUser(stephan).getId();
-		LocalDateTime createdDate = daoTestUtil.findUserByUserId(stephanId).getCreatedDate();
+		LocalDateTime createdDate = daoTestUtil.findUserByUserId(stephanId).getCreatedAt();
 
 		User stephanUpdated = User.newInstance().withAccountName("stephan123").withBirthDate(LocalDate.of(1980, 12, 4))
 				.withFirstName("Stephano juniur").withLastName("Reginaldo").withDepartment(legal).withId(stephanId);
@@ -494,6 +494,6 @@ class UserDaoTest {
 		assertEquals("Stephano juniur", updated.getFirstName());
 		assertEquals("Reginaldo", updated.getLastName());
 		assertEquals(LocalDate.of(1980, 12, 4), updated.getBirthDate());
-		assertEquals(createdDate, updated.getCreatedDate());
+		assertEquals(createdDate, updated.getCreatedAt());
 	}
 }

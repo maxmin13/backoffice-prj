@@ -9,7 +9,7 @@ public class PojoLoginAttempt implements Serializable {
 
 	private String userId;
 	private boolean success;
-	private LocalDateTime createdDate;
+	private LocalDateTime createdAt;
 
 	public String getUserId() {
 		return userId;
@@ -27,12 +27,12 @@ public class PojoLoginAttempt implements Serializable {
 		this.success = success;
 	}
 
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
 }
