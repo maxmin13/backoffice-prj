@@ -7,7 +7,7 @@ public enum UserQueryConstants {
 			+ "SELECT DISTINCT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, "
 			+ "     a.Id AS AddressId, a.Description, a.City, a.Region, a.PostalCode, "
 			+ "     d.Id AS DepartmentId, d.Name AS DepartmentName, "
-			+ "     s.Id AS StateId, s.Name AS StateName "
+			+ "     s.Id AS StateId, s.Name AS StateName, s.Code "
 			+ "FROM User u " 
 			+ "LEFT JOIN UserAddress ua ON u.Id = ua.UserId "
 			+ "LEFT JOIN Address a ON ua.AddressId = a.Id "

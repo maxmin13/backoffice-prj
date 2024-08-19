@@ -141,12 +141,14 @@ class UserDaoTest {
 
 		assertEquals(italy.getId(), maxmin.getAddresses().get(0).getState().getId());
 		assertEquals(italy.getName(), maxmin.getAddresses().get(0).getState().getName());
+		assertEquals(italy.getCode(), maxmin.getAddresses().get(0).getState().getCode());
 
 		assertNotNull(maxmin.getAddresses().get(1).getId());
 		assertEquals("Connolly street", maxmin.getAddresses().get(1).getDescription());
 
 		assertEquals(ireland.getId(), maxmin.getAddresses().get(1).getState().getId());
 		assertEquals(ireland.getName(), maxmin.getAddresses().get(1).getState().getName());
+		assertEquals(ireland.getCode(), maxmin.getAddresses().get(1).getState().getCode());
 
 		User artur = users.get(1);
 
@@ -172,6 +174,7 @@ class UserDaoTest {
 
 		assertEquals(ireland.getId(), artur.getAddresses().get(0).getState().getId());
 		assertEquals(ireland.getName(), artur.getAddresses().get(0).getState().getName());
+		assertEquals(ireland.getCode(), artur.getAddresses().get(0).getState().getCode());
 
 		User reginald = users.get(2);
 
@@ -265,6 +268,7 @@ class UserDaoTest {
 
 		assertEquals(ireland.getId(), artur.getAddresses().get(0).getState().getId());
 		assertEquals(ireland.getName(), artur.getAddresses().get(0).getState().getName());
+		assertEquals(ireland.getCode(), artur.getAddresses().get(0).getState().getCode());
 	}
 
 	@Test
@@ -318,6 +322,7 @@ class UserDaoTest {
 
 		assertEquals(ireland.getId(), artur.getAddresses().get(0).getState().getId());
 		assertEquals(ireland.getName(), artur.getAddresses().get(0).getState().getName());
+		assertEquals(ireland.getCode(), artur.getAddresses().get(0).getState().getCode());
 	}
 
 	@Test
@@ -360,9 +365,10 @@ class UserDaoTest {
 
 		assertEquals("Via Nuova", addresses.get(0).getDescription());
 		assertEquals("Venice", addresses.get(0).getCity());
-		assertEquals(state.getId(), addresses.get(0).getStateId());
 		assertEquals("Veneto", addresses.get(0).getRegion());
 		assertEquals("30033", addresses.get(0).getPostalCode());
+		
+		assertEquals(state.getId(), addresses.get(0).getStateId());
 	}
 
 	@Test

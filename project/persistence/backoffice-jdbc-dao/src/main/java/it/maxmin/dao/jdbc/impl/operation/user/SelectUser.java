@@ -56,7 +56,7 @@ public abstract class SelectUser {
 						if (stateId > 0) { // if found
 							Objects.requireNonNull(address)
 									.withState(State.newInstance().withId(stateId)
-											.withName(rs.getString("StateName")));
+											.withName(rs.getString("StateName")).withCode(rs.getString("Code")));
 						}
 			}
 			var departmentId = rs.getLong("DepartmentId");
