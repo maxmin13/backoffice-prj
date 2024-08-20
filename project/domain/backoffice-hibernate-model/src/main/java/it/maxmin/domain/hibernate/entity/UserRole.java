@@ -1,7 +1,6 @@
 package it.maxmin.domain.hibernate.entity;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -17,8 +16,6 @@ public class UserRole extends AbstractEntity {
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private String roleName;
-	private boolean active;
-	private LocalDateTime createdAt;
 
 	@Column(name = "RoleName")
 	public String getRoleName() {
@@ -27,24 +24,6 @@ public class UserRole extends AbstractEntity {
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
-	}
-
-	@Column(name = "Active")
-	public boolean getActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	@Column(name = "CreatedAt")
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
 	}
 
 	@Override
@@ -74,7 +53,7 @@ public class UserRole extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return  "UserRole [id=" + id + ", roleName=" + roleName + ", active=" + active + ", createdAt=" + createdAt + "]";
+		return "UserRole [id=" + id + ", roleName=" + roleName + "]";
 	}
 
 }

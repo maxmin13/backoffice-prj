@@ -87,7 +87,7 @@
 				<artifactId>backoffice-hibernate-dao</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>it.maxmin.domain</groupId>
 				<artifactId>backoffice-hibernate-model</artifactId>
@@ -120,19 +120,19 @@
 				<artifactId>spring-context</artifactId>
 				<version>${org.springframework.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
 				<version>${org.springframework.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-jdbc</artifactId>
 				<version>${org.springframework.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-orm</artifactId>
@@ -196,6 +196,12 @@
 			<dependency>
 				<groupId>org.junit.jupiter</groupId>
 				<artifactId>junit-jupiter-engine</artifactId>
+				<version>${org.junit.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-params</artifactId>
 				<version>${org.junit.version}</version>
 			</dependency>
 

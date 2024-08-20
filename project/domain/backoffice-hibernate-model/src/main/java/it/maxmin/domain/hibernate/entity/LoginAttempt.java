@@ -1,6 +1,7 @@
 package it.maxmin.domain.hibernate.entity;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -13,7 +14,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "LoginAttempt")
-public class LoginAttempt extends AbstractEntity {
+public class LoginAttempt implements Serializable {
 
 	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
@@ -80,19 +81,13 @@ public class LoginAttempt extends AbstractEntity {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		if (!super.equals(obj)) {
-			return false;
-		}
 		LoginAttempt that = (LoginAttempt) obj;
-		if (that.getId() != null && this.getId() != null) {
-			return super.equals(obj);
-		}
 		return user.id.equals(that.user.id) && createdAt.equals(that.createdAt);
 	}
 
 	@Override
 	public String toString() {
-		return "LoginAttempt [id=" + id + ", user=" + user + ", success=" + success + ", createdAt=" + createdAt + "]";
+		return "LoginAttempt [user=" + user + ", success=" + success + ", createdAt=" + createdAt + "]";
 	}
 	
 }

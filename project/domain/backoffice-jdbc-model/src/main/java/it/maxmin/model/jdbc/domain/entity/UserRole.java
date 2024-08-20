@@ -1,7 +1,8 @@
 package it.maxmin.model.jdbc.domain.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class UserRole implements Serializable {
 
@@ -9,8 +10,10 @@ public class UserRole implements Serializable {
 
 	private Long id;
 	private String roleName;
-	private boolean active;
-	private LocalDateTime createdAt;
+
+	public static UserRole newInstance() {
+		return new UserRole();
+	}
 
 	public Long getId() {
 		return id;
@@ -18,6 +21,11 @@ public class UserRole implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public UserRole withId(Long id) {
+		this.id = id;
+		return this;
 	}
 
 	public String getRoleName() {
@@ -28,20 +36,33 @@ public class UserRole implements Serializable {
 		this.roleName = roleName;
 	}
 
-	public boolean isActive() {
-		return active;
+	public UserRole withRoleName(String roleName) {
+		this.roleName = roleName;
+		return this;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder();
+		hcb.append(roleName);
+		return hcb.toHashCode();
 	}
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		UserRole that = (UserRole) obj;
+		return roleName.equals(that.roleName);
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
+	@Override
+	public String toString() {
+		return  "UserRole [id=" + id + ", roleName=" + roleName + "]";
 	}
 
 }

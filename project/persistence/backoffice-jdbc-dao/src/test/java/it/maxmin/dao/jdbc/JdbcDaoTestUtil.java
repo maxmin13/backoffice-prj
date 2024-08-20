@@ -7,6 +7,7 @@ import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_DEPARTMENT_BY_NAM
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_USER_ID;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ROLES_BY_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.util.Assert.notNull;
 
@@ -34,6 +35,7 @@ import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
 import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 import it.maxmin.model.jdbc.domain.pojo.PojoUserAddress;
+import it.maxmin.model.jdbc.domain.pojo.PojoUserRole;
 
 public class JdbcDaoTestUtil {
 
@@ -101,6 +103,12 @@ public class JdbcDaoTestUtil {
 		user.setId(result.getKey().longValue());
 
 		return user;
+	}
+
+	public List<PojoUserRole> findRolesByUserId(long userId) {
+		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
+		return jdbcTemplate.query(SELECT_ROLES_BY_USER_ID, param,
+				BeanPropertyRowMapper.newInstance(PojoUserRole.class));
 	}
 
 	public List<PojoAddress> findAddressesByUserId(long userId) {

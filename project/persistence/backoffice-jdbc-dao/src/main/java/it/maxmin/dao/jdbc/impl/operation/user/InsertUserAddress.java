@@ -1,28 +1,24 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static org.springframework.util.Assert.notNull;
+import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.INSERT_USER_ADDRESS;
+
+import java.sql.Types;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.SqlUpdate;
 
-import it.maxmin.model.jdbc.domain.entity.UserAddress;
-
-public class InsertUserAddress {
-
-	private DataSource dataSource;
+public class InsertUserAddress extends SqlUpdate {
 
 	public InsertUserAddress(DataSource dataSource) {
-		this.dataSource = dataSource;
+		super(dataSource, INSERT_USER_ADDRESS);
+		super.declareParameter(new SqlParameter("userId", Types.INTEGER));
+		super.declareParameter(new SqlParameter("addressId", Types.INTEGER));
 	}
 
-	public void execute(UserAddress userAddress) {
-		notNull(userAddress, "The user address must not be null");
-
-		SimpleJdbcInsert insertUserAddress = new SimpleJdbcInsert(dataSource);
-		insertUserAddress.withTableName("UserAddress");
-		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(userAddress);
-		insertUserAddress.execute(paramSource);
+	public void execute(long userId, long addressId) {
+		updateByNamedParam(Map.of("userId", userId, "addressId", addressId));
 	}
 }

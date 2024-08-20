@@ -2,6 +2,8 @@ package it.maxmin.model.jdbc.domain.entity;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class Address implements Serializable {
 
 	private static final long serialVersionUID = 7632536256395423354L;
@@ -9,9 +11,9 @@ public class Address implements Serializable {
 	private Long id;
 	private String description;
 	private String city;
-	private State state;
 	private String region;
 	private String postalCode;
+	private State state;
 	
 	public static Address newInstance() {
 		return new Address();
@@ -93,5 +95,30 @@ public class Address implements Serializable {
 	public Address withPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 		return this;
+	}
+	
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder();
+		hcb.append(postalCode);
+		return hcb.toHashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		Address that = (Address) obj;
+		return postalCode.equals(that.postalCode);
+	}
+
+	@Override
+	public String toString() {
+		return "Address [id=" + id + ", description=" + description + ", city=" + city + ", state=" + state
+				+ ", region=" + region + ", postalCode=" + postalCode + "]";
 	}
 }

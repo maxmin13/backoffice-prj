@@ -3,11 +3,19 @@ package it.maxmin.dao.jdbc;
 public enum JdbcQueryTestConstants {
 	;
 
+	public static final String SELECT_ROLES_BY_USER_ID = ""
+			+ "SELECT ur.Id, ur.RoleName "
+			+ "FROM UserRole ur "
+			+ "INNER JOIN UserUserRole uur ON ur.Id = uur.UserRoleId "
+			+ "WHERE uur.UserId = :userId "
+			+ "ORDER BY ur.Id";
+
 	public static final String SELECT_ADDRESSES_BY_USER_ID = ""
 			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode "
 			+ "FROM Address a "
 			+ "INNER JOIN UserAddress u ON a.Id = u.AddressId "
-			+ "WHERE u.UserId = :userId ORDER BY a.Id";
+			+ "WHERE u.UserId = :userId "
+			+ "ORDER BY a.Id";
 	
 	public static final String SELECT_ADDRESS_BY_ADDRESS_ID = ""
 			+ "SELECT Id, Description, City, StateId, Region, PostalCode "

@@ -18,6 +18,7 @@ import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.entity.Department;
 import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.entity.User;
+import it.maxmin.model.jdbc.domain.entity.UserRole;
 
 public abstract class SelectUser {
 	
@@ -43,21 +44,29 @@ public abstract class SelectUser {
 				}
 			});
 			
+			var roleId = rs.getLong("RoleId");
+			if (roleId > 0) { // if found
+				UserRole role = UserRole.newInstance();
+				// depends on UserRole hashCode() and equal()
+				Objects.requireNonNull(user).addRole(role.withId(roleId).withRoleName(rs.getString("RoleName")));
+			}
+			
 			var addressId = rs.getLong("AddressId");
 			if (addressId > 0) { // if found
 				Address address = Address.newInstance();
 				Objects.requireNonNull(user)
-						.addAddress(address.withId(addressId)
-								.withDescription(rs.getString("Description"))
-								.withCity(rs.getString("City"))
-								.withRegion(rs.getString("Region"))
-								.withPostalCode(rs.getString("PostalCode")));
-						var stateId = rs.getLong("StateId");
-						if (stateId > 0) { // if found
-							Objects.requireNonNull(address)
-									.withState(State.newInstance().withId(stateId)
-											.withName(rs.getString("StateName")).withCode(rs.getString("Code")));
-						}
+					// depends on Address hashCode() and equal()
+					.addAddress(address.withId(addressId)
+							.withDescription(rs.getString("Description"))
+							.withCity(rs.getString("City"))
+							.withRegion(rs.getString("Region"))
+							.withPostalCode(rs.getString("PostalCode")));
+					var stateId = rs.getLong("StateId");
+					if (stateId > 0) { // if found
+						Objects.requireNonNull(address)
+								.withState(State.newInstance().withId(stateId)
+										.withName(rs.getString("StateName")).withCode(rs.getString("Code")));
+					}
 			}
 			var departmentId = rs.getLong("DepartmentId");
 			if (departmentId > 0) { // if found

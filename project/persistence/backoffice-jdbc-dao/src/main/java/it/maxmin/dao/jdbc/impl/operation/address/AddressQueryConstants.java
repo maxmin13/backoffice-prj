@@ -22,4 +22,7 @@ public enum AddressQueryConstants {
 
 	public static final String INSERT_USER = "" + "INSERT INTO User "
 			+ "SET AccountName = :accountName, FirstName = :firstName, LastName = :lastName, DepartmentId = :departmentId, BirthDate = :birtDate";
+	
+	public static final String INSERT_USER_ADDRESS = "" + "INSERT INTO UserAddress "
+			+ "SET UserId = :userId, AddressId = :addressId";
 }

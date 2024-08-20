@@ -1,3 +1,4 @@
+DELETE FROM LoginAttempt;
 DELETE FROM UserAddress;
 DELETE FROM UserUserRole;
 DELETE FROM UserStatus;

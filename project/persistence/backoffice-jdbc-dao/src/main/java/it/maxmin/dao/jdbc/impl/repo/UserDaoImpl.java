@@ -21,7 +21,6 @@ import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByAccountName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByFirstName;
 import it.maxmin.dao.jdbc.impl.operation.user.UpdateUser;
 import it.maxmin.model.jdbc.domain.entity.User;
-import it.maxmin.model.jdbc.domain.entity.UserAddress;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -71,10 +70,9 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public void associate(UserAddress userAddress) {
-		notNull(userAddress, "The user address must not be null");
-		this.insertUserAddress.execute(userAddress);
-		LOGGER.info("User {} associated with address  {}", userAddress.getUserId(), userAddress.getAddressId());
+	public void associate(long userId, long addressId) {
+		this.insertUserAddress.execute(userId, addressId);
+		LOGGER.info("User {} associated with address  {}", userId, addressId);
 	}
 
 	@Override

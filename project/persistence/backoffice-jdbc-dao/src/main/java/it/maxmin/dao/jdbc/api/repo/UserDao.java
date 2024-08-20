@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import it.maxmin.model.jdbc.domain.entity.User;
-import it.maxmin.model.jdbc.domain.entity.UserAddress;
 
 public interface UserDao {
 
@@ -16,7 +15,7 @@ public interface UserDao {
 
 	void create(User user);
 
-	void associate(UserAddress userAddress);
+	void associate(long userId, long addressId);
 
 	void update(User user);
 }

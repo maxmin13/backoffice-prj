@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddress;
 import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.entity.User;
-import it.maxmin.model.jdbc.domain.entity.UserAddress;
 
 public class InsertUserWithAddress {
 
@@ -37,8 +36,7 @@ public class InsertUserWithAddress {
 		if (addresses != null) {
 			addresses.stream().forEach(address -> {
 				Address newAddress = this.insertAddress.execute(address);
-				this.insertUserAddress.execute(
-						UserAddress.newInstance().withAddressId(newAddress.getId()).withUserId(newUserId));
+				this.insertUserAddress.execute(newUserId, newAddress.getId());
 			});
 		}
 	}

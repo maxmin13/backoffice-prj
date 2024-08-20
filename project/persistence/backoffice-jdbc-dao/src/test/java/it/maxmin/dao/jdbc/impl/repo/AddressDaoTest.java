@@ -13,8 +13,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -27,9 +25,9 @@ import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
 import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 
-@ExtendWith(MockitoExtension.class)
 class AddressDaoTest {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
 
 	private static AnnotationConfigApplicationContext springJdbcCtx;
@@ -41,8 +39,6 @@ class AddressDaoTest {
 
 	@BeforeAll
 	static void setup() {
-		
-		LOGGER.info("Running AddressDaoTest tests");
 		
 		springJdbcCtx = new AnnotationConfigApplicationContext(JdbcTestCfg.class);
 		jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);

@@ -3,8 +3,10 @@ package it.maxmin.model.jdbc.domain.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class User implements Serializable {
 
@@ -14,10 +16,11 @@ public class User implements Serializable {
 	private String accountName;
 	private String firstName;
 	private String lastName;
-	private Department department;
 	private LocalDate birthDate;
 	private LocalDateTime createdAt;
-	private List<Address> addresses = new ArrayList<>();
+	private Department department;
+	private Set<Address> addresses = new HashSet<>();
+	private Set<UserRole> roles = new HashSet<>();
 
 	public static User newInstance() {
 		return new User();
@@ -114,22 +117,80 @@ public class User implements Serializable {
 		return this;
 	}
 
-	public List<Address> getAddresses() {
+	public Set<Address> getAddresses() {
 		return addresses;
 	}
 
-	public void setAddresses(List<Address> addresses) {
+	void setAddresses(Set<Address> addresses) {
 		this.addresses = addresses;
 	}
 
 	public boolean addAddress(Address address) {
-		if (addresses.contains(address)) {
+		if (address == null || addresses.contains(address)) {
 			return false;
 		}
 		else {
 			addresses.add(address);
 			return true;
 		}
+	}
+
+	public Address getAddress(String postalCode) {
+		if (postalCode == null) {
+			return null;
+		}
+		return addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst().orElse(null);
+	}
+
+	public Set<UserRole> getRoles() {
+		return roles;
+	}
+
+	void setRoles(Set<UserRole> roles) {
+		this.roles = roles;
+	}
+
+	public boolean addRole(UserRole role) {
+		if (role == null || roles.contains(role)) {
+			return false;
+		}
+		else {
+			roles.add(role);
+			return true;
+		}
+	}
+
+	public UserRole getRole(String roleName) {
+		if (roleName == null) {
+			return null;
+		}
+		return roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst().orElse(null);
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder();
+		hcb.append(accountName);
+		return hcb.toHashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		User that = (User) obj;
+		return accountName.equals(that.accountName);
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", accountName=" + accountName + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", department=" + department + ", birthDate=" + birthDate + ", createdAt=" + createdAt
+				+ ", addresses=" + addresses + ", roles=" + roles + "]";
 	}
 
 }

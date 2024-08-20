@@ -2,6 +2,8 @@ package it.maxmin.model.jdbc.domain.entity;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class State implements Serializable {
 
 	private static final long serialVersionUID = 7632536256395423354L;
@@ -51,5 +53,30 @@ public class State implements Serializable {
 	public State withCode(String code) {
 		this.code = code;
 		return this;
+	}
+	
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder();
+		hcb.append(code);
+		return hcb.toHashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		State that = (State) obj;
+		return code.equals(that.code);
+	}
+
+	@Override
+	public String toString() {
+		return  "State [id=" + id + ", name=" + name + ", code=" + code + "]";
 	}
 }
