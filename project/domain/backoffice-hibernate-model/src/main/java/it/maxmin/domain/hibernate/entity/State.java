@@ -18,6 +18,15 @@ public class State extends AbstractEntity {
 	private String name;
 	private String code;
 
+	public static State newInstance() {
+		return new State();
+	}
+
+	public State withId(Long id) {
+		this.id = id;
+		return this;
+	}
+
 	@Column(name = "Name")
 	public String getName() {
 		return name;
@@ -27,6 +36,11 @@ public class State extends AbstractEntity {
 		this.name = name;
 	}
 
+	public State withName(String name) {
+		this.name = name;
+		return this;
+	}
+
 	@Column(name = "Code")
 	public String getCode() {
 		return code;
@@ -34,6 +48,11 @@ public class State extends AbstractEntity {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public State withCode(String code) {
+		this.code = code;
+		return this;
 	}
 
 	@Override
@@ -51,19 +70,12 @@ public class State extends AbstractEntity {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		if (!super.equals(obj)) {
-			return false;
-		}
 		State that = (State) obj;
-		if (that.getId() != null && this.getId() != null) {
-			return super.equals(obj);
-		}
 		return code.equals(that.code);
 	}
 
 	@Override
 	public String toString() {
-		return  "State [id=" + id + ", name=" + name + ", code=" + code + "]";
+		return "State [id=" + id + ", name=" + name + ", code=" + code + "]";
 	}
-	
 }

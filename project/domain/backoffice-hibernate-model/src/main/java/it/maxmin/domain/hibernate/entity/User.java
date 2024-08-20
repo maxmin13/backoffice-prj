@@ -29,8 +29,8 @@ public class User extends AbstractEntity {
 	private LocalDate birthDate;
 	private LocalDateTime createdAt;
 	private Department department;
-	private Set<UserRole> roles = new HashSet<>();
 	private Set<Address> addresses = new HashSet<>();
+	private Set<UserRole> roles = new HashSet<>();
 
 	public static User newInstance() {
 		return new User();
@@ -98,7 +98,7 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
-	@Column(name = "BirtDate")
+	@Column(name = "BirthDate")
 	public LocalDate getBirthDate() {
 		return birthDate;
 	}
@@ -132,38 +132,50 @@ public class User extends AbstractEntity {
 		return addresses;
 	}
 
-	public void setAddresses(Set<Address> addresses) {
+	void setAddresses(Set<Address> addresses) {
 		this.addresses = addresses;
 	}
 
 	public boolean addAddress(Address address) {
-		if (addresses.contains(address)) {
+		if (address == null || addresses.contains(address)) {
 			return false;
-		}
-		else {
+		} else {
 			addresses.add(address);
 			return true;
 		}
 	}
-	
+
+	public Address getAddress(String postalCode) {
+		if (postalCode == null) {
+			return null;
+		}
+		return addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst().orElse(null);
+	}
+
 	@ManyToMany
 	@JoinTable(name = "UserUserRole", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "UserRoleId"))
 	public Set<UserRole> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(Set<UserRole> roles) {
+	void setRoles(Set<UserRole> roles) {
 		this.roles = roles;
 	}
 
-	public boolean addRoles(UserRole role) {
-		if (roles.contains(role)) {
+	public boolean addRole(UserRole role) {
+		if (role == null || roles.contains(role)) {
 			return false;
-		}
-		else {
+		} else {
 			roles.add(role);
 			return true;
 		}
+	}
+
+	public UserRole getRole(String roleName) {
+		if (roleName == null) {
+			return null;
+		}
+		return roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst().orElse(null);
 	}
 
 	@Override
@@ -181,21 +193,15 @@ public class User extends AbstractEntity {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		if (!super.equals(obj)) {
-			return false;
-		}
 		User that = (User) obj;
-		if (that.getId() != null && this.getId() != null) {
-			return super.equals(obj);
-		}
 		return accountName.equals(that.accountName);
 	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", accountName=" + accountName + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", birthDate=" + birthDate + ", createdAt=" + createdAt + ", department=" + department
-				+ ", addresses=" + addresses + "]";
+				+ ", department=" + department + ", birthDate=" + birthDate + ", createdAt=" + createdAt
+				+ ", addresses=" + addresses + ", roles=" + roles + "]";
 	}
 
 }

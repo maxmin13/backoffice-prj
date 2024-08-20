@@ -9,9 +9,9 @@ public class PojoAddress implements Serializable {
 	private Long id;
 	private String description;
 	private String city;
-	private Long stateId;
 	private String region;
 	private String postalCode;
+	private Long stateId;
 	
 	public static PojoAddress newInstance() {
 		return new PojoAddress();

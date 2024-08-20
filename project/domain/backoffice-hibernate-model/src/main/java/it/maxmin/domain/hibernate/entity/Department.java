@@ -1,11 +1,18 @@
 package it.maxmin.domain.hibernate.entity;
 
+import java.io.Serial;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "Department")
 public class Department extends AbstractEntity {
 
+	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private String name;
@@ -13,12 +20,13 @@ public class Department extends AbstractEntity {
 	public static Department newInstance() {
 		return new Department();
 	}
-
+	
+	
 	public Department withId(Long id) {
 		this.id = id;
 		return this;
 	}
-
+	
 	@Column(name = "Name")
 	public String getName() {
 		return name;
@@ -48,13 +56,7 @@ public class Department extends AbstractEntity {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		if (!super.equals(obj)) {
-			return false;
-		}
 		Department that = (Department) obj;
-		if (that.getId() != null && this.getId() != null) {
-			return super.equals(obj);
-		}
 		return name.equals(that.name);
 	}
 
@@ -62,5 +64,4 @@ public class Department extends AbstractEntity {
 	public String toString() {
 		return "Department [id=" + id + ", name=" + name + "]";
 	}
-	
 }

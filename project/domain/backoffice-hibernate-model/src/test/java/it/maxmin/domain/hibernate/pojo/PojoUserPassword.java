@@ -8,11 +8,11 @@ public class PojoUserPassword implements Serializable {
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private Long id;
-	private String userId;
 	private String value;
 	private LocalDateTime effDate;
 	private LocalDateTime endDate;
-
+	private String userId;
+	
 	public Long getId() {
 		return id;
 	}

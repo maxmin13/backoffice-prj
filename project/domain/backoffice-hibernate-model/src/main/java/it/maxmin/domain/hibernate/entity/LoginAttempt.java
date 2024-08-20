@@ -19,9 +19,13 @@ public class LoginAttempt implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
 
-	private User user;
 	private boolean success;
 	private LocalDateTime createdAt;
+	private User user;
+
+	public static LoginAttempt newInstance() {
+		return new LoginAttempt();
+	}
 
 	@OneToOne
 	@JoinColumn(name = "UserId")
@@ -69,7 +73,7 @@ public class LoginAttempt implements Serializable {
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(user.id).append(createdAt);
+		hcb.append(user.getAccountName()).append(createdAt);
 		return hcb.toHashCode();
 	}
 
@@ -82,12 +86,11 @@ public class LoginAttempt implements Serializable {
 			return false;
 		}
 		LoginAttempt that = (LoginAttempt) obj;
-		return user.id.equals(that.user.id) && createdAt.equals(that.createdAt);
+		return user.getAccountName().equals(that.user.getAccountName()) && createdAt.equals(that.createdAt);
 	}
 
 	@Override
 	public String toString() {
 		return "LoginAttempt [user=" + user + ", success=" + success + ", createdAt=" + createdAt + "]";
 	}
-	
 }

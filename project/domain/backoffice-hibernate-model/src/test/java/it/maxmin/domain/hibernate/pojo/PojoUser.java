@@ -12,9 +12,9 @@ public class PojoUser implements Serializable {
 	private String accountName;
 	private String firstName;
 	private String lastName;
-	private Long departmentId;
 	private LocalDate birthDate;
 	private LocalDateTime createdAt;
+	private Long departmentId;
 	
 	public static PojoUser newInstance() {
 		return new PojoUser();

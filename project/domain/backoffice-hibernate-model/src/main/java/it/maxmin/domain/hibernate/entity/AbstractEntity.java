@@ -31,6 +31,11 @@ public abstract class AbstractEntity implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+//	public AbstractEntity withId(Long id) {
+//		this.id = id;
+//		return this;
+//	}
 
 	@Version
 	@Column(name = "Version")

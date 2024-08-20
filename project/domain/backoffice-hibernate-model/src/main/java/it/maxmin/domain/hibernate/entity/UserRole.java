@@ -17,6 +17,15 @@ public class UserRole extends AbstractEntity {
 
 	private String roleName;
 
+	public static UserRole newInstance() {
+		return new UserRole();
+	}
+	
+	public UserRole withId(Long id) {
+		this.id = id;
+		return this;
+	}
+
 	@Column(name = "RoleName")
 	public String getRoleName() {
 		return roleName;
@@ -24,6 +33,11 @@ public class UserRole extends AbstractEntity {
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
+	}
+
+	public UserRole withRoleName(String roleName) {
+		this.roleName = roleName;
+		return this;
 	}
 
 	@Override
@@ -41,19 +55,13 @@ public class UserRole extends AbstractEntity {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		if (!super.equals(obj)) {
-			return false;
-		}
 		UserRole that = (UserRole) obj;
-		if (that.getId() != null && this.getId() != null) {
-			return super.equals(obj);
-		}
 		return roleName.equals(that.roleName);
 	}
 
 	@Override
 	public String toString() {
-		return "UserRole [id=" + id + ", roleName=" + roleName + "]";
+		return  "UserRole [id=" + id + ", roleName=" + roleName + "]";
 	}
 
 }

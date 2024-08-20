@@ -16,17 +16,17 @@ public class Address extends AbstractEntity {
 
 	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
-
+	
 	private String description;
 	private String city;
-	private State state;
 	private String region;
 	private String postalCode;
-
+	private State state;
+	
 	public static Address newInstance() {
 		return new Address();
 	}
-
+	
 	public Address withId(Long id) {
 		this.id = id;
 		return this;
@@ -40,7 +40,7 @@ public class Address extends AbstractEntity {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+	
 	public Address withDescription(String description) {
 		this.description = description;
 		return this;
@@ -54,7 +54,7 @@ public class Address extends AbstractEntity {
 	public void setCity(String city) {
 		this.city = city;
 	}
-
+	
 	public Address withCity(String city) {
 		this.city = city;
 		return this;
@@ -69,7 +69,7 @@ public class Address extends AbstractEntity {
 	public void setState(State state) {
 		this.state = state;
 	}
-
+	
 	public Address withState(State state) {
 		this.state = state;
 		return this;
@@ -83,7 +83,7 @@ public class Address extends AbstractEntity {
 	public void setRegion(String region) {
 		this.region = region;
 	}
-
+	
 	public Address withRegion(String region) {
 		this.region = region;
 		return this;
@@ -97,12 +97,12 @@ public class Address extends AbstractEntity {
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
-
+	
 	public Address withPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 		return this;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
@@ -118,13 +118,7 @@ public class Address extends AbstractEntity {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		if (!super.equals(obj)) {
-			return false;
-		}
 		Address that = (Address) obj;
-		if (that.getId() != null && this.getId() != null) {
-			return super.equals(obj);
-		}
 		return postalCode.equals(that.postalCode);
 	}
 
@@ -133,5 +127,4 @@ public class Address extends AbstractEntity {
 		return "Address [id=" + id + ", description=" + description + ", city=" + city + ", state=" + state
 				+ ", region=" + region + ", postalCode=" + postalCode + "]";
 	}
-
 }
