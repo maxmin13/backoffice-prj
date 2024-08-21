@@ -5,8 +5,8 @@ There are various demands, and various places where you handle unchecked excepti
 
 #########################################################################################
 
-CHANGE  List to Set in jdbc project pojos, add hascode and equal implementation
+make unit test for address and user data extractors
 
-
+in jdbc dao project, make annotation @Sql that encapsulate run db scripts
 
 #########################################################################################

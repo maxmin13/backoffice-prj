@@ -86,7 +86,7 @@ class UserDaoTest {
 		daoTestUtil.stopTestDB();
 	}
 
-	//@Test
+	@Test
 	void testFindAllNotFound() {
 		
 		LOGGER.info("running test testFindAllNotFound");
@@ -221,7 +221,7 @@ class UserDaoTest {
 		assertNotNull(role6.getId());
 	}
 
-	//@Test
+	@Test
 	void testFindAll_with_no_address() {
 		
 		LOGGER.info("running test testFindAll_with_no_address");
@@ -313,7 +313,7 @@ class UserDaoTest {
 		assertNotNull(role6.getId());
 	}
 
-	//@Test
+	@Test
 	void findByAccountNameNotFound() {
 		
 		LOGGER.info("running test findByAccountNameNotFound");
@@ -331,7 +331,7 @@ class UserDaoTest {
 		assertTrue(user.isEmpty());
 	}
 
-	//@Test
+	@Test
 	void findByAccountName() {
 		
 		LOGGER.info("running test findByAccountName");
@@ -380,7 +380,7 @@ class UserDaoTest {
 		assertEquals(ireland.getCode(), address3.getState().getCode());
 	}
 
-	//@Test
+	@Test
 	void findByFirstNameNotFound() {
 		
 		LOGGER.info("running test findByFirstNameNotFound");
@@ -398,7 +398,7 @@ class UserDaoTest {
 		assertEquals(0, users.size());
 	}
 
-	//@Test
+	@Test
 	void findByFirstName() {
 		
 		LOGGER.info("running test findByFirstName");
@@ -451,7 +451,7 @@ class UserDaoTest {
 		assertEquals(ireland.getCode(), address3.getState().getCode());
 	}
 
-	//@Test
+	@Test
 	void associate() {
 		
 		LOGGER.info("running test associate");
@@ -485,7 +485,7 @@ class UserDaoTest {
 		assertEquals(state.getId(), addresses.get(0).getStateId());
 	}
 
-	//@Test
+	@Test
 	void nullCreateThrowsException() {
 		
 		LOGGER.info("running test nullCreateThrowsException");
@@ -500,7 +500,7 @@ class UserDaoTest {
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
-	//@Test
+	@Test
 	void create_with_no_address() {
 		
 		LOGGER.info("running test create_with_no_address");
@@ -529,7 +529,7 @@ class UserDaoTest {
 		assertEquals(0, addresses.size());
 	}
 
-	//@Test
+	@Test
 	void create_with_addresses() {
 		
 		LOGGER.info("running test create_with_addresses");
@@ -565,25 +565,25 @@ class UserDaoTest {
 		List<PojoAddress> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
 
 		assertEquals(2, addresses.size());
-
+		
 		PojoAddress newAddress1 = addresses.get(0);
 
-		assertEquals("Via Nuova", newAddress1.getDescription());
-		assertEquals("Venice", newAddress1.getCity());
-		assertEquals(italy.getId(), newAddress1.getStateId());
-		assertEquals("Emilia Romagna", newAddress1.getRegion());
-		assertEquals("33456", newAddress1.getPostalCode());
+		assertEquals("Via Vecchia", newAddress1.getDescription());
+		assertEquals("Dublin", newAddress1.getCity());
+		assertEquals(ireland.getId(), newAddress1.getStateId());
+		assertEquals("County Dublin", newAddress1.getRegion());
+		assertEquals("A65TF14", newAddress1.getPostalCode());
 
 		PojoAddress newAddress2 = addresses.get(1);
 
-		assertEquals("Via Vecchia", newAddress2.getDescription());
-		assertEquals("Dublin", newAddress2.getCity());
-		assertEquals(ireland.getId(), newAddress2.getStateId());
-		assertEquals("County Dublin", newAddress2.getRegion());
-		assertEquals("A65TF14", newAddress2.getPostalCode());
+		assertEquals("Via Nuova", newAddress2.getDescription());
+		assertEquals("Venice", newAddress2.getCity());
+		assertEquals(italy.getId(), newAddress2.getStateId());
+		assertEquals("Emilia Romagna", newAddress2.getRegion());
+		assertEquals("33456", newAddress2.getPostalCode());
 	}
 
-	//@Test
+	@Test
 	void nullUpdateThrowsException() {
 		
 		LOGGER.info("running test nullUpdateThrowsException");
@@ -598,7 +598,7 @@ class UserDaoTest {
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
-	//@Test
+	@Test
 	void update() {
 		
 		LOGGER.info("running test update");

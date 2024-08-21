@@ -72,7 +72,7 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public void associate(long userId, long addressId) {
 		this.insertUserAddress.execute(userId, addressId);
-		LOGGER.info("User {} associated with address  {}", userId, addressId);
+		LOGGER.info("User {} associated with address {}", userId, addressId);
 	}
 
 	@Override

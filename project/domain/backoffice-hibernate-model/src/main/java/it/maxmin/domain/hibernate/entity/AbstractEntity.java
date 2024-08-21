@@ -32,10 +32,10 @@ public abstract class AbstractEntity implements Serializable {
 		this.id = id;
 	}
 	
-//	public AbstractEntity withId(Long id) {
-//		this.id = id;
-//		return this;
-//	}
+	public AbstractEntity withId(Long id) {
+		this.id = id;
+		return this;
+	}
 
 	@Version
 	@Column(name = "Version")

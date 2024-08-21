@@ -148,7 +148,7 @@ public class JdbcDaoTestUtil {
 		simpleJdbcInsert.withTableName("UserAddress");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(userAddress);
 		simpleJdbcInsert.execute(paramSource);
-		LOGGER.info("User {} associated with address  {}", userAddress.getUserId(), userAddress.getAddressId());
+		LOGGER.info("User {} associated with address {}", userAddress.getUserId(), userAddress.getAddressId());
 	}
 
 	public State findStateByName(String name) {
