@@ -4,10 +4,10 @@ import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESSES_BY_USER
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ALL_ADDRESSES;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ROLES_BY_USER_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_USER_ID;
-import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ROLES_BY_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.util.Assert.notNull;
 
@@ -100,7 +100,12 @@ public class JdbcDaoTestUtil {
 		simpleJdbcInsert.withTableName("User");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(user);
 		KeyHolder result = simpleJdbcInsert.executeAndReturnKeyHolder(paramSource);
-		user.setId(result.getKey().longValue());
+		Number key = result.getKey();
+		if (key != null) {
+			user.setId(key.longValue());
+		} else {
+			throw new DaoTestException("User key not generated");
+		}
 
 		return user;
 	}
@@ -135,7 +140,12 @@ public class JdbcDaoTestUtil {
 		simpleJdbcInsert.withTableName("Address");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(address);
 		KeyHolder result = simpleJdbcInsert.executeAndReturnKeyHolder(paramSource);
-		address.setId(result.getKey().longValue());
+		Number key = result.getKey();
+		if (key != null) {
+			address.setId(key.longValue());
+		} else {
+			throw new DaoTestException("Address key not generated");
+		}
 
 		return address;
 	}

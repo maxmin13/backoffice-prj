@@ -1,2 +1,2 @@
-INSERT INTO State (Code, Name) VALUES ('IT','Italy');
-INSERT INTO State (Code, Name) VALUES ('IE','Ireland');
+INSERT INTO State (Id, Code, Name) VALUES (1, 'IT','Italy');
+INSERT INTO State (Id, Code, Name) VALUES (2, 'IE','Ireland');

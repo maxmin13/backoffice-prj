@@ -1,7 +1,6 @@
 package it.maxmin.domain.hibernate.entity;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -14,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "LoginAttempt")
-public class LoginAttempt implements Serializable {
+public class LoginAttempt extends AbstractEntity {
 
 	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
@@ -25,6 +24,11 @@ public class LoginAttempt implements Serializable {
 
 	public static LoginAttempt newInstance() {
 		return new LoginAttempt();
+	}
+	
+	public LoginAttempt withId(Long id) {
+		this.id = id;
+		return this;
 	}
 
 	@OneToOne

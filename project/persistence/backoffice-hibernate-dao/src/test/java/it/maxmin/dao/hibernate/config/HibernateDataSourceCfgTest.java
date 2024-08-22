@@ -4,7 +4,6 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -31,12 +30,6 @@ class HibernateDataSourceCfgTest {
 	public static void init() {
 		hibernateTestCfg = new AnnotationConfigApplicationContext(HibernateTestCfg.class);
 		daoTestUtil = hibernateTestCfg.getBean("daoTestUtil", HibernateDaoTestUtil.class);
-	}
-
-	@AfterAll
-	public static void cleanUp() {
-		daoTestUtil.stopTestDB();
-		hibernateTestCfg.close();
 	}
 
 	@Test

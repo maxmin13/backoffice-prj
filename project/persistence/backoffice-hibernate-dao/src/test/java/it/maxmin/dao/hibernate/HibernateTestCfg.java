@@ -2,7 +2,6 @@ package it.maxmin.dao.hibernate;
 
 import static org.hibernate.cfg.BatchSettings.STATEMENT_BATCH_SIZE;
 import static org.hibernate.cfg.FetchSettings.MAX_FETCH_DEPTH;
-import static org.hibernate.cfg.JdbcSettings.DIALECT;
 import static org.hibernate.cfg.JdbcSettings.FORMAT_SQL;
 import static org.hibernate.cfg.JdbcSettings.HIGHLIGHT_SQL;
 import static org.hibernate.cfg.JdbcSettings.SHOW_SQL;
@@ -19,12 +18,15 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
@@ -35,6 +37,9 @@ import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
  * tests.
  */
 
+@Configuration
+@ComponentScan(basePackages = { "it.maxmin.dao.hibernate.impl.repo" })
+@EnableTransactionManagement
 public class HibernateTestCfg {
 
 	@SuppressWarnings("unused")
@@ -48,9 +53,8 @@ public class HibernateTestCfg {
 	}
 
 	@Bean
-	public HibernateDaoTestUtil daoTestUtil(MariaDB4jSpringService mariaDB4jSpringService,
-			NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
-		return new HibernateDaoTestUtil(mariaDB4jSpringService, jdbcTemplate, dataSource);
+	public HibernateDaoTestUtil daoTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+		return new HibernateDaoTestUtil(jdbcTemplate, dataSource);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -58,8 +62,7 @@ public class HibernateTestCfg {
 	public DataSource dataSource(MariaDB4jSpringService mariaDB4jSpringService) {
 		try {
 			mariaDB4jSpringService.getDB().createDB("testDB");
-		}
-		catch (ManagedProcessException e) {
+		} catch (ManagedProcessException e) {
 			throw new DaoTestException("Error creating the data source", e);
 		}
 
@@ -69,8 +72,7 @@ public class HibernateTestCfg {
 		Class<? extends Driver> driver;
 		try {
 			driver = (Class<? extends Driver>) Class.forName("org.mariadb.jdbc.Driver");
-		}
-		catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			throw new DaoTestException("Error loading DB driver", e);
 		}
 		ds.setDriverClass(driver);
@@ -90,7 +92,6 @@ public class HibernateTestCfg {
 	@Bean
 	public Properties hibernateProperties() {
 		Properties hibernateProp = new Properties();
-		hibernateProp.put(DIALECT, "org.hibernate.dialect.H2Dialect");
 		hibernateProp.put(HBM2DDL_AUTO, "none");
 		hibernateProp.put(FORMAT_SQL, true);
 		hibernateProp.put(USE_SQL_COMMENTS, true);
@@ -105,7 +106,7 @@ public class HibernateTestCfg {
 	@Bean
 	@DependsOn("dataSource")
 	public SessionFactory sessionFactory() {
-		return new LocalSessionFactoryBuilder(dataSource).scanPackages("com.maxmin.domain.hibernate.entity")
+		return new LocalSessionFactoryBuilder(dataSource).scanPackages("it.maxmin.domain.hibernate.entity")
 				.addProperties(hibernateProperties()).buildSessionFactory();
 	}
 

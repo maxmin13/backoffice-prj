@@ -1,12 +1,16 @@
 package it.maxmin.domain.hibernate.entity;
 
 import java.io.Serial;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -16,17 +20,18 @@ public class Address extends AbstractEntity {
 
 	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
-	
+
 	private String description;
 	private String city;
 	private String region;
 	private String postalCode;
 	private State state;
-	
+	private Set<User> users = new HashSet<>();
+
 	public static Address newInstance() {
 		return new Address();
 	}
-	
+
 	public Address withId(Long id) {
 		this.id = id;
 		return this;
@@ -40,7 +45,7 @@ public class Address extends AbstractEntity {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public Address withDescription(String description) {
 		this.description = description;
 		return this;
@@ -54,24 +59,9 @@ public class Address extends AbstractEntity {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	
+
 	public Address withCity(String city) {
 		this.city = city;
-		return this;
-	}
-
-	@OneToOne
-	@JoinColumn(name = "StateId")
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
-	}
-	
-	public Address withState(State state) {
-		this.state = state;
 		return this;
 	}
 
@@ -83,7 +73,7 @@ public class Address extends AbstractEntity {
 	public void setRegion(String region) {
 		this.region = region;
 	}
-	
+
 	public Address withRegion(String region) {
 		this.region = region;
 		return this;
@@ -97,12 +87,42 @@ public class Address extends AbstractEntity {
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
-	
+
 	public Address withPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 		return this;
 	}
-	
+
+	@OneToOne
+	@JoinColumn(name = "StateId")
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	public Address withState(State state) {
+		this.state = state;
+		return this;
+	}
+
+	@ManyToMany
+	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "AddressId", referencedColumnName = "Id"), inverseJoinColumns = @JoinColumn(name = "UserId", referencedColumnName = "Id"))
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+
+	public Address withUsers(Set<User> users) {
+		this.users = users;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();

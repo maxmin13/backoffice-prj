@@ -8,16 +8,28 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "User")
+
+@NamedQuery(name = "User.findByAccountName", query = """
+		          select distinct u
+		               from User u
+		               left join fetch u.department
+		               left join fetch u.addresses
+		               left join fetch u.roles
+		               where u.accountName = :accountName
+		""")
 public class User extends AbstractEntity {
 
 	@Serial
@@ -83,21 +95,6 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "DepartmentId")
-	public Department getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(Department department) {
-		this.department = department;
-	}
-
-	public User withDepartment(Department department) {
-		this.department = department;
-		return this;
-	}
-
 	@Column(name = "BirthDate")
 	public LocalDate getBirthDate() {
 		return birthDate;
@@ -112,7 +109,7 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
-	@Column(name = "CeatedAt")
+	@Column(name = "CreatedAt")
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
@@ -126,7 +123,22 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
-	@ManyToMany
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "DepartmentId")
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public User withDepartment(Department department) {
+		this.department = department;
+		return this;
+	}
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "AddressId"))
 	public Set<Address> getAddresses() {
 		return addresses;
@@ -152,7 +164,7 @@ public class User extends AbstractEntity {
 		return addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst().orElse(null);
 	}
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinTable(name = "UserUserRole", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "UserRoleId"))
 	public Set<UserRole> getRoles() {
 		return roles;

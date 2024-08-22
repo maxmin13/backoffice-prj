@@ -83,6 +83,7 @@ class UserDaoTest {
 		String[] scripts = { "2_state.down.sql", "2_department.down.sql", "2_userrole.down.sql",
 				"1_create_database.down.sql" };
 		daoTestUtil.runDBScripts(scripts);
+		springJdbcCtx.close();
 		daoTestUtil.stopTestDB();
 	}
 

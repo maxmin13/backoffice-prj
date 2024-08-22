@@ -1,3 +1,3 @@
-insert into UserRole (RoleName) values ('Administrator');
-insert into UserRole (RoleName) values ('User');
-insert into UserRole (RoleName) values ('Worker');
+insert into UserRole (Id, RoleName) values (1, 'Administrator');
+insert into UserRole (Id, RoleName) values (2, 'User');
+insert into UserRole (Id, RoleName) values (3, 'Worker');

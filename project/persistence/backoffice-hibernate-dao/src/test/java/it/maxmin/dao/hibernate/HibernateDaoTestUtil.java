@@ -4,15 +4,13 @@ import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ADDRESS
 import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
 import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ALL_ADDRESSES;
 import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
+import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ROLES_BY_USER_ID;
 import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_STATE_BY_NAME;
 import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_USER_BY_USER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.util.Assert.notNull;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -28,46 +26,23 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
 
-import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
+import it.maxmin.domain.hibernate.entity.Department;
+import it.maxmin.domain.hibernate.entity.State;
 import it.maxmin.domain.hibernate.pojo.PojoAddress;
-import it.maxmin.domain.hibernate.pojo.PojoDepartment;
-import it.maxmin.domain.hibernate.pojo.PojoState;
 import it.maxmin.domain.hibernate.pojo.PojoUser;
 import it.maxmin.domain.hibernate.pojo.PojoUserAddress;
-
+import it.maxmin.domain.hibernate.pojo.PojoUserRole;
 
 public class HibernateDaoTestUtil {
 
-	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateDaoTestUtil.class);
 
-	private MariaDB4jSpringService mariaDB4jSpringService;
 	private NamedParameterJdbcTemplate jdbcTemplate;
-	private SimpleJdbcInsert simpleJdbcInsert;
+	private DataSource dataSource;
 
-	public HibernateDaoTestUtil(MariaDB4jSpringService mariaDB4jSpringService, NamedParameterJdbcTemplate jdbcTemplate,
-			DataSource dataSource) {
-		simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-		simpleJdbcInsert.usingGeneratedKeyColumns("Id");
+	public HibernateDaoTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
 		this.jdbcTemplate = jdbcTemplate;
-		this.mariaDB4jSpringService = mariaDB4jSpringService;
-	}
-
-	public void stopTestDB() {
-		mariaDB4jSpringService.stop();
-	}
-
-	public void runDBScripts(String[] scripts) {
-		for (String script : scripts) {
-			try {
-				Files.readAllLines(Paths.get("src/test/resources/database/" + script)).stream()
-						.filter(line -> !line.trim().isEmpty()).toList()
-						.forEach(jdbcTemplate.getJdbcTemplate()::update);
-			}
-			catch (IOException e) {
-				throw new DaoTestException("Error running DB scripts", e);
-			}
-		}
+		this.dataSource = dataSource;
 	}
 
 	public void testDataSource(DataSource dataSource) throws SQLException {
@@ -96,12 +71,25 @@ public class HibernateDaoTestUtil {
 	public PojoUser createUser(PojoUser user) {
 		notNull(user, "The user must not be null");
 
+		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
+		simpleJdbcInsert.usingGeneratedKeyColumns("Id");
 		simpleJdbcInsert.withTableName("User");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(user);
 		KeyHolder result = simpleJdbcInsert.executeAndReturnKeyHolder(paramSource);
-		user.setId(result.getKey().longValue());
+		Number key = result.getKey();
+		if (key != null) {
+			user.setId(key.longValue());
+		} else {
+			throw new DaoTestException("User key not generated");
+		}
 
 		return user;
+	}
+
+	public List<PojoUserRole> findRolesByUserId(long userId) {
+		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
+		return jdbcTemplate.query(SELECT_ROLES_BY_USER_ID, param,
+				BeanPropertyRowMapper.newInstance(PojoUserRole.class));
 	}
 
 	public List<PojoAddress> findAddressesByUserId(long userId) {
@@ -123,10 +111,17 @@ public class HibernateDaoTestUtil {
 	public PojoAddress createAddress(PojoAddress address) {
 		notNull(address, "The address must not be null");
 
+		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
+		simpleJdbcInsert.usingGeneratedKeyColumns("Id");
 		simpleJdbcInsert.withTableName("Address");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(address);
 		KeyHolder result = simpleJdbcInsert.executeAndReturnKeyHolder(paramSource);
-		address.setId(result.getKey().longValue());
+		Number key = result.getKey();
+		if (key != null) {
+			address.setId(key.longValue());
+		} else {
+			throw new DaoTestException("Address key not generated");
+		}
 
 		return address;
 	}
@@ -134,21 +129,22 @@ public class HibernateDaoTestUtil {
 	public void associateUserAddress(PojoUserAddress userAddress) {
 		notNull(userAddress, "The user address must not be null");
 
+		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
+		simpleJdbcInsert.usingGeneratedKeyColumns("Id");
 		simpleJdbcInsert.withTableName("UserAddress");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(userAddress);
 		simpleJdbcInsert.execute(paramSource);
 		LOGGER.info("User {} associated with address {}", userAddress.getUserId(), userAddress.getAddressId());
 	}
 
-	public PojoState findStateByName(String name) {
+	public State findStateByName(String name) {
 		SqlParameterSource param = new MapSqlParameterSource("name", name);
-		return jdbcTemplate.queryForObject(SELECT_STATE_BY_NAME, param, BeanPropertyRowMapper.newInstance(PojoState.class));
+		return jdbcTemplate.queryForObject(SELECT_STATE_BY_NAME, param, BeanPropertyRowMapper.newInstance(State.class));
 	}
 
-	public PojoDepartment findDepartmentByName(String name) {
+	public Department findDepartmentByName(String name) {
 		SqlParameterSource param = new MapSqlParameterSource("name", name);
 		return jdbcTemplate.queryForObject(SELECT_DEPARTMENT_BY_NAME, param,
-				BeanPropertyRowMapper.newInstance(PojoDepartment.class));
+				BeanPropertyRowMapper.newInstance(Department.class));
 	}
-
 }

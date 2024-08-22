@@ -9,12 +9,26 @@ public class LoginAttempt implements Serializable {
 
 	private static final long serialVersionUID = 7632536256395423354L;
 
+	private long id;
 	private boolean success;
 	private LocalDateTime createdAt;
 	private User user;
 
 	public static LoginAttempt newInstance() {
 		return new LoginAttempt();
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public LoginAttempt withId(long id) {
+		this.id = id;
+		return this;
 	}
 
 	public User getUser() {

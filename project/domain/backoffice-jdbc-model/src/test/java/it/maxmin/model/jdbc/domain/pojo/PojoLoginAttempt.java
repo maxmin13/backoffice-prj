@@ -7,10 +7,19 @@ public class PojoLoginAttempt implements Serializable {
 
 	private static final long serialVersionUID = 7632536256395423354L;
 
+	private long id;
 	private boolean success;
 	private LocalDateTime createdAt;
 	private String userId;
-	
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public String getUserId() {
 		return userId;
 	}

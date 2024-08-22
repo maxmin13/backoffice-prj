@@ -1,11 +1,16 @@
 package it.maxmin.domain.hibernate.entity;
 
 import java.io.Serial;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,11 +21,12 @@ public class UserRole extends AbstractEntity {
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private String roleName;
+	private Set<User> users = new HashSet<>();
 
 	public static UserRole newInstance() {
 		return new UserRole();
 	}
-	
+
 	public UserRole withId(Long id) {
 		this.id = id;
 		return this;
@@ -37,6 +43,21 @@ public class UserRole extends AbstractEntity {
 
 	public UserRole withRoleName(String roleName) {
 		this.roleName = roleName;
+		return this;
+	}
+
+	@ManyToMany
+	@JoinTable(name = "UserUserRole", joinColumns = @JoinColumn(name = "UserRoleId", referencedColumnName="Id"), inverseJoinColumns = @JoinColumn(name = "UserId", referencedColumnName="Id"))
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+
+	public UserRole withUsers(Set<User> users) {
+		this.users = users;
 		return this;
 	}
 
@@ -61,7 +82,7 @@ public class UserRole extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		return  "UserRole [id=" + id + ", roleName=" + roleName + "]";
+		return "UserRole [id=" + id + ", roleName=" + roleName + "]";
 	}
 
 }

@@ -19,7 +19,7 @@ import it.maxmin.dao.jdbc.impl.operation.address.SelectAddressesByUserId;
 import it.maxmin.dao.jdbc.impl.operation.address.UpdateAddress;
 import it.maxmin.model.jdbc.domain.entity.Address;
 
-@Repository
+@Repository("addressDao")
 public class AddressDaoImpl implements AddressDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoImpl.class);

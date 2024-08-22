@@ -34,7 +34,7 @@ public enum JdbcQueryTestConstants {
 			+ "ORDER BY Id";
 	
 	public static final String SELECT_USER_BY_ACCOUNT_NAME = ""
-			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt	, DepartmentId "
+			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt, DepartmentId "
 			+ "FROM User "
 			+ "WHERE AccountName = :accountName "
 			+ "ORDER BY Id";

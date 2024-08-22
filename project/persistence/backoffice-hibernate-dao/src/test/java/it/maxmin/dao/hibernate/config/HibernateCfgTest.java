@@ -50,7 +50,7 @@ class HibernateCfgTest {
 	
 	@AfterAll
 	public static void cleanUp() {
-		daoTestUtil.stopTestDB();
+//		daoTestUtil.stopTestDB();
 		hibernateTestCfg.close();
 	}
 

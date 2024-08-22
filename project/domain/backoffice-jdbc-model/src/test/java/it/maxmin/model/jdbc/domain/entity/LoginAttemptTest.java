@@ -24,7 +24,7 @@ class LoginAttemptTest {
 		User user = User.newInstance().withId(1l).withAccountName(accountName).withBirthDate(birthDate)
 				.withFirstName("Max").withLastName("Min").withDepartment(Department.newInstance().withId(1l));
 
-		LoginAttempt loginAttempt = LoginAttempt.newInstance().withUser(user).withSuccess(true)
+		LoginAttempt loginAttempt = LoginAttempt.newInstance().withId(1l).withUser(user).withSuccess(true)
 				.withCreatedAt(createdAt);
 
 		Set<LoginAttempt> attempts = new HashSet<>();
@@ -50,10 +50,10 @@ class LoginAttemptTest {
 		User user2 = User.newInstance().withId(1l).withAccountName(accountName2).withBirthDate(birthDate)
 				.withFirstName("Max").withLastName("Min").withDepartment(Department.newInstance().withId(1l));
 
-		LoginAttempt loginAttempt1 = LoginAttempt.newInstance().withUser(user1).withSuccess(true)
+		LoginAttempt loginAttempt1 = LoginAttempt.newInstance().withId(1l).withUser(user1).withSuccess(true)
 				.withCreatedAt(createdAt1);
 
-		LoginAttempt loginAttempt2 = LoginAttempt.newInstance().withUser(user2).withSuccess(true)
+		LoginAttempt loginAttempt2 = LoginAttempt.newInstance().withId(1l).withUser(user2).withSuccess(true)
 				.withCreatedAt(createdAt2);
 
 		Set<LoginAttempt> attempts = new HashSet<>();
@@ -80,10 +80,10 @@ class LoginAttemptTest {
 		User user2 = User.newInstance().withId(1l).withAccountName(accountName2).withBirthDate(birthDate)
 				.withFirstName("Max").withLastName("Min").withDepartment(Department.newInstance().withId(1l));
 
-		LoginAttempt loginAttempt1 = LoginAttempt.newInstance().withUser(user1).withSuccess(true)
+		LoginAttempt loginAttempt1 = LoginAttempt.newInstance().withId(1l).withUser(user1).withSuccess(true)
 				.withCreatedAt(createdAt1);
 
-		LoginAttempt loginAttempt2 = LoginAttempt.newInstance().withUser(user2).withSuccess(true)
+		LoginAttempt loginAttempt2 = LoginAttempt.newInstance().withId(1l).withUser(user2).withSuccess(true)
 				.withCreatedAt(createdAt2);
 
 		Set<LoginAttempt> attempts = new HashSet<>();

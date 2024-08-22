@@ -12,7 +12,3 @@ INSERT INTO UserUserRole (UserId, UserRoleId) VALUES ((SELECT Id FROM User WHERE
 INSERT INTO UserStatus (UserId, Active) VALUES ((SELECT Id FROM User WHERE AccountName = 'artur'), 1);
 INSERT INTO UserPassword (UserId, Value, EffDate) VALUES ((SELECT Id FROM User WHERE AccountName = 'artur'), 'secret', CURRENT_TIMESTAMP());
 INSERT INTO UserAddress (UserId, AddressId) VALUE ((SELECT Id FROM User WHERE AccountName = 'artur'), (SELECT Id FROM Address WHERE Description = 'Connolly street'));
-INSERT INTO User (AccountName, FirstName, LastName, BirthDate, DepartmentId) VALUES ('reginald123', 'reginald', 'reinold', '1944-12-23', (SELECT Id FROM Department WHERE name = "Accounts"));
-INSERT INTO UserUserRole (UserId, UserRoleId) VALUES ((SELECT Id FROM User WHERE AccountName = 'reginald123'), (SELECT Id FROM UserRole WHERE RoleName = 'User'));
-INSERT INTO UserStatus (UserId, Active) VALUES ((SELECT Id FROM User WHERE AccountName = 'reginald123'), 1);
-INSERT INTO UserPassword (UserId, Value, EffDate) VALUES ((SELECT Id FROM User WHERE AccountName = 'reginald123'), 'secret', CURRENT_TIMESTAMP());

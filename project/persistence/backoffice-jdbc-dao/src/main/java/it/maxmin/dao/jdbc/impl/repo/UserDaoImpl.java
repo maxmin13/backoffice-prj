@@ -22,7 +22,7 @@ import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByFirstName;
 import it.maxmin.dao.jdbc.impl.operation.user.UpdateUser;
 import it.maxmin.model.jdbc.domain.entity.User;
 
-@Repository
+@Repository("userDao")
 public class UserDaoImpl implements UserDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
