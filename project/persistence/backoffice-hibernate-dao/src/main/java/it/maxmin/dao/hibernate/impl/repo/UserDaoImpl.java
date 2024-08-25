@@ -29,7 +29,15 @@ public class UserDaoImpl implements UserDao {
 	@Transactional(readOnly = true)
 	@Override
 	public List<User> findAll() {
+		// TODO: remove eager fetching from From user, verify lazily loaded
 		return sessionFactory.getCurrentSession().createQuery("from User", User.class).list();
+	}
+	
+	@Transactional(readOnly = true)
+	@Override
+	public List<User> findAllWithAddressAndRole() {
+		// TODO: remove eager fetching from User
+		return null; // use createNameQuery, verify eagerly loaded
 	}
 
 	@Transactional(readOnly = true)

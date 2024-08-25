@@ -20,14 +20,15 @@ public abstract class SelectAddress {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectAddress.class);
 
+	// TODO add the list of users to the address
 	ResultSetExtractor<List<Address>> addressExtractor = (ResultSetExtractor<List<Address>>) rs -> {
 		Map<Long, Address> map = new HashMap<>();
 		Address address = null;
 		while (rs.next()) {
 			var addressId = rs.getLong("Id");
-			address = map.computeIfAbsent(addressId, u -> {
+			address = map.computeIfAbsent(addressId, i -> {
 				try {
-					return Address.newInstance().withId(addressId).withDescription(rs.getString("Description"))
+					return Address.newInstance().withId(i).withDescription(rs.getString("Description"))
 							.withCity(rs.getString("City")).withPostalCode(rs.getString("PostalCode"))
 							.withRegion(rs.getString("Region"));
 				}

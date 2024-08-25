@@ -332,9 +332,9 @@ class UserDaoTest {
 		LOGGER.info("running test findByAccountNameNotFound");
 
 		// run the test
-		Optional<User> user = userDao.findByAccountName("none");
+		Optional<User> none = userDao.findByAccountName("none");
 
-		assertTrue(user.isEmpty());
+		assertTrue(none.isEmpty());
 	}
 
 	@Test
@@ -507,7 +507,7 @@ class UserDaoTest {
 	}
 
 
-	// @Test
+	@Test
 	void nullUpdateThrowsException() {
 
 		LOGGER.info("running test nullUpdateThrowsException");

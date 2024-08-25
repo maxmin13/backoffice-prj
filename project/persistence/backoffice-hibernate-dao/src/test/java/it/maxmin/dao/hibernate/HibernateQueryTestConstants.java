@@ -23,6 +23,12 @@ public enum HibernateQueryTestConstants {
 			+ "WHERE Id = :addressId "
 			+ "ORDER BY Id";
 	
+	public static final String SELECT_ADDRESS_BY_POSTAL_CODE = ""
+			+ "SELECT Id, Description, City, StateId, Region, PostalCode "
+			+ "FROM Address "
+			+ "WHERE PostalCode = :postalCode "
+			+ "ORDER BY Id";
+	
 	public static final String SELECT_ALL_ADDRESSES = ""
 			+ "SELECT Id, Description, City, StateId, Region, PostalCode "
 			+ "FROM Address "

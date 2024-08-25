@@ -30,9 +30,9 @@ public abstract class SelectUser {
 		User user = null;
 		while (rs.next()) {
 			var userId = rs.getLong("Id");
-			user = map.computeIfAbsent(userId, u -> {
+			user = map.computeIfAbsent(userId, id -> {
 				try {
-					return User.newInstance().withId(userId)
+					return User.newInstance().withId(id)
 							.withAccountName(rs.getString("AccountName"))
 							.withFirstName(rs.getString("FirstName"))
 							.withLastName(rs.getString("LastName"))
@@ -44,6 +44,7 @@ public abstract class SelectUser {
 				}
 			});
 			
+			// TODO test this with 2 roles
 			var roleId = rs.getLong("RoleId");
 			if (roleId > 0) { // if found
 				UserRole role = UserRole.newInstance();
@@ -51,6 +52,7 @@ public abstract class SelectUser {
 				Objects.requireNonNull(user).addRole(role.withId(roleId).withRoleName(rs.getString("RoleName")));
 			}
 			
+			//TODO test this with 2 addresses
 			var addressId = rs.getLong("AddressId");
 			if (addressId > 0) { // if found
 				Address address = Address.newInstance();

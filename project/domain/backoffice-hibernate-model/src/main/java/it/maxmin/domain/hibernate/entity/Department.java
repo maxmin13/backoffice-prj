@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -48,7 +49,7 @@ public class Department extends AbstractEntity {
 	// CascadeType.ALL: any operation done on the Department record are propagated to departments linked to it.
 	// orphanRemoval attribute false: after the users Set has been updated, the User entries that no longer exist in 
 	//                                the set should not be deleted from the database.
-	@OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = false)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = false)
 	public Set<User> getUsers() {
 		return users;
 	}

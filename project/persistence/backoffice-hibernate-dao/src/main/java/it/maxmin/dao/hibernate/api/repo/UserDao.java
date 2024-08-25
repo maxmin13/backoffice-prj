@@ -8,6 +8,8 @@ import it.maxmin.domain.hibernate.entity.User;
 public interface UserDao {
 
 	List<User> findAll();
+	
+	List<User> findAllWithAddressAndRole();
 
 	Optional<User> findByAccountName(String accountName);
 

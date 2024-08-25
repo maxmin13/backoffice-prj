@@ -2,6 +2,7 @@ package it.maxmin.dao.hibernate;
 
 import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ADDRESSES_BY_USER_ID;
 import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
+import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
 import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ALL_ADDRESSES;
 import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
 import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ROLES_BY_USER_ID;
@@ -95,6 +96,13 @@ public class HibernateDaoTestUtil {
 	public List<PojoAddress> findAddressesByUserId(long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
 		return jdbcTemplate.query(SELECT_ADDRESSES_BY_USER_ID, param,
+				BeanPropertyRowMapper.newInstance(PojoAddress.class));
+	}
+	
+
+	public PojoAddress findAddressByPostalCode(String postalCode) {
+		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
+		return jdbcTemplate.queryForObject(SELECT_ADDRESS_BY_POSTAL_CODE, param,
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
 	}
 

@@ -8,14 +8,38 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Address")
+
+@NamedQuery(name = "Address.findById", query = """
+		       select distinct a 
+		            from Address a
+		            left join fetch a.users
+		            left join fetch a.state
+		            where a.id = :id
+		""")
+@NamedQuery(name = "Address.findAllWithUsersByAccountName", query = """
+		      select distinct a 
+		            from Address a
+		            left join fetch a.users u
+		            left join fetch a.state
+		            where u.accountName = :accountName
+		""")
+@NamedQuery(name = "Address.findAllWithUsers", query = """
+              select distinct a 
+                   from Address a
+                   left join fetch a.users u
+                   left join fetch a.state
+""")
+
 public class Address extends AbstractEntity {
 
 	@Serial
@@ -108,8 +132,8 @@ public class Address extends AbstractEntity {
 		return this;
 	}
 
-	@ManyToMany
-	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "AddressId", referencedColumnName = "Id"), inverseJoinColumns = @JoinColumn(name = "UserId", referencedColumnName = "Id"))
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "AddressId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
 	public Set<User> getUsers() {
 		return users;
 	}
@@ -121,6 +145,16 @@ public class Address extends AbstractEntity {
 	public Address withUsers(Set<User> users) {
 		this.users = users;
 		return this;
+	}
+
+	// TODO test it in the model
+	public boolean addUser(User user) {
+		if (user == null || users.contains(user)) {
+			return false;
+		} else {
+			users.add(user);
+			return true;
+		}
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -46,8 +47,8 @@ public class UserRole extends AbstractEntity {
 		return this;
 	}
 
-	@ManyToMany
-	@JoinTable(name = "UserUserRole", joinColumns = @JoinColumn(name = "UserRoleId", referencedColumnName="Id"), inverseJoinColumns = @JoinColumn(name = "UserId", referencedColumnName="Id"))
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "UserUserRole", joinColumns = @JoinColumn(name = "UserRoleId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
 	public Set<User> getUsers() {
 		return users;
 	}
