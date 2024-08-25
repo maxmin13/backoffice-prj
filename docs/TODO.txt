@@ -5,8 +5,23 @@ There are various demands, and various places where you handle unchecked excepti
 
 #########################################################################################
 
+in jdbc dao project:
+
 make unit test for address and user data extractors
 
-in jdbc dao project, make annotation @Sql that encapsulate run db scripts
+, make a custom annotation @Sql that encapsulate run db scripts
+
+do not create spring context programmatically use @Configuration
+
+use mokito mock to create ireland italy accounts legal objects in unit test, do not query the db
+
+#########################################################################################
+
+UserDaoImpl.java
+
+revove eager fetch from user entity
+
+use createNameQuery in findAll, this should not cause lazy initialization exception
+
 
 #########################################################################################
