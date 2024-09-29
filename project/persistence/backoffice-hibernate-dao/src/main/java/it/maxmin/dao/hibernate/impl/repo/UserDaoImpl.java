@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.maxmin.dao.hibernate.api.repo.UserDao;
+import it.maxmin.domain.hibernate.entity.Address;
 import it.maxmin.domain.hibernate.entity.User;
 
 @Transactional
@@ -29,15 +30,17 @@ public class UserDaoImpl implements UserDao {
 	@Transactional(readOnly = true)
 	@Override
 	public List<User> findAll() {
-		// TODO: remove eager fetching from From user, verify lazily loaded
 		return sessionFactory.getCurrentSession().createQuery("from User", User.class).list();
 	}
 	
 	@Transactional(readOnly = true)
 	@Override
 	public List<User> findAllWithAddressAndRole() {
-		// TODO: remove eager fetching from User
 		return null; // use createNameQuery, verify eagerly loaded
+		
+//		return sessionFactory.getCurrentSession()
+//				.createNamedQuery("Address.findAllWithUsersByAccountName", Address.class)
+//				.setParameter("accountName", accountName).list();
 	}
 
 	@Transactional(readOnly = true)
@@ -46,7 +49,7 @@ public class UserDaoImpl implements UserDao {
 		notNull(accountName, "The account name must not be null");
 		User user = sessionFactory.getCurrentSession().createNamedQuery("User.findByAccountName", User.class)
 				.setParameter("accountName", accountName).uniqueResult();
-		return user != null ? Optional.of(user) : Optional.empty();
+		return Optional.ofNullable(user);
 	}
 
 	@Transactional

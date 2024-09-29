@@ -1,14 +1,13 @@
 package it.maxmin.dao.hibernate.impl.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.hibernate.LazyInitializationException;
@@ -39,7 +38,6 @@ import it.maxmin.domain.hibernate.entity.State;
 import it.maxmin.domain.hibernate.entity.User;
 import it.maxmin.domain.hibernate.entity.UserRole;
 import it.maxmin.domain.hibernate.pojo.PojoAddress;
-import jakarta.transaction.Transactional;
 
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 @Sql(scripts = { "classpath:database/1_create_database.up.sql", "classpath:database/2_userrole.up.sql",
@@ -72,7 +70,7 @@ class AddressDaoTest {
 
 	@Autowired
 	AddressDao addressDao;
-
+	
 	@BeforeEach
 	void init() {
 		when(italy.getId()).thenReturn(1l);
@@ -88,97 +86,90 @@ class AddressDaoTest {
 		when(production.getId()).thenReturn(3l);
 		when(production.getName()).thenReturn("Production");
 	}
+	
+	@Test
+	@Order(1)
+	@DisplayName("01. should find no address")
+	void findByIdNotFound() {
+		
+		LOGGER.info("running test findByIdNotFound");
+	
+		// run the test
+		Optional<Address> address = addressDao.findById(0);
+		
+		assertTrue(address.isEmpty());
+	}
 
 	@Test
+	@Order(2)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@Order(1)
-	@DisplayName("01. verify eagerly loaded properties")
+	@DisplayName("02. verify eagerly loaded properties")
 	void findById1() {
 
 		LOGGER.info("running test findById1");
-
+		
 		PojoAddress pojoAddress = daoTestUtil.findAddressByPostalCode("A65TF12");
-		Long addressId = pojoAddress.getId();
-
+	
 		// run the test
-		Address address = addressDao.findById(addressId);
+		Optional<Address> address = addressDao.findById(pojoAddress.getId());
 
-		assertNotNull(address);
-		assertNotNull(address.getId());
-		assertEquals(pojoAddress.getDescription(), address.getDescription());
-		assertEquals(pojoAddress.getCity(), address.getCity());
-		assertEquals(pojoAddress.getRegion(), address.getRegion());
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address.get());
 
-		State state = address.getState();
+		State state = address.get().getState();
+		
+		verifyState(ireland.getName(), ireland.getCode(), state);
 
-		assertNotNull(state.getId());
-		assertEquals(ireland.getName(), state.getName());
-		assertEquals(ireland.getCode(), state.getCode());
-
-		Set<User> users = address.getUsers();
+		Set<User> users = address.get().getUsers();
 
 		assertEquals(2, users.size());
 
 		User user1 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
-
-		assertNotNull(user1.getId());
-		assertEquals("Max", user1.getFirstName());
-		assertEquals("Minardi", user1.getLastName());
-		assertEquals(LocalDate.of(1977, 10, 16), user1.getBirthDate());
-		assertNotNull(user1.getCreatedAt());
-		assertNotNull(user1.getDepartment());
-		assertNotNull(user1.getAddresses());
-		assertNotNull(user1.getRoles());
+		
+		verifyUser("Max", "Minardi", LocalDate.of(1977, 10, 16), user1);
 
 		// department
 		Department department = user1.getDepartment();
 
-		assertNotNull(department.getId());
-		assertEquals(production.getName(), department.getName());
+		verifyDepartment(production.getName(), department);
 
 		User user2 = users.stream().filter(u -> u.getAccountName().equals("artur")).findFirst().get();
-
-		assertNotNull(user2.getId());
-		assertEquals("Arturo", user2.getFirstName());
-		assertEquals("Art", user2.getLastName());
-		assertEquals(LocalDate.of(1923, 10, 12), user2.getBirthDate());
-		assertNotNull(user2.getCreatedAt());
-		assertNotNull(user2.getDepartment());
-		assertNotNull(user2.getAddresses());
-		assertNotNull(user2.getRoles());
+		
+		verifyUser("Arturo", "Art", LocalDate.of(1923, 10, 12), user2);
 
 		// department
 		department = user2.getDepartment();
 
-		assertNotNull(department.getId());
-		assertEquals(legal.getName(), department.getName());
+		verifyDepartment(legal.getName(), department);
 	}
-
+		
 	@Test
+	@Order(3)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@Order(2)
-	@DisplayName("02. verify lazily loaded properties")
+	@DisplayName("03. verify lazily loaded properties")
 	void findById2() {
 
 		LOGGER.info("running test findById2");
-
+		
 		PojoAddress pojoAddress = daoTestUtil.findAddressByPostalCode("A65TF12");
-		Long addressId = pojoAddress.getId();
 
 		// run the test
-		Address address = addressDao.findById(addressId);
+		Optional<Address> address = addressDao.findById(pojoAddress.getId());
 
-		Set<User> users = address.getUsers();
+		Set<User> users = address.get().getUsers();
 
 		User user1 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
+		
+		Department department = user1.getDepartment();
+		
+		assertThrows(LazyInitializationException.class, department.getUsers()::size);
 
 		// roles
 		Set<UserRole> roles = user1.getRoles();
@@ -190,101 +181,38 @@ class AddressDaoTest {
 
 		assertThrows(LazyInitializationException.class, addresses::size);
 	}
-
+	
 	@Test
+	@Order(4)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@Transactional
-	@Order(3)
-	@DisplayName("03. should load lazily loaded collections in an open transaction")
+	@DisplayName("04. should load an address without user")
 	void findById3() {
 
 		LOGGER.info("running test findById3");
-
-		PojoAddress pojoAddress = daoTestUtil.findAddressByPostalCode("A65TF12");
-		Long addressId = pojoAddress.getId();
-
+		
+		PojoAddress pojoAddress = daoTestUtil.findAddressByPostalCode("31210");
+	
 		// run the test
-		Address address = addressDao.findById(addressId);
+		Optional<Address> address = addressDao.findById(pojoAddress.getId());
 
-		Set<User> users = address.getUsers();
-		User user1 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
+		verifyAddress("31210", "Via Roma", "Venice", "County Veneto", address.get());
 
-		// roles
-		Set<UserRole> roles = user1.getRoles();
+		State state = address.get().getState();
+		
+		verifyState(italy.getName(), italy.getCode(), state);
 
-		assertEquals(3, roles.size());
+		Set<User> users = address.get().getUsers();
 
-		UserRole role1 = user1.getRole("Administrator");
-
-		assertNotNull(role1.getId());
-
-		UserRole role2 = user1.getRole("User");
-
-		assertNotNull(role2.getId());
-
-		UserRole role3 = user1.getRole("Worker");
-
-		assertNotNull(role3.getId());
-
-		// addresses
-		Set<Address> addresses = user1.getAddresses();
-
-		assertEquals(2, addresses.size());
-
-		Address address1 = user1.getAddress("30010");
-
-		assertNotNull(address1.getId());
-		assertEquals("Via borgo di sotto", address1.getDescription());
-		assertEquals("Rome", address1.getCity());
-		assertEquals("Lazio", address1.getRegion());
-		assertEquals("30010", address1.getPostalCode());
-		assertNotNull(address1.getState().getId());
-		assertEquals(italy.getName(), address1.getState().getName());
-		assertEquals(italy.getCode(), address1.getState().getCode());
-
-		Address address2 = user1.getAddress("A65TF12");
-
-		assertNotNull(address2.getId());
-		assertEquals("Connolly street", address2.getDescription());
-		assertNotNull(address2.getState().getId());
-		assertEquals(ireland.getName(), address2.getState().getName());
-		assertEquals(ireland.getCode(), address2.getState().getCode());
-
-		User user2 = users.stream().filter(u -> u.getAccountName().equals("artur")).findFirst().get();
-
-		// roles
-		roles = user2.getRoles();
-
-		assertEquals(2, roles.size());
-
-		role1 = user2.getRole("Administrator");
-
-		assertNotNull(role1.getId());
-
-		role2 = user2.getRole("User");
-
-		assertNotNull(role2.getId());
-
-		// addresses
-		addresses = user2.getAddresses();
-
-		assertEquals(1, addresses.size());
-
-		Address address3 = user2.getAddress("A65TF12");
-
-		assertNotNull(address1.getId());
-		assertEquals("Connolly street", address3.getDescription());
-		assertNotNull(address3.getState().getId());
-		assertEquals(ireland.getName(), address3.getState().getName());
-		assertEquals(ireland.getCode(), address3.getState().getCode());
+		assertEquals(0, users.size());
 	}
 
 	@Test
-	@Order(4)
+	@Order(5)	
+	@DisplayName("05. should find no address")
 	void testFindAllNotFound() {
 
 		LOGGER.info("running test testFindAllNotFound");
@@ -294,37 +222,32 @@ class AddressDaoTest {
 
 		assertEquals(0, addresses.size());
 	}
-
+	
 	@Test
+	@Order(6)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@Order(5)
-	@DisplayName("05. should load expected properties")
-	void testFindAll() {
+	@DisplayName("06. should load addresses with the associated users")
+	void testFindAll1() {
 
-		LOGGER.info("running test testFindAll");
+		LOGGER.info("running test testFindAll1");
 
 		// run the test
 		Set<Address> addresses = addressDao.findAll();
 
-		assertEquals(2, addresses.size());
+		assertEquals(3, addresses.size());
 
 		Address address1 = addresses.stream().filter(address -> address.getPostalCode().equals("30010")).findFirst()
 				.get();
 
-		assertNotNull(address1.getId());
-		assertNull(address1.getDescription());
-		assertNull(address1.getCity());
-		assertNull(address1.getRegion());
+		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
 
 		State state = address1.getState();
 
-		assertNotNull(state.getId());
-		assertNull(state.getName());
-		assertEquals(italy.getCode(), state.getCode());
+		verifyState(italy.getName(), italy.getCode(), state);
 
 		Set<User> users = address1.getUsers();
 
@@ -332,28 +255,23 @@ class AddressDaoTest {
 
 		User user1 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
 
-		assertNotNull(user1.getId());
-		assertNull(user1.getFirstName());
-		assertNull(user1.getLastName());
-		assertNull(user1.getBirthDate());
-		assertNull(user1.getCreatedAt());
-		assertNull(user1.getDepartment());
+		verifyUser("Max", "Minardi", LocalDate.of(1977, 10, 16), user1);
 		assertEquals(0, user1.getAddresses().size());
 		assertEquals(0, user1.getRoles().size());
+		
+		// department
+		Department department = user1.getDepartment();
+
+		verifyDepartment(production.getName(), department);
 
 		Address address2 = addresses.stream().filter(address -> address.getPostalCode().equals("A65TF12")).findFirst()
 				.get();
-
-		assertNotNull(address2.getId());
-		assertNull(address2.getDescription());
-		assertNull(address2.getCity());
-		assertNull(address2.getRegion());
+		
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
 
 		state = address2.getState();
 
-		assertNotNull(state.getId());
-		assertNull(state.getName());
-		assertEquals(ireland.getCode(), state.getCode());
+		verifyState(ireland.getName(), ireland.getCode(), state);
 
 		users = address2.getUsers();
 
@@ -361,176 +279,88 @@ class AddressDaoTest {
 
 		User user2 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
 
-		assertNotNull(user2.getId());
-		assertNull(user2.getFirstName());
-		assertNull(user2.getLastName());
-		assertNull(user2.getBirthDate());
-		assertNull(user2.getCreatedAt());
-		assertNull(user2.getDepartment());
+		verifyUser("Max", "Minardi", LocalDate.of(1977, 10, 16), user2);
 		assertEquals(0, user2.getAddresses().size());
 		assertEquals(0, user2.getRoles().size());
+		
+		// department
+		department = user2.getDepartment();
+		
+		verifyDepartment(production.getName(), department);
 
 		User user3 = users.stream().filter(u -> u.getAccountName().equals("artur")).findFirst().get();
 
-		assertNotNull(user3.getId());
-		assertNull(user3.getFirstName());
-		assertNull(user3.getLastName());
-		assertNull(user3.getBirthDate());
-		assertNull(user3.getCreatedAt());
-		assertNull(user3.getDepartment());
+		verifyUser("Arturo", "Art", LocalDate.of(1923, 10, 12), user3);
 		assertEquals(0, user3.getAddresses().size());
 		assertEquals(0, user3.getRoles().size());
+		
+		// department
+		department = user3.getDepartment();
+
+		verifyDepartment(legal.getName(), department);
 	}
-
-	@Order(6)
-	public void findAddressesByAccountNameNotFound() {
-
-		LOGGER.info("running test findAddressesByAccountNameNotFound");
-
-		// run the test
-		List<Address> addresses = addressDao.findAddressesByAccountName("maxmin13");
-
-		assertEquals(0, addresses.size());
-	}
-
+	
 	@Test
-	@Sql(scripts = { "classpath:database/2_address.up.sql",
-			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
-			"classpath:database/2_user.down.sql",
-			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@Order(7)
-	@DisplayName("07. verify eagerly loaded properties")
-	void findAddressesByAccountName1() {
-
-		LOGGER.info("running test findAddressesByAccountName1");
-
-		// run the test
-		List<Address> addresses = addressDao.findAddressesByAccountName("maxmin13");
-
-		assertEquals(2, addresses.size());
-
-		Address address1 = addresses.stream().filter(a -> a.getPostalCode().equals("30010")).findFirst().get();
-
-		assertNotNull(address1.getId());
-		assertEquals("Via borgo di sotto", address1.getDescription());
-		assertEquals("Rome", address1.getCity());
-		assertEquals("Lazio", address1.getRegion());
-
-		// state
-		assertNotNull(address1.getState().getId());
-		assertEquals(italy.getName(), address1.getState().getName());
-		assertEquals(italy.getCode(), address1.getState().getCode());
-
-		// users
-		Set<User> users1 = address1.getUsers();
-
-		assertEquals(1, users1.size());
-
-		User user1 = users1.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
-
-		assertNotNull(user1.getId());
-		assertNotNull(user1.getDepartment().getId());
-
-		Address address2 = addresses.stream().filter(a -> a.getPostalCode().equals("A65TF12")).findFirst().get();
-
-		assertNotNull(address2.getId());
-		assertEquals("Connolly street", address2.getDescription());
-
-		// state
-		assertNotNull(address2.getState().getId());
-		assertEquals(ireland.getName(), address2.getState().getName());
-		assertEquals(ireland.getCode(), address2.getState().getCode());
-
-		// users
-		Set<User> users2 = address2.getUsers();
-
-		assertEquals(1, users2.size());
-
-		User user2 = users2.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
-
-		assertNotNull(user2.getId());
-		assertNotNull(user2.getDepartment().getId());
-	}
-
-	@Test
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@Order(8)
-	@DisplayName("08. verify lazily loaded properties")
-	void findAddressesByAccountName2() {
+	@DisplayName("07. should load addresses without users")
+	void testFindAll2() {
 
-		LOGGER.info("running test findAddressesByAccountName2");
-
-		// run the test
-		List<Address> addresses = addressDao.findAddressesByAccountName("maxmin13");
-
-		Address address1 = addresses.stream().filter(a -> a.getPostalCode().equals("30010")).findFirst().get();
-
-		Set<User> users1 = address1.getUsers();
-
-		User user1 = users1.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
-
-		// addresses
-		assertThrows(LazyInitializationException.class, user1.getAddresses()::size);
-
-		// roles
-		assertThrows(LazyInitializationException.class, user1.getRoles()::size);
-
-		Address address2 = addresses.stream().filter(a -> a.getPostalCode().equals("A65TF12")).findFirst().get();
-
-		Set<User> users2 = address2.getUsers();
-
-		User user2 = users2.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
-
-		// addresses
-		assertThrows(LazyInitializationException.class, user2.getAddresses()::size);
-
-		// roles
-		assertThrows(LazyInitializationException.class, user2.getRoles()::size);
-	}
-
-	@Test
-	@Sql(scripts = { "classpath:database/2_address.up.sql",
-			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
-			"classpath:database/2_user.down.sql",
-			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@Transactional
-	@Order(9)
-	@DisplayName("09. should load lazily loaded collections in an open transaction")
-	void findAddressesByAccountName3() {
-
-		LOGGER.info("running test findAddressesByAccountName3");
+		LOGGER.info("running test testFindAll2");
 
 		// run the test
-		List<Address> addresses = addressDao.findAddressesByAccountName("maxmin13");
+		Set<Address> addresses = addressDao.findAll();
 
-		Address address1 = addresses.stream().filter(a -> a.getPostalCode().equals("30010")).findFirst().get();
+		assertEquals(3, addresses.size());
 
-		Set<User> users1 = address1.getUsers();
+		Address address = addresses.stream().filter(a -> a.getPostalCode().equals("31210")).findFirst()
+				.get();
 
-		User user1 = users1.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
+		verifyAddress("31210", "Via Roma", "Venice", "County Veneto", address);
 
-		// addresses
-		assertThrows(LazyInitializationException.class, user1.getAddresses()::size);
+		State state = address.getState();
 
-		// roles
-		assertThrows(LazyInitializationException.class, user1.getRoles()::size);
+		verifyState(italy.getName(), italy.getCode(), state);
 
-		Address address2 = addresses.stream().filter(a -> a.getPostalCode().equals("A65TF12")).findFirst().get();
+		Set<User> users = address.getUsers();
 
-		Set<User> users2 = address2.getUsers();
-
-		User user2 = users2.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
-
-		// addresses
-		assertThrows(LazyInitializationException.class, user2.getAddresses()::size);
-
-		// roles
-		assertThrows(LazyInitializationException.class, user2.getRoles()::size);
+		assertEquals(0, users.size());
 	}
+	
+	void verifyDepartment(String name, Department actual) {
+		assertNotNull(actual.getId());
+		assertEquals(name, actual.getName());
+		assertNotNull(actual.getUsers());
+	}
+	
+	void verifyState(String name, String code, State actual) {
+		assertNotNull(actual.getId());
+		assertEquals(name, actual.getName());
+		assertEquals(code, actual.getCode());
+	}
+	
+	void verifyAddress(String postalCode, String description, String city, String region, Address actual) {
+		assertNotNull(actual);
+		assertNotNull(actual.getId());
+		assertEquals(postalCode, actual.getPostalCode());
+		assertEquals(description, actual.getDescription());
+		assertEquals(city, actual.getCity());
+		assertEquals(region, actual.getRegion());
+	}
+		
+	void verifyUser(String firstName, String lastName, LocalDate birthDate, User actual) {
+		assertNotNull(actual.getId());
+		assertEquals(firstName, actual.getFirstName());
+		assertEquals(lastName, actual.getLastName());
+		assertEquals(birthDate, actual.getBirthDate());
+		assertNotNull(actual.getCreatedAt());
+		assertNotNull(actual.getDepartment());
+		assertNotNull(actual.getAddresses());
+		assertNotNull(actual.getRoles());
+	}
+
 }

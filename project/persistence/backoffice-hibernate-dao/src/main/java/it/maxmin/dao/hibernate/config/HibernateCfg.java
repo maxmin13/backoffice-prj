@@ -42,8 +42,7 @@ public class HibernateCfg {
 		this.dataSource = dataSource;
 	}
 
-	@Bean
-	public Properties hibernateProperties() {
+	private Properties hibernateProperties() {
 		Properties hibernateProp = new Properties();
 		hibernateProp.put(DIALECT, "org.hibernate.dialect.H2Dialect");
 		hibernateProp.put(HBM2DDL_AUTO, "none");

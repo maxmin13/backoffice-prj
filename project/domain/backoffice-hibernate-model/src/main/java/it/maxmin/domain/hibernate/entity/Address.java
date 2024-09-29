@@ -18,28 +18,13 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Address")
-
 @NamedQuery(name = "Address.findById", query = """
 		       select distinct a 
 		            from Address a
 		            left join fetch a.users
-		            left join fetch a.state
+		            inner join fetch a.state
 		            where a.id = :id
 		""")
-@NamedQuery(name = "Address.findAllWithUsersByAccountName", query = """
-		      select distinct a 
-		            from Address a
-		            left join fetch a.users u
-		            left join fetch a.state
-		            where u.accountName = :accountName
-		""")
-@NamedQuery(name = "Address.findAllWithUsers", query = """
-              select distinct a 
-                   from Address a
-                   left join fetch a.users u
-                   left join fetch a.state
-""")
-
 public class Address extends AbstractEntity {
 
 	@Serial

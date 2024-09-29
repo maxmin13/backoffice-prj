@@ -21,7 +21,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "User")
-
 @NamedQuery(name = "User.findByAccountName", query = """
 		          select distinct u
 		               from User u
