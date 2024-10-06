@@ -50,15 +50,14 @@ class HibernateCfgTest {
 	
 	@AfterAll
 	public static void cleanUp() {
-//		daoTestUtil.stopTestDB();
 		hibernateTestCfg.close();
 	}
 
 	@Test
 	void testSessionFactory() throws IllegalStateException {
 
-		var springJdbcCtx = new AnnotationConfigApplicationContext(HibernateCfg.class);
-		var sessionFactory = springJdbcCtx.getBean("sessionFactory", SessionFactory.class);
+		var springCtx = new AnnotationConfigApplicationContext(HibernateCfg.class);
+		var sessionFactory = springCtx.getBean("sessionFactory", SessionFactory.class);
 
 		assertNotNull(sessionFactory);
 
@@ -74,14 +73,14 @@ class HibernateCfgTest {
 		assertEquals(10, properties.get(STATEMENT_BATCH_SIZE));
 		assertEquals(50, properties.get(STATEMENT_FETCH_SIZE));
 
-		springJdbcCtx.close();
+		springCtx.close();
 	}
 
 	@Test
 	void testTransactionManager() throws IllegalStateException, SQLException {
 
-		var springJdbcCtx = new AnnotationConfigApplicationContext(HibernateCfg.class);
-		var transactionManager = springJdbcCtx.getBean("transactionManager", HibernateTransactionManager.class);
+		var springCtx = new AnnotationConfigApplicationContext(HibernateCfg.class);
+		var transactionManager = springCtx.getBean("transactionManager", HibernateTransactionManager.class);
 
 		assertNotNull(transactionManager);
 
@@ -89,7 +88,7 @@ class HibernateCfgTest {
 
 		daoTestUtil.testDataSource(dataSource);
 
-		springJdbcCtx.close();
+		springCtx.close();
 	}
 
 }

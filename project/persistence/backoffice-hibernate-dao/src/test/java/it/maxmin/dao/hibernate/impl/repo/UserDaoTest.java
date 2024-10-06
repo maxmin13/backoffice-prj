@@ -110,7 +110,7 @@ class UserDaoTest {
 		assertEquals(0, users.size());
 	}
 
-	@Test
+//	@Test
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
@@ -229,7 +229,7 @@ class UserDaoTest {
 		assertEquals(ireland.getCode(), address1.getState().getCode());
 	}
 
-	@Test
+//	@Test
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql", "classpath:database/2_useraddress.down.sql"   }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",

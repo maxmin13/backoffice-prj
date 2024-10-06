@@ -18,10 +18,10 @@ import it.maxmin.dao.hibernate.HibernateTestCfg;
  * DataSource object is present. The test relies on simple-jndi library to
  * create a JNDI directory service in the background.
  */
-class HibernateDataSourceCfgTest {
+class JndiDataSourceCfgTest {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateDataSourceCfgTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JndiDataSourceCfgTest.class);
 
 	private static AnnotationConfigApplicationContext hibernateTestCfg;
 	private static HibernateDaoTestUtil daoTestUtil;

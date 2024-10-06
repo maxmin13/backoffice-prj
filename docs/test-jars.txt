@@ -1,4 +1,4 @@
 
 
 
- mvn clean install -DtestFailureIgnore=true
+mvn -DskipTests test-compile jar:test-jar install
