@@ -1,18 +1,16 @@
 package it.maxmin.dao.hibernate;
 
-import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ADDRESSES_BY_USER_ID;
-import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
-import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
-import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ALL_ADDRESSES;
-import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
-import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_ROLES_BY_USER_ID;
-import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_STATE_BY_NAME;
-import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
-import static it.maxmin.dao.hibernate.HibernateQueryTestConstants.SELECT_USER_BY_USER_ID;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_ADDRESSES_BY_USER_ID;
+import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
+import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
+import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_ALL_ADDRESSES;
+import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
+import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_ROLES_BY_USER_ID;
+import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_STATE_BY_NAME;
+import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
+import static it.maxmin.dao.hibernate.QueryTestConstants.SELECT_USER_BY_USER_ID;
 import static org.springframework.util.Assert.notNull;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -34,27 +32,16 @@ import it.maxmin.domain.hibernate.pojo.PojoUser;
 import it.maxmin.domain.hibernate.pojo.PojoUserAddress;
 import it.maxmin.domain.hibernate.pojo.PojoUserRole;
 
-public class HibernateDaoTestUtil {
+public class QueryTestUtil {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateDaoTestUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(QueryTestUtil.class);
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	private DataSource dataSource;
 
-	public HibernateDaoTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+	public QueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.dataSource = dataSource;
-	}
-
-	public void testDataSource(DataSource dataSource) throws SQLException {
-		try (var connection = dataSource.getConnection();
-				var statement = connection.prepareStatement("SELECT 1");
-				var resultSet = statement.executeQuery()) {
-			while (resultSet.next()) {
-				int mockVal = resultSet.getInt("1");
-				assertEquals(1, mockVal);
-			}
-		}
 	}
 
 	public PojoUser findUserByUserId(long userId) {

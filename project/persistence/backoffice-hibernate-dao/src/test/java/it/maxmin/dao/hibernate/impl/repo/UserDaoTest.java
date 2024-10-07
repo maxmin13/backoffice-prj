@@ -27,8 +27,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.hibernate.HibernateDaoTestUtil;
-import it.maxmin.dao.hibernate.HibernateTestCfg;
+import it.maxmin.dao.hibernate.QueryTestUtil;
+import it.maxmin.dao.hibernate.UnitTestContextCfg;
 import it.maxmin.dao.hibernate.api.repo.UserDao;
 import it.maxmin.domain.hibernate.entity.Address;
 import it.maxmin.domain.hibernate.entity.Department;
@@ -46,7 +46,7 @@ import it.maxmin.domain.hibernate.pojo.PojoUserRole;
 @Sql(scripts = { "classpath:database/2_state.down.sql", "classpath:database/2_department.down.sql",
 		"classpath:database/2_userrole.down.sql",
 		"classpath:database/1_create_database.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
-@SpringJUnitConfig(classes = { HibernateTestCfg.class })
+@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -55,7 +55,7 @@ class UserDaoTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);
 
 	@Autowired
-	HibernateDaoTestUtil daoTestUtil;
+	QueryTestUtil queryTestUtil;
 
 	@Mock
 	State ireland;
@@ -419,7 +419,7 @@ class UserDaoTest {
 		// run the test
 		userDao.save(franco);
 
-		PojoUser newUser = daoTestUtil.findUserByAccountName("franc123");
+		PojoUser newUser = queryTestUtil.findUserByAccountName("franc123");
 
 		assertEquals("Franco", newUser.getFirstName());
 		assertEquals("Red", newUser.getLastName());
@@ -428,11 +428,11 @@ class UserDaoTest {
 		assertNotNull(newUser.getCreatedAt());
 		assertNotNull(newUser.getId());
 
-		List<PojoAddress> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(newUser.getId());
 
 		assertEquals(0, addresses.size());
 		
-		List<PojoUserRole> roles = daoTestUtil.findRolesByUserId(newUser.getId());
+		List<PojoUserRole> roles = queryTestUtil.findRolesByUserId(newUser.getId());
 
 		assertEquals(0, roles.size());
 	}
@@ -466,7 +466,7 @@ class UserDaoTest {
 		// run the test
 		userDao.save(carl);
 
-		PojoUser newUser = daoTestUtil.findUserByAccountName("carl23");
+		PojoUser newUser = queryTestUtil.findUserByAccountName("carl23");
 
 		assertEquals("carl23", newUser.getAccountName());
 		assertEquals("Carlo", newUser.getFirstName());
@@ -475,7 +475,7 @@ class UserDaoTest {
 		assertNotNull(newUser.getCreatedAt());
 		assertNotNull(newUser.getId());
 		
-		List<PojoAddress> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(newUser.getId());
 
 		assertEquals(2, addresses.size());
 
@@ -495,7 +495,7 @@ class UserDaoTest {
 		assertEquals("Emilia Romagna", newAddress2.getRegion());
 		assertEquals("33456", newAddress2.getPostalCode());
 		
-		List<PojoUserRole> roles = daoTestUtil.findRolesByUserId(newUser.getId());
+		List<PojoUserRole> roles = queryTestUtil.findRolesByUserId(newUser.getId());
 		
 		assertEquals(2, roles.size());
 		

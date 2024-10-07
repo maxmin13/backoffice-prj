@@ -29,8 +29,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.hibernate.HibernateDaoTestUtil;
-import it.maxmin.dao.hibernate.HibernateTestCfg;
+import it.maxmin.dao.hibernate.QueryTestUtil;
+import it.maxmin.dao.hibernate.UnitTestContextCfg;
 import it.maxmin.dao.hibernate.api.repo.AddressDao;
 import it.maxmin.domain.hibernate.entity.Address;
 import it.maxmin.domain.hibernate.entity.Department;
@@ -46,7 +46,7 @@ import it.maxmin.domain.hibernate.pojo.PojoAddress;
 @Sql(scripts = { "classpath:database/2_state.down.sql", "classpath:database/2_department.down.sql",
 		"classpath:database/2_userrole.down.sql",
 		"classpath:database/1_create_database.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
-@SpringJUnitConfig(classes = { HibernateTestCfg.class })
+@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -55,7 +55,7 @@ class AddressDaoTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
 
 	@Autowired
-	HibernateDaoTestUtil daoTestUtil;
+	QueryTestUtil queryTestUtil;
 
 	@Mock
 	State ireland;
@@ -112,7 +112,7 @@ class AddressDaoTest {
 
 		LOGGER.info("running test findById1");
 		
-		PojoAddress pojoAddress = daoTestUtil.findAddressByPostalCode("A65TF12");
+		PojoAddress pojoAddress = queryTestUtil.findAddressByPostalCode("A65TF12");
 	
 		// run the test
 		Optional<Address> address = addressDao.findById(pojoAddress.getId());
@@ -158,7 +158,7 @@ class AddressDaoTest {
 
 		LOGGER.info("running test findById2");
 		
-		PojoAddress pojoAddress = daoTestUtil.findAddressByPostalCode("A65TF12");
+		PojoAddress pojoAddress = queryTestUtil.findAddressByPostalCode("A65TF12");
 
 		// run the test
 		Optional<Address> address = addressDao.findById(pojoAddress.getId());
@@ -194,7 +194,7 @@ class AddressDaoTest {
 
 		LOGGER.info("running test findById3");
 		
-		PojoAddress pojoAddress = daoTestUtil.findAddressByPostalCode("31210");
+		PojoAddress pojoAddress = queryTestUtil.findAddressByPostalCode("31210");
 	
 		// run the test
 		Optional<Address> address = addressDao.findById(pojoAddress.getId());

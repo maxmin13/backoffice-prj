@@ -40,10 +40,10 @@ import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
 @Configuration
 @ComponentScan(basePackages = { "it.maxmin.dao.hibernate.impl.repo" })
 @EnableTransactionManagement
-public class HibernateTestCfg {
+public class UnitTestContextCfg {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateTestCfg.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UnitTestContextCfg.class);
 
 	private DataSource dataSource;
 
@@ -53,8 +53,13 @@ public class HibernateTestCfg {
 	}
 
 	@Bean
-	public HibernateDaoTestUtil daoTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
-		return new HibernateDaoTestUtil(jdbcTemplate, dataSource);
+	public QueryTestUtil queryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+		return new QueryTestUtil(jdbcTemplate, dataSource);
+	}
+	
+	@Bean 
+	public DataSourceTestUtil dataSourceTestUtil() {
+		return new DataSourceTestUtil();
 	}
 
 	@SuppressWarnings("unchecked")

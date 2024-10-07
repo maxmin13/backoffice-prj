@@ -1,6 +1,6 @@
 package it.maxmin.dao.hibernate;
 
-public enum HibernateQueryTestConstants {
+public enum QueryTestConstants {
 	;
 
 	public static final String SELECT_ROLES_BY_USER_ID = ""

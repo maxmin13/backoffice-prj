@@ -26,31 +26,31 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 
-import it.maxmin.dao.hibernate.HibernateDaoTestUtil;
-import it.maxmin.dao.hibernate.HibernateTestCfg;
+import it.maxmin.dao.hibernate.DataSourceTestUtil;
+import it.maxmin.dao.hibernate.UnitTestContextCfg;
 
 /**
- * Verifies that by loading HibernateCfg.class, in the Spring context a
- * SessionFactory and a TransactionManager objects are present. The test relies
- * on simple-jndi library to create a JNDI directory service in the background.
+ * Verifies that by loading HibernateCfg.class, a SessionFactory and a TransactionManager 
+ * objects are present in the Spring context. The test relies on a MariaDB database 
+ * running in the background (see MariaDB4jSpringService).
  */
 class HibernateCfgTest {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateCfgTest.class);
 
-	private static AnnotationConfigApplicationContext hibernateTestCfg;
-	private static HibernateDaoTestUtil daoTestUtil;
+	private static AnnotationConfigApplicationContext unitTestContext;
+	private static DataSourceTestUtil dataSourceTestUtil;
 
 	@BeforeAll
 	public static void init() {
-		hibernateTestCfg = new AnnotationConfigApplicationContext(HibernateTestCfg.class);
-		daoTestUtil = hibernateTestCfg.getBean("daoTestUtil", HibernateDaoTestUtil.class);
+		unitTestContext = new AnnotationConfigApplicationContext(UnitTestContextCfg.class);
+		dataSourceTestUtil = unitTestContext.getBean("dataSourceTestUtil", DataSourceTestUtil.class);
 	}
-	
+
 	@AfterAll
 	public static void cleanUp() {
-		hibernateTestCfg.close();
+		unitTestContext.close();
 	}
 
 	@Test
@@ -86,7 +86,7 @@ class HibernateCfgTest {
 
 		DataSource dataSource = transactionManager.getDataSource();
 
-		daoTestUtil.testDataSource(dataSource);
+		dataSourceTestUtil.testDataSource(dataSource);
 
 		springCtx.close();
 	}
