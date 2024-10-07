@@ -27,7 +27,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
 
-import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
 import it.maxmin.model.jdbc.domain.entity.Department;
 import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
@@ -39,14 +38,11 @@ public class JdbcQueryTestUtil {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcQueryTestUtil.class);
 
-	private MariaDB4jSpringService mariaDB4jSpringService;
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	private DataSource dataSource;
 
-	public JdbcQueryTestUtil(MariaDB4jSpringService mariaDB4jSpringService, NamedParameterJdbcTemplate jdbcTemplate,
-			DataSource dataSource) {
+	public JdbcQueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
 		this.jdbcTemplate = jdbcTemplate;
-		this.mariaDB4jSpringService = mariaDB4jSpringService;
 		this.dataSource = dataSource;
 	}
 
@@ -56,8 +52,7 @@ public class JdbcQueryTestUtil {
 				Files.readAllLines(Paths.get("src/test/resources/database/" + script)).stream()
 						.filter(line -> !line.trim().isEmpty()).toList()
 						.forEach(jdbcTemplate.getJdbcTemplate()::update);
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				throw new DaoTestException("Error running DB scripts", e);
 			}
 		}

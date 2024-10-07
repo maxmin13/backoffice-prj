@@ -11,7 +11,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import it.maxmin.dao.jdbc.JdbcDataSourceTestUtil;
-import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUnitTestContextCfg;
 
 
@@ -26,13 +25,11 @@ class SpringJdbcTemplateCfgTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SpringJdbcTemplateCfgTest.class);
 
 	private static AnnotationConfigApplicationContext jdbcUnitTestContext;
-	private static JdbcQueryTestUtil jdbcQueryTestUtil;
 	private static JdbcDataSourceTestUtil jdbcDataSourceTestUtil;
 
 	@BeforeAll
 	public static void init() {
 		jdbcUnitTestContext = new AnnotationConfigApplicationContext(JdbcUnitTestContextCfg.class);
-		jdbcQueryTestUtil = jdbcUnitTestContext.getBean("jdbcQueryTestUtil", JdbcQueryTestUtil.class);
 		jdbcDataSourceTestUtil = jdbcUnitTestContext.getBean("jdbcDataSourceTestUtil", JdbcDataSourceTestUtil.class);
 	}
 

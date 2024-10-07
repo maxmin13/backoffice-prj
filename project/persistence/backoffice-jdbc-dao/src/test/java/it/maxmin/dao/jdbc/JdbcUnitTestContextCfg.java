@@ -30,9 +30,8 @@ public class JdbcUnitTestContextCfg {
 	}
 
 	@Bean
-	public JdbcQueryTestUtil jdbcQueryTestUtil(MariaDB4jSpringService mariaDB4jSpringService,
-			NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
-		return new JdbcQueryTestUtil(mariaDB4jSpringService, jdbcTemplate, dataSource);
+	public JdbcQueryTestUtil jdbcQueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+		return new JdbcQueryTestUtil(jdbcTemplate, dataSource);
 	}
 
 	@Bean
