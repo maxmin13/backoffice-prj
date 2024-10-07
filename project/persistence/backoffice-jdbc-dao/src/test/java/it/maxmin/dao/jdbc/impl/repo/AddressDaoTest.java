@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import it.maxmin.dao.jdbc.JdbcDaoTestUtil;
-import it.maxmin.dao.jdbc.JdbcTestCfg;
+import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
+import it.maxmin.dao.jdbc.JdbcUnitTestContextCfg;
 import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
@@ -33,44 +33,43 @@ class AddressDaoTest {
 	private static AnnotationConfigApplicationContext springJdbcCtx;
 	private static NamedParameterJdbcTemplate jdbcTemplate;
 	private static DataSource dataSource;
-	private static JdbcDaoTestUtil daoTestUtil;
+	private static JdbcQueryTestUtil jdbcQueryTestUtil;
 	private static State ireland;
 	private static State italy;
 
 	@BeforeAll
 	static void setup() {
 		
-		springJdbcCtx = new AnnotationConfigApplicationContext(JdbcTestCfg.class);
+		springJdbcCtx = new AnnotationConfigApplicationContext(JdbcUnitTestContextCfg.class);
 		jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
 		dataSource = springJdbcCtx.getBean("dataSource", DataSource.class);
-		daoTestUtil = springJdbcCtx.getBean("daoTestUtil", JdbcDaoTestUtil.class);
+		jdbcQueryTestUtil = springJdbcCtx.getBean("jdbcQueryTestUtil", JdbcQueryTestUtil.class);
 
 		String[] scripts = { "1_create_database.up.sql", "2_userrole.up.sql", "2_state.up.sql", "2_department.up.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 
-		ireland = daoTestUtil.findStateByName("Ireland");
-		italy = daoTestUtil.findStateByName("Italy");
+		ireland = jdbcQueryTestUtil.findStateByName("Ireland");
+		italy = jdbcQueryTestUtil.findStateByName("Italy");
 	}
 
 	@BeforeEach
 	void init() {
 		String[] scripts = { "2_address.up.sql", "2_user.up.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterEach
 	void cleanUp() {
 		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql", "2_address.down.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterAll
 	static void clear() {
 		String[] scripts = { "2_state.down.sql", "2_department.down.sql", "2_userrole.down.sql",
 				"1_create_database.down.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 		springJdbcCtx.close();
-		daoTestUtil.stopTestDB();
 	}
 
 	@Test
@@ -79,7 +78,7 @@ class AddressDaoTest {
 		AddressDaoImpl addressDao = new AddressDaoImpl();
 		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
-		PojoUser maxmin = daoTestUtil.findUserByAccountName("maxmin13");
+		PojoUser maxmin = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
 
 		// run the test
 		List<Address> addresses = addressDao.findAddressesByUserId(maxmin.getId());
@@ -109,12 +108,12 @@ class AddressDaoTest {
 	void findAddressesByUserId_none_associated_found() {
 
 		String[] scripts = { "2_useraddress.down.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
 		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
-		PojoUser maxmin = daoTestUtil.findUserByAccountName("maxmin13");
+		PojoUser maxmin = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
 
 		// run the test
 		List<Address> addresses = addressDao.findAddressesByUserId(maxmin.getId());
@@ -127,12 +126,12 @@ class AddressDaoTest {
 
 		// delete all the addresses
 		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
 		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
 
-		PojoUser maxmin = daoTestUtil.findUserByAccountName("maxmin13");
+		PojoUser maxmin = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
 
 		// run the test
 		List<Address> addresses = addressDao.findAddressesByUserId(maxmin.getId());
@@ -178,7 +177,7 @@ class AddressDaoTest {
 	void create_list() {
 
 		String[] scripts = { "2_address.down.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		AddressDaoImpl addressDao = new AddressDaoImpl();
 		addressDao.setJdbcTemplate(dataSource, jdbcTemplate);
@@ -195,7 +194,7 @@ class AddressDaoTest {
 		// run the test
 		addressDao.create(addresses);
 
-		List<PojoAddress> newAddresses = daoTestUtil.findAllAddresses();
+		List<PojoAddress> newAddresses = jdbcQueryTestUtil.findAllAddresses();
 
 		assertEquals(2, newAddresses.size());
 
@@ -235,7 +234,7 @@ class AddressDaoTest {
 				.withStateId(ireland.getId()).withRegion("County Dublin")
 				.withPostalCode("A65TF33");
 
-		long addressId = daoTestUtil.createAddress(address).getId();
+		long addressId = jdbcQueryTestUtil.createAddress(address).getId();
 
 		Address addressUpdated = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(italy.getId())).withRegion("Veneto").withPostalCode("23465").withId(addressId);
@@ -243,7 +242,7 @@ class AddressDaoTest {
 		// run the test
 		addressDao.update(addressUpdated);
 
-		PojoAddress updated = daoTestUtil.findAddressByAddressId(addressId);
+		PojoAddress updated = jdbcQueryTestUtil.findAddressByAddressId(addressId);
 
 		assertEquals("Via Nuova", updated.getDescription());
 		assertEquals("Venice", updated.getCity());

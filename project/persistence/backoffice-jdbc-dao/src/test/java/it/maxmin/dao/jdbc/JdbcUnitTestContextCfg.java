@@ -19,10 +19,10 @@ import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
  * tests.
  */
 
-public class JdbcTestCfg {
+public class JdbcUnitTestContextCfg {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcTestCfg.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcUnitTestContextCfg.class);
 
 	@Bean
 	public MariaDB4jSpringService mariaDB4jSpringService() {
@@ -30,9 +30,14 @@ public class JdbcTestCfg {
 	}
 
 	@Bean
-	public JdbcDaoTestUtil daoTestUtil(MariaDB4jSpringService mariaDB4jSpringService,
+	public JdbcQueryTestUtil jdbcQueryTestUtil(MariaDB4jSpringService mariaDB4jSpringService,
 			NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
-		return new JdbcDaoTestUtil(mariaDB4jSpringService, jdbcTemplate, dataSource);
+		return new JdbcQueryTestUtil(mariaDB4jSpringService, jdbcTemplate, dataSource);
+	}
+
+	@Bean
+	public JdbcDataSourceTestUtil jdbcDataSourceTestUtil() {
+		return new JdbcDataSourceTestUtil();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -40,8 +45,7 @@ public class JdbcTestCfg {
 	public DataSource dataSource(MariaDB4jSpringService mariaDB4jSpringService) {
 		try {
 			mariaDB4jSpringService.getDB().createDB("testDB");
-		}
-		catch (ManagedProcessException e) {
+		} catch (ManagedProcessException e) {
 			throw new DaoTestException("Error creating the data source", e);
 		}
 
@@ -51,8 +55,7 @@ public class JdbcTestCfg {
 		Class<? extends Driver> driver;
 		try {
 			driver = (Class<? extends Driver>) Class.forName("org.mariadb.jdbc.Driver");
-		}
-		catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			throw new DaoTestException("Error loading DB driver", e);
 		}
 		dataSource.setDriverClass(driver);

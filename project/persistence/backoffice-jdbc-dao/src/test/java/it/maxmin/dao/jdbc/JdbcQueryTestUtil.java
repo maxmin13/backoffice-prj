@@ -8,13 +8,11 @@ import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ROLES_BY_USER_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_USER_ID;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -37,23 +35,19 @@ import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 import it.maxmin.model.jdbc.domain.pojo.PojoUserAddress;
 import it.maxmin.model.jdbc.domain.pojo.PojoUserRole;
 
-public class JdbcDaoTestUtil {
+public class JdbcQueryTestUtil {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcDaoTestUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcQueryTestUtil.class);
 
 	private MariaDB4jSpringService mariaDB4jSpringService;
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	private DataSource dataSource;
 
-	public JdbcDaoTestUtil(MariaDB4jSpringService mariaDB4jSpringService, NamedParameterJdbcTemplate jdbcTemplate,
+	public JdbcQueryTestUtil(MariaDB4jSpringService mariaDB4jSpringService, NamedParameterJdbcTemplate jdbcTemplate,
 			DataSource dataSource) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.mariaDB4jSpringService = mariaDB4jSpringService;
 		this.dataSource = dataSource;
-	}
-
-	public void stopTestDB() {
-		mariaDB4jSpringService.stop();
 	}
 
 	public void runDBScripts(String[] scripts) {
@@ -65,17 +59,6 @@ public class JdbcDaoTestUtil {
 			}
 			catch (IOException e) {
 				throw new DaoTestException("Error running DB scripts", e);
-			}
-		}
-	}
-
-	public void testDataSource(DataSource dataSource) throws SQLException {
-		try (var connection = dataSource.getConnection();
-				var statement = connection.prepareStatement("SELECT 1");
-				var resultSet = statement.executeQuery()) {
-			while (resultSet.next()) {
-				int mockVal = resultSet.getInt("1");
-				assertEquals(1, mockVal);
 			}
 		}
 	}

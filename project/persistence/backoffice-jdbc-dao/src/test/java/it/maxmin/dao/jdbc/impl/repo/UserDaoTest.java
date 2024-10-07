@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import it.maxmin.dao.jdbc.JdbcDaoTestUtil;
-import it.maxmin.dao.jdbc.JdbcTestCfg;
+import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
+import it.maxmin.dao.jdbc.JdbcUnitTestContextCfg;
 import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.entity.Department;
 import it.maxmin.model.jdbc.domain.entity.State;
@@ -39,7 +39,7 @@ class UserDaoTest {
 	private static AnnotationConfigApplicationContext springJdbcCtx;
 	private static NamedParameterJdbcTemplate jdbcTemplate;
 	private static DataSource dataSource;
-	private static JdbcDaoTestUtil daoTestUtil;
+	private static JdbcQueryTestUtil jdbcQueryTestUtil;
 	private static State ireland;
 	private static State italy;
 	private static Department accounts;
@@ -49,42 +49,41 @@ class UserDaoTest {
 	@BeforeAll
 	static void setup() {
 
-		springJdbcCtx = new AnnotationConfigApplicationContext(JdbcTestCfg.class);
+		springJdbcCtx = new AnnotationConfigApplicationContext(JdbcUnitTestContextCfg.class);
 		jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", NamedParameterJdbcTemplate.class);
 		dataSource = springJdbcCtx.getBean("dataSource", DataSource.class);
-		daoTestUtil = springJdbcCtx.getBean("daoTestUtil", JdbcDaoTestUtil.class);
+		jdbcQueryTestUtil = springJdbcCtx.getBean("jdbcQueryTestUtil", JdbcQueryTestUtil.class);
 
 		String[] scripts = { "1_create_database.up.sql", "2_userrole.up.sql", "2_state.up.sql", "2_department.up.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 
-		ireland = daoTestUtil.findStateByName("Ireland");
-		italy = daoTestUtil.findStateByName("Italy");
+		ireland = jdbcQueryTestUtil.findStateByName("Ireland");
+		italy = jdbcQueryTestUtil.findStateByName("Italy");
 
-		accounts = daoTestUtil.findDepartmentByName("Accounts");
-		legal = daoTestUtil.findDepartmentByName("Legal");
-		production = daoTestUtil.findDepartmentByName("Production");
+		accounts = jdbcQueryTestUtil.findDepartmentByName("Accounts");
+		legal = jdbcQueryTestUtil.findDepartmentByName("Legal");
+		production = jdbcQueryTestUtil.findDepartmentByName("Production");
 	}
 
 	@BeforeEach
 	void init() {
 		String[] scripts = { "2_address.up.sql", "2_user.up.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterEach
 	void cleanUp() {
 		String[] scripts = { "2_useruserrole.down.sql", "2_useraddress.down.sql", "2_user.down.sql",
 				"2_address.down.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterAll
 	static void clear() {
 		String[] scripts = { "2_state.down.sql", "2_department.down.sql", "2_userrole.down.sql",
 				"1_create_database.down.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 		springJdbcCtx.close();
-		daoTestUtil.stopTestDB();
 	}
 
 	@Test
@@ -94,7 +93,7 @@ class UserDaoTest {
 
 		// delete all users
 		String[] scripts = { "2_user.down.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
@@ -229,7 +228,7 @@ class UserDaoTest {
 
 		// delete all the addresses
 		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
@@ -321,7 +320,7 @@ class UserDaoTest {
 
 		// delete all users
 		String[] scripts = { "2_user.down.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
@@ -388,7 +387,7 @@ class UserDaoTest {
 
 		// delete all users
 		String[] scripts = { "2_user.down.sql" };
-		daoTestUtil.runDBScripts(scripts);
+		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.setJdbcTemplate(dataSource, jdbcTemplate);
@@ -463,18 +462,18 @@ class UserDaoTest {
 		PojoUser franco = PojoUser.newInstance().withAccountName("franc").withBirthDate(LocalDate.of(1981, 11, 12))
 				.withFirstName("Franco").withLastName("Red").withDepartmentId(legal.getId());
 
-		PojoUser newUser = daoTestUtil.createUser(franco);
-		State state = daoTestUtil.findStateByName("Italy");
+		PojoUser newUser = jdbcQueryTestUtil.createUser(franco);
+		State state = jdbcQueryTestUtil.findStateByName("Italy");
 
 		PojoAddress address = PojoAddress.newInstance().withDescription("Via Nuova").withCity("Venice")
 				.withStateId(italy.getId()).withRegion("Veneto").withPostalCode("30033");
 
-		PojoAddress newAddress = daoTestUtil.createAddress(address);
+		PojoAddress newAddress = jdbcQueryTestUtil.createAddress(address);
 
 		// run the test
 		userDao.associate(newUser.getId(), newAddress.getId());
 
-		List<PojoAddress> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(newUser.getId());
 
 		assertEquals(1, addresses.size());
 
@@ -515,7 +514,7 @@ class UserDaoTest {
 		// run the test
 		userDao.create(franco);
 
-		PojoUser newUser = daoTestUtil.findUserByAccountName("franc");
+		PojoUser newUser = jdbcQueryTestUtil.findUserByAccountName("franc");
 
 		assertEquals("franc", newUser.getAccountName());
 		assertEquals("Franco", newUser.getFirstName());
@@ -525,7 +524,7 @@ class UserDaoTest {
 		assertNotNull(newUser.getCreatedAt());
 		assertNotNull(newUser.getId());
 
-		List<PojoAddress> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(newUser.getId());
 
 		assertEquals(0, addresses.size());
 	}
@@ -554,7 +553,7 @@ class UserDaoTest {
 		// run the test
 		userDao.create(carl);
 
-		PojoUser newUser = daoTestUtil.findUserByAccountName("carl23");
+		PojoUser newUser = jdbcQueryTestUtil.findUserByAccountName("carl23");
 
 		assertEquals("carl23", newUser.getAccountName());
 		assertEquals("Carlo", newUser.getFirstName());
@@ -563,7 +562,7 @@ class UserDaoTest {
 		assertNotNull(newUser.getCreatedAt());
 		assertNotNull(newUser.getId());
 
-		List<PojoAddress> addresses = daoTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(newUser.getId());
 
 		assertEquals(2, addresses.size());
 		
@@ -610,8 +609,8 @@ class UserDaoTest {
 		PojoUser stephan = PojoUser.newInstance().withAccountName("stephan123").withBirthDate(LocalDate.of(1970, 2, 3))
 				.withFirstName("Stephano").withLastName("Regi").withDepartmentId(accounts.getId());
 
-		long stephanId = daoTestUtil.createUser(stephan).getId();
-		LocalDateTime createdAt = daoTestUtil.findUserByUserId(stephanId).getCreatedAt();
+		long stephanId = jdbcQueryTestUtil.createUser(stephan).getId();
+		LocalDateTime createdAt = jdbcQueryTestUtil.findUserByUserId(stephanId).getCreatedAt();
 
 		User stephanUpdated = User.newInstance().withAccountName("stephan123").withBirthDate(LocalDate.of(1980, 12, 4))
 				.withFirstName("Stephano juniur").withLastName("Reginaldo").withDepartment(legal).withId(stephanId);
@@ -619,7 +618,7 @@ class UserDaoTest {
 		// run the test
 		userDao.update(stephanUpdated);
 
-		PojoUser updated = daoTestUtil.findUserByUserId(stephanId);
+		PojoUser updated = jdbcQueryTestUtil.findUserByUserId(stephanId);
 
 		assertEquals("stephan123", updated.getAccountName());
 		assertEquals("Stephano juniur", updated.getFirstName());
