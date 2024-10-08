@@ -54,9 +54,6 @@ class AddressDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
 
-	@Autowired
-	QueryTestUtil queryTestUtil;
-
 	@Mock
 	State ireland;
 	@Mock
@@ -67,6 +64,9 @@ class AddressDaoTest {
 	Department legal;
 	@Mock
 	Department production;
+	
+	@Autowired
+	QueryTestUtil queryTestUtil;
 
 	@Autowired
 	AddressDao addressDao;

@@ -30,15 +30,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @ComponentScan(basePackages = { "it.maxmin.dao.hibernate.impl.repo" }) 
 @EnableTransactionManagement
-public class HibernateCfg {
+public class HibernateContextCfg {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateCfg.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateContextCfg.class);
 
 	private DataSource dataSource;
 
 	@Autowired
-	public HibernateCfg(DataSource dataSource) {
+	public HibernateContextCfg(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 

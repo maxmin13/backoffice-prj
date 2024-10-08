@@ -34,10 +34,10 @@ import it.maxmin.dao.hibernate.UnitTestContextCfg;
  * objects are present in the Spring context. The test relies on a MariaDB database 
  * running in the background (see MariaDB4jSpringService).
  */
-class HibernateCfgTest {
+class HibernateContextCfgTest {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateCfgTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(HibernateContextCfgTest.class);
 
 	private static AnnotationConfigApplicationContext unitTestContext;
 	private static DataSourceTestUtil dataSourceTestUtil;
@@ -56,7 +56,7 @@ class HibernateCfgTest {
 	@Test
 	void testSessionFactory() throws IllegalStateException {
 
-		var springCtx = new AnnotationConfigApplicationContext(HibernateCfg.class);
+		var springCtx = new AnnotationConfigApplicationContext(HibernateContextCfg.class);
 		var sessionFactory = springCtx.getBean("sessionFactory", SessionFactory.class);
 
 		assertNotNull(sessionFactory);
@@ -79,7 +79,7 @@ class HibernateCfgTest {
 	@Test
 	void testTransactionManager() throws IllegalStateException, SQLException {
 
-		var springCtx = new AnnotationConfigApplicationContext(HibernateCfg.class);
+		var springCtx = new AnnotationConfigApplicationContext(HibernateContextCfg.class);
 		var transactionManager = springCtx.getBean("transactionManager", HibernateTransactionManager.class);
 
 		assertNotNull(transactionManager);

@@ -14,7 +14,7 @@ import it.maxmin.dao.jdbc.JdbcDataSourceTestUtil;
 /**
  * Verifies that by loading JndiDataSourceCfg.class, in the Spring context a
  * DataSource object is present. The test relies on simple-jndi library to
- * create a JNDI directory service in the background.
+ * create a JNDI directory service in the background with at datasource object in it.
  */
 class JndiDataSourceCfgTest {
 

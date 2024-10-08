@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @Import(JndiDataSourceCfg.class)
-public class SpringJdbcTemplateCfg {
+public class SpringJdbcContextCfg {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(SpringJdbcTemplateCfg.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SpringJdbcContextCfg.class);
 
 	private DataSource dataSource;
 
@@ -22,7 +22,7 @@ public class SpringJdbcTemplateCfg {
 	 * objects, no need to directly close them.
 	 */
 	@Autowired
-	public SpringJdbcTemplateCfg(DataSource dataSource) {
+	public SpringJdbcContextCfg(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 

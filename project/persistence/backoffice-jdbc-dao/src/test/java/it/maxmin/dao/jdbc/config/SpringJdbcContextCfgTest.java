@@ -16,13 +16,13 @@ import it.maxmin.dao.jdbc.JdbcUnitTestContextCfg;
 
 /**
  * Verifies that by loading SpringJdbcTemplateCfg.class, a JdbcTemplate object
- * is present in the Spring context. The test relies on a MariaDB database
+ * is in the Spring context. The test relies on a MariaDB database
  * running in the background (see MariaDB4jSpringService).
  */
-class SpringJdbcTemplateCfgTest {
+class SpringJdbcContextCfgTest {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(SpringJdbcTemplateCfgTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SpringJdbcContextCfgTest.class);
 
 	private static AnnotationConfigApplicationContext jdbcUnitTestContext;
 	private static JdbcDataSourceTestUtil jdbcDataSourceTestUtil;
@@ -41,7 +41,7 @@ class SpringJdbcTemplateCfgTest {
 	@Test
 	void testSpringJdbcTemplate() throws SQLException, IllegalStateException {
 
-		var springJdbcCtx = new AnnotationConfigApplicationContext(SpringJdbcTemplateCfg.class);
+		var springJdbcCtx = new AnnotationConfigApplicationContext(SpringJdbcContextCfg.class);
 		var jdbcTemplate = springJdbcCtx.getBean("jdbcTemplate", JdbcTemplate.class);
 
 		jdbcDataSourceTestUtil.testDataSource(jdbcTemplate.getDataSource());

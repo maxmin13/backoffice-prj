@@ -7,8 +7,11 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
@@ -19,6 +22,9 @@ import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
  * tests.
  */
 
+@Configuration
+@ComponentScan(basePackages = { "it.maxmin.dao.jdbc.impl.repo" })
+@EnableTransactionManagement
 public class JdbcUnitTestContextCfg {
 
 	@SuppressWarnings("unused")

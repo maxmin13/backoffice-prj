@@ -46,18 +46,6 @@ public class JdbcQueryTestUtil {
 		this.dataSource = dataSource;
 	}
 
-	public void runDBScripts(String[] scripts) {
-		for (String script : scripts) {
-			try {
-				Files.readAllLines(Paths.get("src/test/resources/database/" + script)).stream()
-						.filter(line -> !line.trim().isEmpty()).toList()
-						.forEach(jdbcTemplate.getJdbcTemplate()::update);
-			} catch (IOException e) {
-				throw new DaoTestException("Error running DB scripts", e);
-			}
-		}
-	}
-
 	public PojoUser findUserByUserId(long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
 		return jdbcTemplate.queryForObject(SELECT_USER_BY_USER_ID, param,
@@ -149,4 +137,17 @@ public class JdbcQueryTestUtil {
 		return jdbcTemplate.queryForObject(SELECT_DEPARTMENT_BY_NAME, param,
 				BeanPropertyRowMapper.newInstance(Department.class));
 	}
+
+	public void runDBScripts(String[] scripts) {
+		for (String script : scripts) {
+			try {
+				Files.readAllLines(Paths.get("src/test/resources/database/" + script)).stream()
+						.filter(line -> !line.trim().isEmpty()).toList()
+						.forEach(jdbcTemplate.getJdbcTemplate()::update);
+			} catch (IOException e) {
+				throw new DaoTestException("Error running DB scripts", e);
+			}
+		}
+	}
+
 }
