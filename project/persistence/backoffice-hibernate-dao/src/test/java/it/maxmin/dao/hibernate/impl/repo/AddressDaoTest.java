@@ -1,9 +1,8 @@
 package it.maxmin.dao.hibernate.impl.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -50,7 +49,7 @@ import it.maxmin.domain.hibernate.pojo.PojoAddress;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AddressDaoTest {
+class AddressDaoTest extends BaseTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
 
@@ -64,13 +63,13 @@ class AddressDaoTest {
 	Department legal;
 	@Mock
 	Department production;
-	
+
 	@Autowired
 	QueryTestUtil queryTestUtil;
 
 	@Autowired
 	AddressDao addressDao;
-	
+
 	@BeforeEach
 	void init() {
 		when(italy.getId()).thenReturn(1l);
@@ -86,17 +85,17 @@ class AddressDaoTest {
 		when(production.getId()).thenReturn(3l);
 		when(production.getName()).thenReturn("Production");
 	}
-	
+
 	@Test
 	@Order(1)
 	@DisplayName("01. should find no address")
 	void findByIdNotFound() {
-		
+
 		LOGGER.info("running test findByIdNotFound");
-	
+
 		// run the test
 		Optional<Address> address = addressDao.findById(0);
-		
+
 		assertTrue(address.isEmpty());
 	}
 
@@ -111,16 +110,16 @@ class AddressDaoTest {
 	void findById1() {
 
 		LOGGER.info("running test findById1");
-		
+
 		PojoAddress pojoAddress = queryTestUtil.findAddressByPostalCode("A65TF12");
-	
+
 		// run the test
 		Optional<Address> address = addressDao.findById(pojoAddress.getId());
 
 		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address.get());
 
 		State state = address.get().getState();
-		
+
 		verifyState(ireland.getName(), ireland.getCode(), state);
 
 		Set<User> users = address.get().getUsers();
@@ -128,8 +127,8 @@ class AddressDaoTest {
 		assertEquals(2, users.size());
 
 		User user1 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
-		
-		verifyUser("Max", "Minardi", LocalDate.of(1977, 10, 16), user1);
+
+		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user1);
 
 		// department
 		Department department = user1.getDepartment();
@@ -137,15 +136,15 @@ class AddressDaoTest {
 		verifyDepartment(production.getName(), department);
 
 		User user2 = users.stream().filter(u -> u.getAccountName().equals("artur")).findFirst().get();
-		
-		verifyUser("Arturo", "Art", LocalDate.of(1923, 10, 12), user2);
+
+		verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), user2);
 
 		// department
 		department = user2.getDepartment();
 
 		verifyDepartment(legal.getName(), department);
 	}
-		
+
 	@Test
 	@Order(3)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
@@ -157,7 +156,7 @@ class AddressDaoTest {
 	void findById2() {
 
 		LOGGER.info("running test findById2");
-		
+
 		PojoAddress pojoAddress = queryTestUtil.findAddressByPostalCode("A65TF12");
 
 		// run the test
@@ -166,9 +165,9 @@ class AddressDaoTest {
 		Set<User> users = address.get().getUsers();
 
 		User user1 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
-		
+
 		Department department = user1.getDepartment();
-		
+
 		assertThrows(LazyInitializationException.class, department.getUsers()::size);
 
 		// roles
@@ -181,7 +180,7 @@ class AddressDaoTest {
 
 		assertThrows(LazyInitializationException.class, addresses::size);
 	}
-	
+
 	@Test
 	@Order(4)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
@@ -193,16 +192,16 @@ class AddressDaoTest {
 	void findById3() {
 
 		LOGGER.info("running test findById3");
-		
+
 		PojoAddress pojoAddress = queryTestUtil.findAddressByPostalCode("31210");
-	
+
 		// run the test
 		Optional<Address> address = addressDao.findById(pojoAddress.getId());
 
 		verifyAddress("31210", "Via Roma", "Venice", "County Veneto", address.get());
 
 		State state = address.get().getState();
-		
+
 		verifyState(italy.getName(), italy.getCode(), state);
 
 		Set<User> users = address.get().getUsers();
@@ -211,7 +210,7 @@ class AddressDaoTest {
 	}
 
 	@Test
-	@Order(5)	
+	@Order(5)
 	@DisplayName("05. should find no address")
 	void testFindAllNotFound() {
 
@@ -222,7 +221,7 @@ class AddressDaoTest {
 
 		assertEquals(0, addresses.size());
 	}
-	
+
 	@Test
 	@Order(6)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
@@ -255,10 +254,10 @@ class AddressDaoTest {
 
 		User user1 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
 
-		verifyUser("Max", "Minardi", LocalDate.of(1977, 10, 16), user1);
+		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user1);
 		assertEquals(0, user1.getAddresses().size());
 		assertEquals(0, user1.getRoles().size());
-		
+
 		// department
 		Department department = user1.getDepartment();
 
@@ -266,7 +265,7 @@ class AddressDaoTest {
 
 		Address address2 = addresses.stream().filter(address -> address.getPostalCode().equals("A65TF12")).findFirst()
 				.get();
-		
+
 		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
 
 		state = address2.getState();
@@ -279,27 +278,27 @@ class AddressDaoTest {
 
 		User user2 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
 
-		verifyUser("Max", "Minardi", LocalDate.of(1977, 10, 16), user2);
+		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user2);
 		assertEquals(0, user2.getAddresses().size());
 		assertEquals(0, user2.getRoles().size());
-		
+
 		// department
 		department = user2.getDepartment();
-		
+
 		verifyDepartment(production.getName(), department);
 
 		User user3 = users.stream().filter(u -> u.getAccountName().equals("artur")).findFirst().get();
 
-		verifyUser("Arturo", "Art", LocalDate.of(1923, 10, 12), user3);
+		verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), user3);
 		assertEquals(0, user3.getAddresses().size());
 		assertEquals(0, user3.getRoles().size());
-		
+
 		// department
 		department = user3.getDepartment();
 
 		verifyDepartment(legal.getName(), department);
 	}
-	
+
 	@Test
 	@Order(7)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
@@ -317,8 +316,7 @@ class AddressDaoTest {
 
 		assertEquals(3, addresses.size());
 
-		Address address = addresses.stream().filter(a -> a.getPostalCode().equals("31210")).findFirst()
-				.get();
+		Address address = addresses.stream().filter(a -> a.getPostalCode().equals("31210")).findFirst().get();
 
 		verifyAddress("31210", "Via Roma", "Venice", "County Veneto", address);
 
@@ -329,38 +327,6 @@ class AddressDaoTest {
 		Set<User> users = address.getUsers();
 
 		assertEquals(0, users.size());
-	}
-	
-	void verifyDepartment(String name, Department actual) {
-		assertNotNull(actual.getId());
-		assertEquals(name, actual.getName());
-		assertNotNull(actual.getUsers());
-	}
-	
-	void verifyState(String name, String code, State actual) {
-		assertNotNull(actual.getId());
-		assertEquals(name, actual.getName());
-		assertEquals(code, actual.getCode());
-	}
-	
-	void verifyAddress(String postalCode, String description, String city, String region, Address actual) {
-		assertNotNull(actual);
-		assertNotNull(actual.getId());
-		assertEquals(postalCode, actual.getPostalCode());
-		assertEquals(description, actual.getDescription());
-		assertEquals(city, actual.getCity());
-		assertEquals(region, actual.getRegion());
-	}
-		
-	void verifyUser(String firstName, String lastName, LocalDate birthDate, User actual) {
-		assertNotNull(actual.getId());
-		assertEquals(firstName, actual.getFirstName());
-		assertEquals(lastName, actual.getLastName());
-		assertEquals(birthDate, actual.getBirthDate());
-		assertNotNull(actual.getCreatedAt());
-		assertNotNull(actual.getDepartment());
-		assertNotNull(actual.getAddresses());
-		assertNotNull(actual.getRoles());
 	}
 
 }

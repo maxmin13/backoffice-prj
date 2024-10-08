@@ -50,7 +50,7 @@ import it.maxmin.domain.hibernate.pojo.PojoUserRole;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class UserDaoTest {
+class UserDaoTest extends BaseTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);
 
