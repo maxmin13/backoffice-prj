@@ -1,7 +1,6 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +33,7 @@ import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AddressDaoTest {
+class AddressDaoTest extends JdbcBaseTest {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
@@ -86,27 +85,15 @@ class AddressDaoTest {
 
 		assertEquals(2, addresses.size());
 
-		assertNotNull(addresses.get(0).getId());
-		assertEquals("Via borgo di sotto", addresses.get(0).getDescription());
-		assertEquals("Rome", addresses.get(0).getCity());
-		assertEquals("Lazio", addresses.get(0).getRegion());
-		assertEquals("30010", addresses.get(0).getPostalCode());
+		verifyAddress("30010", "Via borgo di sotto", "Rome", "Lazio", addresses.get(0));
+		verifyState(italy.getName(), italy.getCode(),  addresses.get(0).getState());
 
-		assertEquals(italy.getId(), addresses.get(0).getState().getId());
-		assertEquals(italy.getName(), addresses.get(0).getState().getName());
-
-		assertNotNull(addresses.get(1).getId());
-		assertEquals("Connolly street", addresses.get(1).getDescription());
-		assertEquals("Dublin", addresses.get(1).getCity());
-		assertEquals("County Dublin", addresses.get(1).getRegion());
-		assertEquals("A65TF12", addresses.get(1).getPostalCode());
-
-		assertEquals(ireland.getId(), addresses.get(1).getState().getId());
-		assertEquals(ireland.getName(), addresses.get(1).getState().getName());
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", addresses.get(1));
+		verifyState(ireland.getName(), ireland.getCode(),  addresses.get(1).getState());
 	}
 
 	@Test
-	void findAddressesByUserId_none_associated_found() {
+	void findAddressesByUserIdNoneAssociatedToUser() {
 
 		String[] scripts = { "2_useraddress.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
@@ -120,7 +107,7 @@ class AddressDaoTest {
 	}
 
 	@Test
-	void findAddressesByUserId_none_found() {
+	void findAddressesByUserIdNotFound() {
 
 		// delete all the addresses
 		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
@@ -154,17 +141,12 @@ class AddressDaoTest {
 
 		// run the test
 		Address newAddress = addressDao.create(address);
-
-		assertEquals("Via Nuova", newAddress.getDescription());
-		assertEquals("Venice", newAddress.getCity());
-		assertEquals(italy.getId(), newAddress.getState().getId());
-		assertEquals("Veneto", newAddress.getRegion());
-		assertEquals("30033", newAddress.getPostalCode());
-		assertNotNull(newAddress.getId());
+		
+		verifyAddress("30033", "Via Nuova", "Venice", "Veneto", newAddress);
 	}
 
 	@Test
-	void create_list() {
+	void createList() {
 
 		String[] scripts = { "2_address.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
@@ -185,17 +167,8 @@ class AddressDaoTest {
 
 		assertEquals(2, newAddresses.size());
 
-		assertEquals("Via Nuova", newAddresses.get(0).getDescription());
-		assertEquals("Venice", newAddresses.get(0).getCity());
-		assertEquals(italy.getId(), newAddresses.get(0).getStateId());
-		assertEquals("Veneto", newAddresses.get(0).getRegion());
-		assertEquals("30033", newAddresses.get(0).getPostalCode());
-
-		assertEquals("Connolly street", newAddresses.get(1).getDescription());
-		assertEquals("Dublin", newAddresses.get(1).getCity());
-		assertEquals(ireland.getId(), newAddresses.get(1).getStateId());
-		assertEquals("County Dublin", newAddresses.get(1).getRegion());
-		assertEquals("A65TF12", newAddresses.get(1).getPostalCode());
+		verifyAddress("30033", "Via Nuova", "Venice", "Veneto", newAddresses.get(0));
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", newAddresses.get(1));
 	}
 
 	@Test
@@ -217,7 +190,7 @@ class AddressDaoTest {
 		long addressId = jdbcQueryTestUtil.createAddress(address).getId();
 
 		Address addressUpdated = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
-				.withState(State.newInstance().withId(italy.getId())).withRegion("Veneto").withPostalCode("23465")
+				.withState(State.newInstance().withId(italy.getId())).withRegion("Veneto").withPostalCode("30033")
 				.withId(addressId);
 
 		// run the test
@@ -225,11 +198,7 @@ class AddressDaoTest {
 
 		PojoAddress updated = jdbcQueryTestUtil.findAddressByAddressId(addressId);
 
-		assertEquals("Via Nuova", updated.getDescription());
-		assertEquals("Venice", updated.getCity());
-		assertEquals(italy.getId(), updated.getStateId());
-		assertEquals("Veneto", updated.getRegion());
-		assertEquals("23465", updated.getPostalCode());
+		verifyAddress("30033", "Via Nuova", "Venice", "Veneto", updated);
 	}
 
 }

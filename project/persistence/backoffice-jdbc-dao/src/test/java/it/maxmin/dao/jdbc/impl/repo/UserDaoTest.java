@@ -1,13 +1,11 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +39,7 @@ import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class UserDaoTest {
+class UserDaoTest extends JdbcBaseTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);
 
@@ -55,7 +53,13 @@ class UserDaoTest {
 	Department legal;
 	@Mock
 	Department production;
-
+	@Mock
+	UserRole administrator;
+	@Mock
+	UserRole user;
+	@Mock
+	UserRole worker;
+	
 	JdbcQueryTestUtil jdbcQueryTestUtil;
 	UserDao userDao;
 	
@@ -85,6 +89,12 @@ class UserDaoTest {
 		when(legal.getName()).thenReturn("Legal");
 		when(production.getId()).thenReturn(3l);
 		when(production.getName()).thenReturn("Production");
+		when(administrator.getId()).thenReturn(1l);
+		when(administrator.getRoleName()).thenReturn("Administrator");
+		when(user.getId()).thenReturn(2l);
+		when(user.getRoleName()).thenReturn("User");
+		when(worker.getId()).thenReturn(3l);
+		when(worker.getRoleName()).thenReturn("Worker");
 	}
 
 	@AfterEach
@@ -121,110 +131,85 @@ class UserDaoTest {
 
 		User maxmin = users.get(0);
 
-		assertEquals("maxmin13", maxmin.getAccountName());
-		assertEquals("Max", maxmin.getFirstName());
-		assertEquals("Minardi", maxmin.getLastName());
-		assertEquals(LocalDate.of(1977, 10, 16), maxmin.getBirthDate());
-		assertNotNull(maxmin.getCreatedAt());
-		assertNotNull(maxmin.getDepartment());
-		assertNotNull(maxmin.getAddresses());
-		assertNotNull(maxmin.getId());
+		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), maxmin);
 
 		// roles
 		assertEquals(3, maxmin.getRoles().size());
 
 		UserRole role1 = maxmin.getRole("Administrator");
-
-		assertNotNull(role1.getId());
+		
+		verifyRole(administrator.getRoleName(), role1);
 
 		UserRole role2 = maxmin.getRole("User");
 
-		assertNotNull(role2.getId());
+		verifyRole(user.getRoleName(), role2);
 
 		UserRole role3 = maxmin.getRole("Worker");
 
-		assertNotNull(role3.getId());
+		verifyRole(worker.getRoleName(), role3);
 
 		// department
-		assertEquals(production.getId(), maxmin.getDepartment().getId());
-		assertEquals(production.getName(), maxmin.getDepartment().getName());
+		verifyDepartment(production.getName(), maxmin.getDepartment());
 
 		// addresses
 		assertEquals(2, maxmin.getAddresses().size());
 
 		Address address1 = maxmin.getAddress("30010");
 
-		assertNotNull(address1.getId());
-		assertEquals("Via borgo di sotto", address1.getDescription());
-		assertEquals("Rome", address1.getCity());
-		assertEquals("Lazio", address1.getRegion());
-		assertEquals("30010", address1.getPostalCode());
-		assertEquals(italy.getId(), address1.getState().getId());
-		assertEquals(italy.getName(), address1.getState().getName());
-		assertEquals(italy.getCode(), address1.getState().getCode());
+		verifyAddress("30010", "Via borgo di sotto", "Rome", "Lazio", address1);
+		verifyState(italy.getName(), italy.getCode(), address1.getState());
 
 		Address address2 = maxmin.getAddress("A65TF12");
 
-		assertNotNull(address2.getId());
-		assertEquals("Connolly street", address2.getDescription());
-		assertEquals(ireland.getId(), address2.getState().getId());
-		assertEquals(ireland.getName(), address2.getState().getName());
-		assertEquals(ireland.getCode(), address2.getState().getCode());
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
+		verifyState(ireland.getName(), ireland.getCode(), address2.getState());
 
 		User artur = users.get(1);
 
-		assertEquals("artur", artur.getAccountName());
-		assertEquals("Arturo", artur.getFirstName());
-		assertEquals("Art", artur.getLastName());
-		assertEquals(LocalDate.of(1923, 10, 12), artur.getBirthDate());
-		assertNotNull(artur.getCreatedAt());
-		assertNotNull(artur.getDepartment());
-		assertNotNull(artur.getAddresses());
-		assertNotNull(artur.getId());
+		verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), artur);
 
 		// roles
 		assertEquals(2, artur.getRoles().size());
 
 		UserRole role4 = artur.getRole("Administrator");
 
-		assertNotNull(role4.getId());
+		verifyRole(administrator.getRoleName(), role4);
 
 		UserRole role5 = artur.getRole("User");
 
-		assertNotNull(role5.getId());
+		verifyRole(user.getRoleName(), role5);
 
 		// department
-		assertEquals(legal.getId(), artur.getDepartment().getId());
-		assertEquals(legal.getName(), artur.getDepartment().getName());
+		verifyDepartment(legal.getName(), artur.getDepartment());
 
 		// addresses
 		assertEquals(1, artur.getAddresses().size());
 
 		Address address3 = artur.getAddress("A65TF12");
 
-		assertNotNull(address3.getId());
-		assertEquals("Connolly street", address3.getDescription());
-		assertEquals("Dublin", address3.getCity());
-		assertEquals("County Dublin", address3.getRegion());
-		assertEquals(ireland.getId(), address3.getState().getId());
-		assertEquals(ireland.getName(), address3.getState().getName());
-		assertEquals(ireland.getCode(), address3.getState().getCode());
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3);
+		verifyState(ireland.getName(), ireland.getCode(), address3.getState());
 
 		User reginald = users.get(2);
 
-		assertEquals("reginald123", reginald.getAccountName());
-		assertEquals(accounts.getName(), reginald.getDepartment().getName());
-		assertEquals(0, reginald.getAddresses().size());
+		verifyUser("reginald123", "reginald", "reinold", LocalDate.of(1944, 12, 23), reginald);
 
+		// roles
 		assertEquals(1, reginald.getRoles().size());
 
-		UserRole role6 = artur.getRole("User");
+		UserRole role6 = reginald.getRole("User");
 
-		assertNotNull(role6.getId());
+		verifyRole(user.getRoleName(), role6);
+
+		// department
+		verifyDepartment(accounts.getName(), reginald.getDepartment());
+
+		// addresses
+		assertEquals(0, reginald.getAddresses().size());
 	}
 
 	@Test
-	void testFindAll_with_no_address() {
+	void testFindAllWithNoAddress() {
 		
 		LOGGER.info("running test testFindAll_with_no_address");
 
@@ -239,77 +224,66 @@ class UserDaoTest {
 
 		User maxmin = users.get(0);
 
-		assertEquals("maxmin13", maxmin.getAccountName());
-		assertEquals("Max", maxmin.getFirstName());
-		assertEquals("Minardi", maxmin.getLastName());
-		assertEquals(LocalDate.of(1977, 10, 16), maxmin.getBirthDate());
-		assertNotNull(maxmin.getCreatedAt());
-		assertNotNull(maxmin.getDepartment());
-		assertNotNull(maxmin.getAddresses());
-		assertNotNull(maxmin.getId());
+		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), maxmin);
 		
 		// roles
 		assertEquals(3, maxmin.getRoles().size());
 
 		UserRole role1 = maxmin.getRole("Administrator");
 
-		assertNotNull(role1.getId());
+		verifyRole(administrator.getRoleName(), role1);
 
 		UserRole role2 = maxmin.getRole("User");
 
-		assertNotNull(role2.getId());
+		verifyRole(user.getRoleName(), role2);
 
 		UserRole role3 = maxmin.getRole("Worker");
 
-		assertNotNull(role3.getId());
+		verifyRole(worker.getRoleName(), role3);
 
 		// department
-		assertEquals(production.getId(), maxmin.getDepartment().getId());
-		assertEquals(production.getName(), maxmin.getDepartment().getName());
+		verifyDepartment(production.getName(), maxmin.getDepartment());
 
 		// addresses
 		assertEquals(0, maxmin.getAddresses().size());
 
 		User artur = users.get(1);
 
-		assertEquals("artur", artur.getAccountName());
-		assertEquals("Arturo", artur.getFirstName());
-		assertEquals("Art", artur.getLastName());
-		assertEquals(LocalDate.of(1923, 10, 12), artur.getBirthDate());
-		assertNotNull(artur.getCreatedAt());
-		assertNotNull(artur.getDepartment());
-		assertNotNull(artur.getAddresses());
-		assertNotNull(artur.getId());
+		verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), artur);
 
 		// roles
 		assertEquals(2, artur.getRoles().size());
 
 		UserRole role4 = artur.getRole("Administrator");
 
-		assertNotNull(role4.getId());
+		verifyRole(administrator.getRoleName(), role4);
 
 		UserRole role5 = artur.getRole("User");
 
-		assertNotNull(role5.getId());
+		verifyRole(user.getRoleName(), role5);
 
 		// department
-		assertEquals(legal.getId(), artur.getDepartment().getId());
-		assertEquals(legal.getName(), artur.getDepartment().getName());
+		verifyDepartment(legal.getName(), artur.getDepartment());
 
 		// addresses
 		assertEquals(0, artur.getAddresses().size());
 
 		User reginald = users.get(2);
 
-		assertEquals("reginald123", reginald.getAccountName());
-		assertEquals(accounts.getName(), reginald.getDepartment().getName());
-		assertEquals(0, reginald.getAddresses().size());
+		verifyUser("reginald123", "reginald", "reinold", LocalDate.of(1944, 12, 23), reginald);
 
+		// roles
 		assertEquals(1, reginald.getRoles().size());
 
-		UserRole role6 = artur.getRole("User");
+		UserRole role6 = reginald.getRole("User");
 
-		assertNotNull(role6.getId());
+		verifyRole(user.getRoleName(), role6);
+
+		// department
+		verifyDepartment(accounts.getName(), reginald.getDepartment());
+
+		// addresses
+		assertEquals(0, reginald.getAddresses().size());
 	}
 
 	@Test
@@ -322,9 +296,9 @@ class UserDaoTest {
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// run the test
-		Optional<User> user = userDao.findByAccountName("maxmin13");
+		Optional<User> maxmin = userDao.findByAccountName("maxmin13");
 
-		assertTrue(user.isEmpty());
+		assertTrue(maxmin.isEmpty());
 	}
 
 	@Test
@@ -335,42 +309,29 @@ class UserDaoTest {
 		// run the test
 		User artur = userDao.findByAccountName("artur").get();
 
-		assertEquals("artur", artur.getAccountName());
-		assertEquals("Arturo", artur.getFirstName());
-		assertEquals("Art", artur.getLastName());
-		assertEquals(LocalDate.of(1923, 10, 12), artur.getBirthDate());
-		assertNotNull(artur.getCreatedAt());
-		assertNotNull(artur.getDepartment());
-		assertNotNull(artur.getAddresses());
-		assertNotNull(artur.getId());
+		verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), artur);
 
 		// roles
 		assertEquals(2, artur.getRoles().size());
 
 		UserRole role4 = artur.getRole("Administrator");
 		
-		assertNotNull(role4.getId());
+		verifyRole(administrator.getRoleName(), role4);
 
 		UserRole role5 = artur.getRole("User");
 		
-		assertNotNull(role5.getId());
+		verifyRole(user.getRoleName(), role5);
 
 		// department
-		assertEquals(legal.getId(), artur.getDepartment().getId());
-		assertEquals(legal.getName(), artur.getDepartment().getName());
+		verifyDepartment(legal.getName(), artur.getDepartment());
 
 		// addresses
 		assertEquals(1, artur.getAddresses().size());
 
 		Address address3 = artur.getAddress("A65TF12");
 
-		assertNotNull(address3.getId());
-		assertEquals("Connolly street", address3.getDescription());
-		assertEquals("Dublin", address3.getCity());
-		assertEquals("County Dublin", address3.getRegion());
-		assertEquals(ireland.getId(), address3.getState().getId());
-		assertEquals(ireland.getName(), address3.getState().getName());
-		assertEquals(ireland.getCode(), address3.getState().getCode());
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3);
+		verifyState(ireland.getName(), ireland.getCode(), address3.getState());
 	}
 
 	@Test
@@ -400,42 +361,29 @@ class UserDaoTest {
 
 		User artur = users.get(0);
 
-		assertEquals("artur", artur.getAccountName());
-		assertEquals("Arturo", artur.getFirstName());
-		assertEquals("Art", artur.getLastName());
-		assertEquals(LocalDate.of(1923, 10, 12), artur.getBirthDate());
-		assertNotNull(artur.getCreatedAt());
-		assertNotNull(artur.getDepartment());
-		assertNotNull(artur.getAddresses());
-		assertNotNull(artur.getId());
+		verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), artur);
 
 		// roles
 		assertEquals(2, artur.getRoles().size());
 
 		UserRole role4 = artur.getRole("Administrator");
 		
-		assertNotNull(role4.getId());
+		verifyRole(administrator.getRoleName(), role4);
 
 		UserRole role5 = artur.getRole("User");
 		
-		assertNotNull(role5.getId());
+		verifyRole(user.getRoleName(), role5);
 
 		// department
-		assertEquals(legal.getId(), artur.getDepartment().getId());
-		assertEquals(legal.getName(), artur.getDepartment().getName());
+		verifyDepartment(legal.getName(), artur.getDepartment());
 
 		// addresses
 		assertEquals(1, artur.getAddresses().size());
 
 		Address address3 = artur.getAddress("A65TF12");
 
-		assertNotNull(address3.getId());
-		assertEquals("Connolly street", address3.getDescription());
-		assertEquals("Dublin", address3.getCity());
-		assertEquals("County Dublin", address3.getRegion());
-		assertEquals(ireland.getId(), address3.getState().getId());
-		assertEquals(ireland.getName(), address3.getState().getName());
-		assertEquals(ireland.getCode(), address3.getState().getCode());
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3);
+		verifyState(ireland.getName(), ireland.getCode(), address3.getState());
 	}
 
 	@Test
@@ -461,10 +409,7 @@ class UserDaoTest {
 
 		assertEquals(1, addresses.size());
 
-		assertEquals("Via Nuova", addresses.get(0).getDescription());
-		assertEquals("Venice", addresses.get(0).getCity());
-		assertEquals("Veneto", addresses.get(0).getRegion());
-		assertEquals("30033", addresses.get(0).getPostalCode());
+		verifyAddress("30033", "Via Nuova", "Venice", "Veneto", addresses.get(0));
 
 		assertEquals(state.getId(), addresses.get(0).getStateId());
 	}
@@ -482,7 +427,7 @@ class UserDaoTest {
 	}
 
 	@Test
-	void create_with_no_address() {
+	void createWithNoAddress() {
 		
 		LOGGER.info("running test create_with_no_address");
 
@@ -493,14 +438,8 @@ class UserDaoTest {
 		userDao.create(franco);
 
 		PojoUser newUser = jdbcQueryTestUtil.findUserByAccountName("franc");
-
-		assertEquals("franc", newUser.getAccountName());
-		assertEquals("Franco", newUser.getFirstName());
-		assertEquals("Red", newUser.getLastName());
-		assertEquals(legal.getId(), newUser.getDepartmentId());
-		assertEquals(LocalDate.of(1981, 11, 12), newUser.getBirthDate());
-		assertNotNull(newUser.getCreatedAt());
-		assertNotNull(newUser.getId());
+		
+		verifyUser("franc", "Franco", "Red", LocalDate.of(1981, 11, 12), newUser);
 
 		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(newUser.getId());
 
@@ -508,7 +447,7 @@ class UserDaoTest {
 	}
 
 	@Test
-	void create_with_addresses() {
+	void createWithAddresses() {
 		
 		LOGGER.info("running test create_with_addresses");
 
@@ -529,13 +468,8 @@ class UserDaoTest {
 		userDao.create(carl);
 
 		PojoUser newUser = jdbcQueryTestUtil.findUserByAccountName("carl23");
-
-		assertEquals("carl23", newUser.getAccountName());
-		assertEquals("Carlo", newUser.getFirstName());
-		assertEquals("Rossi", newUser.getLastName());
-		assertEquals(LocalDate.of(1982, 9, 1), newUser.getBirthDate());
-		assertNotNull(newUser.getCreatedAt());
-		assertNotNull(newUser.getId());
+		
+		verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), newUser);
 
 		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(newUser.getId());
 
@@ -543,19 +477,11 @@ class UserDaoTest {
 		
 		PojoAddress newAddress1 = addresses.get(0);
 
-		assertEquals("Via Vecchia", newAddress1.getDescription());
-		assertEquals("Dublin", newAddress1.getCity());
-		assertEquals(ireland.getId(), newAddress1.getStateId());
-		assertEquals("County Dublin", newAddress1.getRegion());
-		assertEquals("A65TF14", newAddress1.getPostalCode());
+		verifyAddress("A65TF14", "Via Vecchia", "Dublin", "County Dublin", newAddress1);
 
 		PojoAddress newAddress2 = addresses.get(1);
 
-		assertEquals("Via Nuova", newAddress2.getDescription());
-		assertEquals("Venice", newAddress2.getCity());
-		assertEquals(italy.getId(), newAddress2.getStateId());
-		assertEquals("Emilia Romagna", newAddress2.getRegion());
-		assertEquals("33456", newAddress2.getPostalCode());
+		verifyAddress("33456", "Via Nuova", "Venice", "Emilia Romagna", newAddress2);
 	}
 
 	@Test
@@ -579,7 +505,6 @@ class UserDaoTest {
 				.withFirstName("Stephano").withLastName("Regi").withDepartmentId(accounts.getId());
 
 		long stephanId = jdbcQueryTestUtil.createUser(stephan).getId();
-		LocalDateTime createdAt = jdbcQueryTestUtil.findUserByUserId(stephanId).getCreatedAt();
 
 		User stephanUpdated = User.newInstance().withAccountName("stephan123").withBirthDate(LocalDate.of(1980, 12, 4))
 				.withFirstName("Stephano juniur").withLastName("Reginaldo").withDepartment(legal).withId(stephanId);
@@ -588,11 +513,7 @@ class UserDaoTest {
 		userDao.update(stephanUpdated);
 
 		PojoUser updated = jdbcQueryTestUtil.findUserByUserId(stephanId);
-
-		assertEquals("stephan123", updated.getAccountName());
-		assertEquals("Stephano juniur", updated.getFirstName());
-		assertEquals("Reginaldo", updated.getLastName());
-		assertEquals(LocalDate.of(1980, 12, 4), updated.getBirthDate());
-		assertEquals(createdAt, updated.getCreatedAt());
+		
+		verifyUser("stephan123", "Stephano juniur", "Reginaldo", LocalDate.of(1980, 12, 4), updated);
 	}
 }
