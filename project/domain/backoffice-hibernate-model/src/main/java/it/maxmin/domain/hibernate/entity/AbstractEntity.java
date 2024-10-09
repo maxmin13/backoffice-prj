@@ -4,7 +4,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -40,23 +39,6 @@ public abstract class AbstractEntity implements Serializable {
 
 	public void setVersion(int version) {
 		this.version = version;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || getClass() != obj.getClass()) {
-			return false;
-		}
-		AbstractEntity that = (AbstractEntity) obj;
-		return Objects.equals(id, that.id);
 	}
 
 }

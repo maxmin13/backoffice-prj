@@ -1,11 +1,8 @@
 package it.maxmin.dao.hibernate;
 
-import static org.hibernate.cfg.BatchSettings.STATEMENT_BATCH_SIZE;
-import static org.hibernate.cfg.FetchSettings.MAX_FETCH_DEPTH;
 import static org.hibernate.cfg.JdbcSettings.FORMAT_SQL;
 import static org.hibernate.cfg.JdbcSettings.HIGHLIGHT_SQL;
 import static org.hibernate.cfg.JdbcSettings.SHOW_SQL;
-import static org.hibernate.cfg.JdbcSettings.STATEMENT_FETCH_SIZE;
 import static org.hibernate.cfg.JdbcSettings.USE_SQL_COMMENTS;
 import static org.hibernate.cfg.SchemaToolingSettings.HBM2DDL_AUTO;
 
@@ -14,7 +11,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.hibernate.SessionFactory;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -23,8 +20,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -52,16 +51,6 @@ public class UnitTestContextCfg {
 		return new MariaDB4jSpringService();
 	}
 
-	@Bean
-	public QueryTestUtil queryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
-		return new QueryTestUtil(jdbcTemplate, dataSource);
-	}
-	
-	@Bean 
-	public DataSourceTestUtil dataSourceTestUtil() {
-		return new DataSourceTestUtil();
-	}
-
 	@SuppressWarnings("unchecked")
 	@Bean
 	public DataSource dataSource(MariaDB4jSpringService mariaDB4jSpringService) {
@@ -86,7 +75,41 @@ public class UnitTestContextCfg {
 		ds.setPassword("root");
 		dataSource = ds;
 
-		return dataSource;
+		return ds;
+	}
+
+	@Bean
+	public PlatformTransactionManager transactionManager() {
+		JpaTransactionManager transactionManager = new JpaTransactionManager();
+		transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+		return transactionManager;
+	}
+
+	@Bean
+	public JpaVendorAdapter jpaVendorAdapter() {
+		return new HibernateJpaVendorAdapter();
+	}
+
+	@Bean
+	@DependsOn("dataSource")
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+		var factory = new LocalContainerEntityManagerFactoryBean();
+		factory.setPersistenceProviderClass(HibernatePersistenceProvider.class);
+		factory.setPackagesToScan("it.maxmin.domain.hibernate.entity");
+		factory.setDataSource(dataSource);
+		factory.setJpaProperties(jpaProperties());
+		factory.setJpaVendorAdapter(jpaVendorAdapter());
+		return factory;
+	}
+
+	@Bean
+	public QueryTestUtil queryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+		return new QueryTestUtil(jdbcTemplate, dataSource);
+	}
+
+	@Bean
+	public DataSourceTestUtil dataSourceTestUtil() {
+		return new DataSourceTestUtil();
 	}
 
 	@Bean
@@ -94,29 +117,14 @@ public class UnitTestContextCfg {
 		return new NamedParameterJdbcTemplate(dataSource);
 	}
 
-	@Bean
-	public Properties hibernateProperties() {
-		Properties hibernateProp = new Properties();
-		hibernateProp.put(HBM2DDL_AUTO, "none");
-		hibernateProp.put(FORMAT_SQL, true);
-		hibernateProp.put(USE_SQL_COMMENTS, true);
-		hibernateProp.put(HIGHLIGHT_SQL, true);
-		hibernateProp.put(SHOW_SQL, true);
-		hibernateProp.put(MAX_FETCH_DEPTH, 3);
-		hibernateProp.put(STATEMENT_BATCH_SIZE, 10);
-		hibernateProp.put(STATEMENT_FETCH_SIZE, 50);
-		return hibernateProp;
+	private Properties jpaProperties() {
+		Properties jpaProperties = new Properties();
+		jpaProperties.put(HBM2DDL_AUTO, "none");
+		jpaProperties.put(FORMAT_SQL, true);
+		jpaProperties.put(USE_SQL_COMMENTS, true);
+		jpaProperties.put(HIGHLIGHT_SQL, true);
+		jpaProperties.put(SHOW_SQL, true);
+		return jpaProperties;
 	}
 
-	@Bean
-	@DependsOn("dataSource")
-	public SessionFactory sessionFactory() {
-		return new LocalSessionFactoryBuilder(dataSource).scanPackages("it.maxmin.domain.hibernate.entity")
-				.addProperties(hibernateProperties()).buildSessionFactory();
-	}
-
-	@Bean
-	public PlatformTransactionManager transactionManager() {
-		return new HibernateTransactionManager(sessionFactory());
-	}
 }
