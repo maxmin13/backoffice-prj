@@ -5,13 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
 
-import it.maxmin.domain.hibernate.pojo.PojoAddress;
-import it.maxmin.domain.hibernate.pojo.PojoUser;
 import it.maxmin.domain.jpa.entity.Address;
 import it.maxmin.domain.jpa.entity.Department;
 import it.maxmin.domain.jpa.entity.State;
 import it.maxmin.domain.jpa.entity.User;
 import it.maxmin.domain.jpa.entity.UserRole;
+import it.maxmin.domain.jpa.pojo.PojoAddress;
+import it.maxmin.domain.jpa.pojo.PojoUser;
 
 abstract class BaseTest {
 	

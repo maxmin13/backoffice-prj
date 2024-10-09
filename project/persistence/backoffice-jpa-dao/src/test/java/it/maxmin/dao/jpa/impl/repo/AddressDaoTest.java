@@ -31,12 +31,12 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import it.maxmin.dao.jpa.QueryTestUtil;
 import it.maxmin.dao.jpa.UnitTestContextCfg;
 import it.maxmin.dao.jpa.api.repo.AddressDao;
-import it.maxmin.domain.hibernate.pojo.PojoAddress;
 import it.maxmin.domain.jpa.entity.Address;
 import it.maxmin.domain.jpa.entity.Department;
 import it.maxmin.domain.jpa.entity.State;
 import it.maxmin.domain.jpa.entity.User;
 import it.maxmin.domain.jpa.entity.UserRole;
+import it.maxmin.domain.jpa.pojo.PojoAddress;
 
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 @Sql(scripts = { "classpath:database/1_create_database.up.sql", "classpath:database/2_userrole.up.sql",

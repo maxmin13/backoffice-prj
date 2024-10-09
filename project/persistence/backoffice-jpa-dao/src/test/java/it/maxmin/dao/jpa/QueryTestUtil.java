@@ -25,12 +25,12 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
 
-import it.maxmin.domain.hibernate.pojo.PojoAddress;
-import it.maxmin.domain.hibernate.pojo.PojoUser;
-import it.maxmin.domain.hibernate.pojo.PojoUserAddress;
-import it.maxmin.domain.hibernate.pojo.PojoUserRole;
 import it.maxmin.domain.jpa.entity.Department;
 import it.maxmin.domain.jpa.entity.State;
+import it.maxmin.domain.jpa.pojo.PojoAddress;
+import it.maxmin.domain.jpa.pojo.PojoUser;
+import it.maxmin.domain.jpa.pojo.PojoUserAddress;
+import it.maxmin.domain.jpa.pojo.PojoUserRole;
 
 public class QueryTestUtil {
 
