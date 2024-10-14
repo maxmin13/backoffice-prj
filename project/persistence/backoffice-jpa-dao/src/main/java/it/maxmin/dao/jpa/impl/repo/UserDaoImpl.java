@@ -44,8 +44,9 @@ public class UserDaoImpl implements UserDao {
 		notNull(accountName, "The account name must not be null");
 		try {
 			return Optional.of(em.createNamedQuery("User.findByAccountName", User.class)
-					.setParameter("accountName", accountName).getSingleResult());
-		} catch (NoResultException e) {
+				.setParameter("accountName", accountName).getSingleResult());
+		}
+		catch(NoResultException e) {
 			return Optional.empty();
 		}
 	}

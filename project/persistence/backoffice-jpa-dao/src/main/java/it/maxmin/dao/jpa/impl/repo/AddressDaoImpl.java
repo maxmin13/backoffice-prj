@@ -28,7 +28,6 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Tuple;
 
-@Transactional
 @Repository("addressDao")
 public class AddressDaoImpl implements AddressDao {
 
@@ -50,10 +49,12 @@ public class AddressDaoImpl implements AddressDao {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Address> findById(long addressId) {
+		notNull(addressId, "The address ID must not be null");
 		try {
 			return Optional.of(em.createNamedQuery("Address.findById", Address.class)
-					.setParameter("id", addressId).getSingleResult());
-		} catch (NoResultException e) {
+				.setParameter("id", addressId).getSingleResult());
+		}
+		catch(NoResultException e) {
 			return Optional.empty();
 		}
 	}
@@ -113,13 +114,16 @@ public class AddressDaoImpl implements AddressDao {
 	}
 
 	@Override
+	@Transactional
 	public void saveList(List<Address> addresses) {
 		notNull(addresses, "The addresses must not be null");
+		// TODO IMPLEMENT BATCH INSERT
 		// this.insertAddresses.execute(addresses);
 		LOGGER.info("New addresses inserted");
 	}
 
 	@Override
+	@Transactional
 	public Address save(Address address) {
 		notNull(address, "The address must not be null");
 		if (address.getId() == null) {

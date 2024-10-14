@@ -5,8 +5,12 @@ import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ALL_ADDRESSES;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
+import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_DEPARTMENT_BY_USER_ACCOUNT_NAME;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLES_BY_USER_ID;
+import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLE_BY_NAME;
+import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLES_BY_USER_ACCOUNT_NAME;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_STATE_BY_NAME;
+import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_STATE_BY_ADDRESS_POSTAL_CODE;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_USER_BY_USER_ID;
 import static org.springframework.util.Assert.notNull;
@@ -25,9 +29,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
 
-import it.maxmin.domain.jpa.entity.Department;
-import it.maxmin.domain.jpa.entity.State;
 import it.maxmin.domain.jpa.pojo.PojoAddress;
+import it.maxmin.domain.jpa.pojo.PojoDepartment;
+import it.maxmin.domain.jpa.pojo.PojoState;
 import it.maxmin.domain.jpa.pojo.PojoUser;
 import it.maxmin.domain.jpa.pojo.PojoUserAddress;
 import it.maxmin.domain.jpa.pojo.PojoUserRole;
@@ -79,6 +83,17 @@ public class QueryTestUtil {
 		return jdbcTemplate.query(SELECT_ROLES_BY_USER_ID, param,
 				BeanPropertyRowMapper.newInstance(PojoUserRole.class));
 	}
+	
+	public List<PojoUserRole> findRolesByUserAccountName(String accountName) {
+		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
+		return jdbcTemplate.query(SELECT_ROLES_BY_USER_ACCOUNT_NAME, param,
+				BeanPropertyRowMapper.newInstance(PojoUserRole.class));
+	}
+	
+	public PojoUserRole findRoleByName(String name) {
+		SqlParameterSource param = new MapSqlParameterSource("roleName", name);
+		return jdbcTemplate.queryForObject(SELECT_ROLE_BY_NAME, param, BeanPropertyRowMapper.newInstance(PojoUserRole.class));
+	}
 
 	public List<PojoAddress> findAddressesByUserId(long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
@@ -86,7 +101,6 @@ public class QueryTestUtil {
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
 	}
 	
-
 	public PojoAddress findAddressByPostalCode(String postalCode) {
 		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
 		return jdbcTemplate.queryForObject(SELECT_ADDRESS_BY_POSTAL_CODE, param,
@@ -132,14 +146,25 @@ public class QueryTestUtil {
 		LOGGER.info("User {} associated with address {}", userAddress.getUserId(), userAddress.getAddressId());
 	}
 
-	public State findStateByName(String name) {
+	public PojoState findStateByName(String name) {
 		SqlParameterSource param = new MapSqlParameterSource("name", name);
-		return jdbcTemplate.queryForObject(SELECT_STATE_BY_NAME, param, BeanPropertyRowMapper.newInstance(State.class));
+		return jdbcTemplate.queryForObject(SELECT_STATE_BY_NAME, param, BeanPropertyRowMapper.newInstance(PojoState.class));
+	}
+	
+	public PojoState findStateByAddressPostalCode(String postalCode) {
+		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
+		return jdbcTemplate.queryForObject(SELECT_STATE_BY_ADDRESS_POSTAL_CODE, param, BeanPropertyRowMapper.newInstance(PojoState.class));
 	}
 
-	public Department findDepartmentByName(String name) {
+	public PojoDepartment findDepartmentByName(String name) {
 		SqlParameterSource param = new MapSqlParameterSource("name", name);
 		return jdbcTemplate.queryForObject(SELECT_DEPARTMENT_BY_NAME, param,
-				BeanPropertyRowMapper.newInstance(Department.class));
+				BeanPropertyRowMapper.newInstance(PojoDepartment.class));
+	}
+	
+	public PojoDepartment findDepartmentByUserAccountName(String accountName) {
+		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
+		return jdbcTemplate.queryForObject(SELECT_DEPARTMENT_BY_USER_ACCOUNT_NAME, param,
+				BeanPropertyRowMapper.newInstance(PojoDepartment.class));
 	}
 }

@@ -10,7 +10,6 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +43,10 @@ public class JpaContextCfg {
 	private Properties jpaProperties() {
 		Properties jpaProperties = new Properties();
 		jpaProperties.put(HBM2DDL_AUTO, "none");
-		jpaProperties.put(FORMAT_SQL, true);
-		jpaProperties.put(USE_SQL_COMMENTS, true);
-		jpaProperties.put(HIGHLIGHT_SQL, true);
-		jpaProperties.put(SHOW_SQL, true);
+		jpaProperties.put(FORMAT_SQL, false);
+		jpaProperties.put(USE_SQL_COMMENTS, false);
+		jpaProperties.put(HIGHLIGHT_SQL, false);
+		jpaProperties.put(SHOW_SQL, false);
 		return jpaProperties;
 	}
 
@@ -66,7 +65,6 @@ public class JpaContextCfg {
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		var factory = new LocalContainerEntityManagerFactoryBean();
-		factory.setPersistenceProviderClass(HibernatePersistenceProvider.class);
 		factory.setPackagesToScan("it.maxmin.domain.jpa.entity");
 		factory.setDataSource(dataSource);
 		factory.setJpaProperties(jpaProperties());

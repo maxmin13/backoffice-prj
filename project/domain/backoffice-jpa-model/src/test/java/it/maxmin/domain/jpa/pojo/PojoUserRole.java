@@ -1,7 +1,6 @@
 package it.maxmin.domain.jpa.pojo;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 public class PojoUserRole implements Serializable {
 
@@ -9,8 +8,6 @@ public class PojoUserRole implements Serializable {
 	
 	private Long id;
 	private String roleName;
-	private boolean active;
-	private LocalDateTime createdAt;
 	
 	public Long getId() {
 		return id;
@@ -24,18 +21,5 @@ public class PojoUserRole implements Serializable {
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
-	public boolean isActive() {
-		return active;
-	}
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-        public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-		
+			
 }

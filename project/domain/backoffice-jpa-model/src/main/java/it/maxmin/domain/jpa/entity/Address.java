@@ -132,7 +132,6 @@ public class Address extends AbstractEntity {
 		return this;
 	}
 
-	// TODO test it in the model
 	public boolean addUser(User user) {
 		if (user == null || users.contains(user)) {
 			return false;

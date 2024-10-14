@@ -137,7 +137,7 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "AddressId"))
 	public Set<Address> getAddresses() {
 		return addresses;
@@ -163,7 +163,7 @@ public class User extends AbstractEntity {
 		return addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst().orElse(null);
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "UserUserRole", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "UserRoleId"))
 	public Set<UserRole> getRoles() {
 		return roles;

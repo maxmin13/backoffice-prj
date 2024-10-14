@@ -44,10 +44,10 @@ class JpaContextCfgTest {
 		Map<String, Object> properties = entityManagerFactory.getProperties();
 
 		assertEquals("none", properties.get(HBM2DDL_AUTO));
-		assertEquals(true, properties.get(FORMAT_SQL));
-		assertEquals(true, properties.get(USE_SQL_COMMENTS));
-		assertEquals(true, properties.get(HIGHLIGHT_SQL));
-		assertEquals(true, properties.get(SHOW_SQL));
+		assertEquals(false, properties.get(FORMAT_SQL));
+		assertEquals(false, properties.get(USE_SQL_COMMENTS));
+		assertEquals(false, properties.get(HIGHLIGHT_SQL));
+		assertEquals(false, properties.get(SHOW_SQL));
 
 		springCtx.close();
 	}

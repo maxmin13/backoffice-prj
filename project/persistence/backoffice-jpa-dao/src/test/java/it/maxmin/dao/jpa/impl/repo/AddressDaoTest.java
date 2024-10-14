@@ -3,27 +3,27 @@ package it.maxmin.dao.jpa.impl.repo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.hibernate.LazyInitializationException;
-import org.junit.jupiter.api.BeforeEach;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -37,6 +37,8 @@ import it.maxmin.domain.jpa.entity.State;
 import it.maxmin.domain.jpa.entity.User;
 import it.maxmin.domain.jpa.entity.UserRole;
 import it.maxmin.domain.jpa.pojo.PojoAddress;
+import it.maxmin.domain.jpa.pojo.PojoDepartment;
+import it.maxmin.domain.jpa.pojo.PojoState;
 
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 @Sql(scripts = { "classpath:database/1_create_database.up.sql", "classpath:database/2_userrole.up.sql",
@@ -53,38 +55,11 @@ class AddressDaoTest extends BaseTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
 
-	@Mock
-	State ireland;
-	@Mock
-	State italy;
-	@Mock
-	Department accounts;
-	@Mock
-	Department legal;
-	@Mock
-	Department production;
-
 	@Autowired
 	QueryTestUtil queryTestUtil;
 
 	@Autowired
 	AddressDao addressDao;
-
-	@BeforeEach
-	void init() {
-		when(italy.getId()).thenReturn(1l);
-		when(italy.getName()).thenReturn("Italy");
-		when(italy.getCode()).thenReturn("IT");
-		when(ireland.getId()).thenReturn(2l);
-		when(ireland.getName()).thenReturn("Ireland");
-		when(ireland.getCode()).thenReturn("IE");
-		when(accounts.getId()).thenReturn(1l);
-		when(accounts.getName()).thenReturn("Accounts");
-		when(legal.getId()).thenReturn(2l);
-		when(legal.getName()).thenReturn("Legal");
-		when(production.getId()).thenReturn(3l);
-		when(production.getName()).thenReturn("Production");
-	}
 
 	@Test
 	@Order(1)
@@ -180,6 +155,8 @@ class AddressDaoTest extends BaseTest {
 
 		assertThrows(LazyInitializationException.class, addresses::size);
 	}
+	
+	// TODO @DisplayName("03. verify lazily loaded properties in open transaction")
 
 	@Test
 	@Order(4)
@@ -279,6 +256,7 @@ class AddressDaoTest extends BaseTest {
 		User user2 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
 
 		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user2);
+		
 		assertEquals(0, user2.getAddresses().size());
 		assertEquals(0, user2.getRoles().size());
 
@@ -290,6 +268,7 @@ class AddressDaoTest extends BaseTest {
 		User user3 = users.stream().filter(u -> u.getAccountName().equals("artur")).findFirst().get();
 
 		verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), user3);
+		
 		assertEquals(0, user3.getAddresses().size());
 		assertEquals(0, user3.getRoles().size());
 
@@ -329,4 +308,85 @@ class AddressDaoTest extends BaseTest {
 		assertEquals(0, users.size());
 	}
 
+	@Test
+	@Order(8)
+	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+			"classpath:database/2_user.down.sql",
+			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("08. should insert the new address")
+	void testSaveWithExistingState() {
+
+		LOGGER.info("running test testSaveWithExistingState");
+
+		PojoState state = queryTestUtil.findStateByName(italy.getName());
+
+		Address address = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
+				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(state.getId()));
+
+		// run the test
+		this.addressDao.save(address);
+
+		List<PojoAddress> addresses = this.queryTestUtil.findAllAddresses();
+
+		assertEquals(1, addresses.size());
+
+		PojoAddress newAddress = addresses.get(0);
+
+		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", newAddress);
+
+		Long stateId = newAddress.getStateId();
+
+		assertEquals(state.getId(), stateId);
+	}
+
+	@Test
+	@Order(9)
+	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+			"classpath:database/2_user.down.sql",
+			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("09. should throw an ConstraintViolationException exception")
+	void testSaveWithNonExistingState() {
+
+		LOGGER.info("running test testSaveWithNonExistingState");
+
+		State state = State.newInstance().withId(3l).withCode("FR").withName("France");
+
+		Address address = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
+				.withCity("Rome").withRegion("County Lazio").withState(state);
+
+		// run the test
+		assertThrows(ConstraintViolationException.class, () -> {
+			addressDao.save(address);
+		});
+	}
+
+	@Test
+	@Order(10)
+	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+			"classpath:database/2_user.down.sql",
+			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("10. should throw a InvalidDataAccessApiUsageException exception")
+	void testSaveWithUser() {
+
+		LOGGER.info("running test testSaveWithUser");
+
+		PojoState state = queryTestUtil.findStateByName(italy.getName());
+
+		Address address = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
+				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(state.getId()));
+
+		PojoDepartment department = queryTestUtil.findDepartmentByName(production.getName());
+
+		User franco = User.newInstance().withAccountName("maxmin13").withBirthDate(LocalDate.of(1977, 10, 16))
+				.withFirstName("Max").withLastName("Minardi").withDepartment(Department.newInstance().withId(department.getId()));
+
+		address.addUser(franco);
+
+		// run the test
+		assertThrows(InvalidDataAccessApiUsageException.class, () -> {
+			addressDao.save(address);
+		});
+	}
+
+	// TODO test update, check version field
 }

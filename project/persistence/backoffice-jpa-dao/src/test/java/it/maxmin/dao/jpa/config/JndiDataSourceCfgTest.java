@@ -5,8 +5,6 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import it.maxmin.dao.jpa.DataSourceTestUtil;
@@ -17,9 +15,6 @@ import it.maxmin.dao.jpa.DataSourceTestUtil;
  * create a JNDI directory service in the background with a "dataSource" object in it.
  */
 class JndiDataSourceCfgTest {
-
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(JndiDataSourceCfgTest.class);
 
 	private DataSourceTestUtil dataSourceTestUtil = new DataSourceTestUtil();
 

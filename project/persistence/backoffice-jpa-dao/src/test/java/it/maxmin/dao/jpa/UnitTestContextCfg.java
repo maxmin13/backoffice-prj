@@ -11,7 +11,6 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -94,7 +93,6 @@ public class UnitTestContextCfg {
 	@DependsOn("dataSource")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		var factory = new LocalContainerEntityManagerFactoryBean();
-		factory.setPersistenceProviderClass(HibernatePersistenceProvider.class);
 		factory.setPackagesToScan("it.maxmin.domain.jpa.entity");
 		factory.setDataSource(dataSource);
 		factory.setJpaProperties(jpaProperties());
