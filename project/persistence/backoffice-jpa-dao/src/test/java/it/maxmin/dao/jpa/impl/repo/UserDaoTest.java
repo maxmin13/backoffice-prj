@@ -221,11 +221,13 @@ class UserDaoTest extends BaseTest {
 	}	
 
 	@Test
+	@Order(5)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("05. should not find any user")
 	void findByAccountNameNotFound() {
 
 		LOGGER.info("running test findByAccountNameNotFound");
@@ -237,11 +239,13 @@ class UserDaoTest extends BaseTest {
 	}
 
 	@Test
+	@Order(6)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("06. should find a user")
 	void findByAccountName() {
 
 		LOGGER.info("running test findByAccountName");
@@ -277,6 +281,7 @@ class UserDaoTest extends BaseTest {
 	}
 
 	@Test
+	@Order(7)
 	void nullCreateThrowsException() {
 
 		LOGGER.info("running test nullCreateThrowsException");
@@ -289,9 +294,11 @@ class UserDaoTest extends BaseTest {
 	}
 
 	@Test
+	@Order(8)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("08. should create a user without addresses and roles")
 	void createWithNoAddressAndWithNoRole() {
 
 		LOGGER.info("running test createWithNoAddressAndWithNoRole");
@@ -323,9 +330,11 @@ class UserDaoTest extends BaseTest {
 	}
 
 	@Test
+	@Order(9)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("09. should create a user with addresses and roles")
 	void createWithAddressAndWithRole() {
 
 		LOGGER.info("running test createWithAddressAndWithRole");
@@ -393,6 +402,7 @@ class UserDaoTest extends BaseTest {
 	}
 
 	@Test
+	@Order(10)
 	void nullUpdateThrowsException() {
 
 		LOGGER.info("running test nullUpdateThrowsException");
