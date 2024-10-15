@@ -165,13 +165,13 @@ class UserDaoTest extends BaseTest {
 
 		assertEquals(3, roles.size());
 
-		UserRole role1 = maxmin.getRole("Administrator");
+		UserRole role1 = maxmin.getRole(administrator.getRoleName());
 		verifyRole(administrator.getRoleName(), role1);
 
-		UserRole role2 = maxmin.getRole("User");
+		UserRole role2 = maxmin.getRole(user.getRoleName());
 		verifyRole(user.getRoleName(), role2);
 
-		UserRole role3 = maxmin.getRole("Worker");
+		UserRole role3 = maxmin.getRole(worker.getRoleName());
 		verifyRole(worker.getRoleName(), role3);
 
 		// addresses
@@ -179,11 +179,11 @@ class UserDaoTest extends BaseTest {
 
 		assertEquals(2, addresses.size());
 
-		Address address1 = maxmin.getAddress("30010");
+		Address address = maxmin.getAddress("30010");
 
-		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
+		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address);
 		
-		State state1 = address1.getState();
+		State state1 = address.getState();
 		
 		verifyState(italy.getName(), italy.getCode(), state1);
 
@@ -204,10 +204,10 @@ class UserDaoTest extends BaseTest {
 
 		assertEquals(2, roles.size());
 
-		UserRole role4 = artur.getRole("Administrator");
+		UserRole role4 = artur.getRole(administrator.getRoleName());
 		verifyRole(administrator.getRoleName(), role4);
 
-		UserRole role5 = artur.getRole("User");
+		UserRole role5 = artur.getRole(user.getRoleName());
 		verifyRole(user.getRoleName(), role5);
 
 		// addresses
@@ -215,9 +215,13 @@ class UserDaoTest extends BaseTest {
 
 		assertEquals(1, addresses.size());
 
-		address1 = artur.getAddress("A65TF12");
+		address = artur.getAddress("A65TF12");
 
-		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address1);
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address);
+		
+		State state = address.getState();
+		
+		verifyState(ireland.getName(), ireland.getCode(), state);
 	}	
 
 	@Test
@@ -260,10 +264,10 @@ class UserDaoTest extends BaseTest {
 
 		assertEquals(2, roles.size());
 
-		UserRole role1 = artur.getRole("Administrator");
+		UserRole role1 = artur.getRole(administrator.getRoleName());
 		verifyRole(administrator.getRoleName(), role1);
 
-		UserRole role2 = artur.getRole("User");
+		UserRole role2 = artur.getRole(user.getRoleName());
 		verifyRole(user.getRoleName(), role2);
 
 		// department
@@ -278,6 +282,10 @@ class UserDaoTest extends BaseTest {
 		Address address = artur.getAddress("A65TF12");
 
 		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address);
+		
+		State state = address.getState();
+		
+		verifyState(ireland.getName(), ireland.getCode(), state);
 	}
 
 	@Test
@@ -415,6 +423,7 @@ class UserDaoTest extends BaseTest {
 	}
 
 	void update_user() {
+		// verify version field
 	}
 
 	void update_user_address() {

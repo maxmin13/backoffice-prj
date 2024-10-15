@@ -232,6 +232,7 @@ class AddressDaoTest extends BaseTest {
 		User user1 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
 
 		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user1);
+		
 		assertEquals(0, user1.getAddresses().size());
 		assertEquals(0, user1.getRoles().size());
 
