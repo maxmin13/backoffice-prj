@@ -27,6 +27,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.maxmin.dao.jpa.QueryTestUtil;
 import it.maxmin.dao.jpa.UnitTestContextCfg;
@@ -95,7 +96,7 @@ class AddressDaoTest extends BaseTest {
 
 		State state = address.get().getState();
 
-		verifyState(ireland.getName(), ireland.getCode(), state);
+		verifyState(IRELAND.getName(), IRELAND.getCode(), state);
 
 		Set<User> users = address.get().getUsers();
 
@@ -108,7 +109,7 @@ class AddressDaoTest extends BaseTest {
 		// department
 		Department department = user1.getDepartment();
 
-		verifyDepartment(production.getName(), department);
+		verifyDepartment(PRODUCTION.getName(), department);
 
 		User user2 = users.stream().filter(u -> u.getAccountName().equals("artur")).findFirst().get();
 
@@ -117,7 +118,7 @@ class AddressDaoTest extends BaseTest {
 		// department
 		department = user2.getDepartment();
 
-		verifyDepartment(legal.getName(), department);
+		verifyDepartment(LEGAL.getName(), department);
 	}
 
 	@Test
@@ -139,36 +140,103 @@ class AddressDaoTest extends BaseTest {
 
 		Set<User> users = address.get().getUsers();
 
-		User user1 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
+		User user = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
 
-		Department department = user1.getDepartment();
+		Department department = user.getDepartment();
 
 		assertThrows(LazyInitializationException.class, department.getUsers()::size);
 
 		// roles
-		Set<UserRole> roles = user1.getRoles();
+		Set<UserRole> roles = user.getRoles();
 
 		assertThrows(LazyInitializationException.class, roles::size);
 
 		// addresses
-		Set<Address> addresses = user1.getAddresses();
+		Set<Address> addresses = user.getAddresses();
 
 		assertThrows(LazyInitializationException.class, addresses::size);
 	}
 	
-	// TODO @DisplayName("03. verify lazily loaded properties in open transaction")
-
 	@Test
+	@Transactional(readOnly = true)
 	@Order(4)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("04. should load an address without user")
+	@DisplayName("04. verify lazily loaded properties in the Address entity: address.users.user.department.users")
 	void findById3() {
 
 		LOGGER.info("running test findById3");
+
+		PojoAddress pojoAddress = queryTestUtil.findAddressByPostalCode("A65TF12");
+
+		// run the test
+		Optional<Address> address = addressDao.findById(pojoAddress.getId());
+
+		Set<User> users = address.get().getUsers();
+		
+		assertEquals(2, users.size());
+
+		User user = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
+
+		Department department = user.getDepartment();
+
+		assertEquals(1, department.getUsers().size());
+		
+		// lazily loaded
+		User maxmin = department.getUsers().stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
+		
+		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), maxmin);
+
+		// roles
+		Set<UserRole> roles = maxmin.getRoles();
+		
+		assertEquals(3, roles.size());
+		
+		UserRole role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
+		verifyRole(ADMINISTRATOR.getRoleName(), role1);
+
+		UserRole role2 = maxmin.getRole(USER.getRoleName());
+		verifyRole(USER.getRoleName(), role2);
+
+		UserRole role3 = maxmin.getRole(WORKER.getRoleName());
+		verifyRole(WORKER.getRoleName(), role3);
+
+		// addresses
+		Set<Address> addresses = maxmin.getAddresses();
+
+		assertEquals(2, addresses.size());
+		
+		Address address1 = maxmin.getAddress("30010");
+
+		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
+		
+		State state1 = address1.getState();
+		
+		verifyState(ITALY.getName(), ITALY.getCode(), state1);
+
+		Address address2 = maxmin.getAddress("A65TF12");
+
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
+		
+		State state2 = address2.getState();
+		
+		verifyState(IRELAND.getName(), IRELAND.getCode(), state2);
+	}
+
+	@Test
+	@Order(5)
+	@Sql(scripts = { "classpath:database/2_address.up.sql",
+			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+			"classpath:database/2_user.down.sql",
+			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("05. should load an address without user")
+	void findById4() {
+
+		LOGGER.info("running test findById4");
 
 		PojoAddress pojoAddress = queryTestUtil.findAddressByPostalCode("31210");
 
@@ -179,7 +247,7 @@ class AddressDaoTest extends BaseTest {
 
 		State state = address.get().getState();
 
-		verifyState(italy.getName(), italy.getCode(), state);
+		verifyState(ITALY.getName(), ITALY.getCode(), state);
 
 		Set<User> users = address.get().getUsers();
 
@@ -187,8 +255,8 @@ class AddressDaoTest extends BaseTest {
 	}
 
 	@Test
-	@Order(5)
-	@DisplayName("05. should find no address")
+	@Order(6)
+	@DisplayName("06. should find no address")
 	void testFindAllNotFound() {
 
 		LOGGER.info("running test testFindAllNotFound");
@@ -200,13 +268,13 @@ class AddressDaoTest extends BaseTest {
 	}
 
 	@Test
-	@Order(6)
+	@Order(7)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("06. should load addresses with the associated users")
+	@DisplayName("07. should load addresses with the associated users")
 	void testFindAll1() {
 
 		LOGGER.info("running test testFindAll1");
@@ -223,7 +291,7 @@ class AddressDaoTest extends BaseTest {
 
 		State state = address1.getState();
 
-		verifyState(italy.getName(), italy.getCode(), state);
+		verifyState(ITALY.getName(), ITALY.getCode(), state);
 
 		Set<User> users = address1.getUsers();
 
@@ -239,7 +307,7 @@ class AddressDaoTest extends BaseTest {
 		// department
 		Department department = user1.getDepartment();
 
-		verifyDepartment(production.getName(), department);
+		verifyDepartment(PRODUCTION.getName(), department);
 
 		Address address2 = addresses.stream().filter(address -> address.getPostalCode().equals("A65TF12")).findFirst()
 				.get();
@@ -248,7 +316,7 @@ class AddressDaoTest extends BaseTest {
 
 		state = address2.getState();
 
-		verifyState(ireland.getName(), ireland.getCode(), state);
+		verifyState(IRELAND.getName(), IRELAND.getCode(), state);
 
 		users = address2.getUsers();
 
@@ -264,7 +332,7 @@ class AddressDaoTest extends BaseTest {
 		// department
 		department = user2.getDepartment();
 
-		verifyDepartment(production.getName(), department);
+		verifyDepartment(PRODUCTION.getName(), department);
 
 		User user3 = users.stream().filter(u -> u.getAccountName().equals("artur")).findFirst().get();
 
@@ -276,17 +344,17 @@ class AddressDaoTest extends BaseTest {
 		// department
 		department = user3.getDepartment();
 
-		verifyDepartment(legal.getName(), department);
+		verifyDepartment(LEGAL.getName(), department);
 	}
 
 	@Test
-	@Order(7)
+	@Order(8)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("07. should load addresses without users")
+	@DisplayName("08. should load addresses without users")
 	void testFindAll2() {
 
 		LOGGER.info("running test testFindAll2");
@@ -302,7 +370,7 @@ class AddressDaoTest extends BaseTest {
 
 		State state = address.getState();
 
-		verifyState(italy.getName(), italy.getCode(), state);
+		verifyState(ITALY.getName(), ITALY.getCode(), state);
 
 		Set<User> users = address.getUsers();
 
@@ -310,16 +378,16 @@ class AddressDaoTest extends BaseTest {
 	}
 
 	@Test
-	@Order(8)
+	@Order(9)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("08. should insert the new address")
+	@DisplayName("09. should insert the new address")
 	void testSaveWithExistingState() {
 
 		LOGGER.info("running test testSaveWithExistingState");
 
-		PojoState state = queryTestUtil.findStateByName(italy.getName());
+		PojoState state = queryTestUtil.findStateByName(ITALY.getName());
 
 		Address address = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
 				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(state.getId()));
@@ -341,11 +409,11 @@ class AddressDaoTest extends BaseTest {
 	}
 
 	@Test
-	@Order(9)
+	@Order(10)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("09. should throw an ConstraintViolationException exception")
+	@DisplayName("10. should throw an ConstraintViolationException exception")
 	void testSaveWithNonExistingState() {
 
 		LOGGER.info("running test testSaveWithNonExistingState");
@@ -362,21 +430,21 @@ class AddressDaoTest extends BaseTest {
 	}
 
 	@Test
-	@Order(10)
+	@Order(11)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("10. should throw a InvalidDataAccessApiUsageException exception")
+	@DisplayName("11. should throw a InvalidDataAccessApiUsageException exception")
 	void testSaveWithUser() {
 
 		LOGGER.info("running test testSaveWithUser");
 
-		PojoState state = queryTestUtil.findStateByName(italy.getName());
+		PojoState state = queryTestUtil.findStateByName(ITALY.getName());
 
 		Address address = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
 				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(state.getId()));
 
-		PojoDepartment department = queryTestUtil.findDepartmentByName(production.getName());
+		PojoDepartment department = queryTestUtil.findDepartmentByName(PRODUCTION.getName());
 
 		User franco = User.newInstance().withAccountName("maxmin13").withBirthDate(LocalDate.of(1977, 10, 16))
 				.withFirstName("Max").withLastName("Minardi").withDepartment(Department.newInstance().withId(department.getId()));

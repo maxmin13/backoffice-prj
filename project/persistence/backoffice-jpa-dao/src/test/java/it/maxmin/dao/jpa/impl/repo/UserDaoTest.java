@@ -97,7 +97,7 @@ class UserDaoTest extends BaseTest {
 
 		// department
 		Department department = maxmin.getDepartment();
-		verifyDepartment(production.getName(), department);
+		verifyDepartment(PRODUCTION.getName(), department);
 
 		User artur = users.get(1);
 
@@ -105,7 +105,7 @@ class UserDaoTest extends BaseTest {
 
 		// department
 		department = artur.getDepartment();
-		verifyDepartment(legal.getName(), department);
+		verifyDepartment(LEGAL.getName(), department);
 	}
 	
 	@Test
@@ -148,7 +148,7 @@ class UserDaoTest extends BaseTest {
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("04. verify lazily loaded properties in an open transaction")
+	@DisplayName("04. verify lazily loaded properties in the User entity: roles and addresses")
 	void testFindAll3() {
 
 		LOGGER.info("running test testFindAll3");
@@ -165,14 +165,14 @@ class UserDaoTest extends BaseTest {
 
 		assertEquals(3, roles.size());
 
-		UserRole role1 = maxmin.getRole(administrator.getRoleName());
-		verifyRole(administrator.getRoleName(), role1);
+		UserRole role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
+		verifyRole(ADMINISTRATOR.getRoleName(), role1);
 
-		UserRole role2 = maxmin.getRole(user.getRoleName());
-		verifyRole(user.getRoleName(), role2);
+		UserRole role2 = maxmin.getRole(USER.getRoleName());
+		verifyRole(USER.getRoleName(), role2);
 
-		UserRole role3 = maxmin.getRole(worker.getRoleName());
-		verifyRole(worker.getRoleName(), role3);
+		UserRole role3 = maxmin.getRole(WORKER.getRoleName());
+		verifyRole(WORKER.getRoleName(), role3);
 
 		// addresses
 		Set<Address> addresses = maxmin.getAddresses();
@@ -185,7 +185,7 @@ class UserDaoTest extends BaseTest {
 		
 		State state1 = address.getState();
 		
-		verifyState(italy.getName(), italy.getCode(), state1);
+		verifyState(ITALY.getName(), ITALY.getCode(), state1);
 
 		Address address2 = maxmin.getAddress("A65TF12");
 
@@ -193,7 +193,7 @@ class UserDaoTest extends BaseTest {
 		
 		State state2 = address2.getState();
 		
-		verifyState(ireland.getName(), ireland.getCode(), state2);
+		verifyState(IRELAND.getName(), IRELAND.getCode(), state2);
 
 		User artur = users.get(1);
 
@@ -204,11 +204,11 @@ class UserDaoTest extends BaseTest {
 
 		assertEquals(2, roles.size());
 
-		UserRole role4 = artur.getRole(administrator.getRoleName());
-		verifyRole(administrator.getRoleName(), role4);
+		UserRole role4 = artur.getRole(ADMINISTRATOR.getRoleName());
+		verifyRole(ADMINISTRATOR.getRoleName(), role4);
 
-		UserRole role5 = artur.getRole(user.getRoleName());
-		verifyRole(user.getRoleName(), role5);
+		UserRole role5 = artur.getRole(USER.getRoleName());
+		verifyRole(USER.getRoleName(), role5);
 
 		// addresses
 		addresses = artur.getAddresses();
@@ -221,7 +221,7 @@ class UserDaoTest extends BaseTest {
 		
 		State state = address.getState();
 		
-		verifyState(ireland.getName(), ireland.getCode(), state);
+		verifyState(IRELAND.getName(), IRELAND.getCode(), state);
 	}	
 
 	@Test
@@ -264,15 +264,15 @@ class UserDaoTest extends BaseTest {
 
 		assertEquals(2, roles.size());
 
-		UserRole role1 = artur.getRole(administrator.getRoleName());
-		verifyRole(administrator.getRoleName(), role1);
+		UserRole role1 = artur.getRole(ADMINISTRATOR.getRoleName());
+		verifyRole(ADMINISTRATOR.getRoleName(), role1);
 
-		UserRole role2 = artur.getRole(user.getRoleName());
-		verifyRole(user.getRoleName(), role2);
+		UserRole role2 = artur.getRole(USER.getRoleName());
+		verifyRole(USER.getRoleName(), role2);
 
 		// department
 		Department department = artur.getDepartment();
-		verifyDepartment(legal.getName(), department);
+		verifyDepartment(LEGAL.getName(), department);
 
 		// addresses
 		Set<Address> addresses = artur.getAddresses();
@@ -285,7 +285,7 @@ class UserDaoTest extends BaseTest {
 		
 		State state = address.getState();
 		
-		verifyState(ireland.getName(), ireland.getCode(), state);
+		verifyState(IRELAND.getName(), IRELAND.getCode(), state);
 	}
 
 	@Test
@@ -311,7 +311,7 @@ class UserDaoTest extends BaseTest {
 
 		LOGGER.info("running test createWithNoAddressAndWithNoRole");
 
-		PojoDepartment department = queryTestUtil.findDepartmentByName(legal.getName());
+		PojoDepartment department = queryTestUtil.findDepartmentByName(LEGAL.getName());
 
 		User franco = User.newInstance().withAccountName("franc123").withBirthDate(LocalDate.of(1981, 11, 12))
 				.withFirstName("Franco").withLastName("Red")
@@ -326,7 +326,7 @@ class UserDaoTest extends BaseTest {
 
 		PojoDepartment newDepartment = queryTestUtil.findDepartmentByUserAccountName("franc123");
 
-		verifyDepartment(legal.getName(), newDepartment);
+		verifyDepartment(LEGAL.getName(), newDepartment);
 
 		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(newUser.getId());
 
@@ -347,24 +347,24 @@ class UserDaoTest extends BaseTest {
 
 		LOGGER.info("running test createWithAddressAndWithRole");
 
-		PojoDepartment department = queryTestUtil.findDepartmentByName(accounts.getName());
+		PojoDepartment department = queryTestUtil.findDepartmentByName(ACCOUNTS.getName());
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi")
 				.withDepartment(Department.newInstance().withId(department.getId()));
 
-		PojoUserRole role = queryTestUtil.findRoleByName(administrator.getRoleName());
+		PojoUserRole role = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
 
 		carl.addRole(UserRole.newInstance().withId(role.getId()));
 
-		PojoState state1 = queryTestUtil.findStateByName(italy.getName());
+		PojoState state1 = queryTestUtil.findStateByName(ITALY.getName());
 
 		Address address1 = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(state1.getId())).withRegion("Emilia Romagna")
 				.withPostalCode("33456");
 		carl.addAddress(address1);
 
-		PojoState state2 = queryTestUtil.findStateByName(ireland.getName());
+		PojoState state2 = queryTestUtil.findStateByName(IRELAND.getName());
 
 		Address address2 = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
 				.withState(State.newInstance().withId(state2.getId())).withRegion("County Dublin")
@@ -380,13 +380,13 @@ class UserDaoTest extends BaseTest {
 
 		PojoDepartment userDepartment = queryTestUtil.findDepartmentByUserAccountName("carl23");
 
-		verifyDepartment(accounts.getName(), userDepartment);
+		verifyDepartment(ACCOUNTS.getName(), userDepartment);
 
 		List<PojoUserRole> userRoles = queryTestUtil.findRolesByUserAccountName("carl23");
 
 		assertEquals(1, userRoles.size());
 
-		verifyRole(administrator.getRoleName(), userRoles.get(0));
+		verifyRole(ADMINISTRATOR.getRoleName(), userRoles.get(0));
 
 		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(newUser.getId());
 
@@ -398,7 +398,7 @@ class UserDaoTest extends BaseTest {
 
 		PojoState newState1 = queryTestUtil.findStateByAddressPostalCode("33456");
 
-		verifyState(italy.getName(), italy.getCode(), newState1);
+		verifyState(ITALY.getName(), ITALY.getCode(), newState1);
 
 		PojoAddress newAddress2 = addresses.get(1);
 
@@ -406,7 +406,7 @@ class UserDaoTest extends BaseTest {
 
 		PojoState newState2 = queryTestUtil.findStateByAddressPostalCode("A65TF14");
 
-		verifyState(ireland.getName(), ireland.getCode(), newState2);
+		verifyState(IRELAND.getName(), IRELAND.getCode(), newState2);
 	}
 
 	@Test

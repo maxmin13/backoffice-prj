@@ -23,21 +23,21 @@ import it.maxmin.domain.jpa.pojo.PojoUserRole;
 abstract class BaseTest {
 	
 	@Mock
-	State ireland;
+	State IRELAND;
 	@Mock
-	State italy;
+	State ITALY;
 	@Mock
-	Department accounts;
+	Department ACCOUNTS;
 	@Mock
-	Department legal;
+	Department LEGAL;
 	@Mock
-	Department production;
+	Department PRODUCTION;
 	@Mock
-	UserRole administrator;
+	UserRole ADMINISTRATOR;
 	@Mock
-	UserRole user;
+	UserRole USER;
 	@Mock
-	UserRole worker;
+	UserRole WORKER;
 	
 	void verifyDepartment(String name, Department actual) {
 		assertNotNull(actual.getId());
@@ -114,15 +114,15 @@ abstract class BaseTest {
 	
 	@BeforeEach
 	void init() {		
-		when(italy.getName()).thenReturn("Italy");
-		when(italy.getCode()).thenReturn("IT");
-		when(ireland.getName()).thenReturn("Ireland");
-		when(ireland.getCode()).thenReturn("IE");
-		when(accounts.getName()).thenReturn("Accounts");
-		when(legal.getName()).thenReturn("Legal");
-		when(production.getName()).thenReturn("Production");
-		when(administrator.getRoleName()).thenReturn("Administrator");
-		when(user.getRoleName()).thenReturn("User");
-		when(worker.getRoleName()).thenReturn("Worker");
+		when(ITALY.getName()).thenReturn("Italy");
+		when(ITALY.getCode()).thenReturn("IT");
+		when(IRELAND.getName()).thenReturn("Ireland");
+		when(IRELAND.getCode()).thenReturn("IE");
+		when(ACCOUNTS.getName()).thenReturn("Accounts");
+		when(LEGAL.getName()).thenReturn("Legal");
+		when(PRODUCTION.getName()).thenReturn("Production");
+		when(ADMINISTRATOR.getRoleName()).thenReturn("Administrator");
+		when(USER.getRoleName()).thenReturn("User");
+		when(WORKER.getRoleName()).thenReturn("Worker");
 	}
 }
