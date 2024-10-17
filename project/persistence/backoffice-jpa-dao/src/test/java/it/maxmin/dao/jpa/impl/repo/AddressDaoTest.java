@@ -382,10 +382,10 @@ class AddressDaoTest extends BaseTest {
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("09. should insert the new address")
-	void testSaveWithExistingState() {
+	@DisplayName("09. should insert the new address without a user")
+	void testPersistWithExistingState() {
 
-		LOGGER.info("running test testSaveWithExistingState");
+		LOGGER.info("running test testPersistWithExistingState");
 
 		PojoState state = queryTestUtil.findStateByName(ITALY.getName());
 
@@ -413,10 +413,10 @@ class AddressDaoTest extends BaseTest {
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("10. should throw an ConstraintViolationException exception")
-	void testSaveWithNonExistingState() {
+	@DisplayName("10. should throw an ConstraintViolationException exception, France is not a valid state.")
+	void testPersistWithNonExistingState() {
 
-		LOGGER.info("running test testSaveWithNonExistingState");
+		LOGGER.info("running test testPersistWithNonExistingState");
 
 		State state = State.newInstance().withId(3l).withCode("FR").withName("France");
 
@@ -434,10 +434,10 @@ class AddressDaoTest extends BaseTest {
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("11. should throw a InvalidDataAccessApiUsageException exception")
-	void testSaveWithUser() {
+	@DisplayName("11. should throw a InvalidDataAccessApiUsageException exception since no cascading is set on address.users")
+	void testPersistWithUser() {
 
-		LOGGER.info("running test testSaveWithUser");
+		LOGGER.info("running test testPersistWithUser");
 
 		PojoState state = queryTestUtil.findStateByName(ITALY.getName());
 
