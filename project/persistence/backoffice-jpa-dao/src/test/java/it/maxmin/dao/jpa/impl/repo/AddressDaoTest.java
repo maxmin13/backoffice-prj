@@ -1,5 +1,12 @@
 package it.maxmin.dao.jpa.impl.repo;
 
+import static it.maxmin.dao.jpa.impl.repo.constant.Department.LEGAL;
+import static it.maxmin.dao.jpa.impl.repo.constant.Department.PRODUCTION;
+import static it.maxmin.dao.jpa.impl.repo.constant.Role.ADMINISTRATOR;
+import static it.maxmin.dao.jpa.impl.repo.constant.Role.USER;
+import static it.maxmin.dao.jpa.impl.repo.constant.Role.WORKER;
+import static it.maxmin.dao.jpa.impl.repo.constant.State.IRELAND;
+import static it.maxmin.dao.jpa.impl.repo.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -52,7 +59,7 @@ import it.maxmin.domain.jpa.pojo.PojoState;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class AddressDaoTest extends BaseTest {
+class AddressDaoTest extends TestAbstract {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
 

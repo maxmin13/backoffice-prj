@@ -2,9 +2,11 @@ package it.maxmin.dao.jpa;
 
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESSES_BY_USER_ID;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
+import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESSES_BY_USER_ACCOUNT_NAME;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ALL_ADDRESSES;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
+import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_DEPARTMENT_BY_ID;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_DEPARTMENT_BY_USER_ACCOUNT_NAME;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLES_BY_USER_ID;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLE_BY_NAME;
@@ -101,6 +103,12 @@ public class QueryTestUtil {
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
 	}
 	
+	public List<PojoAddress> findAddressesByUserAccountName(String accountName) {
+		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
+		return jdbcTemplate.query(SELECT_ADDRESSES_BY_USER_ACCOUNT_NAME, param,
+				BeanPropertyRowMapper.newInstance(PojoAddress.class));
+	}
+	
 	public PojoAddress findAddressByPostalCode(String postalCode) {
 		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
 		return jdbcTemplate.queryForObject(SELECT_ADDRESS_BY_POSTAL_CODE, param,
@@ -154,6 +162,12 @@ public class QueryTestUtil {
 	public PojoState findStateByAddressPostalCode(String postalCode) {
 		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
 		return jdbcTemplate.queryForObject(SELECT_STATE_BY_ADDRESS_POSTAL_CODE, param, BeanPropertyRowMapper.newInstance(PojoState.class));
+	}
+	
+	public PojoDepartment findDepartmentById(long id) {
+		SqlParameterSource param = new MapSqlParameterSource("id", id);
+		return jdbcTemplate.queryForObject(SELECT_DEPARTMENT_BY_ID, param,
+				BeanPropertyRowMapper.newInstance(PojoDepartment.class));
 	}
 
 	public PojoDepartment findDepartmentByName(String name) {

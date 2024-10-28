@@ -15,7 +15,7 @@ class UserPasswordTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, 2000" })
-	void same_object_equal(String accountName, int yearEffDate) {
+	void sameObjectEqualMethod(String accountName, int yearEffDate) {
 
 		LocalDateTime effDate = LocalDateTime.of(yearEffDate, Month.MARCH, 28, 14, 33, 48, 000000);
 
@@ -35,7 +35,7 @@ class UserPasswordTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, 2000, maxmin13, 2000" })
-	void test_passwords_equal(String accountName1, int yearEffDate1, String accountName2, int yearEffDate2) {
+	void testPasswordsEqualMethod(String accountName1, int yearEffDate1, String accountName2, int yearEffDate2) {
 
 		LocalDateTime effDate1 = LocalDateTime.of(yearEffDate1, Month.MARCH, 28, 14, 33, 48, 000000);
 		
@@ -62,7 +62,7 @@ class UserPasswordTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, 1999, reginald, 2023" })
-	void test_passwords_not_equal(String accountName1, int yearEffDate1, String accountName2,
+	void testPasswordsNotEqualMethod(String accountName1, int yearEffDate1, String accountName2,
 			int yearEffDate2) {
 
 		LocalDateTime effDate1 = LocalDateTime.of(yearEffDate1, Month.MARCH, 28, 14, 33, 48, 000000);

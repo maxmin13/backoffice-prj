@@ -13,7 +13,7 @@ class UserRoleTest {
 	
 	@ParameterizedTest
 	@ValueSource(strings = {"Administrator"})
-	void test_same_object_equal(String roleName) {
+	void testSameObjectEqualMethod(String roleName) {
 
 		UserRole role = UserRole.newInstance().withId(1l).withRoleName(roleName);
 		
@@ -26,7 +26,7 @@ class UserRoleTest {
 	
 	@ParameterizedTest
 	@CsvSource({ "Administrator, Administrator" })
-	void test_roles_equal(String roleName1, String roleName2) {
+	void testRolesEqualMethod(String roleName1, String roleName2) {
 
 		UserRole role1 = UserRole.newInstance().withId(1l).withRoleName(roleName1);
 		UserRole role2 = UserRole.newInstance().withId(1l).withRoleName(roleName2);
@@ -41,7 +41,7 @@ class UserRoleTest {
 	
 	@ParameterizedTest
 	@CsvSource({ "Administrator, Legal" })
-	void test_roles_not_equal(String roleName1, String roleName2) {
+	void testRolesNotEqualMethod(String roleName1, String roleName2) {
 
 		UserRole role1 = UserRole.newInstance().withId(1l).withRoleName(roleName1);
 		UserRole role2 = UserRole.newInstance().withId(1l).withRoleName(roleName2);

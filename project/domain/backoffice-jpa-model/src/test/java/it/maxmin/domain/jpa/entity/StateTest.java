@@ -13,7 +13,7 @@ class StateTest {
 
 	@ParameterizedTest
 	@ValueSource(strings = { "IT" })
-	void test_same_object_equal(String code) {
+	void testSameObjectEqualMethod(String code) {
 
 		State state = State.newInstance().withId(1l).withName("Italy").withCode(code);
 
@@ -26,7 +26,7 @@ class StateTest {
 
 	@ParameterizedTest
 	@CsvSource({ "IT, IT" })
-	void test_states_equal(String code1, String code2) {
+	void testStatesEqualMethod(String code1, String code2) {
 
 		State state1 = State.newInstance().withId(1l).withName("Italy").withCode(code1);
 
@@ -41,7 +41,7 @@ class StateTest {
 
 	@ParameterizedTest
 	@CsvSource({ "IT, IE" })
-	void test_states_not_equal(String code1, String code2) {
+	void testStatesNotEqualMethod(String code1, String code2) {
 
 		State state1 = State.newInstance().withId(1l).withName("Italy").withCode(code1);
 

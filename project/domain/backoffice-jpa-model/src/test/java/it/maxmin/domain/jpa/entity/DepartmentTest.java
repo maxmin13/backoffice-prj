@@ -13,7 +13,7 @@ class DepartmentTest {
 	
 	@ParameterizedTest
 	@ValueSource(strings = {"Production"})
-	void test_same_object_equal(String deparmentName) {
+	void testSameObjectEqualMethod(String deparmentName) {
 
 		Department department = Department.newInstance().withId(1l).withName(deparmentName);
 		
@@ -26,7 +26,7 @@ class DepartmentTest {
 	
 	@ParameterizedTest
 	@CsvSource({ "Production, Production" })
-	void test_departments_equal(String deparmentName1, String deparmentName2) {
+	void testDepartmentsEqualMethod(String deparmentName1, String deparmentName2) {
 
 		Department department1 = Department.newInstance().withId(1l).withName(deparmentName1);
 		Department department2 = Department.newInstance().withId(1l).withName(deparmentName2);
@@ -40,7 +40,7 @@ class DepartmentTest {
 
 	@ParameterizedTest
 	@CsvSource({ "Production, Legal" })
-	void test_departments_not_equal(String deparmentName1, String deparmentName2) {
+	void testDepartmentsNotEqualMethod(String deparmentName1, String deparmentName2) {
 
 		Department department1 = Department.newInstance().withId(1l).withName(deparmentName1);
 		Department department2 = Department.newInstance().withId(1l).withName(deparmentName2);

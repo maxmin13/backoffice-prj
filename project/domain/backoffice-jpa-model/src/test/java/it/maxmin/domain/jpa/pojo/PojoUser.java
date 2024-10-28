@@ -8,27 +8,28 @@ public class PojoUser implements Serializable {
 
 	private static final long serialVersionUID = 7632536256395423354L;
 
-	private Long id;
+	private long id;
 	private String accountName;
 	private String firstName;
 	private String lastName;
 	private LocalDate birthDate;
 	private LocalDateTime createdAt;
-	private Long departmentId;
+	private long departmentId;
+	private long version;
 	
 	public static PojoUser newInstance() {
 		return new PojoUser();
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public PojoUser withId(Long id) {
+	public PojoUser withId(long id) {
 		this.id = id;
 		return this;
 	}
@@ -72,15 +73,15 @@ public class PojoUser implements Serializable {
 		return this;
 	}
 	
-	public Long getDepartmentId() {
+	public long getDepartmentId() {
 		return departmentId;
 	}
 
-	public void setDepartmentId(Long departmentId) {
+	public void setDepartmentId(long departmentId) {
 		this.departmentId = departmentId;
 	}
 
-	public PojoUser withDepartmentId(Long departmentId) {
+	public PojoUser withDepartmentId(long departmentId) {
 		this.departmentId = departmentId;
 		return this;
 	}
@@ -110,5 +111,12 @@ public class PojoUser implements Serializable {
 		this.createdAt = createdAt;
 		return this;
 	}
+
+	public long getVersion() {
+		return version;
+	}
 	
+	public void setVersion(long version) {
+		this.version = version;
+	}
 }

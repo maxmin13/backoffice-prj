@@ -17,7 +17,7 @@ class UserTest {
 
 	@ParameterizedTest
 	@ValueSource(strings = { "maxmin13" })
-	void test_same_object_equal(String accountName) {
+	void testSameObjectEqualMethod(String accountName) {
 
 		User user = User.newInstance().withId(1l).withAccountName(accountName)
 				.withBirthDate(LocalDate.of(1988, Month.MARCH, 12)).withFirstName("Max").withLastName("Min")
@@ -32,7 +32,7 @@ class UserTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, maxmin13" })
-	void test_users_equal(String accountName1, String accountName2) {
+	void testUsersEqualMethod(String accountName1, String accountName2) {
 
 		User user1 = User.newInstance().withId(1l).withAccountName(accountName1)
 				.withBirthDate(LocalDate.of(1988, Month.MARCH, 12)).withFirstName("Max").withLastName("Min")
@@ -51,7 +51,7 @@ class UserTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, reginald999" })
-	void test_users_not_equal(String accountName1, String accountName2) {
+	void testUsersNotEqualMethod(String accountName1, String accountName2) {
 
 		User user1 = User.newInstance().withId(1l).withAccountName(accountName1)
 				.withBirthDate(LocalDate.of(1988, Month.MARCH, 12)).withFirstName("Max").withLastName("Min")
@@ -69,7 +69,7 @@ class UserTest {
 	}
 
 	@Test
-	void addRole_null() {
+	void addNullRole() {
 
 		User user = User.newInstance();
 		user.addRole(null);
@@ -79,7 +79,7 @@ class UserTest {
 
 	@ParameterizedTest
 	@CsvSource({ "Administrator, Administrator" })
-	void addRole_equal(String roleName1, String roleName2) {
+	void addSameRoleTwice(String roleName1, String roleName2) {
 
 		UserRole role1 = UserRole.newInstance().withId(1l).withRoleName(roleName1);
 		UserRole role2 = UserRole.newInstance().withId(1l).withRoleName(roleName2);
@@ -93,7 +93,7 @@ class UserTest {
 
 	@ParameterizedTest
 	@CsvSource({ "Administrator, User", })
-	void addRole_not_equal(String roleName1, String roleName2) {
+	void addDifferentRoles(String roleName1, String roleName2) {
 
 		UserRole role1 = UserRole.newInstance().withId(1l).withRoleName(roleName1);
 		UserRole role2 = UserRole.newInstance().withId(1l).withRoleName(roleName2);
@@ -106,7 +106,7 @@ class UserTest {
 	}
 
 	@Test
-	void addAddress_null() {
+	void addNullAddress() {
 
 		User user = User.newInstance();
 		user.addAddress(null);
@@ -116,7 +116,7 @@ class UserTest {
 
 	@ParameterizedTest
 	@CsvSource({ "30030, 30030" })
-	void addAddress_equal(String postalCode1, String postalCode2) {
+	void addSameAddressTwice(String postalCode1, String postalCode2) {
 
 		Address address1 = Address.newInstance().withId(1l).withDescription("Via Roma").withCity("Roma")
 				.withState(State.newInstance().withId(1l)).withRegion("Lazio").withPostalCode(postalCode1);
@@ -133,7 +133,7 @@ class UserTest {
 
 	@ParameterizedTest
 	@CsvSource({ "30030, 112233" })
-	void addAddress_not_equal(String postalCode1, String postalCode2) {
+	void addDIfferentAddresses(String postalCode1, String postalCode2) {
 
 		Address address1 = Address.newInstance().withId(1l).withDescription("Via Roma").withCity("Roma")
 				.withState(State.newInstance().withId(1l)).withRegion("Lazio").withPostalCode(postalCode1);
@@ -149,7 +149,7 @@ class UserTest {
 	}
 
 	@Test
-	void getRole__null() {
+	void getNullRole() {
 
 		User user = User.newInstance();
 
@@ -177,7 +177,7 @@ class UserTest {
 	}
 
 	@Test
-	void getAddress__null() {
+	void getNullAddress() {
 
 		User user = User.newInstance();
 

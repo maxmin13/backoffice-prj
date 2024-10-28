@@ -15,7 +15,7 @@ class LoginAttemptTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, 2000" })
-	void same_object_equal(String accountName, int yearCreatedAt) {
+	void sameObjectEqualMethod(String accountName, int yearCreatedAt) {
 
 		LocalDateTime createdAt = LocalDateTime.of(yearCreatedAt, Month.MARCH, 28, 14, 33, 48, 000000);
 
@@ -36,7 +36,7 @@ class LoginAttemptTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, 2000, maxmin13, 2000" })
-	void test_login_attempts_equal(String accountName1, int yearCreatedAt1, String accountName2, int yearCreatedAt2) {
+	void testLoginAttemptsEqualMethod(String accountName1, int yearCreatedAt1, String accountName2, int yearCreatedAt2) {
 
 		LocalDateTime createdAt1 = LocalDateTime.of(yearCreatedAt1, Month.MARCH, 28, 14, 33, 48, 000000);
 
@@ -65,7 +65,7 @@ class LoginAttemptTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, 1999, reginald, 2023" })
-	void test_login_attempts_not_equal(String accountName1, int yearCreatedAt1, String accountName2,
+	void testLoginAttemptsNotEqualMethod(String accountName1, int yearCreatedAt1, String accountName2,
 			int yearCreatedAt2) {
 
 		LocalDateTime createdAt1 = LocalDateTime.of(yearCreatedAt1, Month.MARCH, 28, 14, 33, 48, 000000);

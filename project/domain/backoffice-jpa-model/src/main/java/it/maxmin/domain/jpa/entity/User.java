@@ -137,7 +137,7 @@ public class User extends AbstractEntity {
 		return this;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "AddressId"))
 	public Set<Address> getAddresses() {
 		return addresses;
@@ -152,6 +152,15 @@ public class User extends AbstractEntity {
 			return false;
 		} else {
 			addresses.add(address);
+			return true;
+		}
+	}
+	
+	public boolean removeAddress(Address address) {
+		if (address == null || !addresses.contains(address)) {
+			return false;
+		} else {
+			addresses.remove(address);
 			return true;
 		}
 	}
@@ -178,6 +187,15 @@ public class User extends AbstractEntity {
 			return false;
 		} else {
 			roles.add(role);
+			return true;
+		}
+	}
+	
+	public boolean removeRole(UserRole role) {
+		if (role == null || !roles.contains(role)) {
+			return false;
+		} else {
+			roles.remove(role);
 			return true;
 		}
 	}

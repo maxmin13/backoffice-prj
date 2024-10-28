@@ -13,7 +13,7 @@ class AddressTest {
 	
 	@ParameterizedTest
 	@ValueSource(strings = {"30010"})
-	void test_same_object_equal(String postalCode) {
+	void testSameObjectEqualMethod(String postalCode) {
 
 		Address address = Address.newInstance().withId(1l).withDescription("Via Roma").withCity("Roma")
 				.withState(State.newInstance().withId(1l)).withRegion("Lazio").withPostalCode(postalCode);
@@ -27,7 +27,7 @@ class AddressTest {
 
 	@ParameterizedTest
 	@CsvSource({ "30030, 30030" })
-	void test_addresses_equal(String postalCode1, String postalCode2) {
+	void testAddressesEqualMethdo(String postalCode1, String postalCode2) {
 
 		Address address1 = Address.newInstance().withId(1l).withDescription("Via Roma").withCity("Roma")
 				.withState(State.newInstance().withId(1l)).withRegion("Lazio").withPostalCode(postalCode1);
@@ -44,7 +44,7 @@ class AddressTest {
 
 	@ParameterizedTest
 	@CsvSource({ "54123, 30030" })
-	void test_addresses_not_equal(String postalCode1, String postalCode2) {
+	void testAddressesNotEqualNot(String postalCode1, String postalCode2) {
 
 		Address address1 = Address.newInstance().withId(1l).withDescription("Via Roma").withCity("Roma")
 				.withState(State.newInstance().withId(1l)).withRegion("Lazio").withPostalCode(postalCode1);
