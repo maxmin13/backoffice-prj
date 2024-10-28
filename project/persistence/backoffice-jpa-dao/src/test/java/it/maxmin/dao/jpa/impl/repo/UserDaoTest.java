@@ -810,6 +810,7 @@ class UserDaoTest extends TestAbstract {
 		});
 	}
 
+	//TODO NOT WORKING
 	@Test
 	@Order(22)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
@@ -832,7 +833,6 @@ class UserDaoTest extends TestAbstract {
 				.withDepartment(Department.newInstance().withId(newDepartment.getId()));
 
 		PojoState newState = queryTestUtil.findStateByName(IRELAND.getName());
-		PojoAddress address = queryTestUtil.findAddressByPostalCode("30010");
 		Address newAddress = Address.newInstance().withId(0l)
 				.withCity("Cork")
 				.withDescription("Romolo street").withPostalCode("A11TF22").withRegion("County Cork")
@@ -843,9 +843,9 @@ class UserDaoTest extends TestAbstract {
 		newMaxmin.addRole(UserRole.newInstance().withId(newRole.getId()));
 
 		// run the test
-//		assertThrows(EntityNotFoundException.class, () -> {
+		assertThrows(EntityNotFoundException.class, () -> {
 			userDao.update(newMaxmin);
-//		});
+		});
 	}
 
 }
