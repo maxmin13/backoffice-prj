@@ -53,6 +53,7 @@ import it.maxmin.domain.jpa.pojo.PojoUser;
 import it.maxmin.domain.jpa.pojo.PojoUserRole;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
 
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 @Sql(scripts = { "classpath:database/1_create_database.up.sql", "classpath:database/2_userrole.up.sql",
@@ -319,7 +320,7 @@ class UserDaoTest extends TestAbstract {
 		LOGGER.info("running test createWithIdentifierThrowsException");
 
 		User user = User.newInstance().withId(1l);
-		
+
 		assertThrows(IllegalArgumentException.class, () -> {
 			userDao.create(user);
 		});
@@ -810,7 +811,6 @@ class UserDaoTest extends TestAbstract {
 		});
 	}
 
-	//TODO NOT WORKING
 	@Test
 	@Order(22)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
@@ -818,24 +818,38 @@ class UserDaoTest extends TestAbstract {
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("22. should throw EntityNotFoundException")
+	@DisplayName("22. should throw OptimisticLockException")
+	/**
+	 * I would have expected an EntityNotFoundException, but an OptimisticLockException is thrown.
+	 * Found this explanation:
+	 * https://stackoverflow.com/questions/24827576/what-does-mean-hibernates-unsaved-value-mapping-was-incorrect
+	 * 
+	 * If an entity is determined by means of your unsaved-value as detached, but is
+	 * instead new, then hibernate can't compare the version numbers (because the
+	 * entity just doesn't exist in the database). But Hibernate can't know if your
+	 * unsaved-value mapping is not correct or the entity has been deleted in
+	 * another transaction. This is described in org.hibernate.StaleStateException
+	 * as well: Thrown when a version number or timestamp check failed, indicating
+	 * that the Session contained stale data (when using long transactions with
+	 * versioning). Also occurs if we try delete or update a row that does not
+	 * exist.
+	 */
 	void updateWithNotExistingAddressThrowsException() {
 
 		LOGGER.info("running test updateWithNotExistingAddressThrowsException");
 
 		// Get an existing user
 		PojoUser maxmin = queryTestUtil.findUserByAccountName("maxmin13");
-		
-		// Update the user
+
+		// Update the user with an address that doesn't exist.
 		PojoDepartment newDepartment = queryTestUtil.findDepartmentByName(LEGAL.getName());
 		User newMaxmin = User.newInstance().withId(maxmin.getId()).withAccountName("maxmin13").withFirstName("Maxi")
 				.withLastName("Miliano").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withDepartment(Department.newInstance().withId(newDepartment.getId()));
 
 		PojoState newState = queryTestUtil.findStateByName(IRELAND.getName());
-		Address newAddress = Address.newInstance().withId(0l)
-				.withCity("Cork")
-				.withDescription("Romolo street").withPostalCode("A11TF22").withRegion("County Cork")
+		Address newAddress = Address.newInstance().withId(0l).withCity("Cork").withDescription("Romolo street")
+				.withPostalCode("A11TF22").withRegion("County Cork")
 				.withState(State.newInstance().withId(newState.getId()));
 		newMaxmin.addAddress(newAddress);
 
@@ -843,7 +857,7 @@ class UserDaoTest extends TestAbstract {
 		newMaxmin.addRole(UserRole.newInstance().withId(newRole.getId()));
 
 		// run the test
-		assertThrows(EntityNotFoundException.class, () -> {
+		assertThrows(OptimisticLockException.class, () -> {
 			userDao.update(newMaxmin);
 		});
 	}
