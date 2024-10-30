@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.hibernate.LazyInitializationException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -47,6 +48,7 @@ import it.maxmin.domain.jpa.pojo.PojoAddress;
 import it.maxmin.domain.jpa.pojo.PojoDepartment;
 import it.maxmin.domain.jpa.pojo.PojoState;
 import it.maxmin.domain.jpa.pojo.PojoUser;
+import it.maxmin.domain.jpa.pojo.PojoUserRole;
 import jakarta.persistence.EntityExistsException;
 
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
@@ -387,7 +389,7 @@ class AddressDaoTest extends TestAbstract {
 	}
 
 	@Test
-	@Order(7)
+	@Order(9)
 	void createWithNoAddressThrowsException() {
 
 		LOGGER.info("running test createWithNoAddressThrowsException");
@@ -398,7 +400,7 @@ class AddressDaoTest extends TestAbstract {
 	}
 
 	@Test
-	@Order(8)
+	@Order(10)
 	void createWithIdentifierThrowsException() {
 
 		LOGGER.info("running test createWithIdentifierThrowsException");
@@ -411,11 +413,11 @@ class AddressDaoTest extends TestAbstract {
 	}
 
 	@Test
-	@Order(9)
+	@Order(11)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("09. should create the new address with a new user and associated to an existing state")
+	@DisplayName("11. should create the new address with a new user and associated to an existing state")
 	void create() {
 
 		LOGGER.info("running test create");
@@ -423,34 +425,34 @@ class AddressDaoTest extends TestAbstract {
 		PojoState italy = queryTestUtil.findStateByName(ITALY.getName());
 		PojoDepartment production = queryTestUtil.findDepartmentByName(PRODUCTION.getName());
 
-		Address address30010 = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
+		Address address33322 = Address.newInstance().withPostalCode("33322").withDescription("Via borgo di sotto")
 				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(italy.getId()));
 
 		User franco = User.newInstance().withAccountName("franco123").withBirthDate(LocalDate.of(1977, 10, 16))
 				.withFirstName("Franco").withLastName("Franchi")
 				.withDepartment(Department.newInstance().withId(production.getId()));
 
-		address30010.addUser(franco);
+		address33322.addUser(franco);
 
 		User carlo = User.newInstance().withAccountName("carlo123").withBirthDate(LocalDate.of(1977, 10, 16))
 				.withFirstName("Carlo").withLastName("Carli")
 				.withDepartment(Department.newInstance().withId(production.getId()));
 
-		address30010.addUser(carlo);
+		address33322.addUser(carlo);
 
 		// run the test
-		Address address = this.addressDao.create(address30010);
+		Address address = this.addressDao.create(address33322);
 
 		assertNotNull(address);
 		assertNotNull(address.getId());
 
-		PojoAddress newAddress = this.queryTestUtil.findAddressByPostalCode("30010");
+		PojoAddress newAddress = this.queryTestUtil.findAddressByPostalCode("33322");
 
-		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", newAddress);
+		verifyAddress("33322", "Via borgo di sotto", "Rome", "County Lazio", newAddress);
 
 		assertEquals(italy.getId(), newAddress.getStateId());
 
-		List<PojoUser> users = queryTestUtil.findUsersByPostalCode("30010");
+		List<PojoUser> users = queryTestUtil.findUsersByPostalCode("33322");
 
 		assertEquals(2, users.size());
 
@@ -474,45 +476,45 @@ class AddressDaoTest extends TestAbstract {
 	}
 
 	@Test
-	@Order(9)
+	@Order(12)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("09. should create the new address associated to an existing state")
+	@DisplayName("12. should create the new address associated to an existing state")
 	void createWithNoUser() {
 
 		LOGGER.info("running test createWithNoUser");
 
 		PojoState italy = queryTestUtil.findStateByName(ITALY.getName());
 
-		Address address30010 = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
+		Address address33322 = Address.newInstance().withPostalCode("33322").withDescription("Via borgo di sotto")
 				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(italy.getId()));
 
 		// run the test
-		Address address = this.addressDao.create(address30010);
+		Address address = this.addressDao.create(address33322);
 
 		assertNotNull(address);
 		assertNotNull(address.getId());
 
-		PojoAddress newAddress = this.queryTestUtil.findAddressByPostalCode("30010");
+		PojoAddress newAddress = this.queryTestUtil.findAddressByPostalCode("33322");
 
-		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", newAddress);
+		verifyAddress("33322", "Via borgo di sotto", "Rome", "County Lazio", newAddress);
 
 		assertEquals(italy.getId(), newAddress.getStateId());
 
-		List<PojoUser> users = queryTestUtil.findUsersByPostalCode("30010");
+		List<PojoUser> users = queryTestUtil.findUsersByPostalCode("33322");
 
 		assertEquals(0, users.size());
 	}
 
 	@Test
-	@Order(7)
+	@Order(13)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("07. should throw EntityExistsException")
+	@DisplayName("13. should throw EntityExistsException")
 	void createWithExistingUserThrowsException() {
 
 		LOGGER.info("running test createWithExistingUserThrowsException");
@@ -526,8 +528,8 @@ class AddressDaoTest extends TestAbstract {
 		PojoDepartment department = queryTestUtil.findDepartmentById(maxmin.getDepartmentId());
 
 		address33322.addUser(User.newInstance().withId(maxmin.getId()).withAccountName(maxmin.getAccountName())
-				.withBirthDate(maxmin.getBirthDate()).withDepartment(
-						Department.newInstance().withId(department.getId()).withName(department.getName())));
+				.withBirthDate(maxmin.getBirthDate())
+				.withDepartment(Department.newInstance().withId(department.getId()).withName(department.getName())));
 
 		// run the test
 		assertThrows(EntityExistsException.class, () -> {
@@ -535,24 +537,135 @@ class AddressDaoTest extends TestAbstract {
 		});
 	}
 
+	@Test
+	@Order(14)
+	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+			"classpath:database/2_user.down.sql",
+			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("14. should throw ConstraintViolationException")
 	void createWithNoStateThrowsException() {
 
+		LOGGER.info("running test createWithNoStateThrowsException");
+
+		Address address33322 = Address.newInstance().withPostalCode("33322").withDescription("Via borgo di sotto")
+				.withCity("Rome").withRegion("County Lazio");
+
+		// run the test
+		assertThrows(ConstraintViolationException.class, () -> {
+			this.addressDao.create(address33322);
+		});
 	}
 
+	@Test
+	@Order(15)
+	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+			"classpath:database/2_user.down.sql",
+			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("15. should throw ConstraintViolationException")
 	void createWithNotExistingStateThrowsException() {
 
+		LOGGER.info("running test createWithNotExistingStateThrowsException");
+
+		Address address33322 = Address.newInstance().withPostalCode("33322").withDescription("Via borgo di sotto")
+				.withCity("Rome").withRegion("County Lazio")
+				.withState(State.newInstance().withId(0l).withCode("FR").withName("France"));
+
+		// run the test
+		assertThrows(ConstraintViolationException.class, () -> {
+			this.addressDao.create(address33322);
+		});
 	}
 
+	@Test
+	@Order(16)
 	void updateWithNoAddressThrowsException() {
 
+		LOGGER.info("running test updateWithNoAddressThrowsException");
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			addressDao.update(null);
+		});
 	}
 
+	@Test
+	@Order(17)
 	void updateWithoutIdentifierThrowsException() {
 
+		LOGGER.info("running test updateWithIdentifierThrowsException");
+
+		Address address = Address.newInstance();
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			addressDao.update(address);
+		});
 	}
 
+	@Test
+	@Order(17)
+	@Sql(scripts = { "classpath:database/2_address.up.sql",
+			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+			"classpath:database/2_user.down.sql",
+			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("17. should update an address and the user associated")
 	void update() {
 
+		LOGGER.info("running test update");
+
+		PojoState ireland = queryTestUtil.findStateByName(IRELAND.getName());
+
+		// Find an existing address
+		PojoAddress address30010 = queryTestUtil.findAddressByPostalCode("30010");
+		
+		//TODO assert address before changing it?????????
+		// Assert the address's initial status
+		
+		
+
+		// Change the address
+		Address address = Address.newInstance().withId(address30010.getId()).withCity("Padova")
+				.withDescription("Via dei mille").withPostalCode("333222").withRegion("County Veneto").withState(State
+						.newInstance().withId(ireland.getId()).withCode(ireland.getCode()).withName(ireland.getName()));
+
+		// Find an existing user
+		PojoUser maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+
+		PojoDepartment production = queryTestUtil.findDepartmentByName(PRODUCTION.getName());
+
+		// Change the user
+		User user = User.newInstance().withId(maxmin.getId()).withAccountName("carlo123")
+				.withBirthDate(LocalDate.of(1911, 10, 16)).withFirstName("Carlo").withLastName("Carli")
+				.withDepartment(Department.newInstance().withId(production.getId()));
+		
+		PojoUserRole role = queryTestUtil.findRoleByName(WORKER.getRoleName());
+		user.addRole(UserRole.newInstance().withId(role.getId()).withRoleName(role.getRoleName()));
+
+		address.addUser(user);
+
+		// run the test
+		Address updatedAddress = this.addressDao.update(address);
+
+		assertNotNull(updatedAddress);
+		assertEquals(address.getId(), updatedAddress.getId());
+
+		PojoAddress newAddress = this.queryTestUtil.findAddressByAddressId(updatedAddress.getId());
+		
+		verifyAddress("333222", "Via dei mille", "Padova", "County Veneto", newAddress);
+
+		assertEquals(ireland.getId(), newAddress.getStateId());
+
+		List<PojoUser> users = queryTestUtil.findUsersByPostalCode("333222");
+
+		assertEquals(1, users.size());
+
+		PojoUser carlo = users.stream().filter(u -> u.getAccountName().equals("carlo123")).findFirst().orElse(null);
+
+		verifyUser("carlo123", "Carlo", "Carli", LocalDate.of(1911, 10, 16), carlo);
+
+		assertEquals(production.getId(), carlo.getDepartmentId());
+
+		assertEquals(1, queryTestUtil.findRolesByUserAccountName("carlo123").size());
+		assertEquals(1, queryTestUtil.findAddressesByUserAccountName("carlo123").size());
 	}
 
 	void updateRemoveUser() {

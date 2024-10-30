@@ -23,8 +23,14 @@ public enum QueryTestConstants {
 			+ "FROM UserRole "
 			+ "WHERE roleName = :roleName ";
 	
-	public static final String SELECT_ADDRESSES_BY_USER_USER_ID = "";
-	
+	public static final String SELECT_ADDRESSES_BY_USER_USER_ID = ""
+			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode "
+			+ "FROM Address a "
+			+ "INNER JOIN UserAddress ua ON a.Id = ua.AddressId "
+			+ "INNER JOIN User u ON u.Id = ua.UserId "
+			+ "WHERE u.Id = :userId "
+			+ "ORDER BY a.Id";
+		
 	public static final String SELECT_ADDRESSES_BY_USER_ACCOUNT_NAME = ""
 			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode "
 			+ "FROM Address a "
