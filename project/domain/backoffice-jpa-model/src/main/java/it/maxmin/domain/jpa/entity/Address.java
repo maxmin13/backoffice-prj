@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -117,7 +118,7 @@ public class Address extends AbstractEntity {
 		return this;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "AddressId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
 	public Set<User> getUsers() {
 		return users;

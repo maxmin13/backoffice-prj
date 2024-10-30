@@ -18,7 +18,7 @@ public abstract class AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 870969367705096128L;
 
 	protected Long id;
-	protected int version;
+	protected int version = 0;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

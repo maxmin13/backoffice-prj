@@ -1,6 +1,6 @@
 package it.maxmin.dao.jpa;
 
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESSES_BY_USER_ID;
+import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESSES_BY_USER_USER_ID;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESSES_BY_USER_ACCOUNT_NAME;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
@@ -8,13 +8,14 @@ import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ALL_ADDRESSES;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_DEPARTMENT_BY_ID;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_DEPARTMENT_BY_USER_ACCOUNT_NAME;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLES_BY_USER_ID;
+import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLES_BY_USER_USER_ID;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLE_BY_NAME;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLES_BY_USER_ACCOUNT_NAME;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_STATE_BY_NAME;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_STATE_BY_ADDRESS_POSTAL_CODE;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_USER_BY_USER_ID;
+import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_USER_BY_ADDRESS_POSTAL_CODE;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -61,6 +62,12 @@ public class QueryTestUtil {
 		return jdbcTemplate.queryForObject(SELECT_USER_BY_ACCOUNT_NAME, param,
 				BeanPropertyRowMapper.newInstance(PojoUser.class));
 	}
+	
+	public List<PojoUser> findUsersByPostalCode(String postalCode) {
+		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
+		return jdbcTemplate.query(SELECT_USER_BY_ADDRESS_POSTAL_CODE, param,
+				BeanPropertyRowMapper.newInstance(PojoUser.class));
+	}
 
 	public PojoUser createUser(PojoUser user) {
 		notNull(user, "The user must not be null");
@@ -82,7 +89,7 @@ public class QueryTestUtil {
 
 	public List<PojoUserRole> findRolesByUserId(long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
-		return jdbcTemplate.query(SELECT_ROLES_BY_USER_ID, param,
+		return jdbcTemplate.query(SELECT_ROLES_BY_USER_USER_ID, param,
 				BeanPropertyRowMapper.newInstance(PojoUserRole.class));
 	}
 	
@@ -99,7 +106,7 @@ public class QueryTestUtil {
 
 	public List<PojoAddress> findAddressesByUserId(long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
-		return jdbcTemplate.query(SELECT_ADDRESSES_BY_USER_ID, param,
+		return jdbcTemplate.query(SELECT_ADDRESSES_BY_USER_USER_ID, param,
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
 	}
 	

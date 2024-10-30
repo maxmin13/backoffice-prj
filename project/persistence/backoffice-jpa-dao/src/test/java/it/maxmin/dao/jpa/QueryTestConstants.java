@@ -3,18 +3,18 @@ package it.maxmin.dao.jpa;
 public enum QueryTestConstants {
 	;
 
-	public static final String SELECT_ROLES_BY_USER_ID = ""
+	public static final String SELECT_ROLES_BY_USER_USER_ID = ""
 			+ "SELECT ur.Id, ur.RoleName "
 			+ "FROM UserRole ur "
-			+ "LEFT JOIN UserUserRole uur ON ur.Id = uur.UserRoleId "
+			+ "INNER JOIN UserUserRole uur ON ur.Id = uur.UserRoleId "
 			+ "WHERE uur.UserId = :userId "
 			+ "ORDER BY ur.Id";
 	
 	public static final String SELECT_ROLES_BY_USER_ACCOUNT_NAME = ""
 			+ "SELECT ur.Id, ur.RoleName "
 			+ "FROM UserRole ur "
-			+ "LEFT JOIN UserUserRole uur ON ur.Id = uur.UserRoleId "
-			+ "LEFT JOIN User u ON u.Id = uur.UserId "
+			+ "INNER JOIN UserUserRole uur ON ur.Id = uur.UserRoleId "
+			+ "INNER JOIN User u ON u.Id = uur.UserId "
 			+ "WHERE u.AccountName = :accountName "
 			+ "ORDER BY ur.Id";	
 	
@@ -22,19 +22,14 @@ public enum QueryTestConstants {
 			+ "SELECT Id, RoleName "
 			+ "FROM UserRole "
 			+ "WHERE roleName = :roleName ";
-
-	public static final String SELECT_ADDRESSES_BY_USER_ID = ""
-			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode "
-			+ "FROM Address a "
-			+ "INNER JOIN UserAddress ua ON a.Id = ua.AddressId "
-			+ "WHERE ua.UserId = :userId "
-			+ "ORDER BY a.Id";
+	
+	public static final String SELECT_ADDRESSES_BY_USER_USER_ID = "";
 	
 	public static final String SELECT_ADDRESSES_BY_USER_ACCOUNT_NAME = ""
 			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode "
 			+ "FROM Address a "
-			+ "LEFT JOIN UserAddress ua ON a.Id = ua.AddressId "
-			+ "LEFT JOIN User u ON u.Id = ua.UserId "
+			+ "INNER JOIN UserAddress ua ON a.Id = ua.AddressId "
+			+ "INNER JOIN User u ON u.Id = ua.UserId "
 			+ "WHERE u.AccountName = :accountName "
 			+ "ORDER BY a.Id";
 	
@@ -56,12 +51,21 @@ public enum QueryTestConstants {
 	
 	public static final String SELECT_USER_BY_USER_ID = ""
 			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt, DepartmentId, Version "
-			+ "FROM User WHERE Id = :userId ";
+			+ "FROM User "
+			+ "WHERE Id = :userId ";
 	
 	public static final String SELECT_USER_BY_ACCOUNT_NAME = ""
 			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt, DepartmentId, Version "
 			+ "FROM User "
 			+ "WHERE AccountName = :accountName ";
+	
+	public static final String SELECT_USER_BY_ADDRESS_POSTAL_CODE = ""
+			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId, u.Version "
+			+ "FROM User u "
+			+ "INNER JOIN UserAddress ua ON u.Id = ua.UserId "
+			+ "INNER JOIN Address a ON ua.AddressId = a.Id "
+			+ "WHERE a.PostalCode = :postalCode "
+			+ "ORDER BY u.Id";
     
 	public static final String SELECT_STATE_BY_NAME = ""
 			+ "SELECT Id, Name, Code "

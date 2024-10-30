@@ -8,6 +8,7 @@ import static it.maxmin.dao.jpa.impl.repo.constant.Role.WORKER;
 import static it.maxmin.dao.jpa.impl.repo.constant.State.IRELAND;
 import static it.maxmin.dao.jpa.impl.repo.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,7 +18,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.hibernate.LazyInitializationException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -30,7 +30,6 @@ import org.mockito.quality.Strictness;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -47,6 +46,8 @@ import it.maxmin.domain.jpa.entity.UserRole;
 import it.maxmin.domain.jpa.pojo.PojoAddress;
 import it.maxmin.domain.jpa.pojo.PojoDepartment;
 import it.maxmin.domain.jpa.pojo.PojoState;
+import it.maxmin.domain.jpa.pojo.PojoUser;
+import jakarta.persistence.EntityExistsException;
 
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 @Sql(scripts = { "classpath:database/1_create_database.up.sql", "classpath:database/2_userrole.up.sql",
@@ -163,7 +164,7 @@ class AddressDaoTest extends TestAbstract {
 
 		assertThrows(LazyInitializationException.class, addresses::size);
 	}
-	
+
 	@Test
 	@Transactional(readOnly = true)
 	@Order(4)
@@ -183,7 +184,7 @@ class AddressDaoTest extends TestAbstract {
 		Optional<Address> address = addressDao.findById(pojoAddress.getId());
 
 		Set<User> users = address.get().getUsers();
-		
+
 		assertEquals(2, users.size());
 
 		User user = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
@@ -191,17 +192,18 @@ class AddressDaoTest extends TestAbstract {
 		Department department = user.getDepartment();
 
 		assertEquals(1, department.getUsers().size());
-		
+
 		// lazily loaded
-		User maxmin = department.getUsers().stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
-		
+		User maxmin = department.getUsers().stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst()
+				.get();
+
 		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), maxmin);
 
 		// roles
 		Set<UserRole> roles = maxmin.getRoles();
-		
+
 		assertEquals(3, roles.size());
-		
+
 		UserRole role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
 		verifyRole(ADMINISTRATOR.getRoleName(), role1);
 
@@ -215,21 +217,21 @@ class AddressDaoTest extends TestAbstract {
 		Set<Address> addresses = maxmin.getAddresses();
 
 		assertEquals(2, addresses.size());
-		
+
 		Address address1 = maxmin.getAddress("30010");
 
 		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
-		
+
 		State state1 = address1.getState();
-		
+
 		verifyState(ITALY.getName(), ITALY.getCode(), state1);
 
 		Address address2 = maxmin.getAddress("A65TF12");
 
 		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
-		
+
 		State state2 = address2.getState();
-		
+
 		verifyState(IRELAND.getName(), IRELAND.getCode(), state2);
 	}
 
@@ -307,7 +309,7 @@ class AddressDaoTest extends TestAbstract {
 		User user1 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
 
 		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user1);
-		
+
 		assertEquals(0, user1.getAddresses().size());
 		assertEquals(0, user1.getRoles().size());
 
@@ -332,7 +334,7 @@ class AddressDaoTest extends TestAbstract {
 		User user2 = users.stream().filter(u -> u.getAccountName().equals("maxmin13")).findFirst().get();
 
 		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user2);
-		
+
 		assertEquals(0, user2.getAddresses().size());
 		assertEquals(0, user2.getRoles().size());
 
@@ -344,7 +346,7 @@ class AddressDaoTest extends TestAbstract {
 		User user3 = users.stream().filter(u -> u.getAccountName().equals("artur")).findFirst().get();
 
 		verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), user3);
-		
+
 		assertEquals(0, user3.getAddresses().size());
 		assertEquals(0, user3.getRoles().size());
 
@@ -385,84 +387,184 @@ class AddressDaoTest extends TestAbstract {
 	}
 
 	@Test
+	@Order(7)
+	void createWithNoAddressThrowsException() {
+
+		LOGGER.info("running test createWithNoAddressThrowsException");
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			addressDao.create(null);
+		});
+	}
+
+	@Test
+	@Order(8)
+	void createWithIdentifierThrowsException() {
+
+		LOGGER.info("running test createWithIdentifierThrowsException");
+
+		Address address = Address.newInstance().withId(1l);
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			addressDao.create(address);
+		});
+	}
+
+	@Test
 	@Order(9)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("09. should insert the new address without a user")
-	void testPersistWithExistingState() {
+	@DisplayName("09. should create the new address with a new user and associated to an existing state")
+	void create() {
 
-		LOGGER.info("running test testPersistWithExistingState");
+		LOGGER.info("running test create");
 
-		PojoState state = queryTestUtil.findStateByName(ITALY.getName());
+		PojoState italy = queryTestUtil.findStateByName(ITALY.getName());
+		PojoDepartment production = queryTestUtil.findDepartmentByName(PRODUCTION.getName());
 
-		Address address = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
-				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(state.getId()));
+		Address address30010 = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
+				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(italy.getId()));
+
+		User franco = User.newInstance().withAccountName("franco123").withBirthDate(LocalDate.of(1977, 10, 16))
+				.withFirstName("Franco").withLastName("Franchi")
+				.withDepartment(Department.newInstance().withId(production.getId()));
+
+		address30010.addUser(franco);
+
+		User carlo = User.newInstance().withAccountName("carlo123").withBirthDate(LocalDate.of(1977, 10, 16))
+				.withFirstName("Carlo").withLastName("Carli")
+				.withDepartment(Department.newInstance().withId(production.getId()));
+
+		address30010.addUser(carlo);
 
 		// run the test
-		this.addressDao.save(address);
+		Address address = this.addressDao.create(address30010);
 
-		List<PojoAddress> addresses = this.queryTestUtil.findAllAddresses();
+		assertNotNull(address);
+		assertNotNull(address.getId());
 
-		assertEquals(1, addresses.size());
-
-		PojoAddress newAddress = addresses.get(0);
+		PojoAddress newAddress = this.queryTestUtil.findAddressByPostalCode("30010");
 
 		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", newAddress);
 
-		Long stateId = newAddress.getStateId();
+		assertEquals(italy.getId(), newAddress.getStateId());
 
-		assertEquals(state.getId(), stateId);
+		List<PojoUser> users = queryTestUtil.findUsersByPostalCode("30010");
+
+		assertEquals(2, users.size());
+
+		PojoUser user1 = users.stream().filter(u -> u.getAccountName().equals("franco123")).findFirst().orElse(null);
+
+		verifyUser("franco123", "Franco", "Franchi", LocalDate.of(1977, 10, 16), user1);
+
+		assertEquals(production.getId(), user1.getDepartmentId());
+
+		assertEquals(0, queryTestUtil.findRolesByUserAccountName("franco123").size());
+		assertEquals(1, queryTestUtil.findAddressesByUserAccountName("franco123").size());
+
+		PojoUser user2 = users.stream().filter(u -> u.getAccountName().equals("carlo123")).findFirst().orElse(null);
+
+		verifyUser("carlo123", "Carlo", "Carli", LocalDate.of(1977, 10, 16), user2);
+
+		assertEquals(production.getId(), user2.getDepartmentId());
+
+		assertEquals(0, queryTestUtil.findRolesByUserAccountName("carlo123").size());
+		assertEquals(1, queryTestUtil.findAddressesByUserAccountName("carlo123").size());
 	}
 
 	@Test
-	@Order(10)
+	@Order(9)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("10. should throw an ConstraintViolationException exception, France is not a valid state.")
-	void testPersistWithNonExistingState() {
+	@DisplayName("09. should create the new address associated to an existing state")
+	void createWithNoUser() {
 
-		LOGGER.info("running test testPersistWithNonExistingState");
+		LOGGER.info("running test createWithNoUser");
 
-		State state = State.newInstance().withId(3l).withCode("FR").withName("France");
+		PojoState italy = queryTestUtil.findStateByName(ITALY.getName());
 
-		Address address = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
-				.withCity("Rome").withRegion("County Lazio").withState(state);
+		Address address30010 = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
+				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(italy.getId()));
 
 		// run the test
-		assertThrows(ConstraintViolationException.class, () -> {
-			addressDao.save(address);
-		});
+		Address address = this.addressDao.create(address30010);
+
+		assertNotNull(address);
+		assertNotNull(address.getId());
+
+		PojoAddress newAddress = this.queryTestUtil.findAddressByPostalCode("30010");
+
+		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", newAddress);
+
+		assertEquals(italy.getId(), newAddress.getStateId());
+
+		List<PojoUser> users = queryTestUtil.findUsersByPostalCode("30010");
+
+		assertEquals(0, users.size());
 	}
 
 	@Test
-	@Order(11)
+	@Order(7)
+	@Sql(scripts = { "classpath:database/2_address.up.sql",
+			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("11. should throw a InvalidDataAccessApiUsageException exception since no cascading is set on address.users")
-	void testPersistWithUser() {
+	@DisplayName("07. should throw EntityExistsException")
+	void createWithExistingUserThrowsException() {
 
-		LOGGER.info("running test testPersistWithUser");
+		LOGGER.info("running test createWithExistingUserThrowsException");
 
-		PojoState state = queryTestUtil.findStateByName(ITALY.getName());
+		PojoState italy = queryTestUtil.findStateByName(ITALY.getName());
 
-		Address address = Address.newInstance().withPostalCode("30010").withDescription("Via borgo di sotto")
-				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(state.getId()));
+		Address address33322 = Address.newInstance().withPostalCode("33322").withDescription("Via borgo di sotto")
+				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(italy.getId()));
 
-		PojoDepartment department = queryTestUtil.findDepartmentByName(PRODUCTION.getName());
+		PojoUser maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+		PojoDepartment department = queryTestUtil.findDepartmentById(maxmin.getDepartmentId());
 
-		User franco = User.newInstance().withAccountName("maxmin13").withBirthDate(LocalDate.of(1977, 10, 16))
-				.withFirstName("Max").withLastName("Minardi").withDepartment(Department.newInstance().withId(department.getId()));
-
-		address.addUser(franco);
+		address33322.addUser(User.newInstance().withId(maxmin.getId()).withAccountName(maxmin.getAccountName())
+				.withBirthDate(maxmin.getBirthDate()).withDepartment(
+						Department.newInstance().withId(department.getId()).withName(department.getName())));
 
 		// run the test
-		assertThrows(InvalidDataAccessApiUsageException.class, () -> {
-			addressDao.save(address);
+		assertThrows(EntityExistsException.class, () -> {
+			this.addressDao.create(address33322);
 		});
 	}
 
-	// TODO test update, check version field
+	void createWithNoStateThrowsException() {
+
+	}
+
+	void createWithNotExistingStateThrowsException() {
+
+	}
+
+	void updateWithNoAddressThrowsException() {
+
+	}
+
+	void updateWithoutIdentifierThrowsException() {
+
+	}
+
+	void update() {
+
+	}
+
+	void updateRemoveUser() {
+
+	}
+
+	void updateWithNoStateThrowsException() {
+
+	}
+
+	void updateWithNotExistingStateThrowsException() {
+
+	}
+
 }

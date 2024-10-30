@@ -28,6 +28,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Tuple;
 
+@Transactional
 @Repository("addressDao")
 public class AddressDaoImpl implements AddressDao {
 
@@ -114,21 +115,23 @@ public class AddressDaoImpl implements AddressDao {
 	}
 
 	@Override
-	@Transactional
-	public void saveList(List<Address> addresses) {
-		notNull(addresses, "The addresses must not be null");
-		// TODO IMPLEMENT BATCH INSERT
-		// this.insertAddresses.execute(addresses);
-		LOGGER.info("New addresses inserted");
-	}
-
-	@Override
-	@Transactional
-	public Address save(Address address) {
+	public Address create(Address address) {	
 		notNull(address, "The address must not be null");
 		if (address.getId() == null) {
 			LOGGER.info("Inserting new address ...");
 			em.persist(address);
+		} else {
+			throw new IllegalArgumentException("Address identifier must be null");
+		}
+		LOGGER.info("User created with id: {}", address.getId());
+		return address;
+	}
+	
+	@Override
+	public Address update(Address address) {	
+		notNull(address, "The address must not be null");
+		if (address.getId() == null) {
+			throw new IllegalArgumentException("Address identifier must not be null");
 		} else {
 			LOGGER.info("Updating new address ...");
 			em.merge(address);
@@ -137,4 +140,12 @@ public class AddressDaoImpl implements AddressDao {
 		return address;
 	}
 
+	@Override
+	public void saveList(List<Address> addresses) {
+		notNull(addresses, "The addresses must not be null");
+		// TODO IMPLEMENT BATCH INSERT
+		// this.insertAddresses.execute(addresses);
+		LOGGER.info("New addresses inserted");
+	}
+	
 }

@@ -3,6 +3,14 @@ package it.maxmin.dao.jdbc.impl.repo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+import static it.maxmin.dao.jpa.impl.repo.constant.Department.ACCOUNTS;
+import static it.maxmin.dao.jpa.impl.repo.constant.Department.LEGAL;
+import static it.maxmin.dao.jpa.impl.repo.constant.Department.PRODUCTION;
+import static it.maxmin.dao.jpa.impl.repo.constant.Role.ADMINISTRATOR;
+import static it.maxmin.dao.jpa.impl.repo.constant.Role.USER;
+import static it.maxmin.dao.jpa.impl.repo.constant.Role.WORKER;
+import static it.maxmin.dao.jpa.impl.repo.constant.State.IRELAND;
+import static it.maxmin.dao.jpa.impl.repo.constant.State.ITALY;
 
 import java.util.List;
 
@@ -37,11 +45,6 @@ class AddressDaoTest extends JdbcBaseTest {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
-
-	@Mock
-	State ireland;
-	@Mock
-	State italy;
 
 	JdbcQueryTestUtil jdbcQueryTestUtil;
 	AddressDao addressDao;
