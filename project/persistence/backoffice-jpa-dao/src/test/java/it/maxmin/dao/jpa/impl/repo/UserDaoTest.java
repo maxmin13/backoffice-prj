@@ -328,21 +328,78 @@ class UserDaoTest extends TestAbstract {
 
 	@Test
 	@Order(9)
+	@Sql(scripts = { "classpath:database/2_address.up.sql",
+			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("09. should throw ConstraintViolationException")
-	void createWithNoDepartmentThrowsException() {
+	@DisplayName("09. should create a user associated to a department, with a new address, with an existing role")
+	void create() {
 
-		LOGGER.info("running test createWithNoDepartmentThrowsException");
+		LOGGER.info("running test create");
 
-		User franco = User.newInstance().withAccountName("franc123").withBirthDate(LocalDate.of(1981, 11, 12))
-				.withFirstName("Franco").withLastName("Red");
+		PojoDepartment department = queryTestUtil.findDepartmentByName(ACCOUNTS.getName());
+
+		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
+				.withFirstName("Carlo").withLastName("Rossi")
+				.withDepartment(Department.newInstance().withId(department.getId()));
+
+		PojoState state1 = queryTestUtil.findStateByName(ITALY.getName());
+
+		Address address1 = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
+				.withState(State.newInstance().withId(state1.getId())).withRegion("Emilia Romagna")
+				.withPostalCode("33456");
+		carl.addAddress(address1);
+
+		PojoState state2 = queryTestUtil.findStateByName(IRELAND.getName());
+
+		Address address2 = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
+				.withState(State.newInstance().withId(state2.getId())).withRegion("County Dublin")
+				.withPostalCode("A65TF14");
+		carl.addAddress(address2);
+
+		PojoUserRole role = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
+
+		carl.addRole(UserRole.newInstance().withId(role.getId()));
 
 		// run the test
-		assertThrows(ConstraintViolationException.class, () -> {
-			userDao.create(franco);
-		});
+		User user = userDao.create(carl);
+
+		assertNotNull(user);
+		assertNotNull(user.getId());
+
+		PojoUser newUser = queryTestUtil.findUserByAccountName("carl23");
+
+		verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), newUser);
+
+		PojoDepartment userDepartment = queryTestUtil.findDepartmentByUserAccountName("carl23");
+
+		verifyDepartment(ACCOUNTS.getName(), userDepartment);
+
+		List<PojoUserRole> userRoles = queryTestUtil.findRolesByUserAccountName("carl23");
+
+		assertEquals(1, userRoles.size());
+		verifyRole(ADMINISTRATOR.getRoleName(), userRoles.get(0));
+
+		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(newUser.getId());
+
+		assertEquals(2, addresses.size());
+
+		PojoAddress newAddress1 = addresses.get(0);
+
+		verifyAddress("A65TF14", "Via Vecchia", "Dublin", "County Dublin", newAddress1);
+
+		PojoState newState1 = queryTestUtil.findStateByAddressPostalCode("33456");
+
+		verifyState(ITALY.getName(), ITALY.getCode(), newState1);
+
+		PojoAddress newAddress2 = addresses.get(1);
+
+		verifyAddress("33456", "Via Nuova", "Venice", "Emilia Romagna", newAddress2);
+
+		PojoState newState2 = queryTestUtil.findStateByAddressPostalCode("A65TF14");
+
+		verifyState(IRELAND.getName(), IRELAND.getCode(), newState2);
 	}
 
 	@Test
@@ -390,75 +447,7 @@ class UserDaoTest extends TestAbstract {
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("11. should create a user with existing role")
-	void createWithExistingRole() {
-
-		LOGGER.info("running test createWithExistingRole");
-
-		PojoDepartment department = queryTestUtil.findDepartmentByName(ACCOUNTS.getName());
-
-		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withFirstName("Carlo").withLastName("Rossi")
-				.withDepartment(Department.newInstance().withId(department.getId()));
-
-		PojoUserRole role = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
-
-		carl.addRole(UserRole.newInstance().withId(role.getId()));
-
-		// run the test
-		User user = userDao.create(carl);
-
-		assertNotNull(user.getId());
-
-		PojoUser newUser = queryTestUtil.findUserByAccountName("carl23");
-
-		verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), newUser);
-
-		PojoDepartment userDepartment = queryTestUtil.findDepartmentByUserAccountName("carl23");
-
-		verifyDepartment(ACCOUNTS.getName(), userDepartment);
-
-		List<PojoUserRole> userRoles = queryTestUtil.findRolesByUserAccountName("carl23");
-
-		assertEquals(1, userRoles.size());
-
-		verifyRole(ADMINISTRATOR.getRoleName(), userRoles.get(0));
-	}
-
-	@Test
-	@Order(12)
-	@Sql(scripts = { "classpath:database/2_address.up.sql",
-			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
-			"classpath:database/2_user.down.sql",
-			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("12. should throw DataIntegrityViolationException")
-	void createWithNotExistingRoleThrowsException() {
-
-		LOGGER.info("running test createWithNotExistingRoleThrowsException");
-
-		PojoDepartment department = queryTestUtil.findDepartmentByName(ACCOUNTS.getName());
-
-		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withFirstName("Carlo").withLastName("Rossi")
-				.withDepartment(Department.newInstance().withId(department.getId()));
-
-		carl.addRole(UserRole.newInstance().withId(23l).withRoleName("Mechanic"));
-
-		// run the test
-		assertThrows(DataIntegrityViolationException.class, () -> {
-			userDao.create(carl);
-		});
-	}
-
-	@Test
-	@Order(13)
-	@Sql(scripts = { "classpath:database/2_address.up.sql",
-			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
-			"classpath:database/2_user.down.sql",
-			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("13. should throw EntityExistsException")
+	@DisplayName("11. should throw EntityExistsException")
 	void createWithExistingAddressThrowsException() {
 
 		LOGGER.info("running test createWithExistingAddressThrowsException");
@@ -484,14 +473,55 @@ class UserDaoTest extends TestAbstract {
 	}
 
 	@Test
-	@Order(14)
+	@Order(12)
 	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-	@DisplayName("14. should create a user with new addresses")
-	void createWithNotExistingAddress() {
+	@DisplayName("12. should throw ConstraintViolationException")
+	void createWithNoDepartmentThrowsException() {
 
-		LOGGER.info("running test createWithNotExistingAddress");
+		LOGGER.info("running test createWithNoDepartmentThrowsException");
+
+		User franco = User.newInstance().withAccountName("franc123").withBirthDate(LocalDate.of(1981, 11, 12))
+				.withFirstName("Franco").withLastName("Red");
+
+		// run the test
+		assertThrows(ConstraintViolationException.class, () -> {
+			userDao.create(franco);
+		});
+	}
+
+	@Test
+	@Order(13)
+	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+			"classpath:database/2_user.down.sql",
+			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("13. should throw ConstraintViolationException")
+	void createWithNotExistingDepartmentThrowsException() {
+
+		LOGGER.info("running test createWithNotExistingDepartmentThrowsException");
+
+		User franco = User.newInstance().withAccountName("franc123").withBirthDate(LocalDate.of(1981, 11, 12))
+				.withFirstName("Franco").withLastName("Red")
+				.withDepartment(Department.newInstance().withId(0l).withName("Agricolture"));
+
+		// run the test
+		assertThrows(ConstraintViolationException.class, () -> {
+			userDao.create(franco);
+		});
+	}
+
+	@Test
+	@Order(14)
+	@Sql(scripts = { "classpath:database/2_address.up.sql",
+			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+			"classpath:database/2_user.down.sql",
+			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+	@DisplayName("14. should throw DataIntegrityViolationException")
+	void createWithNotExistingRoleThrowsException() {
+
+		LOGGER.info("running test createWithNotExistingRoleThrowsException");
 
 		PojoDepartment department = queryTestUtil.findDepartmentByName(ACCOUNTS.getName());
 
@@ -499,56 +529,12 @@ class UserDaoTest extends TestAbstract {
 				.withFirstName("Carlo").withLastName("Rossi")
 				.withDepartment(Department.newInstance().withId(department.getId()));
 
-		PojoState state1 = queryTestUtil.findStateByName(ITALY.getName());
-
-		Address address1 = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
-				.withState(State.newInstance().withId(state1.getId())).withRegion("Emilia Romagna")
-				.withPostalCode("33456");
-		carl.addAddress(address1);
-
-		PojoState state2 = queryTestUtil.findStateByName(IRELAND.getName());
-
-		Address address2 = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
-				.withState(State.newInstance().withId(state2.getId())).withRegion("County Dublin")
-				.withPostalCode("A65TF14");
-		carl.addAddress(address2);
+		carl.addRole(UserRole.newInstance().withId(23l).withRoleName("Mechanic"));
 
 		// run the test
-		User user = userDao.create(carl);
-
-		assertNotNull(user.getId());
-
-		PojoUser newUser = queryTestUtil.findUserByAccountName("carl23");
-
-		verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), newUser);
-
-		PojoDepartment userDepartment = queryTestUtil.findDepartmentByUserAccountName("carl23");
-
-		verifyDepartment(ACCOUNTS.getName(), userDepartment);
-
-		List<PojoUserRole> userRoles = queryTestUtil.findRolesByUserAccountName("carl23");
-
-		assertEquals(0, userRoles.size());
-
-		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(newUser.getId());
-
-		assertEquals(2, addresses.size());
-
-		PojoAddress newAddress1 = addresses.get(0);
-
-		verifyAddress("A65TF14", "Via Vecchia", "Dublin", "County Dublin", newAddress1);
-
-		PojoState newState1 = queryTestUtil.findStateByAddressPostalCode("33456");
-
-		verifyState(ITALY.getName(), ITALY.getCode(), newState1);
-
-		PojoAddress newAddress2 = addresses.get(1);
-
-		verifyAddress("33456", "Via Nuova", "Venice", "Emilia Romagna", newAddress2);
-
-		PojoState newState2 = queryTestUtil.findStateByAddressPostalCode("A65TF14");
-
-		verifyState(IRELAND.getName(), IRELAND.getCode(), newState2);
+		assertThrows(DataIntegrityViolationException.class, () -> {
+			userDao.create(carl);
+		});
 	}
 
 	@Test
@@ -820,8 +806,8 @@ class UserDaoTest extends TestAbstract {
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("22. should throw OptimisticLockException")
 	/**
-	 * I would have expected an EntityNotFoundException, but an OptimisticLockException is thrown.
-	 * Found this explanation:
+	 * I would have expected an EntityNotFoundException, but an
+	 * OptimisticLockException is thrown. Found this explanation:
 	 * https://stackoverflow.com/questions/24827576/what-does-mean-hibernates-unsaved-value-mapping-was-incorrect
 	 * 
 	 * If an entity is determined by means of your unsaved-value as detached, but is
