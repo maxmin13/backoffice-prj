@@ -12,7 +12,7 @@ This is important because it means that you can configure a single instance of a
 
 MariaDB supported joins:
 
-INNER JOIN 
-LEFT JOIN outer join starting from the left table
-RIGHT JOIN outer join starting from the right table
-CROSS JOIN Cartesian product
+INNER JOIN: 
+LEFT JOIN: outer join starting from the left table
+RIGHT JOIN: outer join starting from the right table
+CROSS JOIN: Cartesian product
