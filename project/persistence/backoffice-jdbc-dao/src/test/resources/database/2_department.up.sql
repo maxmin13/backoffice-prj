@@ -1,3 +1,3 @@
-INSERT INTO Department (Name) VALUES ("Accounts");
-INSERT INTO Department (Name) VALUES ("Legal");
-INSERT INTO Department (Name) VALUES ("Production");
+INSERT INTO Department (Id, Name) VALUES (1, "Accounts");
+INSERT INTO Department (Id, Name) VALUES (2, "Legal");
+INSERT INTO Department (Id, Name) VALUES (3, "Production");

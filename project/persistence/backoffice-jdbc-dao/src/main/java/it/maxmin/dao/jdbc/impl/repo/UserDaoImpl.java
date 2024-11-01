@@ -65,8 +65,13 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public void create(User user) {
 		notNull(user, "The user must not be null");
-		this.insertUserWithAddress.execute(user);
-		LOGGER.info("New user  {} {} inserted", user.getFirstName(), user.getLastName());
+		if (user.getId() == null) {
+			LOGGER.info("Inserting new user ...");
+			this.insertUserWithAddress.execute(user);
+			LOGGER.info("User created with id: {}", user.getId());
+		} else {
+			throw new IllegalArgumentException("User identifier must be null");
+		}
 	}
 
 	@Override
@@ -78,7 +83,12 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public void update(User user) {
 		notNull(user, "The user must not be null");
-		updateUser.execute(user);
-		LOGGER.info("Existing user updated with id: {}", user.getId());
+		if (user.getId() == null) {
+			throw new IllegalArgumentException("User identifier must not be null");
+		} else {
+			LOGGER.info("Updating new user ...");
+			updateUser.execute(user);
+			LOGGER.info("User saved with id: {}", user.getId());
+		}
 	}
 }

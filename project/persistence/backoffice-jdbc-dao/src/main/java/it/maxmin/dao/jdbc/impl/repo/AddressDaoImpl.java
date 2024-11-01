@@ -46,8 +46,14 @@ public class AddressDaoImpl implements AddressDao {
 	@Override
 	public Address create(Address address) {
 		notNull(address, "The address must not be null");
-		Address newAddress = this.insertAddress.execute(address);
-		LOGGER.info("New address  {} inserted with id: {}", newAddress.getDescription(), newAddress.getId());
+		Address newAddress;
+		if (address.getId() == null) {
+			LOGGER.info("Inserting new address ...");
+			newAddress = this.insertAddress.execute(address);
+			LOGGER.info("New address  {} inserted with id: {}", newAddress.getDescription(), newAddress.getId());
+		} else {
+			throw new IllegalArgumentException("Address identifier must be null");
+		}
 		return address;
 	}
 
@@ -61,8 +67,13 @@ public class AddressDaoImpl implements AddressDao {
 	@Override
 	public void update(Address address) {
 		notNull(address, "The address must not be null");
-		updateAddress.execute(address);
-		LOGGER.info("Existing address updated with id: {}", address.getId());
+		if (address.getId() == null) {
+			throw new IllegalArgumentException("Address identifier must not be null");
+		} else {
+			LOGGER.info("Updating new address ...");
+			updateAddress.execute(address);
+			LOGGER.info("Address saved with id: {}", address.getId());
+		}
 	}
 
 }

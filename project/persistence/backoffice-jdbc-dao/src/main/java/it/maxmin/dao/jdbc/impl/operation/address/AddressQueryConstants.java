@@ -13,11 +13,13 @@ public enum AddressQueryConstants {
 			+ "WHERE ua.UserId = :userId "
 			+ "ORDER BY a.Id, ua.UserId";
 
-	public static final String UPDATE_ADDRESS = "" + "UPDATE Address "
+	public static final String UPDATE_ADDRESS = "" 
+			+ "UPDATE Address "
 			+ "SET Description=:description, City=:city, StateId=:stateId, Region=:region, PostalCode=:postalCode "
 			+ "WHERE Id=:addressId";
 
-	public static final String INSERT_ADDRESS = "" + "INSERT INTO Address "
+	public static final String INSERT_ADDRESS = "" 
+			+ "INSERT INTO Address "
 			+ "SET Description = :description, City = :city, StateId = :stateId, Region = :region, PostalCode = :postalCode";
 
 	public static final String INSERT_USER = "" + "INSERT INTO User "

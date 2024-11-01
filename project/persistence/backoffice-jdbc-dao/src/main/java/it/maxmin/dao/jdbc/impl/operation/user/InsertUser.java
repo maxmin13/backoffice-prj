@@ -35,7 +35,9 @@ public class InsertUser extends SqlUpdate {
 
 	public User execute(User user) {
 		notNull(user, "The user must not be null");
-
+		if (user.getId() != null) {
+			throw new IllegalArgumentException("User identifier must not null");
+		}
 		var keyHolder = new GeneratedKeyHolder();
 		updateByNamedParam(
 				Map.of("accountName", user.getAccountName(), "firstName", user.getFirstName(), "lastName",

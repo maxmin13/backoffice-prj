@@ -57,10 +57,10 @@ public class UserDaoImpl implements UserDao {
 		if (user.getId() == null) {
 			LOGGER.info("Inserting new user ...");
 			em.persist(user);
+			LOGGER.info("User created with id: {}", user.getId());
 		} else {
 			throw new IllegalArgumentException("User identifier must be null");
 		}
-		LOGGER.info("User created with id: {}", user.getId());
 		return user;
 	}
 	
@@ -72,8 +72,8 @@ public class UserDaoImpl implements UserDao {
 		} else {
 			LOGGER.info("Updating new user ...");
 			em.merge(user);
+			LOGGER.info("User saved with id: {}", user.getId());
 		}
-		LOGGER.info("User saved with id: {}", user.getId());
 		return user;
 	}
 

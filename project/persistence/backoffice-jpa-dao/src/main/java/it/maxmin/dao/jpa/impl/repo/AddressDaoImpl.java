@@ -120,10 +120,10 @@ public class AddressDaoImpl implements AddressDao {
 		if (address.getId() == null) {
 			LOGGER.info("Inserting new address ...");
 			em.persist(address);
+			LOGGER.info("User created with id: {}", address.getId());
 		} else {
 			throw new IllegalArgumentException("Address identifier must be null");
 		}
-		LOGGER.info("User created with id: {}", address.getId());
 		return address;
 	}
 	
@@ -135,8 +135,8 @@ public class AddressDaoImpl implements AddressDao {
 		} else {
 			LOGGER.info("Updating new address ...");
 			em.merge(address);
+			LOGGER.info("Address saved with id: {}", address.getId());
 		}
-		LOGGER.info("Address saved with id: {}", address.getId());
 		return address;
 	}
 
