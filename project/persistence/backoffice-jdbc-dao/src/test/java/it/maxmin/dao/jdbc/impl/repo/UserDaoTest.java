@@ -36,7 +36,7 @@ import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 class UserDaoTest extends BaseTestUser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);
-	UserDao userDao;
+	private UserDao userDao;
 
 	@Autowired
 	UserDaoTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil, UserDao userDao) {

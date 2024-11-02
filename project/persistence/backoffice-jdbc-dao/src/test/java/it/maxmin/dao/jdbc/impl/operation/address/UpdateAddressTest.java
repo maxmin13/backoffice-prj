@@ -19,11 +19,10 @@ import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
 import it.maxmin.model.jdbc.domain.pojo.PojoState;
 
-public class UpdateAddressTest extends BaseTestUser {
+class UpdateAddressTest extends BaseTestUser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UpdateAddressTest.class);
-
-	UpdateAddress updateAddress;
+	private UpdateAddress updateAddress;
 
 	@Autowired
 	UpdateAddressTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil, 

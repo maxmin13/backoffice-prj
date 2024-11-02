@@ -19,10 +19,10 @@ import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
 
-public class InsertAddressesTest extends BaseTestUser {
+class InsertAddressesTest extends BaseTestUser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertAddressesTest.class);
-	InsertAddresses insertAddresses;
+	private InsertAddresses insertAddresses;
 
 	@Autowired
 	InsertAddressesTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil, DataSource dataSource) {

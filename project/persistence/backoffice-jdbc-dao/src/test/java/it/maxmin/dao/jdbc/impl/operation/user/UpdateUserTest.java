@@ -8,10 +8,10 @@ import it.maxmin.dao.jdbc.BaseTestUser;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 
-public class UpdateUserTest extends BaseTestUser {
+class UpdateUserTest extends BaseTestUser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UpdateUserTest.class);
-	UpdateUser updateUser;
+	private UpdateUser updateUser;
 
 	@Autowired
 	UpdateUserTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil,

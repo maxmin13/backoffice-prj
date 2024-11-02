@@ -8,10 +8,10 @@ import it.maxmin.dao.jdbc.BaseTestUser;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 
-public class InsertUserAddressTest extends BaseTestUser {
+class InsertUserAddressTest extends BaseTestUser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertUserAddressTest.class);
-	InsertUserAddress insertUserAddress;
+	private InsertUserAddress insertUserAddress;
 
 	@Autowired
 	InsertUserAddressTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil,

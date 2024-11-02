@@ -19,10 +19,10 @@ import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 
-public class SelectAddressesByUserIdTest extends BaseTestUser {
+class SelectAddressesByUserIdTest extends BaseTestUser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectAddressesByUserIdTest.class);
-	SelectAddressesByUserId selectAddressesByUserId;
+	private SelectAddressesByUserId selectAddressesByUserId;
 
 	@Autowired
 	SelectAddressesByUserIdTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil,
