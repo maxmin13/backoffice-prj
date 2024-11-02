@@ -6,6 +6,7 @@ import static it.maxmin.dao.jdbc.impl.repo.constant.Department.PRODUCTION;
 import static it.maxmin.dao.jdbc.impl.repo.constant.State.IRELAND;
 import static it.maxmin.dao.jdbc.impl.repo.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -40,7 +41,6 @@ import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AddressDaoTest extends JdbcBaseTest {
 
-	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
 
 	JdbcQueryTestUtil jdbcQueryTestUtil;
@@ -142,27 +142,54 @@ class AddressDaoTest extends JdbcBaseTest {
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
+	
+	@Test
+	void createWithAddressIdThrowsException() {
+
+		LOGGER.info("running test createWithAddressIdThrowsException");
+
+		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
+				.withState(State.newInstance().withId(italy.getId())).withRegion("Veneto").withPostalCode("30033");
+
+		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.create(address));
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
 
 	@Test
 	void create() {
-		
+
 		LOGGER.info("running test create");
+
+		// delete all the addresses
+		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
+		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		Address address = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(italy.getId())).withRegion("Veneto").withPostalCode("30033");
 
 		// run the test
-		Address newAddress = addressDao.create(address);
+		address = addressDao.create(address);
+
+		assertNotNull(address);
+		assertNotNull(address.getId());
+
+		PojoAddress newAddress = jdbcQueryTestUtil.findAddressByAddressId(address.getId());
 
 		verifyAddress("30033", "Via Nuova", "Venice", "Veneto", newAddress);
+
+		PojoState state = jdbcQueryTestUtil.findStateByAddressPostalCode("30033");
+
+		verifyState(ITALY.getName(), ITALY.getCode(), state);
 	}
 
 	@Test
 	void createList() {
-		
+
 		LOGGER.info("running test createList");
 
-		String[] scripts = { "2_address.down.sql" };
+		// delete all the addresses
+		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		Address address1 = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
@@ -182,12 +209,14 @@ class AddressDaoTest extends JdbcBaseTest {
 		assertEquals(2, newAddresses.size());
 
 		verifyAddress("30033", "Via Nuova", "Venice", "Veneto", newAddresses.get(0));
+		assertEquals(italy.getId(), newAddresses.get(0).getStateId());
 		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", newAddresses.get(1));
+		assertEquals(ireland.getId(), newAddresses.get(1).getStateId());
 	}
 
 	@Test
 	void updateWithNoAddressThrowsException() {
-		
+
 		LOGGER.info("running test updateWithNoAddressThrowsException");
 
 		Address address = null;
@@ -198,31 +227,46 @@ class AddressDaoTest extends JdbcBaseTest {
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
+	
+	@Test
+	void updateWithNoAddressIdThrowsException() {
+
+		LOGGER.info("running test updateWithNoAddressIdThrowsException");
+
+		Address address = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
+				.withState(State.newInstance().withId(italy.getId())).withRegion("Veneto").withPostalCode("30033");
+
+		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.update(address));
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
 
 	@Test
 	void update() {
-		
+
 		LOGGER.info("running test update");
 
 		// Find an existing address
 		PojoAddress address = jdbcQueryTestUtil.findAddressByPostalCode("30010");
 
-		// TODO ASSERT THE ADDRESS
-		// TODO ASSERT THE ADDRESS
-		// TODO ASSERT THE ADDRESS
-		// TODO ASSERT THE ADDRESS
+		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address);
+		assertEquals(italy.getId(), address.getStateId());
 
 		// Change the address
 		Address addressUpdated = Address.newInstance().withId(address.getId()).withDescription("Via Nuova")
 				.withCity("Venice").withState(State.newInstance().withId(italy.getId())).withRegion("Veneto")
-				.withPostalCode("30010");
+				.withPostalCode("33311");
 
 		// run the test
 		addressDao.update(addressUpdated);
 
-		PojoAddress updated = jdbcQueryTestUtil.findAddressByPostalCode("30010");
+		PojoAddress updated = jdbcQueryTestUtil.findAddressByAddressId(address.getId());
 
-		verifyAddress("30010", "Via Nuova", "Venice", "Veneto", updated);
+		verifyAddress("33311", "Via Nuova", "Venice", "Veneto", updated);
+
+		PojoState state = jdbcQueryTestUtil.findStateByAddressPostalCode("33311");
+
+		verifyState(ITALY.getName(), ITALY.getCode(), state);
 	}
 
 }

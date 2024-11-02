@@ -11,6 +11,7 @@ import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.entity.User;
 import it.maxmin.model.jdbc.domain.entity.UserRole;
 import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
+import it.maxmin.model.jdbc.domain.pojo.PojoState;
 import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 
 abstract class JdbcBaseTest {
@@ -34,6 +35,12 @@ abstract class JdbcBaseTest {
 	}
 
 	void verifyState(String name, String code, State actual) {
+		assertNotNull(actual.getId());
+		assertEquals(name, actual.getName());
+		assertEquals(code, actual.getCode());
+	}
+	
+	void verifyState(String name, String code, PojoState actual) {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());
 		assertEquals(code, actual.getCode());
