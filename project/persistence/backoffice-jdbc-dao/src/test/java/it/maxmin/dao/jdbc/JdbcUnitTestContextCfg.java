@@ -44,6 +44,11 @@ public class JdbcUnitTestContextCfg {
 	public JdbcDataSourceTestUtil jdbcDataSourceTestUtil() {
 		return new JdbcDataSourceTestUtil();
 	}
+	
+	@Bean
+	public JdbcUserTestUtil jdbcUserTestUtil() {
+		return new JdbcUserTestUtil();
+	}
 
 	@SuppressWarnings("unchecked")
 	@Bean

@@ -35,7 +35,7 @@ public class UserDaoImpl implements UserDao {
 	private InsertUserAddress insertUserAddress;
 
 	@Autowired
-	public void setJdbcTemplate(DataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
+	public UserDaoImpl(DataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
 		this.updateUser = new UpdateUser(dataSource);
 		this.insertUserWithAddress = new InsertUserWithAddress(dataSource);
 		this.insertUserAddress = new InsertUserAddress(dataSource);

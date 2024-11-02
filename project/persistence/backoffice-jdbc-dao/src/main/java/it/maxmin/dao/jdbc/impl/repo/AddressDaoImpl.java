@@ -30,7 +30,7 @@ public class AddressDaoImpl implements AddressDao {
 	private SelectAddressesByUserId selectAddressesByUserId;
 
 	@Autowired
-	public void setJdbcTemplate(DataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
+	public AddressDaoImpl(DataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
 		this.updateAddress = new UpdateAddress(dataSource);
 		this.insertAddress = new InsertAddress(dataSource);
 		this.insertAddresses = new InsertAddresses(dataSource);

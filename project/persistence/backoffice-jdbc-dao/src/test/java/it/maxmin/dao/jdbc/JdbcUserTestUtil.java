@@ -1,4 +1,4 @@
-package it.maxmin.dao.jdbc.impl.repo;
+package it.maxmin.dao.jdbc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,9 +14,22 @@ import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
 import it.maxmin.model.jdbc.domain.pojo.PojoState;
 import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 
-abstract class JdbcTestBase {
+public class JdbcUserTestUtil {
 
-	void verifyAddress(String postalCode, String description, String city, String region, Address actual) {
+	public void verifyAddress(String postalCode, String description, String city, String region, Address actual) {
+		assertNotNull(actual.getId());
+		verifyAddressWithoutId(postalCode, description, city, region, actual);
+	}
+	
+	public void verifyAddressWithoutId(String postalCode, String description, String city, String region, Address actual) {
+		assertNotNull(actual);
+		assertEquals(postalCode, actual.getPostalCode());
+		assertEquals(description, actual.getDescription());
+		assertEquals(city, actual.getCity());
+		assertEquals(region, actual.getRegion());
+	}
+
+	public void verifyAddress(String postalCode, String description, String city, String region, PojoAddress actual) {
 		assertNotNull(actual);
 		assertNotNull(actual.getId());
 		assertEquals(postalCode, actual.getPostalCode());
@@ -25,33 +38,24 @@ abstract class JdbcTestBase {
 		assertEquals(region, actual.getRegion());
 	}
 
-	void verifyAddress(String postalCode, String description, String city, String region, PojoAddress actual) {
-		assertNotNull(actual);
-		assertNotNull(actual.getId());
-		assertEquals(postalCode, actual.getPostalCode());
-		assertEquals(description, actual.getDescription());
-		assertEquals(city, actual.getCity());
-		assertEquals(region, actual.getRegion());
-	}
-
-	void verifyState(String name, String code, State actual) {
+	public void verifyState(String name, String code, State actual) {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());
 		assertEquals(code, actual.getCode());
 	}
 	
-	void verifyState(String name, String code, PojoState actual) {
+	public void verifyState(String name, String code, PojoState actual) {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());
 		assertEquals(code, actual.getCode());
 	}
 
-	void verifyDepartment(String name, Department actual) {
+	public void verifyDepartment(String name, Department actual) {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());
 	}
 
-	void verifyUser(String accountName, String firstName, String lastName, LocalDate birthDate, User actual) {
+	public void verifyUser(String accountName, String firstName, String lastName, LocalDate birthDate, User actual) {
 		assertNotNull(actual.getId());
 		assertEquals(accountName, actual.getAccountName());
 		assertEquals(firstName, actual.getFirstName());
@@ -63,7 +67,7 @@ abstract class JdbcTestBase {
 		assertNotNull(actual.getRoles());
 	}
 
-	void verifyUser(String accountName, String firstName, String lastName, LocalDate birthDate, PojoUser actual) {
+	public void verifyUser(String accountName, String firstName, String lastName, LocalDate birthDate, PojoUser actual) {
 		assertNotNull(actual.getId());
 		assertEquals(accountName, actual.getAccountName());
 		assertEquals(firstName, actual.getFirstName());
@@ -72,7 +76,7 @@ abstract class JdbcTestBase {
 		assertNotNull(actual.getCreatedAt());
 	}
 
-	void verifyRole(String roleName, UserRole actual) {
+	public void verifyRole(String roleName, UserRole actual) {
 		assertNotNull(actual.getId());
 		assertEquals(roleName, actual.getRoleName());
 	}
