@@ -14,7 +14,7 @@ import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
 import it.maxmin.model.jdbc.domain.pojo.PojoState;
 import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 
-abstract class JdbcBaseTest {
+abstract class JdbcTestBase {
 
 	void verifyAddress(String postalCode, String description, String city, String region, Address actual) {
 		assertNotNull(actual);

@@ -48,7 +48,7 @@ import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class UserDaoTest extends JdbcBaseTest {
+class UserDaoTest extends JdbcTestBase {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);
 
