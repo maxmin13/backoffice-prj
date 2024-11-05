@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import it.maxmin.model.jdbc.domain.entity.User;
 
-public class SelectAllUsers extends SelectUser {
+public class SelectAllUsers extends UserResultsetExctractor {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectAllUsers.class);

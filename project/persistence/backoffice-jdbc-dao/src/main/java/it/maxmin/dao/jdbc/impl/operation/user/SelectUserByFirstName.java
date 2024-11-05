@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import it.maxmin.model.jdbc.domain.entity.User;
 
-public class SelectUserByFirstName extends SelectUser {
+public class SelectUserByFirstName extends UserResultsetExctractor {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
 

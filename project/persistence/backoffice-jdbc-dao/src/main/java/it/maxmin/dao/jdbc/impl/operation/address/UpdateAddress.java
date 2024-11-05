@@ -27,7 +27,7 @@ public class UpdateAddress extends SqlUpdate {
 
 	public void execute(Address address) {
 		notNull(address, "The address must not be null");
-		notNull(address.getId(), "Address identifier must not be null");
+		notNull(address.getId(), "The address ID must not be null");
 		updateByNamedParam(Map.of("addressId", address.getId(), "description", address.getDescription(), "city",
 				address.getCity(), "stateId", address.getState().getId(), "region", address.getRegion(), "postalCode",
 				address.getPostalCode()));

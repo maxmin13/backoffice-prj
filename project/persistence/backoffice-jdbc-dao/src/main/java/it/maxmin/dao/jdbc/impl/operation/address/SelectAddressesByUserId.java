@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import it.maxmin.model.jdbc.domain.entity.Address;
 
-public class SelectAddressesByUserId extends SelectAddress {
+public class SelectAddressesByUserId extends AddressResultsetExtractor {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
 

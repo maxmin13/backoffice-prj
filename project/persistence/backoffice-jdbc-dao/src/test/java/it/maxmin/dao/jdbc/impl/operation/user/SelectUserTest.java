@@ -11,10 +11,10 @@ import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 class SelectUserTest extends BaseTestUser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectUserTest.class);
-	private SelectUser selectUser;
+	private UserResultsetExctractor selectUser;
 
 	@Autowired
-	SelectUserTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil, SelectUser selectUser) {
+	SelectUserTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil, UserResultsetExctractor selectUser) {
 		super(jdbcQueryTestUtil, jdbcUserTestUtil);
 		this.selectUser = selectUser;
 	}

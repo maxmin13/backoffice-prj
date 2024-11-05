@@ -12,6 +12,14 @@ public enum AddressQueryConstants {
 			+ "INNER JOIN State s ON a.StateId = s.Id " 
 			+ "WHERE ua.UserId = :userId "
 			+ "ORDER BY a.Id, ua.UserId";
+	
+	public static final String SELECT_ADDRESS_BY_USER_POSTAL_CODE = ""
+			+ "SELECT a.Id, a.Description, a.City, a.Region, a.PostalCode, "
+			+ "         s.Id AS StateId, s.Name, s.Code " 
+			+ "FROM Address a "
+			+ "INNER JOIN State s ON a.StateId = s.Id " 
+			+ "WHERE a.PostalCode = :postalCode "
+			+ "ORDER BY a.Id";	
 
 	public static final String UPDATE_ADDRESS = "" 
 			+ "UPDATE Address "
@@ -22,9 +30,4 @@ public enum AddressQueryConstants {
 			+ "INSERT INTO Address "
 			+ "SET Description = :description, City = :city, StateId = :stateId, Region = :region, PostalCode = :postalCode";
 
-	public static final String INSERT_USER = "" + "INSERT INTO User "
-			+ "SET AccountName = :accountName, FirstName = :firstName, LastName = :lastName, DepartmentId = :departmentId, BirthDate = :birtDate";
-	
-	public static final String INSERT_USER_ADDRESS = "" + "INSERT INTO UserAddress "
-			+ "SET UserId = :userId, AddressId = :addressId";
 }

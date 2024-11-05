@@ -5,6 +5,8 @@ import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
 import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
 import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
+import static it.maxmin.dao.jdbc.impl.constant.UserRole.*;
+
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import it.maxmin.model.jdbc.domain.pojo.PojoDepartment;
 import it.maxmin.model.jdbc.domain.pojo.PojoState;
+import it.maxmin.model.jdbc.domain.pojo.PojoUserRole;
 
 @SpringJUnitConfig(classes = { JdbcUnitTestContextCfg.class })
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -33,6 +36,9 @@ public abstract class BaseTestUser {
 	protected PojoDepartment production;
 	protected PojoState italy;
 	protected PojoState ireland;
+	protected PojoUserRole administrator;
+	protected PojoUserRole user;
+	protected PojoUserRole worker;
 
 	@Autowired
 	protected BaseTestUser(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil) {
@@ -47,6 +53,9 @@ public abstract class BaseTestUser {
 		this.production = jdbcQueryTestUtil.findDepartmentByName(PRODUCTION.getName());
 		this.italy = jdbcQueryTestUtil.findStateByName(ITALY.getName());
 		this.ireland = jdbcQueryTestUtil.findStateByName(IRELAND.getName());
+		this.administrator = jdbcQueryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
+		this.worker = jdbcQueryTestUtil.findRoleByName(WORKER.getRoleName());
+		this.user = jdbcQueryTestUtil.findRoleByName(USER.getRoleName());
 	}
 
 	@BeforeEach

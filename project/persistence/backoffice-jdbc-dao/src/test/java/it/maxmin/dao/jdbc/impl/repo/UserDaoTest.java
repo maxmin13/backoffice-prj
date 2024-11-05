@@ -2,9 +2,9 @@ package it.maxmin.dao.jdbc.impl.repo;
 
 import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
-import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
-import static it.maxmin.dao.jdbc.impl.constant.Role.USER;
-import static it.maxmin.dao.jdbc.impl.constant.Role.WORKER;
+import static it.maxmin.dao.jdbc.impl.constant.UserRole.ADMINISTRATOR;
+import static it.maxmin.dao.jdbc.impl.constant.UserRole.USER;
+import static it.maxmin.dao.jdbc.impl.constant.UserRole.WORKER;
 import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
 import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,7 +50,7 @@ class UserDaoTest extends BaseTestUser {
 		LOGGER.info("running test testFindAllNotFound");
 
 		// delete all users
-		String[] scripts = { "2_user.down.sql" };
+		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// run the test
@@ -198,7 +198,7 @@ class UserDaoTest extends BaseTestUser {
 		LOGGER.info("running test findByAccountNameNotFound");
 
 		// delete all users
-		String[] scripts = { "2_user.down.sql" };
+		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// run the test
@@ -250,7 +250,7 @@ class UserDaoTest extends BaseTestUser {
 		LOGGER.info("running test findByFirstNameNotFound");
 
 		// delete all users
-		String[] scripts = { "2_user.down.sql" };
+		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// run the test

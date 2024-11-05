@@ -11,8 +11,10 @@ import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.entity.User;
 import it.maxmin.model.jdbc.domain.entity.UserRole;
 import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
+import it.maxmin.model.jdbc.domain.pojo.PojoDepartment;
 import it.maxmin.model.jdbc.domain.pojo.PojoState;
 import it.maxmin.model.jdbc.domain.pojo.PojoUser;
+import it.maxmin.model.jdbc.domain.pojo.PojoUserRole;
 
 public class JdbcUserTestUtil {
 
@@ -54,14 +56,23 @@ public class JdbcUserTestUtil {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());
 	}
+	
+	public void verifyDepartment(String name, PojoDepartment actual) {
+		assertNotNull(actual.getId());
+		assertEquals(name, actual.getName());
+	}
 
 	public void verifyUser(String accountName, String firstName, String lastName, LocalDate birthDate, User actual) {
+		verifyUserWithNoCreatedAtDate(accountName, firstName, lastName, birthDate, actual);
+		assertNotNull(actual.getCreatedAt());
+	}
+	
+	public void verifyUserWithNoCreatedAtDate(String accountName, String firstName, String lastName, LocalDate birthDate, User actual) {
 		assertNotNull(actual.getId());
 		assertEquals(accountName, actual.getAccountName());
 		assertEquals(firstName, actual.getFirstName());
 		assertEquals(lastName, actual.getLastName());
 		assertEquals(birthDate, actual.getBirthDate());
-		assertNotNull(actual.getCreatedAt());
 		assertNotNull(actual.getDepartment());
 		assertNotNull(actual.getAddresses());
 		assertNotNull(actual.getRoles());
@@ -77,6 +88,11 @@ public class JdbcUserTestUtil {
 	}
 
 	public void verifyRole(String roleName, UserRole actual) {
+		assertNotNull(actual.getId());
+		assertEquals(roleName, actual.getRoleName());
+	}
+	
+	public void verifyRole(String roleName, PojoUserRole actual) {
 		assertNotNull(actual.getId());
 		assertEquals(roleName, actual.getRoleName());
 	}

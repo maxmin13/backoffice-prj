@@ -15,12 +15,11 @@ import it.maxmin.dao.jdbc.exception.DATAAccessException;
 import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.entity.State;
 
-public abstract class SelectAddress {
+public abstract class AddressResultsetExtractor {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(SelectAddress.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AddressResultsetExtractor.class);
 
-	// TODO add the list of users to the address
 	ResultSetExtractor<List<Address>> addressExtractor = (ResultSetExtractor<List<Address>>) rs -> {
 		Map<Long, Address> map = new HashMap<>();
 		Address address = null;

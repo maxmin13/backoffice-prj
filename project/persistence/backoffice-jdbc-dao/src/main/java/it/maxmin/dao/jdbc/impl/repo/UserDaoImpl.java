@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import it.maxmin.dao.jdbc.api.repo.UserDao;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserAddress;
-import it.maxmin.dao.jdbc.impl.operation.user.InsertUserWithAddress;
+import it.maxmin.dao.jdbc.impl.operation.user.InsertUserWithAddressAndRole;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectAllUsers;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByAccountName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByFirstName;
@@ -31,13 +31,13 @@ public class UserDaoImpl implements UserDao {
 	private SelectUserByFirstName selectUserByFirstName;
 	private SelectUserByAccountName selectUserByAccountName;
 	private SelectAllUsers selectAllUsers;
-	private InsertUserWithAddress insertUserWithAddress;
+	private InsertUserWithAddressAndRole insertUserWithAddress;
 	private InsertUserAddress insertUserAddress;
 
 	@Autowired
 	public UserDaoImpl(DataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
 		this.updateUser = new UpdateUser(dataSource);
-		this.insertUserWithAddress = new InsertUserWithAddress(dataSource);
+		this.insertUserWithAddress = new InsertUserWithAddressAndRole(dataSource, jdbcTemplate);
 		this.insertUserAddress = new InsertUserAddress(dataSource);
 		this.selectUserByFirstName = new SelectUserByFirstName(jdbcTemplate);
 		this.selectUserByAccountName = new SelectUserByAccountName(jdbcTemplate);
@@ -70,7 +70,7 @@ public class UserDaoImpl implements UserDao {
 			this.insertUserWithAddress.execute(user);
 			LOGGER.info("User created with id: {}", user.getId());
 		} else {
-			throw new IllegalArgumentException("User identifier must be null");
+			throw new IllegalArgumentException("The user ID must be null");
 		}
 	}
 
@@ -84,7 +84,7 @@ public class UserDaoImpl implements UserDao {
 	public void update(User user) {
 		notNull(user, "The user must not be null");
 		if (user.getId() == null) {
-			throw new IllegalArgumentException("User identifier must not be null");
+			throw new IllegalArgumentException("The user ID must not be null");
 		} else {
 			LOGGER.info("Updating new user ...");
 			updateUser.execute(user);

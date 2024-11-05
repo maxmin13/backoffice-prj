@@ -122,7 +122,7 @@ public class AddressDaoImpl implements AddressDao {
 			em.persist(address);
 			LOGGER.info("User created with id: {}", address.getId());
 		} else {
-			throw new IllegalArgumentException("Address identifier must be null");
+			throw new IllegalArgumentException("The address ID must be null");
 		}
 		return address;
 	}
@@ -131,7 +131,7 @@ public class AddressDaoImpl implements AddressDao {
 	public Address update(Address address) {	
 		notNull(address, "The address must not be null");
 		if (address.getId() == null) {
-			throw new IllegalArgumentException("Address identifier must not be null");
+			throw new IllegalArgumentException("The address ID must not be null");
 		} else {
 			LOGGER.info("Updating new address ...");
 			em.merge(address);

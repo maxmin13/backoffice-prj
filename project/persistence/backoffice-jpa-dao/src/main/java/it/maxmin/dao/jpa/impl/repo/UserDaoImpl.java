@@ -59,7 +59,7 @@ public class UserDaoImpl implements UserDao {
 			em.persist(user);
 			LOGGER.info("User created with id: {}", user.getId());
 		} else {
-			throw new IllegalArgumentException("User identifier must be null");
+			throw new IllegalArgumentException("The user ID must be null");
 		}
 		return user;
 	}
@@ -68,7 +68,7 @@ public class UserDaoImpl implements UserDao {
 	public User update(User user) {	
 		notNull(user, "The user must not be null");
 		if (user.getId() == null) {
-			throw new IllegalArgumentException("User identifier must not be null");
+			throw new IllegalArgumentException("The user ID must not be null");
 		} else {
 			LOGGER.info("Updating new user ...");
 			em.merge(user);

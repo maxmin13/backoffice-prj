@@ -52,7 +52,7 @@ public class AddressDaoImpl implements AddressDao {
 			newAddress = this.insertAddress.execute(address);
 			LOGGER.info("New address  {} inserted with id: {}", newAddress.getDescription(), newAddress.getId());
 		} else {
-			throw new IllegalArgumentException("Address identifier must be null");
+			throw new IllegalArgumentException("The address ID must be null");
 		}
 		return address;
 	}
@@ -68,7 +68,7 @@ public class AddressDaoImpl implements AddressDao {
 	public void update(Address address) {
 		notNull(address, "The address must not be null");
 		if (address.getId() == null) {
-			throw new IllegalArgumentException("Address identifier must not be null");
+			throw new IllegalArgumentException("The address ID must not be null");
 		} else {
 			LOGGER.info("Updating new address ...");
 			updateAddress.execute(address);

@@ -20,10 +20,10 @@ import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.entity.User;
 import it.maxmin.model.jdbc.domain.entity.UserRole;
 
-public abstract class SelectUser {
+public abstract class UserResultsetExctractor {
 	
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(SelectUser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserResultsetExctractor.class);
 
 	ResultSetExtractor<List<User>> userExtractor = (ResultSetExtractor<List<User>>) rs ->  {
 		Map<Long, User> map = new HashMap<>();

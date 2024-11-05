@@ -1,5 +1,14 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import it.maxmin.dao.jdbc.BaseTestUser;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
+import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 
 class InsertUserAddressTest extends BaseTestUser {
 
@@ -15,9 +26,61 @@ class InsertUserAddressTest extends BaseTestUser {
 
 	@Autowired
 	InsertUserAddressTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil,
-			InsertUserAddress insertUserAddress) {
+			DataSource dataSource) {
 		super(jdbcQueryTestUtil, jdbcUserTestUtil);
-		this.insertUserAddress = insertUserAddress;
+		this.insertUserAddress = new InsertUserAddress(dataSource);
 	}
 
+	@Test
+	void executeWithNoUserIdThrowsException() {
+
+		LOGGER.info("running test executeWithNoUserIdThrowsException");
+		
+		Long userId = null;
+		Long addressId = 1l;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> insertUserAddress.execute(userId, addressId));
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+	
+	@Test
+	void executeWithNoAddressIdThrowsException() {
+
+		LOGGER.info("running test executeWithNoAddressIdThrowsException");
+		
+		Long userId = 1l;
+		Long addressId = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> insertUserAddress.execute(userId, addressId));
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void execute() {
+
+		LOGGER.info("running test execute");
+
+		PojoUser franco = PojoUser.newInstance().withAccountName("franc").withBirthDate(LocalDate.of(1981, 11, 12))
+				.withFirstName("Franco").withLastName("Red").withDepartmentId(legal.getId());
+
+		PojoUser newUser = jdbcQueryTestUtil.createUser(franco);
+
+		PojoAddress address = PojoAddress.newInstance().withDescription("Via Nuova").withCity("Venice")
+				.withStateId(italy.getId()).withRegion("Veneto").withPostalCode("30033");
+
+		PojoAddress newAddress = jdbcQueryTestUtil.createAddress(address);
+
+		// run the test
+		insertUserAddress.execute(newUser.getId(), newAddress.getId());
+
+		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(newUser.getId());
+
+		assertEquals(1, addresses.size());
+
+		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "Veneto", addresses.get(0));
+
+		assertEquals(italy.getId(), addresses.get(0).getStateId());
+	}
 }
