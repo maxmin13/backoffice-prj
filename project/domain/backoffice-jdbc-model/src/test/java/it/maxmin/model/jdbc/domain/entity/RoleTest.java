@@ -9,15 +9,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class UserRoleTest {
+class RoleTest {
 	
 	@ParameterizedTest
 	@ValueSource(strings = {"Administrator"})
 	void test_same_object_equal(String roleName) {
 
-		UserRole role = UserRole.newInstance().withId(1l).withRoleName(roleName);
+		Role role = Role.newInstance().withId(1l).withRoleName(roleName);
 		
-		Set<UserRole> roles = new HashSet<>();
+		Set<Role> roles = new HashSet<>();
 		roles.add(role);
 		roles.add(role);
 
@@ -28,10 +28,10 @@ class UserRoleTest {
 	@CsvSource({ "Administrator, Administrator" })
 	void test_roles_equal(String roleName1, String roleName2) {
 
-		UserRole role1 = UserRole.newInstance().withId(1l).withRoleName(roleName1);
-		UserRole role2 = UserRole.newInstance().withId(1l).withRoleName(roleName2);
+		Role role1 = Role.newInstance().withId(1l).withRoleName(roleName1);
+		Role role2 = Role.newInstance().withId(1l).withRoleName(roleName2);
 
-		Set<UserRole> roles = new HashSet<>();
+		Set<Role> roles = new HashSet<>();
 		roles.add(role1);
 		roles.add(role2);
 
@@ -43,10 +43,10 @@ class UserRoleTest {
 	@CsvSource({ "Administrator, Legal" })
 	void test_roles_not_equal(String roleName1, String roleName2) {
 
-		UserRole role1 = UserRole.newInstance().withId(1l).withRoleName(roleName1);
-		UserRole role2 = UserRole.newInstance().withId(1l).withRoleName(roleName2);
+		Role role1 = Role.newInstance().withId(1l).withRoleName(roleName1);
+		Role role2 = Role.newInstance().withId(1l).withRoleName(roleName2);
 
-		Set<UserRole> roles = new HashSet<>();
+		Set<Role> roles = new HashSet<>();
 		roles.add(role1);
 		roles.add(role2);
 

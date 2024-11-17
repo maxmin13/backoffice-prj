@@ -2,7 +2,7 @@ package it.maxmin.domain.jpa.pojo;
 
 import java.io.Serializable;
 
-public class PojoUserRole implements Serializable {
+public class PojoRole implements Serializable {
 
 	private static final long serialVersionUID = 7632536256395423354L;
 	

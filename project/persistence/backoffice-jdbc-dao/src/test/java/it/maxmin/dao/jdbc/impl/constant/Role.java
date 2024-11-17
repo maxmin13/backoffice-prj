@@ -1,12 +1,12 @@
 package it.maxmin.dao.jdbc.impl.constant;
 
-public enum UserRole {
+public enum Role {
 
 	ADMINISTRATOR("Administrator"), WORKER("Worker"), USER("User");
 
 	private String roleName;
 
-	private UserRole(String roleName) {
+	private Role(String roleName) {
 		this.roleName = roleName;
 	}
 

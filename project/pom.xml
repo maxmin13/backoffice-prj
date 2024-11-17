@@ -18,7 +18,7 @@
 		<module>domain/backoffice-jpa-model</module>
 		<module>persistence/backoffice-jdbc-dao</module>
 		<module>domain/backoffice-jdbc-model</module>
-		<module>service/backoffice-service</module>
+		<module>service/backoffice-jdbc-service</module>
 	</modules>
 
 	<properties>
@@ -76,18 +76,19 @@
 				<artifactId>backoffice-jdbc-dao</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>it.maxmin.domain</groupId>
-				<artifactId>backoffice-jdbc-model</artifactId>
-				<version>${project.parent.version}</version>
-			</dependency>
-
+			
 			<dependency>
 				<groupId>it.maxmin.persistence</groupId>
 				<artifactId>backoffice-jpa-dao</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-
+			
+			<dependency>
+				<groupId>it.maxmin.domain</groupId>
+				<artifactId>backoffice-jdbc-model</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			
 			<dependency>
 				<groupId>it.maxmin.domain</groupId>
 				<artifactId>backoffice-jpa-model</artifactId>
@@ -96,7 +97,7 @@
 
 			<dependency>
 				<groupId>it.maxmin.service</groupId>
-				<artifactId>backoffice-service</artifactId>
+				<artifactId>backoffice-jdbc-service</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 
@@ -240,7 +241,7 @@
 				<artifactId>h2</artifactId>
 				<version>${com.h2database.version}</version>
 			</dependency>
-
+			
 		</dependencies>
 	</dependencyManagement>
 

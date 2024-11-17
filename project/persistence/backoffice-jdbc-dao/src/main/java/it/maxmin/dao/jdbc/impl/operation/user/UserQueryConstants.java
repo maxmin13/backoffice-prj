@@ -8,12 +8,12 @@ public enum UserQueryConstants {
 			+ "     a.Id AS AddressId, a.Description, a.City, a.Region, a.PostalCode, "
 			+ "     d.Id AS DepartmentId, d.Name AS DepartmentName, "
 			+ "     s.Id AS StateId, s.Name AS StateName, s.Code, "
-			+ "     ur.Id AS RoleId, ur.RoleName "
+			+ "     r.Id AS RoleId, r.RoleName "
 			+ "FROM User u " 
 			+ "LEFT JOIN UserAddress ua ON u.Id = ua.UserId "
 			+ "LEFT JOIN Address a ON ua.AddressId = a.Id "
-			+ "LEFT JOIN UserUserRole uur ON u.Id = uur.UserId "
-			+ "LEFT JOIN UserRole ur ON uur.UserRoleId = ur.Id "
+			+ "LEFT JOIN UserRole ur ON u.Id = ur.UserId "
+			+ "LEFT JOIN Role r ON ur.RoleId = r.Id "
 			+ "LEFT JOIN Department d ON u.DepartmentId = d.Id "
 			+ "LEFT JOIN State s ON a.StateId  = s.Id ";
 
@@ -40,14 +40,14 @@ public enum UserQueryConstants {
 			+ "INSERT INTO User "
 			+ "SET AccountName = :accountName, FirstName = :firstName, LastName = :lastName, DepartmentId = :departmentId, BirthDate = :birtDate";
 	
-	public static final String SELECT_USER_ROLE_BY_ROLE_NAME = ""
+	public static final String SELECT_ROLE_BY_ROLE_NAME = ""
 			+ "SELECT Id, RoleName "
-			+ "FROM UserRole "
+			+ "FROM Role "
 			+ "WHERE roleName = :roleName ";
 
-	public static final String INSERT_USER_USER_ROLE = "" 
-			+ "INSERT INTO UserUserRole "
-			+ "SET UserId = :userId, UserRoleId = :roleId";
+	public static final String INSERT_USER_ROLE = "" 
+			+ "INSERT INTO UserRole "
+			+ "SET UserId = :userId, RoleId = :roleId";
 	
 	public static final String INSERT_USER_ADDRESS = "" 
 			+ "INSERT INTO UserAddress "

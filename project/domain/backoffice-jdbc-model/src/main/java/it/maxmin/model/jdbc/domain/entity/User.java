@@ -20,7 +20,7 @@ public class User implements Serializable {
 	private LocalDateTime createdAt;
 	private Department department;
 	private Set<Address> addresses = new HashSet<>();
-	private Set<UserRole> roles = new HashSet<>();
+	private Set<Role> roles = new HashSet<>();
 
 	public static User newInstance() {
 		return new User();
@@ -142,15 +142,15 @@ public class User implements Serializable {
 		return addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst().orElse(null);
 	}
 
-	public Set<UserRole> getRoles() {
+	public Set<Role> getRoles() {
 		return roles;
 	}
 
-	void setRoles(Set<UserRole> roles) {
+	void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
 
-	public boolean addRole(UserRole role) {
+	public boolean addRole(Role role) {
 		if (role == null || roles.contains(role)) {
 			return false;
 		}
@@ -160,7 +160,7 @@ public class User implements Serializable {
 		}
 	}
 
-	public UserRole getRole(String roleName) {
+	public Role getRole(String roleName) {
 		if (roleName == null) {
 			return null;
 		}

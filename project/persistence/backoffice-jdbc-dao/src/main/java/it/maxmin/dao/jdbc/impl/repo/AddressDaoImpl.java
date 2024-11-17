@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.maxmin.dao.jdbc.api.repo.AddressDao;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddress;
@@ -19,6 +20,7 @@ import it.maxmin.dao.jdbc.impl.operation.address.SelectAddressesByUserId;
 import it.maxmin.dao.jdbc.impl.operation.address.UpdateAddress;
 import it.maxmin.model.jdbc.domain.entity.Address;
 
+@Transactional
 @Repository("addressDao")
 public class AddressDaoImpl implements AddressDao {
 
@@ -38,6 +40,7 @@ public class AddressDaoImpl implements AddressDao {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Address> findAddressesByUserId(Long userId) {
 		notNull(userId, "The user ID must not be null");
 		return this.selectAddressesByUserId.execute(userId);

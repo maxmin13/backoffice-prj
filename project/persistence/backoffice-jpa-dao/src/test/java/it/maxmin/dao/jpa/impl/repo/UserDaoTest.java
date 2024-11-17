@@ -45,22 +45,22 @@ import it.maxmin.domain.jpa.entity.Address;
 import it.maxmin.domain.jpa.entity.Department;
 import it.maxmin.domain.jpa.entity.State;
 import it.maxmin.domain.jpa.entity.User;
-import it.maxmin.domain.jpa.entity.UserRole;
+import it.maxmin.domain.jpa.entity.Role;
 import it.maxmin.domain.jpa.pojo.PojoAddress;
 import it.maxmin.domain.jpa.pojo.PojoDepartment;
 import it.maxmin.domain.jpa.pojo.PojoState;
 import it.maxmin.domain.jpa.pojo.PojoUser;
-import it.maxmin.domain.jpa.pojo.PojoUserRole;
+import it.maxmin.domain.jpa.pojo.PojoRole;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;
 
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
-@Sql(scripts = { "classpath:database/1_create_database.up.sql", "classpath:database/2_userrole.up.sql",
+@Sql(scripts = { "classpath:database/1_create_database.up.sql", "classpath:database/2_role.up.sql",
 		"classpath:database/2_state.up.sql",
 		"classpath:database/2_department.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @Sql(scripts = { "classpath:database/2_state.down.sql", "classpath:database/2_department.down.sql",
-		"classpath:database/2_userrole.down.sql",
+		"classpath:database/2_role.down.sql",
 		"classpath:database/1_create_database.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 @SpringJUnitConfig(classes = { UnitTestContextCfg.class })
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -92,7 +92,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(2)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("02. verify eagerly loaded properties")
@@ -126,7 +126,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(3)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("03. verify lazily loaded properties, should thorow LazyInitializationException")
@@ -159,7 +159,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(4)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("04. verify lazily loaded properties in the User entity: roles and addresses")
@@ -175,17 +175,17 @@ class UserDaoTest extends TestAbstract {
 		User maxmin = users.get(0);
 
 		// roles
-		Set<UserRole> roles = maxmin.getRoles();
+		Set<Role> roles = maxmin.getRoles();
 
 		assertEquals(3, roles.size());
 
-		UserRole role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
+		Role role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
 		verifyRole(ADMINISTRATOR.getRoleName(), role1);
 
-		UserRole role2 = maxmin.getRole(USER.getRoleName());
+		Role role2 = maxmin.getRole(USER.getRoleName());
 		verifyRole(USER.getRoleName(), role2);
 
-		UserRole role3 = maxmin.getRole(WORKER.getRoleName());
+		Role role3 = maxmin.getRole(WORKER.getRoleName());
 		verifyRole(WORKER.getRoleName(), role3);
 
 		// addresses
@@ -218,10 +218,10 @@ class UserDaoTest extends TestAbstract {
 
 		assertEquals(2, roles.size());
 
-		UserRole role4 = artur.getRole(ADMINISTRATOR.getRoleName());
+		Role role4 = artur.getRole(ADMINISTRATOR.getRoleName());
 		verifyRole(ADMINISTRATOR.getRoleName(), role4);
 
-		UserRole role5 = artur.getRole(USER.getRoleName());
+		Role role5 = artur.getRole(USER.getRoleName());
 		verifyRole(USER.getRoleName(), role5);
 
 		// addresses
@@ -242,7 +242,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(5)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("05. should not find any user")
@@ -260,7 +260,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(6)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("06. should find a user")
@@ -274,14 +274,14 @@ class UserDaoTest extends TestAbstract {
 		verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), artur);
 
 		// roles
-		Set<UserRole> roles = artur.getRoles();
+		Set<Role> roles = artur.getRoles();
 
 		assertEquals(2, roles.size());
 
-		UserRole role1 = artur.getRole(ADMINISTRATOR.getRoleName());
+		Role role1 = artur.getRole(ADMINISTRATOR.getRoleName());
 		verifyRole(ADMINISTRATOR.getRoleName(), role1);
 
-		UserRole role2 = artur.getRole(USER.getRoleName());
+		Role role2 = artur.getRole(USER.getRoleName());
 		verifyRole(USER.getRoleName(), role2);
 
 		// department
@@ -330,7 +330,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(9)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("09. should create a user associated to a department, with a new address, with an existing role")
@@ -358,9 +358,9 @@ class UserDaoTest extends TestAbstract {
 				.withPostalCode("A65TF14");
 		carl.addAddress(address2);
 
-		PojoUserRole role = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
+		PojoRole role = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
 
-		carl.addRole(UserRole.newInstance().withId(role.getId()));
+		carl.addRole(Role.newInstance().withId(role.getId()));
 
 		// run the test
 		User user = userDao.create(carl);
@@ -376,10 +376,10 @@ class UserDaoTest extends TestAbstract {
 
 		verifyDepartment(ACCOUNTS.getName(), userDepartment);
 
-		List<PojoUserRole> userRoles = queryTestUtil.findRolesByUserAccountName("carl23");
+		List<PojoRole> roles = queryTestUtil.findRolesByUserAccountName("carl23");
 
-		assertEquals(1, userRoles.size());
-		verifyRole(ADMINISTRATOR.getRoleName(), userRoles.get(0));
+		assertEquals(1, roles.size());
+		verifyRole(ADMINISTRATOR.getRoleName(), roles.get(0));
 
 		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(newUser.getId());
 
@@ -404,7 +404,7 @@ class UserDaoTest extends TestAbstract {
 
 	@Test
 	@Order(10)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("10. should create a user without addresses and roles")
@@ -435,7 +435,7 @@ class UserDaoTest extends TestAbstract {
 
 		assertEquals(0, addresses.size());
 
-		List<PojoUserRole> roles = queryTestUtil.findRolesByUserId(newUser.getId());
+		List<PojoRole> roles = queryTestUtil.findRolesByUserId(newUser.getId());
 
 		assertEquals(0, roles.size());
 	}
@@ -444,7 +444,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(11)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("11. should throw EntityExistsException")
@@ -474,7 +474,7 @@ class UserDaoTest extends TestAbstract {
 
 	@Test
 	@Order(12)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("12. should throw ConstraintViolationException")
@@ -493,7 +493,7 @@ class UserDaoTest extends TestAbstract {
 
 	@Test
 	@Order(13)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("13. should throw ConstraintViolationException")
@@ -515,7 +515,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(14)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("14. should throw DataIntegrityViolationException")
@@ -529,7 +529,7 @@ class UserDaoTest extends TestAbstract {
 				.withFirstName("Carlo").withLastName("Rossi")
 				.withDepartment(Department.newInstance().withId(department.getId()));
 
-		carl.addRole(UserRole.newInstance().withId(23l).withRoleName("Mechanic"));
+		carl.addRole(Role.newInstance().withId(23l).withRoleName("Mechanic"));
 
 		// run the test
 		assertThrows(DataIntegrityViolationException.class, () -> {
@@ -565,7 +565,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(17)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("17. should update user, department, addresses and roles")
@@ -577,7 +577,7 @@ class UserDaoTest extends TestAbstract {
 		PojoUser maxmin = queryTestUtil.findUserByAccountName("maxmin13");
 		PojoDepartment department = queryTestUtil.findDepartmentById(maxmin.getDepartmentId());
 		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(maxmin.getId());
-		List<PojoUserRole> roles = queryTestUtil.findRolesByUserId(maxmin.getId());
+		List<PojoRole> roles = queryTestUtil.findRolesByUserId(maxmin.getId());
 
 		// Assert the user's initial status
 		assertEquals(0, maxmin.getVersion());
@@ -608,8 +608,8 @@ class UserDaoTest extends TestAbstract {
 				.withState(State.newInstance().withId(newState.getId()));
 		newMaxmin.addAddress(newAddress);
 
-		PojoUserRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
-		newMaxmin.addRole(UserRole.newInstance().withId(newRole.getId()));
+		PojoRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
+		newMaxmin.addRole(Role.newInstance().withId(newRole.getId()));
 
 		// run the test
 		userDao.update(newMaxmin);
@@ -635,7 +635,7 @@ class UserDaoTest extends TestAbstract {
 
 		verifyState(IRELAND.getName(), IRELAND.getCode(), queryTestUtil.findStateByAddressPostalCode("A89TF33"));
 
-		List<PojoUserRole> updatedRoles = queryTestUtil.findRolesByUserId(newUser.getId());
+		List<PojoRole> updatedRoles = queryTestUtil.findRolesByUserId(newUser.getId());
 
 		assertEquals(1, updatedRoles.size());
 
@@ -646,7 +646,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(18)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("18. should remove addresses and roles")
@@ -657,7 +657,7 @@ class UserDaoTest extends TestAbstract {
 		// Get an existing user
 		PojoUser maxmin = queryTestUtil.findUserByAccountName("maxmin13");
 		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(maxmin.getId());
-		List<PojoUserRole> roles = queryTestUtil.findRolesByUserId(maxmin.getId());
+		List<PojoRole> roles = queryTestUtil.findRolesByUserId(maxmin.getId());
 
 		// Assert the user's initial status
 		assertEquals(0, maxmin.getVersion());
@@ -682,7 +682,7 @@ class UserDaoTest extends TestAbstract {
 
 		assertEquals(0, updatedAddresses.size());
 
-		List<PojoUserRole> updatedRoles = queryTestUtil.findRolesByUserId(newUser.getId());
+		List<PojoRole> updatedRoles = queryTestUtil.findRolesByUserId(newUser.getId());
 
 		assertEquals(0, updatedRoles.size());
 	}
@@ -691,7 +691,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(19)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("19. should throw DataIntegrityViolationException")
@@ -713,8 +713,8 @@ class UserDaoTest extends TestAbstract {
 				.withState(State.newInstance().withId(newState.getId()));
 		newMaxmin.addAddress(newAddress);
 
-		PojoUserRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
-		newMaxmin.addRole(UserRole.newInstance().withId(newRole.getId()));
+		PojoRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
+		newMaxmin.addRole(Role.newInstance().withId(newRole.getId()));
 
 		// run the test
 		assertThrows(DataIntegrityViolationException.class, () -> {
@@ -726,7 +726,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(20)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("20. should throw EntityNotFoundException")
@@ -751,8 +751,8 @@ class UserDaoTest extends TestAbstract {
 				.withState(State.newInstance().withId(newState.getId()));
 		newMaxmin.addAddress(newAddress);
 
-		PojoUserRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
-		newMaxmin.addRole(UserRole.newInstance().withId(newRole.getId()));
+		PojoRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
+		newMaxmin.addRole(Role.newInstance().withId(newRole.getId()));
 
 		// run the test
 		assertThrows(EntityNotFoundException.class, () -> {
@@ -764,7 +764,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(21)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("21. should throw EntityNotFoundException")
@@ -788,7 +788,7 @@ class UserDaoTest extends TestAbstract {
 				.withState(State.newInstance().withId(newState.getId()));
 		newMaxmin.addAddress(newAddress);
 
-		UserRole role = UserRole.newInstance().withId(0l).withRoleName("Inspector");
+		Role role = Role.newInstance().withId(0l).withRoleName("Inspector");
 		newMaxmin.addRole(role);
 
 		// run the test
@@ -801,7 +801,7 @@ class UserDaoTest extends TestAbstract {
 	@Order(22)
 	@Sql(scripts = { "classpath:database/2_address.up.sql",
 			"classpath:database/2_user.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-	@Sql(scripts = { "classpath:database/2_useruserrole.down.sql", "classpath:database/2_useraddress.down.sql",
+	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("22. should throw OptimisticLockException")
@@ -839,8 +839,8 @@ class UserDaoTest extends TestAbstract {
 				.withState(State.newInstance().withId(newState.getId()));
 		newMaxmin.addAddress(newAddress);
 
-		PojoUserRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
-		newMaxmin.addRole(UserRole.newInstance().withId(newRole.getId()));
+		PojoRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
+		newMaxmin.addRole(Role.newInstance().withId(newRole.getId()));
 
 		// run the test
 		assertThrows(OptimisticLockException.class, () -> {

@@ -4,25 +4,24 @@ import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_A
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import it.maxmin.model.jdbc.domain.entity.User;
 
-public class SelectAllUsers extends UserResultsetExctractor {
-
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(SelectAllUsers.class);
+public class SelectAllUsers {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
+	private ResultSetExtractor<List<User>> resultSetExtractor;
 
 	public SelectAllUsers(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+		SelectUserHelper helper = new SelectUserHelper();
+		this.resultSetExtractor = helper.getResultSetExtractor();
 	}
 
 	public List<User> execute() {
-		return jdbcTemplate.getJdbcTemplate().query(SELECT_ALL_USERS, userExtractor);
+		return jdbcTemplate.getJdbcTemplate().query(SELECT_ALL_USERS, resultSetExtractor);
 	}
 
 }

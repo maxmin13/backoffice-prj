@@ -1,6 +1,5 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -25,12 +24,11 @@ class UpdateAddressTest extends BaseTestUser {
 	private UpdateAddress updateAddress;
 
 	@Autowired
-	UpdateAddressTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil, 
-			DataSource dataSource) {
+	UpdateAddressTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil, DataSource dataSource) {
 		super(jdbcQueryTestUtil, jdbcUserTestUtil);
 		this.updateAddress = new UpdateAddress(dataSource);
 	}
-	
+
 	@Test
 	void executeWithNoAddressThrowsException() {
 
@@ -44,7 +42,7 @@ class UpdateAddressTest extends BaseTestUser {
 	}
 
 	@Test
-	void executeWithoutAddressIdThrowsException() {
+	void executeWithNoAddressIdThrowsException() {
 
 		LOGGER.info("running test executeWithoutAddressIdThrowsException");
 
@@ -55,28 +53,27 @@ class UpdateAddressTest extends BaseTestUser {
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
-	
+
 	@Test
-	void updateWithNoAddressThrowsException() {
+	void executeWithNoStateThrowsException() {
 
-		LOGGER.info("running test updateWithNoAddressThrowsException");
+		LOGGER.info("running test executeWithNoStateThrowsException");
 
-		Address address = null;
+		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
+				.withRegion("Veneto").withPostalCode("30033");
 
-		Throwable throwable = assertThrows(Throwable.class, () -> {
-			updateAddress.execute(address);
-		});
+		Throwable throwable = assertThrows(Throwable.class, () -> updateAddress.execute(address));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
-
+	
 	@Test
-	void updateWithNoAddressIdThrowsException() {
+	void executeWithNoStateIdThrowsException() {
 
-		LOGGER.info("running test updateWithNoAddressIdThrowsException");
+		LOGGER.info("running test executeWithNoStateThrowsException");
 
-		Address address = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
-				.withState(State.newInstance().withId(italy.getId())).withRegion("Veneto").withPostalCode("30033");
+		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
+				.withRegion("Veneto").withPostalCode("30033").withState(State.newInstance());
 
 		Throwable throwable = assertThrows(Throwable.class, () -> updateAddress.execute(address));
 
@@ -84,7 +81,7 @@ class UpdateAddressTest extends BaseTestUser {
 	}
 
 	@Test
-	void update() {
+	void execute() {
 
 		LOGGER.info("running test update");
 
@@ -108,7 +105,7 @@ class UpdateAddressTest extends BaseTestUser {
 
 		PojoState state = jdbcQueryTestUtil.findStateByAddressPostalCode("33311");
 
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), state);
+		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), state);
 	}
 
 }

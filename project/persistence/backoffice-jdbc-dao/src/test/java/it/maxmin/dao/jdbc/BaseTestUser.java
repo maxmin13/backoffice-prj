@@ -5,8 +5,9 @@ import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
 import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
 import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
-import static it.maxmin.dao.jdbc.impl.constant.UserRole.*;
-
+import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
+import static it.maxmin.dao.jdbc.impl.constant.Role.USER;
+import static it.maxmin.dao.jdbc.impl.constant.Role.WORKER;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +22,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import it.maxmin.model.jdbc.domain.pojo.PojoDepartment;
 import it.maxmin.model.jdbc.domain.pojo.PojoState;
-import it.maxmin.model.jdbc.domain.pojo.PojoUserRole;
+import it.maxmin.model.jdbc.domain.pojo.PojoRole;
 
-@SpringJUnitConfig(classes = { JdbcUnitTestContextCfg.class })
+@SpringJUnitConfig(classes = { SpringTestContextCfg.class })
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -36,16 +37,16 @@ public abstract class BaseTestUser {
 	protected PojoDepartment production;
 	protected PojoState italy;
 	protected PojoState ireland;
-	protected PojoUserRole administrator;
-	protected PojoUserRole user;
-	protected PojoUserRole worker;
+	protected PojoRole administrator;
+	protected PojoRole user;
+	protected PojoRole worker;
 
 	@Autowired
 	protected BaseTestUser(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil) {
 		this.jdbcQueryTestUtil = jdbcQueryTestUtil;
 		this.jdbcUserTestUtil = jdbcUserTestUtil;
 
-		String[] scripts = { "1_create_database.up.sql", "2_userrole.up.sql", "2_state.up.sql", "2_department.up.sql" };
+		String[] scripts = { "1_create_database.up.sql", "2_role.up.sql", "2_state.up.sql", "2_department.up.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		this.legal = jdbcQueryTestUtil.findDepartmentByName(LEGAL.getName());
@@ -53,9 +54,9 @@ public abstract class BaseTestUser {
 		this.production = jdbcQueryTestUtil.findDepartmentByName(PRODUCTION.getName());
 		this.italy = jdbcQueryTestUtil.findStateByName(ITALY.getName());
 		this.ireland = jdbcQueryTestUtil.findStateByName(IRELAND.getName());
-		this.administrator = jdbcQueryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
-		this.worker = jdbcQueryTestUtil.findRoleByName(WORKER.getRoleName());
-		this.user = jdbcQueryTestUtil.findRoleByName(USER.getRoleName());
+		this.administrator = jdbcQueryTestUtil.findRoleByRoleName(ADMINISTRATOR.getRoleName());
+		this.worker = jdbcQueryTestUtil.findRoleByRoleName(WORKER.getRoleName());
+		this.user = jdbcQueryTestUtil.findRoleByRoleName(USER.getRoleName());
 	}
 
 	@BeforeEach
@@ -67,7 +68,8 @@ public abstract class BaseTestUser {
 	@AfterEach
 	void cleanUp() {
 		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql", "2_address.down.sql", "2_state.down.sql",
-				"2_department.down.sql", "2_userrole.down.sql", "1_create_database.down.sql" };
+				"2_department.down.sql", "2_role.down.sql", "1_create_database.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 	}
+	
 }

@@ -41,7 +41,7 @@ public class User extends AbstractEntity {
 	private LocalDateTime createdAt;
 	private Department department;
 	private Set<Address> addresses = new HashSet<>();
-	private Set<UserRole> roles = new HashSet<>();
+	private Set<Role> roles = new HashSet<>();
 
 	public static User newInstance() {
 		return new User();
@@ -173,16 +173,16 @@ public class User extends AbstractEntity {
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "UserUserRole", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "UserRoleId"))
-	public Set<UserRole> getRoles() {
+	@JoinTable(name = "UserRole", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "RoleId"))
+	public Set<Role> getRoles() {
 		return roles;
 	}
 
-	void setRoles(Set<UserRole> roles) {
+	void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
 
-	public boolean addRole(UserRole role) {
+	public boolean addRole(Role role) {
 		if (role == null || roles.contains(role)) {
 			return false;
 		} else {
@@ -191,7 +191,7 @@ public class User extends AbstractEntity {
 		}
 	}
 	
-	public boolean removeRole(UserRole role) {
+	public boolean removeRole(Role role) {
 		if (role == null || !roles.contains(role)) {
 			return false;
 		} else {
@@ -200,7 +200,7 @@ public class User extends AbstractEntity {
 		}
 	}
 
-	public UserRole getRole(String roleName) {
+	public Role getRole(String roleName) {
 		if (roleName == null) {
 			return null;
 		}

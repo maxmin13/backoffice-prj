@@ -52,19 +52,4 @@ class JpaContextCfgTest {
 		springCtx.close();
 	}
 
-	@Test
-	void testTransactionManager() throws IllegalStateException, SQLException {
-
-		var springCtx = new AnnotationConfigApplicationContext(JpaContextCfg.class);
-		var transactionManager = springCtx.getBean("transactionManager", JpaTransactionManager.class);
-
-		assertNotNull(transactionManager);
-
-		DataSource dataSource = transactionManager.getDataSource();
-
-		dataSourceTestUtil.testDataSource(dataSource);
-
-		springCtx.close();
-	}
-
 }

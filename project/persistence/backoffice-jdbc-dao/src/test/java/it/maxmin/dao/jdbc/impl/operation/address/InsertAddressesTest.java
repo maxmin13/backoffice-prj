@@ -41,7 +41,7 @@ class InsertAddressesTest extends BaseTestUser {
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
-
+	
 	@Test
 	void execute() {
 
@@ -69,6 +69,7 @@ class InsertAddressesTest extends BaseTestUser {
 
 		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "Veneto", newAddresses.get(0));
 		assertEquals(italy.getId(), newAddresses.get(0).getStateId());
+		
 		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", newAddresses.get(1));
 		assertEquals(ireland.getId(), newAddresses.get(1).getStateId());
 	}

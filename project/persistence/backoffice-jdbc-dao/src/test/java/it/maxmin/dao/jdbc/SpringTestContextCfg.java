@@ -4,54 +4,35 @@ import java.sql.Driver;
 
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
+import it.maxmin.dao.jdbc.config.SpringContextCfg;
 
 /**
- * Starts an embedded MariaDB database and creates a Spring context for the unit
- * tests.
- */
-
+ * Starts an embedded MariaDB database and overrides the datasource
+ * */
 @Configuration
 @ComponentScan(basePackages = { "it.maxmin.dao.jdbc.impl.repo" })
-@EnableTransactionManagement
-public class JdbcUnitTestContextCfg {
-
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcUnitTestContextCfg.class);
+@Import(SpringContextCfg.class)
+public class SpringTestContextCfg {
 
 	@Bean
 	public MariaDB4jSpringService mariaDB4jSpringService() {
 		return new MariaDB4jSpringService();
 	}
 
-	@Bean
-	public JdbcQueryTestUtil jdbcQueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
-		return new JdbcQueryTestUtil(jdbcTemplate, dataSource);
-	}
-
-	@Bean
-	public JdbcDataSourceTestUtil jdbcDataSourceTestUtil() {
-		return new JdbcDataSourceTestUtil();
-	}
-	
-	@Bean
-	public JdbcUserTestUtil jdbcUserTestUtil() {
-		return new JdbcUserTestUtil();
-	}
-
 	@SuppressWarnings("unchecked")
 	@Bean
+	@Primary
 	public DataSource dataSource(MariaDB4jSpringService mariaDB4jSpringService) {
 		try {
 			mariaDB4jSpringService.getDB().createDB("testDB");
@@ -76,7 +57,17 @@ public class JdbcUnitTestContextCfg {
 	}
 
 	@Bean
-	public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
-		return new NamedParameterJdbcTemplate(dataSource);
+	public JdbcQueryTestUtil jdbcQueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+		return new JdbcQueryTestUtil(jdbcTemplate, dataSource);
+	}
+
+	@Bean
+	public JdbcDataSourceTestUtil jdbcDataSourceTestUtil() {
+		return new JdbcDataSourceTestUtil();
+	}
+
+	@Bean
+	public JdbcUserTestUtil jdbcUserTestUtil() {
+		return new JdbcUserTestUtil();
 	}
 }

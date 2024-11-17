@@ -9,12 +9,12 @@ import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.entity.Department;
 import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.entity.User;
-import it.maxmin.model.jdbc.domain.entity.UserRole;
+import it.maxmin.model.jdbc.domain.entity.Role;
 import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
 import it.maxmin.model.jdbc.domain.pojo.PojoDepartment;
 import it.maxmin.model.jdbc.domain.pojo.PojoState;
 import it.maxmin.model.jdbc.domain.pojo.PojoUser;
-import it.maxmin.model.jdbc.domain.pojo.PojoUserRole;
+import it.maxmin.model.jdbc.domain.pojo.PojoRole;
 
 public class JdbcUserTestUtil {
 
@@ -87,12 +87,12 @@ public class JdbcUserTestUtil {
 		assertNotNull(actual.getCreatedAt());
 	}
 
-	public void verifyRole(String roleName, UserRole actual) {
+	public void verifyRole(String roleName, Role actual) {
 		assertNotNull(actual.getId());
 		assertEquals(roleName, actual.getRoleName());
 	}
 	
-	public void verifyRole(String roleName, PojoUserRole actual) {
+	public void verifyRole(String roleName, PojoRole actual) {
 		assertNotNull(actual.getId());
 		assertEquals(roleName, actual.getRoleName());
 	}

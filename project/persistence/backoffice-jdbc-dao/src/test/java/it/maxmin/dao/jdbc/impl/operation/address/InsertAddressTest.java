@@ -1,6 +1,5 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,6 +55,32 @@ class InsertAddressTest extends BaseTestUser {
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
+	
+	@Test
+	void executeWithNoStateThrowsException() {
+
+		LOGGER.info("running test executeWithNoStateThrowsException");
+
+		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
+				.withRegion("Veneto").withPostalCode("30033");
+
+		Throwable throwable = assertThrows(Throwable.class, () -> insertAddress.execute(address));
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+	
+	@Test
+	void executeWithNoStateIdThrowsException() {
+
+		LOGGER.info("running test executeWithNoStateThrowsException");
+
+		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
+				.withRegion("Veneto").withPostalCode("30033").withState(State.newInstance());
+
+		Throwable throwable = assertThrows(Throwable.class, () -> insertAddress.execute(address));
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
 
 	@Test
 	void execute() {
@@ -81,6 +106,6 @@ class InsertAddressTest extends BaseTestUser {
 
 		PojoState state = jdbcQueryTestUtil.findStateByAddressPostalCode("30033");
 
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), state);
+		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), state);
 	}
 }

@@ -4,15 +4,15 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class UserRole implements Serializable {
+public class Role implements Serializable {
 
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private Long id;
 	private String roleName;
 
-	public static UserRole newInstance() {
-		return new UserRole();
+	public static Role newInstance() {
+		return new Role();
 	}
 
 	public Long getId() {
@@ -23,7 +23,7 @@ public class UserRole implements Serializable {
 		this.id = id;
 	}
 
-	public UserRole withId(Long id) {
+	public Role withId(Long id) {
 		this.id = id;
 		return this;
 	}
@@ -36,7 +36,7 @@ public class UserRole implements Serializable {
 		this.roleName = roleName;
 	}
 
-	public UserRole withRoleName(String roleName) {
+	public Role withRoleName(String roleName) {
 		this.roleName = roleName;
 		return this;
 	}
@@ -56,13 +56,13 @@ public class UserRole implements Serializable {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		UserRole that = (UserRole) obj;
+		Role that = (Role) obj;
 		return roleName.equals(that.roleName);
 	}
 
 	@Override
 	public String toString() {
-		return  "UserRole [id=" + id + ", roleName=" + roleName + "]";
+		return  "Role [id=" + id + ", roleName=" + roleName + "]";
 	}
 
 }

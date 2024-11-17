@@ -4,23 +4,23 @@ public enum JdbcQueryTestConstants {
 	;
 
 	public static final String SELECT_ROLES_BY_USER_USER_ID = ""
-			+ "SELECT ur.Id, ur.RoleName "
-			+ "FROM UserRole ur "
-			+ "INNER JOIN UserUserRole uur ON ur.Id = uur.UserRoleId "
-			+ "WHERE uur.UserId = :userId "
-			+ "ORDER BY ur.Id";
+			+ "SELECT r.Id, r.RoleName "
+			+ "FROM Role r "
+			+ "INNER JOIN UserRole ur ON r.Id = ur.RoleId "
+			+ "WHERE ur.UserId = :userId "
+			+ "ORDER BY r.Id";
 	
 	public static final String SELECT_ROLES_BY_USER_ACCOUNT_NAME = ""
-			+ "SELECT ur.Id, ur.RoleName "
-			+ "FROM UserRole ur "
-			+ "INNER JOIN UserUserRole uur ON ur.Id = uur.UserRoleId "
-			+ "INNER JOIN User u ON u.Id = uur.UserId "
+			+ "SELECT r.Id, r.RoleName "
+			+ "FROM Role r "
+			+ "INNER JOIN UserRole ur ON r.Id = ur.RoleId "
+			+ "INNER JOIN User u ON u.Id = ur.UserId "
 			+ "WHERE u.AccountName = :accountName "
-			+ "ORDER BY ur.Id";	
+			+ "ORDER BY r.Id";	
 	
 	public static final String SELECT_ROLE_BY_NAME = ""
 			+ "SELECT Id, RoleName "
-			+ "FROM UserRole "
+			+ "FROM Role "
 			+ "WHERE roleName = :roleName ";
 	
 	public static final String SELECT_ADDRESSES_BY_USER_USER_ID = ""

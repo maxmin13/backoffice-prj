@@ -81,8 +81,8 @@ class UserTest {
 	@CsvSource({ "Administrator, Administrator" })
 	void addRole_equal(String roleName1, String roleName2) {
 
-		UserRole role1 = UserRole.newInstance().withId(1l).withRoleName(roleName1);
-		UserRole role2 = UserRole.newInstance().withId(1l).withRoleName(roleName2);
+		Role role1 = Role.newInstance().withId(1l).withRoleName(roleName1);
+		Role role2 = Role.newInstance().withId(1l).withRoleName(roleName2);
 
 		User user = User.newInstance();
 		user.addRole(role1);
@@ -95,8 +95,8 @@ class UserTest {
 	@CsvSource({ "Administrator, User", })
 	void addRole_not_equal(String roleName1, String roleName2) {
 
-		UserRole role1 = UserRole.newInstance().withId(1l).withRoleName(roleName1);
-		UserRole role2 = UserRole.newInstance().withId(1l).withRoleName(roleName2);
+		Role role1 = Role.newInstance().withId(1l).withRoleName(roleName1);
+		Role role2 = Role.newInstance().withId(1l).withRoleName(roleName2);
 
 		User user = User.newInstance();
 		user.addRole(role1);
@@ -153,7 +153,7 @@ class UserTest {
 
 		User user = User.newInstance();
 
-		UserRole role = user.getRole(null);
+		Role role = user.getRole(null);
 
 		assertNull(role);
 	}
@@ -162,16 +162,16 @@ class UserTest {
 	@CsvSource({ "Administrator" })
 	void getRole(String roleName) {
 
-		UserRole role = UserRole.newInstance().withId(1l).withRoleName(roleName);
+		Role role = Role.newInstance().withId(1l).withRoleName(roleName);
 
 		User user = User.newInstance();
 		user.getRoles().add(role);
 
-		UserRole role1 = user.getRole("Administrator");
+		Role role1 = user.getRole("Administrator");
 
 		assertEquals(1l, role1.getId());
 
-		UserRole role2 = user.getRole("User");
+		Role role2 = user.getRole("User");
 
 		assertNull(role2);
 	}

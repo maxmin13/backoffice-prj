@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.INSERT_USER_USER_ROLE;
+import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.INSERT_USER_ROLE;
 import static org.springframework.util.Assert.notNull;
 
 import java.sql.Types;
@@ -11,10 +11,10 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.SqlUpdate;
 
-public class InsertUserUserRole extends SqlUpdate {
+public class InsertRole extends SqlUpdate {
 
-	public InsertUserUserRole(DataSource dataSource) {
-		super(dataSource, INSERT_USER_USER_ROLE);
+	public InsertRole(DataSource dataSource) {
+		super(dataSource, INSERT_USER_ROLE);
 		super.declareParameter(new SqlParameter("userId", Types.INTEGER));
 		super.declareParameter(new SqlParameter("roleId", Types.INTEGER));
 	}

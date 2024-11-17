@@ -28,21 +28,26 @@ import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.entity.State;
 
 @ExtendWith(MockitoExtension.class)
-class AddressDaoTest {
+class AddressDaoTest  {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
 
 	private JdbcUserTestUtil jdbcUserTestUtil;
+	
 	@Mock
 	private UpdateAddress updateAddress;
+	
 	@Mock
 	private InsertAddress insertAddress;
+	
 	@Mock
 	private InsertAddresses insertAddresses;
+	
 	@Mock
 	private SelectAddressesByUserId selectAddressesByUserId;
+	
 	@InjectMocks
-	private 	AddressDaoImpl addressDao;
+	private AddressDaoImpl addressDao;
 
 	AddressDaoTest() {
 		MockitoAnnotations.openMocks(this);

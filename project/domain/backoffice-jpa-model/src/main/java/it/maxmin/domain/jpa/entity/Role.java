@@ -15,8 +15,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "UserRole")
-public class UserRole extends AbstractEntity {
+@Table(name = "Role")
+public class Role extends AbstractEntity {
 
 	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
@@ -24,11 +24,11 @@ public class UserRole extends AbstractEntity {
 	private String roleName;
 	private Set<User> users = new HashSet<>();
 
-	public static UserRole newInstance() {
-		return new UserRole();
+	public static Role newInstance() {
+		return new Role();
 	}
 
-	public UserRole withId(Long id) {
+	public Role withId(Long id) {
 		this.id = id;
 		return this;
 	}
@@ -42,13 +42,13 @@ public class UserRole extends AbstractEntity {
 		this.roleName = roleName;
 	}
 
-	public UserRole withRoleName(String roleName) {
+	public Role withRoleName(String roleName) {
 		this.roleName = roleName;
 		return this;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "UserUserRole", joinColumns = @JoinColumn(name = "UserRoleId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
+	@JoinTable(name = "Role", joinColumns = @JoinColumn(name = "RoleId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
 	public Set<User> getUsers() {
 		return users;
 	}
@@ -57,7 +57,7 @@ public class UserRole extends AbstractEntity {
 		this.users = users;
 	}
 
-	public UserRole withUsers(Set<User> users) {
+	public Role withUsers(Set<User> users) {
 		this.users = users;
 		return this;
 	}
@@ -77,13 +77,13 @@ public class UserRole extends AbstractEntity {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		UserRole that = (UserRole) obj;
+		Role that = (Role) obj;
 		return roleName.equals(that.roleName);
 	}
 
 	@Override
 	public String toString() {
-		return "UserRole [id=" + id + ", roleName=" + roleName + "]";
+		return "Role [id=" + id + ", roleName=" + roleName + "]";
 	}
 
 }

@@ -40,7 +40,7 @@ import it.maxmin.model.jdbc.domain.pojo.PojoDepartment;
 import it.maxmin.model.jdbc.domain.pojo.PojoState;
 import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 import it.maxmin.model.jdbc.domain.pojo.PojoUserAddress;
-import it.maxmin.model.jdbc.domain.pojo.PojoUserRole;
+import it.maxmin.model.jdbc.domain.pojo.PojoRole;
 
 public class JdbcQueryTestUtil {
 
@@ -90,21 +90,21 @@ public class JdbcQueryTestUtil {
 		return user;
 	}
 
-	public List<PojoUserRole> findRolesByUserId(long userId) {
+	public List<PojoRole> findRolesByUserId(long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
 		return jdbcTemplate.query(SELECT_ROLES_BY_USER_USER_ID, param,
-				BeanPropertyRowMapper.newInstance(PojoUserRole.class));
+				BeanPropertyRowMapper.newInstance(PojoRole.class));
 	}
 	
-	public List<PojoUserRole> findRolesByUserAccountName(String accountName) {
+	public List<PojoRole> findRolesByUserAccountName(String accountName) {
 		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
 		return jdbcTemplate.query(SELECT_ROLES_BY_USER_ACCOUNT_NAME, param,
-				BeanPropertyRowMapper.newInstance(PojoUserRole.class));
+				BeanPropertyRowMapper.newInstance(PojoRole.class));
 	}
 	
-	public PojoUserRole findRoleByName(String name) {
+	public PojoRole findRoleByRoleName(String name) {
 		SqlParameterSource param = new MapSqlParameterSource("roleName", name);
-		return jdbcTemplate.queryForObject(SELECT_ROLE_BY_NAME, param, BeanPropertyRowMapper.newInstance(PojoUserRole.class));
+		return jdbcTemplate.queryForObject(SELECT_ROLE_BY_NAME, param, BeanPropertyRowMapper.newInstance(PojoRole.class));
 	}
 
 	public List<PojoAddress> findAddressesByUserId(long userId) {

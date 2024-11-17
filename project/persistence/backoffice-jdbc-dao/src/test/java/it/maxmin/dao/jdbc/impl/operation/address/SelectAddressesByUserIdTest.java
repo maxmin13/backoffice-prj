@@ -1,7 +1,5 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
-import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -30,9 +28,9 @@ class SelectAddressesByUserIdTest extends BaseTestUser {
 		super(jdbcQueryTestUtil, jdbcUserTestUtil);
 		this.selectAddressesByUserId = new SelectAddressesByUserId(jdbcTemplate);
 	}
-	
+
 	@Test
-	void executeWithNoAddresses() {
+	void executeWithNoAddressId() {
 
 		LOGGER.info("running test executeWithNoAddresses");
 
@@ -41,41 +39,6 @@ class SelectAddressesByUserIdTest extends BaseTestUser {
 		Throwable throwable = assertThrows(Throwable.class, () -> selectAddressesByUserId.execute(userId));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-	
-	@Test
-	void execute() {
-
-		LOGGER.info("running test execute");
-
-		PojoUser maxmin = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
-
-		// run the test
-		List<Address> addresses = selectAddressesByUserId.execute(maxmin.getId());
-
-		assertEquals(2, addresses.size());
-
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", addresses.get(0));
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), addresses.get(0).getState());
-
-		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", addresses.get(1));
-		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), addresses.get(1).getState());
-	}
-
-	@Test
-	void executeNoAddressAssociatedToUser() {
-
-		LOGGER.info("running test executeNoAddressAssociatedToUser");
-
-		String[] scripts = { "2_useraddress.down.sql" };
-		jdbcQueryTestUtil.runDBScripts(scripts);
-
-		PojoUser maxmin = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
-
-		// run the test
-		List<Address> addresses = selectAddressesByUserId.execute(maxmin.getId());
-
-		assertEquals(0, addresses.size());
 	}
 
 	@Test
@@ -93,6 +56,25 @@ class SelectAddressesByUserIdTest extends BaseTestUser {
 		List<Address> addresses = selectAddressesByUserId.execute(maxmin.getId());
 
 		assertEquals(0, addresses.size());
+	}
+
+	@Test
+	void execute() {
+
+		LOGGER.info("running test execute");
+
+		PojoUser maxmin = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+
+		// run the test
+		List<Address> addresses = selectAddressesByUserId.execute(maxmin.getId());
+
+		assertEquals(2, addresses.size());
+
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", addresses.get(0));
+		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), addresses.get(0).getState());
+
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", addresses.get(1));
+		jdbcUserTestUtil.verifyState(ireland.getName(), ireland.getCode(), addresses.get(1).getState());
 	}
 
 }

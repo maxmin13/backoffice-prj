@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jndi.JndiTemplate;
 
 /**
@@ -46,11 +47,10 @@ public class JndiDataSourceCfg {
 	public DataSource dataSource() {
 		try {
 			return (DataSource) jndiTemplate.lookup(jndiDataSourceName);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LOGGER.error("JNDI DataSource bean cannot be created!", e);
 			return null;
 		}
 	}
 
- }
+}

@@ -6,22 +6,21 @@ import static org.springframework.util.Assert.notNull;
 import java.sql.Types;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import it.maxmin.model.jdbc.domain.entity.User;
 
-public class SelectUserByAccountName extends UserResultsetExctractor {
-
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(SelectUserByAccountName.class);
-
+public class SelectUserByAccountName {
+	
 	private NamedParameterJdbcTemplate jdbcTemplate;
+	private ResultSetExtractor<List<User>> resultSetExtractor;
 
 	public SelectUserByAccountName(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+		SelectUserHelper helper = new SelectUserHelper();
+		this.resultSetExtractor = helper.getResultSetExtractor();
 	}
 	
 	public User execute(String accountName) {
@@ -31,7 +30,7 @@ public class SelectUserByAccountName extends UserResultsetExctractor {
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		param.addValue("accountName", accountName, Types.VARCHAR);
 
-		List<User> users = jdbcTemplate.query(SELECT_USER_BY_ACCOUNT_NAME, param, userExtractor);
+		List<User> users = jdbcTemplate.query(SELECT_USER_BY_ACCOUNT_NAME, param, resultSetExtractor);
 		 
 		return (users == null || users.isEmpty()) ? null : users.get(0);
 	}

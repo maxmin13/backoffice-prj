@@ -36,8 +36,10 @@ public class InsertAddress extends SqlUpdate {
 	public Address execute(Address address) {
 		notNull(address, "The address must not be null");
 		if (address.getId() != null) {
-			throw new IllegalArgumentException("The address ID must not null");
+			throw new IllegalArgumentException("The address ID must be null");
 		}
+		notNull(address.getState(), "The state must not be null");
+		notNull(address.getState().getId(), "The state ID must not be null");
 
 		var keyHolder = new GeneratedKeyHolder();
 		updateByNamedParam(Map.of("description", address.getDescription(), "city",

@@ -9,12 +9,12 @@ import it.maxmin.domain.jpa.entity.Address;
 import it.maxmin.domain.jpa.entity.Department;
 import it.maxmin.domain.jpa.entity.State;
 import it.maxmin.domain.jpa.entity.User;
-import it.maxmin.domain.jpa.entity.UserRole;
+import it.maxmin.domain.jpa.entity.Role;
 import it.maxmin.domain.jpa.pojo.PojoAddress;
 import it.maxmin.domain.jpa.pojo.PojoDepartment;
 import it.maxmin.domain.jpa.pojo.PojoState;
 import it.maxmin.domain.jpa.pojo.PojoUser;
-import it.maxmin.domain.jpa.pojo.PojoUserRole;
+import it.maxmin.domain.jpa.pojo.PojoRole;
 
 abstract class TestAbstract {
 		
@@ -81,12 +81,12 @@ abstract class TestAbstract {
 		assertNotNull(actual.getDepartmentId());
 	}
 
-	void verifyRole(String roleName, UserRole actual) {
+	void verifyRole(String roleName, Role actual) {
 		assertNotNull(actual.getId());
 		assertEquals(roleName, actual.getRoleName());
 	}
 	
-	void verifyRole(String roleName, PojoUserRole actual) {
+	void verifyRole(String roleName, PojoRole actual) {
 		assertNotNull(actual.getId());
 		assertEquals(roleName, actual.getRoleName());
 	}
