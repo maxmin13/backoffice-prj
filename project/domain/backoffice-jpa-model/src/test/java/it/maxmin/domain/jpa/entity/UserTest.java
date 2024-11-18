@@ -17,7 +17,7 @@ class UserTest {
 
 	@ParameterizedTest
 	@ValueSource(strings = { "maxmin13" })
-	void testSameObjectEqualMethod(String accountName) {
+	void testSameObjectIsEqual(String accountName) {
 
 		User user = User.newInstance().withId(1l).withAccountName(accountName)
 				.withBirthDate(LocalDate.of(1988, Month.MARCH, 12)).withFirstName("Max").withLastName("Min")
@@ -32,7 +32,7 @@ class UserTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, maxmin13" })
-	void testUsersEqualMethod(String accountName1, String accountName2) {
+	void testSameAccountNamesAreEqual(String accountName1, String accountName2) {
 
 		User user1 = User.newInstance().withId(1l).withAccountName(accountName1)
 				.withBirthDate(LocalDate.of(1988, Month.MARCH, 12)).withFirstName("Max").withLastName("Min")
@@ -51,7 +51,7 @@ class UserTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, reginald999" })
-	void testUsersNotEqualMethod(String accountName1, String accountName2) {
+	void testDifferentAccountNamesAreNotEqual(String accountName1, String accountName2) {
 
 		User user1 = User.newInstance().withId(1l).withAccountName(accountName1)
 				.withBirthDate(LocalDate.of(1988, Month.MARCH, 12)).withFirstName("Max").withLastName("Min")

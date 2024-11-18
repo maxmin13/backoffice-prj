@@ -15,7 +15,7 @@ class UserPasswordTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, 2000" })
-	void same_object_equal(String accountName, int yearEffDate) {
+	void testSameObjectIsEqual(String accountName, int yearEffDate) {
 
 		LocalDateTime effDate = LocalDateTime.of(yearEffDate, Month.MARCH, 28, 14, 33, 48, 000000);
 
@@ -35,22 +35,23 @@ class UserPasswordTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, 2000, maxmin13, 2000" })
-	void test_passwords_equal(String accountName1, int yearEffDate1, String accountName2, int yearEffDate2) {
+	void testSameAccountNamesAndEffDatesAreEqual(String accountName1, int yearEffDate1, String accountName2,
+			int yearEffDate2) {
 
 		LocalDateTime effDate1 = LocalDateTime.of(yearEffDate1, Month.MARCH, 28, 14, 33, 48, 000000);
-		
+
 		LocalDateTime effDate2 = LocalDateTime.of(yearEffDate2, Month.MARCH, 28, 14, 33, 48, 000000);
 
 		LocalDate birthDate = LocalDate.of(1982, 9, 1);
 
 		User user1 = User.newInstance().withId(1l).withAccountName(accountName1).withBirthDate(birthDate)
 				.withFirstName("Max").withLastName("Min").withDepartment(Department.newInstance().withId(1l));
-		
+
 		User user2 = User.newInstance().withId(1l).withAccountName(accountName2).withBirthDate(birthDate)
 				.withFirstName("Max").withLastName("Min").withDepartment(Department.newInstance().withId(1l));
 
 		UserPassword userPassword1 = UserPassword.newInstance().withUser(user1).withEffDate(effDate1);
-		
+
 		UserPassword userPassword2 = UserPassword.newInstance().withUser(user2).withEffDate(effDate2);
 
 		Set<UserPassword> passwords = new HashSet<>();
@@ -62,23 +63,23 @@ class UserPasswordTest {
 
 	@ParameterizedTest
 	@CsvSource({ "maxmin13, 1999, reginald, 2023" })
-	void test_passwords_not_equal(String accountName1, int yearEffDate1, String accountName2,
+	void testDifferentAccountNamesAndEffDatesAreNotEqual(String accountName1, int yearEffDate1, String accountName2,
 			int yearEffDate2) {
 
 		LocalDateTime effDate1 = LocalDateTime.of(yearEffDate1, Month.MARCH, 28, 14, 33, 48, 000000);
-		
+
 		LocalDateTime effDate2 = LocalDateTime.of(yearEffDate2, Month.MARCH, 28, 14, 33, 48, 000000);
 
 		LocalDate birthDate = LocalDate.of(1982, 9, 1);
 
 		User user1 = User.newInstance().withId(1l).withAccountName(accountName1).withBirthDate(birthDate)
 				.withFirstName("Max").withLastName("Min").withDepartment(Department.newInstance().withId(1l));
-		
+
 		User user2 = User.newInstance().withId(1l).withAccountName(accountName2).withBirthDate(birthDate)
 				.withFirstName("Max").withLastName("Min").withDepartment(Department.newInstance().withId(1l));
 
 		UserPassword userPassword1 = UserPassword.newInstance().withUser(user1).withEffDate(effDate1);
-		
+
 		UserPassword userPassword2 = UserPassword.newInstance().withUser(user2).withEffDate(effDate2);
 
 		Set<UserPassword> passwords = new HashSet<>();

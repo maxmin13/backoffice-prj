@@ -10,23 +10,23 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class RoleTest {
-	
+
 	@ParameterizedTest
-	@ValueSource(strings = {"Administrator"})
-	void test_same_object_equal(String roleName) {
+	@ValueSource(strings = { "Administrator" })
+	void testSameObjectIsEqual(String roleName) {
 
 		Role role = Role.newInstance().withId(1l).withRoleName(roleName);
-		
+
 		Set<Role> roles = new HashSet<>();
 		roles.add(role);
 		roles.add(role);
 
 		assertEquals(1, roles.size());
 	}
-	
+
 	@ParameterizedTest
 	@CsvSource({ "Administrator, Administrator" })
-	void test_roles_equal(String roleName1, String roleName2) {
+	void testSameRoleNamesAreEqual(String roleName1, String roleName2) {
 
 		Role role1 = Role.newInstance().withId(1l).withRoleName(roleName1);
 		Role role2 = Role.newInstance().withId(1l).withRoleName(roleName2);
@@ -38,10 +38,9 @@ class RoleTest {
 		assertEquals(1, roles.size());
 	}
 
-	
 	@ParameterizedTest
 	@CsvSource({ "Administrator, Legal" })
-	void test_roles_not_equal(String roleName1, String roleName2) {
+	void testDifferentRoleNamesAreNotEqual(String roleName1, String roleName2) {
 
 		Role role1 = Role.newInstance().withId(1l).withRoleName(roleName1);
 		Role role2 = Role.newInstance().withId(1l).withRoleName(roleName2);
