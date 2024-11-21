@@ -2,10 +2,10 @@ package it.maxmin.dao.jdbc.impl.operation.user;
 
 import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
-import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
-import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
 import static it.maxmin.dao.jdbc.impl.constant.Role.USER;
+import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
+import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -14,6 +14,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,9 +29,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.entity.Department;
+import it.maxmin.model.jdbc.domain.entity.Role;
 import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.entity.User;
-import it.maxmin.model.jdbc.domain.entity.Role;
 
 class SelectAllUsersTest {
 
@@ -40,7 +41,7 @@ class SelectAllUsersTest {
 
 	@Mock
 	private NamedParameterJdbcTemplate jdbcTemplate;
-	
+
 	@InjectMocks
 	private SelectAllUsers selectAllUsers;
 
@@ -56,16 +57,18 @@ class SelectAllUsersTest {
 		LOGGER.info("running test execute");
 
 		Address rome = Address.newInstance().withId(4l).withPostalCode("30010").withDescription("Via borgo di sotto")
-				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()));
+				.withCity("Rome").withRegion("County Lazio")
+				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()));
 		Department production = Department.newInstance().withId(3l).withName(PRODUCTION.getName());
 		Role administrator = Role.newInstance().withId(2l).withRoleName(ADMINISTRATOR.getRoleName());
 		User maxmin = User.newInstance().withId(1l).withAccountName("maxmin13").withFirstName("Max")
 				.withLastName("Minardi").withBirthDate(LocalDate.of(1977, 10, 16)).withDepartment(production);
 		maxmin.addRole(administrator);
 		maxmin.addAddress(rome);
-		
+
 		Address dublin = Address.newInstance().withId(4l).withPostalCode("A65TF12").withDescription("Connolly street")
-				.withCity("Dublin").withRegion("County Dublin").withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
+				.withCity("Dublin").withRegion("County Dublin")
+				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
 		Department legal = Department.newInstance().withId(3l).withName(LEGAL.getName());
 		Role user = Role.newInstance().withId(2l).withRoleName(USER.getRoleName());
 		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
@@ -91,9 +94,9 @@ class SelectAllUsersTest {
 		// roles
 		assertEquals(1, user1.getRoles().size());
 
-		Role role1 = user1.getRole(ADMINISTRATOR.getRoleName());
+		Optional<Role> role1 = user1.getRole(ADMINISTRATOR.getRoleName());
 
-		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1);
+		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), user1.getDepartment());
@@ -101,10 +104,12 @@ class SelectAllUsersTest {
 		// addresses
 		assertEquals(1, user1.getAddresses().size());
 
-		Address address1 = user1.getAddress("30010");
+		Optional<Address> address1 = user1.getAddress("30010");
 
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.getState());
+		assertEquals(true, address1.isPresent());
+
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1.get());
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.get().getState());
 
 		User user2 = usersFound.get(1);
 
@@ -113,9 +118,11 @@ class SelectAllUsersTest {
 		// roles
 		assertEquals(1, user2.getRoles().size());
 
-		Role role2 = user2.getRole(USER.getRoleName());
+		Optional<Role> role2 = user2.getRole(USER.getRoleName());
 
-		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role2);
+		assertEquals(true, role2.isPresent());
+
+		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role2.get());
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), user2.getDepartment());
@@ -123,9 +130,11 @@ class SelectAllUsersTest {
 		// addresses
 		assertEquals(1, user2.getAddresses().size());
 
-		Address address2 = user2.getAddress("A65TF12");
+		Optional<Address> address2 = user2.getAddress("A65TF12");
 
-		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
-		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address2.getState());
+		assertEquals(true, address2.isPresent());
+
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2.get());
+		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address2.get().getState());
 	}
 }

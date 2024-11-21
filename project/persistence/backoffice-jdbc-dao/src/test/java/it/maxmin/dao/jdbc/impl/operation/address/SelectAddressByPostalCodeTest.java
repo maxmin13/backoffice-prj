@@ -1,4 +1,4 @@
-package it.maxmin.dao.jdbc.impl.operation.user;
+package it.maxmin.dao.jdbc.impl.operation.address;
 
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
@@ -11,7 +11,6 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,9 +29,9 @@ import it.maxmin.model.jdbc.domain.entity.Role;
 import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.entity.User;
 
-class SelectUserByAccountNameTest {
+class SelectAddressByPostalCodeTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SelectAllUsersTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SelectAddressByPostalCodeTest.class);
 
 	private JdbcUserTestUtil jdbcUserTestUtil;
 
@@ -40,21 +39,21 @@ class SelectUserByAccountNameTest {
 	private NamedParameterJdbcTemplate jdbcTemplate;
 
 	@InjectMocks
-	private SelectUserByAccountName selectUserByAccountName;
+	private SelectAddressByPostalCode selectAddressByPostalCode;
 
-	SelectUserByAccountNameTest() {
+	SelectAddressByPostalCodeTest() {
 		MockitoAnnotations.openMocks(this);
 		jdbcUserTestUtil = new JdbcUserTestUtil();
 	}
 
 	@Test
-	void executeWithNoAccountName() {
+	void executeWithNoPostalCode() {
 
-		LOGGER.info("running test executeWithNoAccountName");
+		LOGGER.info("running test executeWithNoPostalCode");
 
-		String accountName = null;
+		String postalCode = null;
 
-		Throwable throwable = assertThrows(Throwable.class, () -> selectUserByAccountName.execute(accountName));
+		Throwable throwable = assertThrows(Throwable.class, () -> selectAddressByPostalCode.execute(postalCode));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
@@ -75,37 +74,16 @@ class SelectUserByAccountNameTest {
 		maxmin.addRole(administrator);
 		maxmin.addAddress(rome);
 
-		List<User> users = List.of(maxmin);
+		List<Address> addresses = List.of(rome);
 
 		when(jdbcTemplate.query(anyString(), any(SqlParameterSource.class), any(ResultSetExtractor.class)))
-				.thenReturn(users);
+				.thenReturn(addresses);
 
 		// run the test
-		User userFound = selectUserByAccountName.execute("maxmin13");
+		Address foundAddress = selectAddressByPostalCode.execute("30010");
 
-		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16),
-				userFound);
-
-		// roles
-		assertEquals(1, userFound.getRoles().size());
-
-		Optional<Role> role1 = userFound.getRole(ADMINISTRATOR.getRoleName());
-
-		assertEquals(true, role1.isPresent());
-
-		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
-
-		// department
-		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), userFound.getDepartment());
-
-		// addresses
-		assertEquals(1, userFound.getAddresses().size());
-
-		Optional<Address> address1 = userFound.getAddress("30010");
-
-		assertEquals(true, address1.isPresent());
-
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1.get());
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.get().getState());
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", foundAddress);
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), foundAddress.getState());
 	}
+
 }

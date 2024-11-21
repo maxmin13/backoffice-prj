@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -26,9 +27,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import it.maxmin.dao.jdbc.BaseTestUser;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
+import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
 import it.maxmin.model.jdbc.domain.entity.Address;
-import it.maxmin.model.jdbc.domain.entity.User;
 import it.maxmin.model.jdbc.domain.entity.Role;
+import it.maxmin.model.jdbc.domain.entity.User;
 
 class SelectUserHelperTest extends BaseTestUser {
 
@@ -47,7 +50,9 @@ class SelectUserHelperTest extends BaseTestUser {
 
 	@BeforeEach
 	void initTests() {
-		SelectUserHelper selectUserHelper = new SelectUserHelper();
+		ResultSetUserBuilder resultSetUserBuilder = new ResultSetUserBuilder();
+		ResultSetAddressBuilder resultSetAddressBuilder = new ResultSetAddressBuilder();
+		SelectUserHelper selectUserHelper = new SelectUserHelper(resultSetUserBuilder, resultSetAddressBuilder);
 		resultSetExtractor = selectUserHelper.getResultSetExtractor();
 	}
 
@@ -89,17 +94,23 @@ class SelectUserHelperTest extends BaseTestUser {
 		// roles
 		assertEquals(3, maxmin.getRoles().size());
 
-		Role role1 = maxmin.getRole(administrator.getRoleName());
+		Optional<Role> role1 = maxmin.getRole(administrator.getRoleName());
 
-		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), role1);
+		assertEquals(true, role1.isPresent());
 
-		Role role2 = maxmin.getRole(user.getRoleName());
+		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), role1.get());
 
-		jdbcUserTestUtil.verifyRole(user.getRoleName(), role2);
+		Optional<Role> role2 = maxmin.getRole(user.getRoleName());
 
-		Role role3 = maxmin.getRole(worker.getRoleName());
+		assertEquals(true, role2.isPresent());
 
-		jdbcUserTestUtil.verifyRole(worker.getRoleName(), role3);
+		jdbcUserTestUtil.verifyRole(user.getRoleName(), role2.get());
+
+		Optional<Role> role3 = maxmin.getRole(worker.getRoleName());
+
+		assertEquals(true, role3.isPresent());
+
+		jdbcUserTestUtil.verifyRole(worker.getRoleName(), role3.get());
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(production.getName(), maxmin.getDepartment());
@@ -107,15 +118,19 @@ class SelectUserHelperTest extends BaseTestUser {
 		// addresses
 		assertEquals(2, maxmin.getAddresses().size());
 
-		Address address1 = maxmin.getAddress("30010");
+		Optional<Address> address1 = maxmin.getAddress("30010");
 
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
-		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), address1.getState());
+		assertEquals(true, address1.isPresent());
 
-		Address address2 = maxmin.getAddress("A65TF12");
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1.get());
+		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), address1.get().getState());
 
-		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
-		jdbcUserTestUtil.verifyState(ireland.getName(), ireland.getCode(), address2.getState());
+		Optional<Address> address2 = maxmin.getAddress("A65TF12");
+
+		assertEquals(true, address2.isPresent());
+
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2.get());
+		jdbcUserTestUtil.verifyState(ireland.getName(), ireland.getCode(), address2.get().getState());
 
 		User artur = users.get(1);
 
@@ -124,13 +139,17 @@ class SelectUserHelperTest extends BaseTestUser {
 		// roles
 		assertEquals(2, artur.getRoles().size());
 
-		Role role4 = artur.getRole(administrator.getRoleName());
+		Optional<Role> role4 = artur.getRole(administrator.getRoleName());
 
-		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), role4);
+		assertEquals(true, role4.isPresent());
 
-		Role role5 = artur.getRole(user.getRoleName());
+		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), role4.get());
 
-		jdbcUserTestUtil.verifyRole(user.getRoleName(), role5);
+		Optional<Role> role5 = artur.getRole(user.getRoleName());
+
+		assertEquals(true, role5.isPresent());
+
+		jdbcUserTestUtil.verifyRole(user.getRoleName(), role5.get());
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(legal.getName(), artur.getDepartment());
@@ -138,10 +157,12 @@ class SelectUserHelperTest extends BaseTestUser {
 		// addresses
 		assertEquals(1, artur.getAddresses().size());
 
-		Address address3 = artur.getAddress("A65TF12");
+		Optional<Address> address3 = artur.getAddress("A65TF12");
 
-		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3);
-		jdbcUserTestUtil.verifyState(ireland.getName(), ireland.getCode(), address3.getState());
+		assertEquals(true, address3.isPresent());
+
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3.get());
+		jdbcUserTestUtil.verifyState(ireland.getName(), ireland.getCode(), address3.get().getState());
 	}
 
 	@Test
@@ -182,13 +203,17 @@ class SelectUserHelperTest extends BaseTestUser {
 		// roles
 		assertEquals(2, artur.getRoles().size());
 
-		Role role4 = artur.getRole(administrator.getRoleName());
+		Optional<Role> role4 = artur.getRole(administrator.getRoleName());
 
-		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), role4);
+		assertEquals(true, role4.isPresent());
 
-		Role role5 = artur.getRole(user.getRoleName());
+		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), role4.get());
 
-		jdbcUserTestUtil.verifyRole(user.getRoleName(), role5);
+		Optional<Role> role5 = artur.getRole(user.getRoleName());
+
+		assertEquals(true, role5.isPresent());
+
+		jdbcUserTestUtil.verifyRole(user.getRoleName(), role5.get());
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(legal.getName(), artur.getDepartment());
@@ -196,12 +221,14 @@ class SelectUserHelperTest extends BaseTestUser {
 		// addresses
 		assertEquals(1, artur.getAddresses().size());
 
-		Address address3 = artur.getAddress("A65TF12");
+		Optional<Address> address3 = artur.getAddress("A65TF12");
 
-		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3);
-		jdbcUserTestUtil.verifyState(ireland.getName(), ireland.getCode(), address3.getState());
+		assertEquals(true, address3.isPresent());
+
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3.get());
+		jdbcUserTestUtil.verifyState(ireland.getName(), ireland.getCode(), address3.get().getState());
 	}
-	
+
 	@Test
 	void selectUserByFirstNameNotFound() {
 
@@ -240,13 +267,17 @@ class SelectUserHelperTest extends BaseTestUser {
 		// roles
 		assertEquals(2, artur.getRoles().size());
 
-		Role role4 = artur.getRole(administrator.getRoleName());
+		Optional<Role> role4 = artur.getRole(administrator.getRoleName());
 
-		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), role4);
+		assertEquals(true, role4.isPresent());
 
-		Role role5 = artur.getRole(user.getRoleName());
+		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), role4.get());
 
-		jdbcUserTestUtil.verifyRole(user.getRoleName(), role5);
+		Optional<Role> role5 = artur.getRole(user.getRoleName());
+
+		assertEquals(true, role5.isPresent());
+
+		jdbcUserTestUtil.verifyRole(user.getRoleName(), role5.get());
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(legal.getName(), artur.getDepartment());
@@ -254,9 +285,11 @@ class SelectUserHelperTest extends BaseTestUser {
 		// addresses
 		assertEquals(1, artur.getAddresses().size());
 
-		Address address3 = artur.getAddress("A65TF12");
+		Optional<Address> address3 = artur.getAddress("A65TF12");
 
-		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3);
-		jdbcUserTestUtil.verifyState(ireland.getName(), ireland.getCode(), address3.getState());
+		assertEquals(true, address3.isPresent());
+
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3.get());
+		jdbcUserTestUtil.verifyState(ireland.getName(), ireland.getCode(), address3.get().getState());
 	}
 }

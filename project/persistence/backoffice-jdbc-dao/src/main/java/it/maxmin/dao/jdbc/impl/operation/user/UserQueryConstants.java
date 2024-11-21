@@ -4,32 +4,33 @@ public enum UserQueryConstants {
 	;
 	
 	public static final String BASE_SELECT_USERS = ""
-			+ "SELECT DISTINCT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, "
-			+ "     a.Id AS AddressId, a.Description, a.City, a.Region, a.PostalCode, "
+			+ "SELECT DISTINCT u.Id AS UserId, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, "
 			+ "     d.Id AS DepartmentId, d.Name AS DepartmentName, "
-			+ "     s.Id AS StateId, s.Name AS StateName, s.Code, "
-			+ "     r.Id AS RoleId, r.RoleName "
+			+ "     r.Id AS RoleId, r.RoleName, "
+			+ "     a.Id AS AddressId, a.Description, a.City, a.Region, a.PostalCode, "
+			+ "     s.Id AS StateId, s.Name AS StateName, s.Code "
 			+ "FROM User u " 
-			+ "LEFT JOIN UserAddress ua ON u.Id = ua.UserId "
-			+ "LEFT JOIN Address a ON ua.AddressId = a.Id "
+			+ "LEFT JOIN Department d ON u.DepartmentId = d.Id "
 			+ "LEFT JOIN UserRole ur ON u.Id = ur.UserId "
 			+ "LEFT JOIN Role r ON ur.RoleId = r.Id "
-			+ "LEFT JOIN Department d ON u.DepartmentId = d.Id "
+			+ "LEFT JOIN UserAddress ua ON u.Id = ua.UserId "
+			+ "LEFT JOIN Address a ON ua.AddressId = a.Id "
 			+ "LEFT JOIN State s ON a.StateId  = s.Id ";
 
+			
 	public static final String SELECT_ALL_USERS = ""
 			+ BASE_SELECT_USERS
-			+ "ORDER BY u.Id, AddressId, StateId";
+			+ "ORDER BY UserId, AddressId, StateId";
 
 	public static final String SELECT_USER_BY_ACCOUNT_NAME = ""
 			+ BASE_SELECT_USERS 
 			+ "WHERE u.AccountName = :accountName "
-			+ "ORDER BY u.Id, AddressId, StateId";
+			+ "ORDER BY UserId, AddressId, StateId";
 
 	public static final String SELECT_USERS_BY_FIRST_NAME = ""
 			+ BASE_SELECT_USERS
 			+ "WHERE FirstName = :firstName "
-			+ "ORDER BY u.Id, AddressId, StateId";
+			+ "ORDER BY UserId, AddressId, StateId";
 
 	public static final String UPDATE_USER = ""
 			+ "UPDATE User "

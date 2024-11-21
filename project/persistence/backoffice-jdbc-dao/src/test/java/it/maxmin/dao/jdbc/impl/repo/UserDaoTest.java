@@ -13,7 +13,7 @@ import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.dao.jdbc.api.repo.UserDao;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUser;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserAddress;
-import it.maxmin.dao.jdbc.impl.operation.user.InsertRole;
+import it.maxmin.dao.jdbc.impl.operation.user.InsertUserRole;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectAllUsers;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByAccountName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByFirstName;
@@ -35,7 +35,7 @@ class UserDaoTest {
 	private InsertUserAddress insertUserAddress;
 	
 	@Mock
-	private InsertRole insertRole;
+	private InsertUserRole insertRole;
 	
 	@Mock
 	private SelectAllUsers selectAllUsers;

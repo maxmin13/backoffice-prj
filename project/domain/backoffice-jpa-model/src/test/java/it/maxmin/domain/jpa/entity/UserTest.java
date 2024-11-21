@@ -1,11 +1,11 @@
 package it.maxmin.domain.jpa.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -153,9 +153,9 @@ class UserTest {
 
 		User user = User.newInstance();
 
-		Role role = user.getRole(null);
+		Optional<Role> role = user.getRole(null);
 
-		assertNull(role);
+		assertEquals(true, role.isEmpty());
 	}
 
 	@ParameterizedTest
@@ -167,13 +167,14 @@ class UserTest {
 		User user = User.newInstance();
 		user.getRoles().add(role);
 
-		Role role1 = user.getRole("Administrator");
+		Optional<Role> role1 = user.getRole("Administrator");
 
-		assertEquals(1l, role1.getId());
+		assertEquals(true, role1.isPresent());
+		assertEquals(1l, role1.get().getId());
 
-		Role role2 = user.getRole("User");
+		Optional<Role> role2 = user.getRole("User");
 
-		assertNull(role2);
+		assertEquals(true, role2.isEmpty());
 	}
 
 	@Test
@@ -181,9 +182,9 @@ class UserTest {
 
 		User user = User.newInstance();
 
-		Address address = user.getAddress(null);
+		Optional<Address> address = user.getAddress(null);
 
-		assertNull(address);
+		assertEquals(true, address.isEmpty());
 	}
 
 	@ParameterizedTest
@@ -196,12 +197,12 @@ class UserTest {
 		User user = User.newInstance();
 		user.addAddress(address);
 
-		Address address1 = user.getAddress("30030");
+		Optional<Address> address1 = user.getAddress("30030");
 
-		assertEquals(1l, address1.getId());
+		assertEquals(true, address1.isPresent());
+		assertEquals(1l, address1.get().getId());
 
-		Address address2 = user.getAddress("111111");
-
-		assertNull(address2);
+		Optional<Address> address2 = user.getAddress("111111");
+		assertEquals(true, address2.isEmpty());
 	}
 }

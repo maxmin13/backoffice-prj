@@ -1,51 +1,58 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-import it.maxmin.dao.jdbc.exception.DATAAccessException;
+import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
+import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
 import it.maxmin.model.jdbc.domain.entity.Address;
+import it.maxmin.model.jdbc.domain.entity.Department;
+import it.maxmin.model.jdbc.domain.entity.Role;
 import it.maxmin.model.jdbc.domain.entity.State;
+import it.maxmin.model.jdbc.domain.entity.User;
 
 public class SelectAddressHelper {
+
+	private ResultSetUserBuilder resultSetUserBuilder;
+	private ResultSetAddressBuilder resultSetAddressBuilder;
+
+	public SelectAddressHelper(ResultSetUserBuilder resultSetUserBuilder,
+			ResultSetAddressBuilder resultSetAddressBuilder) {
+		this.resultSetUserBuilder = resultSetUserBuilder;
+		this.resultSetAddressBuilder = resultSetAddressBuilder;
+	}
 
 	ResultSetExtractor<List<Address>> getResultSetExtractor() {
 		return (ResultSetExtractor<List<Address>>) rs -> {
 			Map<Long, Address> map = new HashMap<>();
-			Address address = null;
 			while (rs.next()) {
-				var addressId = rs.getLong("Id");
-				address = map.computeIfAbsent(addressId, i -> {
-					try {
-						return buildAddress(rs);
-					} catch (SQLException ex) {
-						throw new DATAAccessException("Malformed data!", ex);
-					}
+				Long addressId = rs.getLong("AddressId");
+				Address address = map.computeIfAbsent(addressId,
+						id -> resultSetAddressBuilder.buildAddress(rs).orElse(null));
+				Optional<State> state = resultSetAddressBuilder.buildState(rs);
+				state.ifPresent(requireNonNull(address)::withState);
+
+				String accountName = rs.getString("accountName");
+				requireNonNull(address).getUser(accountName).ifPresentOrElse(u -> {
+					Optional<Role> role = resultSetUserBuilder.buildRole(rs);
+					role.ifPresent(requireNonNull(u)::addRole);
+				}, () -> {
+					User user = resultSetUserBuilder.buildUser(rs).orElse(null);
+					Optional<Department> department = resultSetUserBuilder.buildDepartment(rs);
+					department.ifPresent(requireNonNull(user)::withDepartment);
+					Optional<Role> role = resultSetUserBuilder.buildRole(rs);
+					role.ifPresent(requireNonNull(user)::addRole);
+					address.addUser(user);
 				});
-				var stateId = rs.getLong("StateId");
-				if (stateId > 0) {
-					Objects.requireNonNull(address).withState(buildState(rs));
-				}
 			}
 			return new ArrayList<>(map.values());
 		};
-	}
-
-	private Address buildAddress(ResultSet rs) throws SQLException {
-		return Address.newInstance().withId(rs.getLong("Id")).withDescription(rs.getString("Description"))
-				.withCity(rs.getString("City")).withPostalCode(rs.getString("PostalCode"))
-				.withRegion(rs.getString("Region"));
-	}
-
-	private State buildState(ResultSet rs) throws SQLException {
-		return State.newInstance().withId(rs.getLong("StateId")).withCode(rs.getString("Code"))
-				.withName(rs.getString("Name"));
 	}
 }

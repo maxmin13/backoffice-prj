@@ -2,6 +2,7 @@ package it.maxmin.domain.jpa.entity;
 
 import java.io.Serial;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -140,6 +141,14 @@ public class Address extends AbstractEntity {
 			users.add(user);
 			return true;
 		}
+	}
+	
+	public Optional<User> getUser(String accountName) {
+		if (accountName == null) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(
+				users.stream().filter(each -> each.getAccountName().equals(accountName)).findFirst().orElse(null));
 	}
 
 	@Override

@@ -7,6 +7,10 @@ Configure a local development environment with Eclipse to develop the Java backo
 
 git clone git@github.com:maxmin13/backoffice-prj.git
 
+cd project/
+mvn -DskipTests test-compile jar:test-jar install
+mvn clean install
+
 ###################################################################
 # configure the project in eclipse
 ###################################################################
@@ -17,6 +21,17 @@ in the Root Directory input box, select the directory that contains the parent p
 ex:
 /home/vagrant/workspace/backoffice-prj/project
 click Finish 
+
+right click on backoffice-prj
+manven, Update project
+
+if a project doesn't see test classes of another project:
+
+righ click on the project
+select Projects
+check that the project configured under Classpath has: Without test code: No
+
+
 
 ###################################################################
 # Install Tomcat webserver Eclipse plugin:

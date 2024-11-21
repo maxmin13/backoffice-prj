@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -128,18 +129,18 @@ public class User implements Serializable {
 	public boolean addAddress(Address address) {
 		if (address == null || addresses.contains(address)) {
 			return false;
-		}
-		else {
+		} else {
 			addresses.add(address);
 			return true;
 		}
 	}
 
-	public Address getAddress(String postalCode) {
+	public Optional<Address> getAddress(String postalCode) {
 		if (postalCode == null) {
-			return null;
+			return Optional.empty();
 		}
-		return addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst().orElse(null);
+		return Optional.ofNullable(
+				addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst().orElse(null));
 	}
 
 	public Set<Role> getRoles() {
@@ -153,18 +154,18 @@ public class User implements Serializable {
 	public boolean addRole(Role role) {
 		if (role == null || roles.contains(role)) {
 			return false;
-		}
-		else {
+		} else {
 			roles.add(role);
 			return true;
 		}
 	}
 
-	public Role getRole(String roleName) {
+	public Optional<Role> getRole(String roleName) {
 		if (roleName == null) {
-			return null;
+			return Optional.empty();
 		}
-		return roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst().orElse(null);
+		return Optional.ofNullable(
+				roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst().orElse(null));
 	}
 
 	@Override

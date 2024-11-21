@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
+import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
 import it.maxmin.model.jdbc.domain.entity.User;
 
 public class SelectUserByFirstName {
@@ -19,7 +21,9 @@ public class SelectUserByFirstName {
 
 	public SelectUserByFirstName(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
-		SelectUserHelper helper = new SelectUserHelper();
+		ResultSetUserBuilder resultSetUserBuilder = new ResultSetUserBuilder();
+		ResultSetAddressBuilder resultSetAddressBuilder = new ResultSetAddressBuilder();
+		SelectUserHelper helper = new SelectUserHelper(resultSetUserBuilder, resultSetAddressBuilder);
 		this.resultSetExtractor = helper.getResultSetExtractor();
 	}
 

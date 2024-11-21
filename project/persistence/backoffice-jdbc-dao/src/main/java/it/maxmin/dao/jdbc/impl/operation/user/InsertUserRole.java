@@ -11,9 +11,9 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.SqlUpdate;
 
-public class InsertRole extends SqlUpdate {
+public class InsertUserRole extends SqlUpdate {
 
-	public InsertRole(DataSource dataSource) {
+	public InsertUserRole(DataSource dataSource) {
 		super(dataSource, INSERT_USER_ROLE);
 		super.declareParameter(new SqlParameter("userId", Types.INTEGER));
 		super.declareParameter(new SqlParameter("roleId", Types.INTEGER));

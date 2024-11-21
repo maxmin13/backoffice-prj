@@ -206,33 +206,46 @@ class AddressDaoTest extends TestAbstract {
 
 		assertEquals(3, roles.size());
 
-		Role role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
-		verifyRole(ADMINISTRATOR.getRoleName(), role1);
+		Optional<Role> role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
+		
+		assertEquals(true, role1.isPresent());
+		
+		verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
 
-		Role role2 = maxmin.getRole(USER.getRoleName());
-		verifyRole(USER.getRoleName(), role2);
+		Optional<Role> role2 = maxmin.getRole(USER.getRoleName());
+		
+		assertEquals(true, role2.isPresent());
+		
+		verifyRole(USER.getRoleName(), role2.get());
 
-		Role role3 = maxmin.getRole(WORKER.getRoleName());
-		verifyRole(WORKER.getRoleName(), role3);
+		Optional<Role> role3 = maxmin.getRole(WORKER.getRoleName());
+		
+		assertEquals(true, role3.isPresent());
+		
+		verifyRole(WORKER.getRoleName(), role3.get());
 
 		// addresses
 		Set<Address> addresses = maxmin.getAddresses();
 
 		assertEquals(2, addresses.size());
 
-		Address address1 = maxmin.getAddress("30010");
+		Optional<Address> address1 = maxmin.getAddress("30010");
+		
+		assertEquals(true, address1.isPresent());
 
-		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
+		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1.get());
 
-		State state1 = address1.getState();
+		State state1 = address1.get().getState();
 
 		verifyState(ITALY.getName(), ITALY.getCode(), state1);
 
-		Address address2 = maxmin.getAddress("A65TF12");
+		Optional<Address> address2 = maxmin.getAddress("A65TF12");
+		
+		assertEquals(true, address2.isPresent());
 
-		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2.get());
 
-		State state2 = address2.getState();
+		State state2 = address2.get().getState();
 
 		verifyState(IRELAND.getName(), IRELAND.getCode(), state2);
 	}

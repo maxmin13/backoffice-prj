@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -155,7 +156,7 @@ public class User extends AbstractEntity {
 			return true;
 		}
 	}
-	
+
 	public boolean removeAddress(Address address) {
 		if (address == null || !addresses.contains(address)) {
 			return false;
@@ -165,11 +166,12 @@ public class User extends AbstractEntity {
 		}
 	}
 
-	public Address getAddress(String postalCode) {
+	public Optional<Address> getAddress(String postalCode) {
 		if (postalCode == null) {
-			return null;
+			return Optional.empty();
 		}
-		return addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst().orElse(null);
+		return Optional.ofNullable(
+				addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst().orElse(null));
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -190,7 +192,7 @@ public class User extends AbstractEntity {
 			return true;
 		}
 	}
-	
+
 	public boolean removeRole(Role role) {
 		if (role == null || !roles.contains(role)) {
 			return false;
@@ -200,11 +202,12 @@ public class User extends AbstractEntity {
 		}
 	}
 
-	public Role getRole(String roleName) {
+	public Optional<Role> getRole(String roleName) {
 		if (roleName == null) {
-			return null;
+			return Optional.empty();
 		}
-		return roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst().orElse(null);
+		return Optional.ofNullable(
+				roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst().orElse(null));
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
-import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
+import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -25,9 +26,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.entity.Department;
+import it.maxmin.model.jdbc.domain.entity.Role;
 import it.maxmin.model.jdbc.domain.entity.State;
 import it.maxmin.model.jdbc.domain.entity.User;
-import it.maxmin.model.jdbc.domain.entity.Role;
 
 class SelectUserByFirstNameTest {
 
@@ -45,7 +46,7 @@ class SelectUserByFirstNameTest {
 		MockitoAnnotations.openMocks(this);
 		jdbcUserTestUtil = new JdbcUserTestUtil();
 	}
-	
+
 	@Test
 	void executeWithNoFirstName() {
 
@@ -81,9 +82,9 @@ class SelectUserByFirstNameTest {
 
 		// run the test
 		List<User> usersFound = selectUserByFirstName.execute("Max");
-		
+
 		assertEquals(1, usersFound.size());
-		
+
 		User userFound = usersFound.get(0);
 
 		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16),
@@ -92,9 +93,11 @@ class SelectUserByFirstNameTest {
 		// roles
 		assertEquals(1, userFound.getRoles().size());
 
-		Role role1 = userFound.getRole(ADMINISTRATOR.getRoleName());
+		Optional<Role> role1 = userFound.getRole(ADMINISTRATOR.getRoleName());
 
-		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1);
+		assertEquals(true, role1.isPresent());
+
+		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), userFound.getDepartment());
@@ -102,9 +105,11 @@ class SelectUserByFirstNameTest {
 		// addresses
 		assertEquals(1, userFound.getAddresses().size());
 
-		Address address1 = userFound.getAddress("30010");
+		Optional<Address> address1 = userFound.getAddress("30010");
 
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.getState());
+		assertEquals(true, address1.isPresent());
+
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1.get());
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.get().getState());
 	}
 }

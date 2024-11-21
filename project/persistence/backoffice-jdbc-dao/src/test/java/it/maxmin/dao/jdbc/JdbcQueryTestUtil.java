@@ -15,6 +15,7 @@ import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_ADDRESS_
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ADDRESS_POSTAL_CODE;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ROLE_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_USER_ID;
 import static org.springframework.util.Assert.notNull;
 
@@ -37,10 +38,10 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
 import it.maxmin.model.jdbc.domain.pojo.PojoDepartment;
+import it.maxmin.model.jdbc.domain.pojo.PojoRole;
 import it.maxmin.model.jdbc.domain.pojo.PojoState;
 import it.maxmin.model.jdbc.domain.pojo.PojoUser;
 import it.maxmin.model.jdbc.domain.pojo.PojoUserAddress;
-import it.maxmin.model.jdbc.domain.pojo.PojoRole;
 
 public class JdbcQueryTestUtil {
 
@@ -69,6 +70,12 @@ public class JdbcQueryTestUtil {
 	public List<PojoUser> findUsersByPostalCode(String postalCode) {
 		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
 		return jdbcTemplate.query(SELECT_USER_BY_ADDRESS_POSTAL_CODE, param,
+				BeanPropertyRowMapper.newInstance(PojoUser.class));
+	}
+	
+	public List<PojoUser> findUsersByRoleName(String roleName) {
+		SqlParameterSource param = new MapSqlParameterSource("roleName", roleName);
+		return jdbcTemplate.query(SELECT_USER_BY_ROLE_NAME, param,
 				BeanPropertyRowMapper.newInstance(PojoUser.class));
 	}
 

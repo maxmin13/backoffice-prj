@@ -179,33 +179,46 @@ class UserDaoTest extends TestAbstract {
 
 		assertEquals(3, roles.size());
 
-		Role role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
-		verifyRole(ADMINISTRATOR.getRoleName(), role1);
+		Optional<Role>  role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
+		
+		assertEquals(true, role1.isPresent());
+		
+		verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
 
-		Role role2 = maxmin.getRole(USER.getRoleName());
-		verifyRole(USER.getRoleName(), role2);
+		Optional<Role>  role2 = maxmin.getRole(USER.getRoleName());
+		
+		assertEquals(true, role2.isPresent());
+		
+		verifyRole(USER.getRoleName(), role2.get());
 
-		Role role3 = maxmin.getRole(WORKER.getRoleName());
-		verifyRole(WORKER.getRoleName(), role3);
+		Optional<Role> role3 = maxmin.getRole(WORKER.getRoleName());
+		
+		assertEquals(true, role3.isPresent());
+		
+		verifyRole(WORKER.getRoleName(), role3.get());
 
 		// addresses
 		Set<Address> addresses = maxmin.getAddresses();
 
 		assertEquals(2, addresses.size());
 
-		Address address = maxmin.getAddress("30010");
+		Optional<Address> address = maxmin.getAddress("30010");
+		
+		assertEquals(true, address.isPresent());
 
-		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address);
+		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address.get());
 
-		State state1 = address.getState();
+		State state1 = address.get().getState();
 
 		verifyState(ITALY.getName(), ITALY.getCode(), state1);
 
-		Address address2 = maxmin.getAddress("A65TF12");
+		Optional<Address> address2 = maxmin.getAddress("A65TF12");
+		
+		assertEquals(true, address2.isPresent());
 
-		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2.get());
 
-		State state2 = address2.getState();
+		State state2 = address2.get().getState();
 
 		verifyState(IRELAND.getName(), IRELAND.getCode(), state2);
 
@@ -218,11 +231,17 @@ class UserDaoTest extends TestAbstract {
 
 		assertEquals(2, roles.size());
 
-		Role role4 = artur.getRole(ADMINISTRATOR.getRoleName());
-		verifyRole(ADMINISTRATOR.getRoleName(), role4);
+		Optional<Role> role4 = artur.getRole(ADMINISTRATOR.getRoleName());
+		
+		assertEquals(true, role4.isPresent());
+		
+		verifyRole(ADMINISTRATOR.getRoleName(), role4.get());
 
-		Role role5 = artur.getRole(USER.getRoleName());
-		verifyRole(USER.getRoleName(), role5);
+		Optional<Role> role5 = artur.getRole(USER.getRoleName());
+		
+		assertEquals(true, role5.isPresent());
+		
+		verifyRole(USER.getRoleName(), role5.get());
 
 		// addresses
 		addresses = artur.getAddresses();
@@ -230,10 +249,12 @@ class UserDaoTest extends TestAbstract {
 		assertEquals(1, addresses.size());
 
 		address = artur.getAddress("A65TF12");
+		
+		assertEquals(true, address.isPresent());
 
-		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address);
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address.get());
 
-		State state = address.getState();
+		State state = address.get().getState();
 
 		verifyState(IRELAND.getName(), IRELAND.getCode(), state);
 	}
@@ -278,11 +299,17 @@ class UserDaoTest extends TestAbstract {
 
 		assertEquals(2, roles.size());
 
-		Role role1 = artur.getRole(ADMINISTRATOR.getRoleName());
-		verifyRole(ADMINISTRATOR.getRoleName(), role1);
+		Optional<Role> role1 = artur.getRole(ADMINISTRATOR.getRoleName());
+		
+		assertEquals(true, role1.isPresent());
+		
+		verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
 
-		Role role2 = artur.getRole(USER.getRoleName());
-		verifyRole(USER.getRoleName(), role2);
+		Optional<Role> role2 = artur.getRole(USER.getRoleName());
+		
+		assertEquals(true, role2.isPresent());
+		
+		verifyRole(USER.getRoleName(), role2.get());
 
 		// department
 		Department department = artur.getDepartment();
@@ -293,11 +320,13 @@ class UserDaoTest extends TestAbstract {
 
 		assertEquals(1, addresses.size());
 
-		Address address = artur.getAddress("A65TF12");
+		Optional<Address> address = artur.getAddress("A65TF12");
 
-		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address);
+		assertEquals(true, address.isPresent());
 
-		State state = address.getState();
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address.get());
+
+		State state = address.get().getState();
 
 		verifyState(IRELAND.getName(), IRELAND.getCode(), state);
 	}

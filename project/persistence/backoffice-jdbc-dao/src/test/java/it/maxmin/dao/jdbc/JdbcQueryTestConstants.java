@@ -72,6 +72,14 @@ public enum JdbcQueryTestConstants {
 			+ "INNER JOIN Address a ON ua.AddressId = a.Id "
 			+ "WHERE a.PostalCode = :postalCode "
 			+ "ORDER BY u.Id";
+	
+	public static final String SELECT_USER_BY_ROLE_NAME = ""
+			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId "
+			+ "FROM User u "
+			+ "INNER JOIN UserRole ur ON u.Id = ur.UserId "
+			+ "INNER JOIN Role r ON ur.RoleId = r.Id "
+			+ "WHERE r.RoleName = :roleName "
+			+ "ORDER BY u.Id";
     
 	public static final String SELECT_STATE_BY_NAME = ""
 			+ "SELECT Id, Name, Code "

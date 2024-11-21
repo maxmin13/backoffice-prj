@@ -10,16 +10,21 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
+import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
+import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
 import it.maxmin.model.jdbc.domain.entity.Address;
 
-public class SelectAddressByPostalCode extends SelectAddressHelper {
+public class SelectAddressByPostalCode {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	private ResultSetExtractor<List<Address>> resultSetExtractor;
 
 	public SelectAddressByPostalCode(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
-		SelectAddressHelper selectAddressHelper = new SelectAddressHelper();
+		ResultSetUserBuilder resultSetUserBuilder = new ResultSetUserBuilder();
+		ResultSetAddressBuilder resultSetAddressBuilder = new ResultSetAddressBuilder();
+		SelectAddressHelper selectAddressHelper = new SelectAddressHelper(resultSetUserBuilder,
+				resultSetAddressBuilder);
 		resultSetExtractor = selectAddressHelper.getResultSetExtractor();
 	}
 
