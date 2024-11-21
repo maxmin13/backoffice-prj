@@ -1,5 +1,20 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
+import static it.maxmin.dao.jdbc.impl.constant.Department.ACCOUNTS;
+import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
+import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
+import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
+import static it.maxmin.dao.jdbc.impl.constant.Role.USER;
+import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
+import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,50 +25,49 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.api.repo.UserDao;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUser;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserAddress;
-import it.maxmin.dao.jdbc.impl.operation.user.InsertUserRole;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectAllUsers;
+import it.maxmin.dao.jdbc.impl.operation.user.SelectRoleByRoleName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByAccountName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByFirstName;
-import it.maxmin.dao.jdbc.impl.operation.user.SelectRoleByRoleName;
 import it.maxmin.dao.jdbc.impl.operation.user.UpdateUser;
+import it.maxmin.model.jdbc.domain.entity.Address;
+import it.maxmin.model.jdbc.domain.entity.Department;
+import it.maxmin.model.jdbc.domain.entity.Role;
+import it.maxmin.model.jdbc.domain.entity.State;
+import it.maxmin.model.jdbc.domain.entity.User;
 
 @ExtendWith(MockitoExtension.class)
 class UserDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);
-	private UserDao userDao;
 
 	private JdbcUserTestUtil jdbcUserTestUtil;
-	
+
 	@Mock
 	private InsertUser insertUser;
-	
+
 	@Mock
 	private InsertUserAddress insertUserAddress;
-	
-	@Mock
-	private InsertUserRole insertRole;
-	
+
 	@Mock
 	private SelectAllUsers selectAllUsers;
-	
+
 	@Mock
 	private SelectUserByAccountName selectUserByAccountName;
-	
+
 	@Mock
 	private SelectUserByFirstName selectUserByFirstName;
-	
+
 	@Mock
 	private SelectRoleByRoleName selectRoleByRoleName;
-	
+
 	@Mock
 	private UpdateUser updateUser;
 
 	@InjectMocks
-	private AddressDaoImpl addressDao;
+	private UserDaoImpl userDao;
 
 	UserDaoTest() {
 		MockitoAnnotations.openMocks(this);
@@ -65,141 +79,96 @@ class UserDaoTest {
 
 		LOGGER.info("running test testFindAll");
 
+		Address rome = Address.newInstance().withId(4l).withPostalCode("30010").withDescription("Via borgo di sotto")
+				.withCity("Rome").withRegion("County Lazio")
+				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()));
+		Department production = Department.newInstance().withId(3l).withName(PRODUCTION.getName());
+		Role administrator = Role.newInstance().withId(2l).withRoleName(ADMINISTRATOR.getRoleName());
+		User maxmin = User.newInstance().withId(1l).withAccountName("maxmin13").withFirstName("Max")
+				.withLastName("Minardi").withBirthDate(LocalDate.of(1977, 10, 16)).withDepartment(production);
+		maxmin.addRole(administrator);
+		maxmin.addAddress(rome);
+
+		Address dublin = Address.newInstance().withId(4l).withPostalCode("A65TF12").withDescription("Connolly street")
+				.withCity("Dublin").withRegion("County Dublin")
+				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
+		Department legal = Department.newInstance().withId(3l).withName(LEGAL.getName());
+		Role user = Role.newInstance().withId(2l).withRoleName(USER.getRoleName());
+		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
+				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal);
+		artur.addRole(user);
+		artur.addAddress(dublin);
+
+		List<User> users = List.of(maxmin, artur);
+
+		when(selectAllUsers.execute()).thenReturn(users);
+
 		// run the test
-//		List<User> users = userDao.findAll();
-//
-//		assertEquals(2, users.size());
-//
-//		User maxmin = users.get(0);
-//
-//		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), maxmin);
-//
-//		// roles
-//		assertEquals(3, maxmin.getRoles().size());
-//
-//		Role role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1);
-//
-//		Role role2 = maxmin.getRole(USER.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role2);
-//
-//		Role role3 = maxmin.getRole(WORKER.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(WORKER.getRoleName(), role3);
-//
-//		// department
-//		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), maxmin.getDepartment());
-//
-//		// addresses
-//		assertEquals(2, maxmin.getAddresses().size());
-//
-//		Address address1 = maxmin.getAddress("30010");
-//
-//		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
-//		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.getState());
-//
-//		Address address2 = maxmin.getAddress("A65TF12");
-//
-//		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
-//		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address2.getState());
-//
-//		User artur = users.get(1);
-//
-//		jdbcUserTestUtil.verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), artur);
-//
-//		// roles
-//		assertEquals(2, artur.getRoles().size());
-//
-//		Role role4 = artur.getRole(ADMINISTRATOR.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role4);
-//
-//		Role role5 = artur.getRole(USER.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role5);
-//
-//		// department
-//		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), artur.getDepartment());
-//
-//		// addresses
-//		assertEquals(1, artur.getAddresses().size());
-//
-//		Address address3 = artur.getAddress("A65TF12");
-//
-//		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3);
-//		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address3.getState());
+		List<User> usersFound = userDao.findAll();
+
+		assertEquals(2, usersFound.size());
+
+		User user1 = usersFound.get(0);
+
+		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user1);
+
+		// roles
+		assertEquals(1, user1.getRoles().size());
+
+		Optional<Role> role1 = user1.getRole(ADMINISTRATOR.getRoleName());
+
+		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
+
+		// department
+		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), user1.getDepartment());
+
+		// addresses
+		assertEquals(1, user1.getAddresses().size());
+
+		Optional<Address> address1 = user1.getAddress("30010");
+
+		assertEquals(true, address1.isPresent());
+
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1.get());
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.get().getState());
+
+		User user2 = usersFound.get(1);
+
+		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), user2);
+
+		// roles
+		assertEquals(1, user2.getRoles().size());
+
+		Optional<Role> role2 = user2.getRole(USER.getRoleName());
+
+		assertEquals(true, role2.isPresent());
+
+		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role2.get());
+
+		// department
+		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), user2.getDepartment());
+
+		// addresses
+		assertEquals(1, user2.getAddresses().size());
+
+		Optional<Address> address2 = user2.getAddress("A65TF12");
+
+		assertEquals(true, address2.isPresent());
+
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2.get());
+		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address2.get().getState());
 	}
 
 	@Test
-	void testFindAllWithNoAddress() {
+	void findByAccountNameWithNoAccountNameThrowsException() {
 
-		LOGGER.info("running test testFindAllWithNoAddress");
+		LOGGER.info("running test findByAccountNameWithNoAccountNameThrowsException");
 
+		String accountName = null;
 
-		// run the test
-//		List<User> users = userDao.findAll();
-//
-//		assertEquals(2, users.size());
-//
-//		User maxmin = users.get(0);
-//
-//		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), maxmin);
-//
-//		// roles
-//		assertEquals(3, maxmin.getRoles().size());
-//
-//		Role role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1);
-//
-//		Role role2 = maxmin.getRole(USER.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role2);
-//
-//		Role role3 = maxmin.getRole(WORKER.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(WORKER.getRoleName(), role3);
-//
-//		// department
-//		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), maxmin.getDepartment());
-//
-//		// addresses
-//		assertEquals(0, maxmin.getAddresses().size());
-//
-//		User artur = users.get(1);
-//
-//		jdbcUserTestUtil.verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), artur);
-//
-//		// roles
-//		assertEquals(2, artur.getRoles().size());
-//
-//		Role role4 = artur.getRole(ADMINISTRATOR.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role4);
-//
-//		Role role5 = artur.getRole(USER.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role5);
-//
-//		// department
-//		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), artur.getDepartment());
-//
-//		// addresses
-//		assertEquals(0, artur.getAddresses().size());
-	}
+		Throwable throwable = assertThrows(Throwable.class, () -> userDao.findByAccountName(accountName));
 
-	@Test
-	void findByAccountNameNotFound() {
-
-		LOGGER.info("running test findByAccountNameNotFound");
-
-
-		// run the test
-//		Optional<User> maxmin = userDao.findByAccountName("maxmin13");
-//
-//		assertTrue(maxmin.isEmpty());
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
@@ -207,47 +176,59 @@ class UserDaoTest {
 
 		LOGGER.info("running test findByAccountName");
 
+		Address dublin = Address.newInstance().withId(4l).withPostalCode("A65TF12").withDescription("Connolly street")
+				.withCity("Dublin").withRegion("County Dublin")
+				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
+		Department legal = Department.newInstance().withId(3l).withName(LEGAL.getName());
+		Role user = Role.newInstance().withId(2l).withRoleName(USER.getRoleName());
+		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
+				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal);
+		artur.addRole(user);
+		artur.addAddress(dublin);
+
+		when(selectUserByAccountName.execute("artur")).thenReturn(artur);
+
 		// run the test
-//		Optional<User> artur = userDao.findByAccountName("artur");
-//
-//		if (!artur.isPresent()) {
-//			throw new DaoTestException("User not found!");
-//		}
-//
-//		jdbcUserTestUtil.verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), artur.get());
-//
-//		// roles
-//		assertEquals(2, artur.get().getRoles().size());
-//
-//		Role role4 = artur.get().getRole(ADMINISTRATOR.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role4);
-//
-//		Role role5 = artur.get().getRole(USER.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role5);
-//
-//		// department
-//		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), artur.get().getDepartment());
-//
-//		// addresses
-//		assertEquals(1, artur.get().getAddresses().size());
-//
-//		Address address3 = artur.get().getAddress("A65TF12");
-//
-//		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3);
-//		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address3.getState());
+		Optional<User> userFound = userDao.findByAccountName("artur");
+
+		assertEquals(true, userFound.isPresent());
+
+		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12),
+				userFound.get());
+
+		// roles
+		assertEquals(1, userFound.get().getRoles().size());
+
+		Optional<Role> role2 = userFound.get().getRole(USER.getRoleName());
+
+		assertEquals(true, role2.isPresent());
+
+		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role2.get());
+
+		// department
+		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), userFound.get().getDepartment());
+
+		// addresses
+		assertEquals(1, userFound.get().getAddresses().size());
+
+		Optional<Address> address2 = userFound.get().getAddress("A65TF12");
+
+		assertEquals(true, address2.isPresent());
+
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2.get());
+		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address2.get().getState());
 	}
 
 	@Test
-	void findByFirstNameNotFound() {
+	void findByFirstNameWithNoFirstNameThrowsException() {
 
-		LOGGER.info("running test findByFirstNameNotFound");
+		LOGGER.info("running test findByFirstNameWithNoFirstNameThrowsException");
 
-		// run the test
-//		List<User> users = userDao.findByFirstName("art");
-//
-//		assertEquals(0, users.size());
+		String firstName = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> userDao.findByAccountName(firstName));
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
@@ -255,55 +236,83 @@ class UserDaoTest {
 
 		LOGGER.info("running test findByFirstName");
 
-		// run the test
-//		List<User> users = userDao.findByFirstName("Arturo");
-//
-//		assertEquals(1, users.size());
-//
-//		User artur = users.get(0);
-//
-//		jdbcUserTestUtil.verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), artur);
-//
-//		// roles
-//		assertEquals(2, artur.getRoles().size());
-//
-//		Role role4 = artur.getRole(ADMINISTRATOR.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role4);
-//
-//		Role role5 = artur.getRole(USER.getRoleName());
-//
-//		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role5);
-//
-//		// department
-//		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), artur.getDepartment());
-//
-//		// addresses
-//		assertEquals(1, artur.getAddresses().size());
-//
-//		Address address3 = artur.getAddress("A65TF12");
-//
-//		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address3);
-//		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address3.getState());
-	}
+		Address dublin = Address.newInstance().withId(4l).withPostalCode("A65TF12").withDescription("Connolly street")
+				.withCity("Dublin").withRegion("County Dublin")
+				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
+		Department legal = Department.newInstance().withId(3l).withName(LEGAL.getName());
+		Role user = Role.newInstance().withId(2l).withRoleName(USER.getRoleName());
+		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
+				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal);
+		artur.addRole(user);
+		artur.addAddress(dublin);
 
+		List<User> users = List.of(artur);
+
+		when(selectUserByFirstName.execute("Arturo")).thenReturn(users);
+
+		// run the test
+		List<User> usersFound = userDao.findByFirstName("Arturo");
+
+		assertEquals(1, usersFound.size());
+
+		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12),
+				usersFound.get(0));
+
+		// roles
+		assertEquals(1, usersFound.get(0).getRoles().size());
+
+		Optional<Role> role2 = usersFound.get(0).getRole(USER.getRoleName());
+
+		assertEquals(true, role2.isPresent());
+
+		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role2.get());
+
+		// department
+		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), usersFound.get(0).getDepartment());
+
+		// addresses
+		assertEquals(1, usersFound.get(0).getAddresses().size());
+
+		Optional<Address> address2 = usersFound.get(0).getAddress("A65TF12");
+
+		assertEquals(true, address2.isPresent());
+
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2.get());
+		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address2.get().getState());
+	}
 
 	@Test
 	void createWithNoUserThrowsException() {
 
 		LOGGER.info("running test createWithNoUserThrowsException");
 
-//		Throwable throwable = assertThrows(Throwable.class, () -> {
-//			userDao.create(null);
-//		});
-//
-//		assertEquals(IllegalArgumentException.class, throwable.getClass());
+		User user = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.create(user);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
-	
+	@Test
+	void createWithUserIdThrowsException() {
+
+		LOGGER.info("running test createWithUserIdThrowsException");
+
+		User user = User.newInstance().withId(1l).withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
+				.withFirstName("Carlo").withLastName("Rossi")
+				.withDepartment(Department.newInstance().withId(1l).withName(ACCOUNTS.getName()));
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.create(user);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
 
 	@Test
-	void createWithAddresses() {
+	void create() {
 
 		LOGGER.info("running test createWithAddresses");
 
@@ -346,11 +355,29 @@ class UserDaoTest {
 
 		LOGGER.info("running test updateWithNoUserThrowsException");
 
-//		Throwable throwable = assertThrows(Throwable.class, () -> {
-//			userDao.update(null);
-//		});
-//
-//		assertEquals(IllegalArgumentException.class, throwable.getClass());
+		User user = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.update(user);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void updateWithNoUserIdThrowsException() {
+
+		LOGGER.info("running test updateWithNoUserIdThrowsException");
+
+		User user = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
+				.withFirstName("Carlo").withLastName("Rossi")
+				.withDepartment(Department.newInstance().withId(1l).withName(ACCOUNTS.getName()));
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.update(user);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
@@ -358,8 +385,5 @@ class UserDaoTest {
 
 		LOGGER.info("running test update");
 
-		
-
-	
 	}
 }

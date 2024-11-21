@@ -161,7 +161,7 @@ class AddressDaoTest  {
 				.withRegion("County Lazio").withPostalCode("20021");
 
 		List<Address> addresses = List.of(address1, address2);
-
+		
 		// run the test
 		addressDao.create(addresses);
 
