@@ -74,13 +74,16 @@ public class UserDaoImpl implements UserDao {
 			LOGGER.info("Inserting new user ...");
 			this.insertUser.execute(user);
 			LOGGER.info("User created with id: {}", user.getId());
-		} else {
+		}
+		else {
 			throw new IllegalArgumentException("The user ID must be null");
 		}
 	}
 
 	@Override
-	public void associate(long userId, long addressId) {
+	public void associate(Long userId, Long addressId) {
+		notNull(userId, "The user ID must not be null");
+		notNull(addressId, "The address ID must not be null");
 		this.insertUserAddress.execute(userId, addressId);
 		LOGGER.info("User {} associated with address {}", userId, addressId);
 	}
@@ -90,7 +93,8 @@ public class UserDaoImpl implements UserDao {
 		notNull(user, "The user must not be null");
 		if (user.getId() == null) {
 			throw new IllegalArgumentException("The user ID must not be null");
-		} else {
+		}
+		else {
 			LOGGER.info("Updating new user ...");
 			updateUser.execute(user);
 			LOGGER.info("User saved with id: {}", user.getId());

@@ -9,6 +9,8 @@ import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
 import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -106,6 +108,8 @@ class UserDaoTest {
 		// run the test
 		List<User> usersFound = userDao.findAll();
 
+		verify(selectAllUsers, times(1)).execute();
+
 		assertEquals(2, usersFound.size());
 
 		User user1 = usersFound.get(0);
@@ -191,6 +195,8 @@ class UserDaoTest {
 		// run the test
 		Optional<User> userFound = userDao.findByAccountName("artur");
 
+		verify(selectUserByAccountName, times(1)).execute("artur");
+
 		assertEquals(true, userFound.isPresent());
 
 		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12),
@@ -252,6 +258,8 @@ class UserDaoTest {
 
 		// run the test
 		List<User> usersFound = userDao.findByFirstName("Arturo");
+
+		verify(selectUserByFirstName, times(1)).execute("Arturo");
 
 		assertEquals(1, usersFound.size());
 
@@ -316,38 +324,53 @@ class UserDaoTest {
 
 		LOGGER.info("running test createWithAddresses");
 
-//		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
-//				.withFirstName("Carlo").withLastName("Rossi")
-//				.withDepartment(Department.newInstance().withId(1l));
-//
-//		Address address1 = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
-//				.withState(State.newInstance().withId(2l)).withRegion("Emilia Romagna")
-//				.withPostalCode("33456");
-//		carl.addAddress(address1);
-//
-//		Address address2 = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
-//				.withState(State.newInstance().withId(3l)).withRegion("County Dublin")
-//				.withPostalCode("A65TF14");
-//		carl.addAddress(address2);
-//
-//		// run the test
-//		userDao.create(carl);
-//
-//		PojoUser newUser = jdbcQueryTestUtil.findUserByAccountName("carl23");
-//
-//		jdbcUserTestUtil.verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), newUser);
-//
-//		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(newUser.getId());
-//
-//		assertEquals(2, addresses.size());
-//
-//		PojoAddress newAddress1 = addresses.get(0);
-//
-//		jdbcUserTestUtil.verifyAddress("A65TF14", "Via Vecchia", "Dublin", "County Dublin", newAddress1);
-//
-//		PojoAddress newAddress2 = addresses.get(1);
-//
-//		jdbcUserTestUtil.verifyAddress("33456", "Via Nuova", "Venice", "Emilia Romagna", newAddress2);
+		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
+				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance().withId(1l));
+
+		// run the test
+		userDao.create(carl);
+
+		verify(insertUser, times(1)).execute(carl);
+	}
+
+	@Test
+	void associateWithNoUserIdThrowsException() {
+
+		LOGGER.info("running test associateWithNoUserIdThrowsException");
+
+		Long userId = null;
+		Long addressId = 2l;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.associate(userId, addressId);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void associateWithNoAddressIdThrowsException() {
+
+		LOGGER.info("running test associateWithNoAddressIdThrowsException");
+
+		Long userId = 2l;
+		Long addressId = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.associate(userId, addressId);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void associate() {
+
+		LOGGER.info("running test associate");
+
+		userDao.associate(1l, 2l);
+
+		verify(insertUserAddress, times(1)).execute(1l, 2l);
 	}
 
 	@Test
@@ -385,5 +408,12 @@ class UserDaoTest {
 
 		LOGGER.info("running test update");
 
+		User carl = User.newInstance().withId(2l).withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
+				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance().withId(1l));
+
+		// run the test
+		userDao.update(carl);
+
+		verify(updateUser, times(1)).execute(carl);
 	}
 }

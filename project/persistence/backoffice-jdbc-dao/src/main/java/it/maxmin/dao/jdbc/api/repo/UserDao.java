@@ -15,7 +15,7 @@ public interface UserDao {
 
 	void create(User user);
 
-	void associate(long userId, long addressId);
+	void associate(Long userId, Long addressId);
 
 	void update(User user);
 }

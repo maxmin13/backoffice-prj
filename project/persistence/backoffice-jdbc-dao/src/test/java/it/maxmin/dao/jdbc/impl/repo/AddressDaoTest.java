@@ -28,24 +28,24 @@ import it.maxmin.model.jdbc.domain.entity.Address;
 import it.maxmin.model.jdbc.domain.entity.State;
 
 @ExtendWith(MockitoExtension.class)
-class AddressDaoTest  {
+class AddressDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
 
 	private JdbcUserTestUtil jdbcUserTestUtil;
-	
+
 	@Mock
 	private UpdateAddress updateAddress;
-	
+
 	@Mock
 	private InsertAddress insertAddress;
-	
+
 	@Mock
 	private InsertAddresses insertAddresses;
-	
+
 	@Mock
 	private SelectAddressesByUserId selectAddressesByUserId;
-	
+
 	@InjectMocks
 	private AddressDaoImpl addressDao;
 
@@ -82,6 +82,8 @@ class AddressDaoTest  {
 
 		// run the test
 		List<Address> addresses = addressDao.findAddressesByUserId(1l);
+
+		verify(selectAddressesByUserId, times(1)).execute(1l);
 
 		assertEquals(2, addresses.size());
 
@@ -126,11 +128,13 @@ class AddressDaoTest  {
 		Address address = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
 				.withRegion("County Veneto").withPostalCode("30033");
-		
+
 		when(insertAddress.execute(address)).thenReturn(address);
 
 		// run the test
 		address = addressDao.create(address);
+
+		verify(insertAddress, times(1)).execute(address);
 
 		jdbcUserTestUtil.verifyAddressWithoutId("30033", "Via Nuova", "Venice", "County Veneto", address);
 		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address.getState());
@@ -161,7 +165,7 @@ class AddressDaoTest  {
 				.withRegion("County Lazio").withPostalCode("20021");
 
 		List<Address> addresses = List.of(address1, address2);
-		
+
 		// run the test
 		addressDao.create(addresses);
 
