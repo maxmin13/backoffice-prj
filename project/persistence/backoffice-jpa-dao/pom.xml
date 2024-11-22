@@ -23,7 +23,7 @@
 		<!-- backoffice modules -->
 		<dependency>
 			<groupId>it.maxmin.domain</groupId>
-			<artifactId>backoffice-jpa-model</artifactId>
+			<artifactId>backoffice-jpa-dao-model</artifactId>
 		</dependency>
 
 		<!-- spring framework libraries -->
@@ -64,7 +64,7 @@
 
 		<dependency>
 			<groupId>it.maxmin.domain</groupId>
-			<artifactId>backoffice-jpa-model</artifactId>
+			<artifactId>backoffice-jpa-dao-model</artifactId>
 			<version>${project.version}</version>
 			<classifier>tests</classifier>
 			<type>test-jar</type>

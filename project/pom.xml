@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -14,11 +13,15 @@
 	<modules>
 		<module>ui/backoffice-webapp</module>
 		<module>config/backoffice-config</module>
+		
 		<module>persistence/backoffice-jpa-dao</module>
-		<module>domain/backoffice-jpa-model</module>
+		<module>domain/backoffice-jpa-dao-model</module>
+		
 		<module>persistence/backoffice-jdbc-dao</module>
-		<module>domain/backoffice-jdbc-model</module>
+		<module>domain/backoffice-jdbc-dao-model</module>
+		
 		<module>service/backoffice-jdbc-service</module>
+		<module>domain/backoffice-jdbc-service-model</module>
 	</modules>
 
 	<properties>
@@ -85,13 +88,19 @@
 			
 			<dependency>
 				<groupId>it.maxmin.domain</groupId>
-				<artifactId>backoffice-jdbc-model</artifactId>
+				<artifactId>backoffice-jdbc-dao-model</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 			
 			<dependency>
 				<groupId>it.maxmin.domain</groupId>
-				<artifactId>backoffice-jpa-model</artifactId>
+				<artifactId>backoffice-jpa-dao-model</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>it.maxmin.domain</groupId>
+				<artifactId>backoffice-jdbc-service-model</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
 
@@ -139,7 +148,7 @@
 				<artifactId>spring-orm</artifactId>
 				<version>${org.springframework.version}</version>
 			</dependency>
-
+			
 			<!-- Hibernate lib -->
 			<dependency>
 				<groupId>org.hibernate.orm</groupId>

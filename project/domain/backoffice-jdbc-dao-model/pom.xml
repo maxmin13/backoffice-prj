@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0"
@@ -13,16 +14,31 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<groupId>it.maxmin.config</groupId>
-	<artifactId>backoffice-config</artifactId>
-	<name>backoffice-config</name>
+	<groupId>it.maxmin.domain</groupId>
+	<artifactId>backoffice-jdbc-dao-model</artifactId>
 
 	<dependencies>
+
 		<!-- logging lib -->
+
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<!-- Test dependencies -->
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<profiles>

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: it.maxmin.domain.AppTest
+-------------------------------------------------------------------------------
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s - in it.maxmin.domain.AppTest

@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import it.maxmin.dao.jdbc.api.repo.UserDao;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUser;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserAddress;
+import it.maxmin.dao.jdbc.impl.operation.user.InsertUserRole;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectAllUsers;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByAccountName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByFirstName;
@@ -35,12 +36,14 @@ public class UserDaoImpl implements UserDao {
 	private UpdateUser updateUser;
 	private InsertUser insertUser;
 	private InsertUserAddress insertUserAddress;
+	private InsertUserRole insertUserRole;
 
 	@Autowired
 	public UserDaoImpl(DataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
 		this.updateUser = new UpdateUser(dataSource);
 		this.insertUser = new InsertUser(dataSource);
 		this.insertUserAddress = new InsertUserAddress(dataSource);
+		this.insertUserRole = new InsertUserRole(dataSource);
 		this.selectUserByFirstName = new SelectUserByFirstName(jdbcTemplate);
 		this.selectUserByAccountName = new SelectUserByAccountName(jdbcTemplate);
 		this.selectAllUsers = new SelectAllUsers(jdbcTemplate);
@@ -81,11 +84,19 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public void associate(Long userId, Long addressId) {
+	public void associateAddress(Long userId, Long addressId) {
 		notNull(userId, "The user ID must not be null");
 		notNull(addressId, "The address ID must not be null");
 		this.insertUserAddress.execute(userId, addressId);
 		LOGGER.info("User {} associated with address {}", userId, addressId);
+	}
+
+	@Override
+	public void associateRole(Long userId, Long roleId) {
+		notNull(userId, "The user ID must not be null");
+		notNull(roleId, "The role ID must not be null");
+		this.insertUserRole.execute(userId, roleId);
+		LOGGER.info("User {} associated with role {}", userId, roleId);
 	}
 
 	@Override

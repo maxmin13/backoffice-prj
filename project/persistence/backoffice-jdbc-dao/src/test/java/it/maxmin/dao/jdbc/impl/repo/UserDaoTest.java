@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUser;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserAddress;
+import it.maxmin.dao.jdbc.impl.operation.user.InsertUserRole;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectAllUsers;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectRoleByRoleName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByAccountName;
@@ -52,6 +53,9 @@ class UserDaoTest {
 
 	@Mock
 	private InsertUserAddress insertUserAddress;
+
+	@Mock
+	private InsertUserRole insertUserRole;
 
 	@Mock
 	private SelectAllUsers selectAllUsers;
@@ -334,43 +338,83 @@ class UserDaoTest {
 	}
 
 	@Test
-	void associateWithNoUserIdThrowsException() {
+	void associateAddressWithNoUserIdThrowsException() {
 
-		LOGGER.info("running test associateWithNoUserIdThrowsException");
+		LOGGER.info("running test associateAddressWithNoUserIdThrowsException");
 
 		Long userId = null;
 		Long addressId = 2l;
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
-			userDao.associate(userId, addressId);
+			userDao.associateAddress(userId, addressId);
 		});
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
-	void associateWithNoAddressIdThrowsException() {
+	void associateAddressWithNoAddressIdThrowsException() {
 
-		LOGGER.info("running test associateWithNoAddressIdThrowsException");
+		LOGGER.info("running test associateAddressWithNoAddressIdThrowsException");
 
 		Long userId = 2l;
 		Long addressId = null;
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
-			userDao.associate(userId, addressId);
+			userDao.associateAddress(userId, addressId);
 		});
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
-	void associate() {
+	void associateAddress() {
 
-		LOGGER.info("running test associate");
+		LOGGER.info("running test associateAddress");
 
-		userDao.associate(1l, 2l);
+		userDao.associateAddress(1l, 2l);
 
 		verify(insertUserAddress, times(1)).execute(1l, 2l);
+	}
+
+	@Test
+	void associateRoleWithNoUserIdThrowsException() {
+
+		LOGGER.info("running test associateAddressWithNoUserIdThrowsException");
+
+		Long userId = null;
+		Long roleId = 2l;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.associateRole(userId, roleId);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void associateRoleWithNoRoleIdThrowsException() {
+
+		LOGGER.info("running test associateRoleWithNoRoleIdThrowsException");
+
+		Long userId = 2l;
+		Long roleId = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.associateRole(userId, roleId);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void associateRole() {
+
+		LOGGER.info("running test associateRole");
+
+		userDao.associateRole(1l, 2l);
+
+		verify(insertUserRole, times(1)).execute(1l, 2l);
 	}
 
 	@Test
