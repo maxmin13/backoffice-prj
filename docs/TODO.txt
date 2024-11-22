@@ -3,25 +3,13 @@ Yes, the exceptions should be handled, but in Spring design, on higher level the
 There are various demands, and various places where you handle unchecked exceptions. One of these are aspects, where you can for example convert Spring's exceptions to your exceptions (uncatched exceptions need not be declared in method signature, so this convertion is very elegant). In REST method you can add generic handler that will return the error responce to the caller, and you write exception handling in only one place. In JSF/JSP based technologies you can add own error page whenever error occures.
 
 
-#########################################################################################
-
-in jdbc dao project:
-
-make unit test for address and user data extractors
-
-, make a custom annotation @Sql that encapsulate run db scripts
-
-do not create spring context programmatically use @Configuration
-
-use mokito mock to create ireland italy accounts legal objects in unit test, do not query the db
-
-#########################################################################################
-
-UserDaoImpl.java
-
-revove eager fetch from user entity
-
-use createNameQuery in findAll, this should not cause lazy initialization exception
+*******************************************************************************************************************
 
 
-#########################################################################################
+jdbc dao project, see: 
+
+UnitTestContextCfg.java imports JdbcContextCfg.java
+
+do the same in jpa dao project:
+
+                        imports JpaContextCfg.java
