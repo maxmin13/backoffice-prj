@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.SqlUpdate;
 
-import it.maxmin.model.jdbc.domain.entity.User;
+import it.maxmin.model.jdbc.dao.entity.User;
 
 public class UpdateUser extends SqlUpdate {
 

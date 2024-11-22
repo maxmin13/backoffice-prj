@@ -16,9 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import it.maxmin.dao.jdbc.BaseTestUser;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.model.jdbc.domain.pojo.PojoUser;
+import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
-public class InsertUserRoleTest extends BaseTestUser {
+class InsertUserRoleTest extends BaseTestUser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertUserRoleTest.class);
 	private InsertUserRole insertUserRole;

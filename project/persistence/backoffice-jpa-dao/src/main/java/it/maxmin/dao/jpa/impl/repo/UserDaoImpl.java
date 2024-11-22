@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.maxmin.dao.jpa.api.repo.UserDao;
-import it.maxmin.domain.jpa.entity.User;
+import it.maxmin.model.jpa.dao.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;

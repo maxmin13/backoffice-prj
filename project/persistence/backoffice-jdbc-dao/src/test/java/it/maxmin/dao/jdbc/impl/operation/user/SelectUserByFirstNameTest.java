@@ -24,11 +24,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.model.jdbc.domain.entity.Address;
-import it.maxmin.model.jdbc.domain.entity.Department;
-import it.maxmin.model.jdbc.domain.entity.Role;
-import it.maxmin.model.jdbc.domain.entity.State;
-import it.maxmin.model.jdbc.domain.entity.User;
+import it.maxmin.model.jdbc.dao.entity.Address;
+import it.maxmin.model.jdbc.dao.entity.Department;
+import it.maxmin.model.jdbc.dao.entity.Role;
+import it.maxmin.model.jdbc.dao.entity.State;
+import it.maxmin.model.jdbc.dao.entity.User;
 
 class SelectUserByFirstNameTest {
 

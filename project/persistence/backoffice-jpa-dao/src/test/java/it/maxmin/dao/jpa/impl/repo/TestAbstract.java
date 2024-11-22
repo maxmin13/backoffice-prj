@@ -5,16 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
 
-import it.maxmin.domain.jpa.entity.Address;
-import it.maxmin.domain.jpa.entity.Department;
-import it.maxmin.domain.jpa.entity.State;
-import it.maxmin.domain.jpa.entity.User;
-import it.maxmin.domain.jpa.entity.Role;
-import it.maxmin.domain.jpa.pojo.PojoAddress;
-import it.maxmin.domain.jpa.pojo.PojoDepartment;
-import it.maxmin.domain.jpa.pojo.PojoState;
-import it.maxmin.domain.jpa.pojo.PojoUser;
-import it.maxmin.domain.jpa.pojo.PojoRole;
+import it.maxmin.model.jpa.dao.entity.Address;
+import it.maxmin.model.jpa.dao.entity.Department;
+import it.maxmin.model.jpa.dao.entity.Role;
+import it.maxmin.model.jpa.dao.entity.State;
+import it.maxmin.model.jpa.dao.entity.User;
+import it.maxmin.model.jpa.dao.pojo.PojoAddress;
+import it.maxmin.model.jpa.dao.pojo.PojoDepartment;
+import it.maxmin.model.jpa.dao.pojo.PojoRole;
+import it.maxmin.model.jpa.dao.pojo.PojoState;
+import it.maxmin.model.jpa.dao.pojo.PojoUser;
 
 abstract class TestAbstract {
 		

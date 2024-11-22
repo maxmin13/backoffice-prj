@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.SqlUpdate;
 
-import it.maxmin.model.jdbc.domain.entity.Address;
+import it.maxmin.model.jdbc.dao.entity.Address;
 
 public class UpdateAddress extends SqlUpdate {
 

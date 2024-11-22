@@ -22,10 +22,10 @@ import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
-import it.maxmin.model.jdbc.domain.entity.Address;
-import it.maxmin.model.jdbc.domain.entity.Role;
-import it.maxmin.model.jdbc.domain.entity.User;
-import it.maxmin.model.jdbc.domain.pojo.PojoUser;
+import it.maxmin.model.jdbc.dao.entity.Address;
+import it.maxmin.model.jdbc.dao.entity.Role;
+import it.maxmin.model.jdbc.dao.entity.User;
+import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
 class SelectAddressHelperTest extends BaseTestUser {
 

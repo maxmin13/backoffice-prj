@@ -10,7 +10,7 @@ import com.maxmin.service.jdbc.api.UserService;
 
 import it.maxmin.dao.jdbc.api.repo.AddressDao;
 import it.maxmin.dao.jdbc.api.repo.UserDao;
-import it.maxmin.model.jdbc.domain.entity.User;
+import it.maxmin.model.jdbc.dao.entity.User;
 
 @Transactional
 @Service("userService")

@@ -24,8 +24,8 @@ import it.maxmin.dao.jdbc.impl.operation.address.InsertAddress;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddresses;
 import it.maxmin.dao.jdbc.impl.operation.address.SelectAddressesByUserId;
 import it.maxmin.dao.jdbc.impl.operation.address.UpdateAddress;
-import it.maxmin.model.jdbc.domain.entity.Address;
-import it.maxmin.model.jdbc.domain.entity.State;
+import it.maxmin.model.jdbc.dao.entity.Address;
+import it.maxmin.model.jdbc.dao.entity.State;
 
 @ExtendWith(MockitoExtension.class)
 class AddressDaoTest {

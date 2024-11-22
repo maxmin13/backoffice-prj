@@ -22,8 +22,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Import(JndiDataSourceCfg.class)
 @Configuration
+@Import({ JndiDataSourceCfg.class, TransactionCfg.class })
 @ComponentScan(basePackages = { "it.maxmin.dao.jpa.impl.repo" })
 @EnableTransactionManagement
 public class JpaContextCfg {
@@ -56,7 +56,7 @@ public class JpaContextCfg {
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		var factory = new LocalContainerEntityManagerFactoryBean();
-		factory.setPackagesToScan("it.maxmin.domain.jpa.entity");
+		factory.setPackagesToScan("it.maxmin.model.jpa.dao.entity");
 		factory.setDataSource(dataSource);
 		factory.setJpaProperties(jpaProperties());
 		factory.setJpaVendorAdapter(jpaVendorAdapter());

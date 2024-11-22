@@ -35,11 +35,11 @@ import it.maxmin.dao.jdbc.impl.operation.user.SelectRoleByRoleName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByAccountName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByFirstName;
 import it.maxmin.dao.jdbc.impl.operation.user.UpdateUser;
-import it.maxmin.model.jdbc.domain.entity.Address;
-import it.maxmin.model.jdbc.domain.entity.Department;
-import it.maxmin.model.jdbc.domain.entity.Role;
-import it.maxmin.model.jdbc.domain.entity.State;
-import it.maxmin.model.jdbc.domain.entity.User;
+import it.maxmin.model.jdbc.dao.entity.Address;
+import it.maxmin.model.jdbc.dao.entity.Department;
+import it.maxmin.model.jdbc.dao.entity.Role;
+import it.maxmin.model.jdbc.dao.entity.State;
+import it.maxmin.model.jdbc.dao.entity.User;
 
 @ExtendWith(MockitoExtension.class)
 class UserDaoTest {

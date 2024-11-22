@@ -3,7 +3,7 @@ package it.maxmin.dao.jpa.api.repo;
 import java.util.List;
 import java.util.Optional;
 
-import it.maxmin.domain.jpa.entity.User;
+import it.maxmin.model.jpa.dao.entity.User;
 
 public interface UserDao {
 

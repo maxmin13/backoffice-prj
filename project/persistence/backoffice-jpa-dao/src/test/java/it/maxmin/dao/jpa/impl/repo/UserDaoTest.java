@@ -41,16 +41,16 @@ import org.springframework.transaction.annotation.Transactional;
 import it.maxmin.dao.jpa.QueryTestUtil;
 import it.maxmin.dao.jpa.UnitTestContextCfg;
 import it.maxmin.dao.jpa.api.repo.UserDao;
-import it.maxmin.domain.jpa.entity.Address;
-import it.maxmin.domain.jpa.entity.Department;
-import it.maxmin.domain.jpa.entity.State;
-import it.maxmin.domain.jpa.entity.User;
-import it.maxmin.domain.jpa.entity.Role;
-import it.maxmin.domain.jpa.pojo.PojoAddress;
-import it.maxmin.domain.jpa.pojo.PojoDepartment;
-import it.maxmin.domain.jpa.pojo.PojoState;
-import it.maxmin.domain.jpa.pojo.PojoUser;
-import it.maxmin.domain.jpa.pojo.PojoRole;
+import it.maxmin.model.jpa.dao.entity.Address;
+import it.maxmin.model.jpa.dao.entity.Department;
+import it.maxmin.model.jpa.dao.entity.Role;
+import it.maxmin.model.jpa.dao.entity.State;
+import it.maxmin.model.jpa.dao.entity.User;
+import it.maxmin.model.jpa.dao.pojo.PojoAddress;
+import it.maxmin.model.jpa.dao.pojo.PojoDepartment;
+import it.maxmin.model.jpa.dao.pojo.PojoRole;
+import it.maxmin.model.jpa.dao.pojo.PojoState;
+import it.maxmin.model.jpa.dao.pojo.PojoUser;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;
@@ -62,10 +62,10 @@ import jakarta.persistence.OptimisticLockException;
 @Sql(scripts = { "classpath:database/2_state.down.sql", "classpath:database/2_department.down.sql",
 		"classpath:database/2_role.down.sql",
 		"classpath:database/1_create_database.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
-@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
+@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
 class UserDaoTest extends TestAbstract {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);

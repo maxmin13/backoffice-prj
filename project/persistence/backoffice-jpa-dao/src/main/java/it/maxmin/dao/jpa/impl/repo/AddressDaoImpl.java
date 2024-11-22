@@ -19,10 +19,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.maxmin.dao.jpa.api.repo.AddressDao;
-import it.maxmin.domain.jpa.entity.Address;
-import it.maxmin.domain.jpa.entity.Department;
-import it.maxmin.domain.jpa.entity.State;
-import it.maxmin.domain.jpa.entity.User;
+import it.maxmin.model.jpa.dao.entity.Address;
+import it.maxmin.model.jpa.dao.entity.Department;
+import it.maxmin.model.jpa.dao.entity.State;
+import it.maxmin.model.jpa.dao.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;

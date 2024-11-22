@@ -1,6 +1,6 @@
 package com.maxmin.service.jdbc.api;
 
-import it.maxmin.model.jdbc.domain.entity.User;
+import it.maxmin.model.jdbc.dao.entity.User;
 
 public interface UserService {
 

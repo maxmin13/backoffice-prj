@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
-import it.maxmin.model.jdbc.domain.entity.User;
+import it.maxmin.model.jdbc.dao.entity.User;
 
 public class SelectAllUsers {
 

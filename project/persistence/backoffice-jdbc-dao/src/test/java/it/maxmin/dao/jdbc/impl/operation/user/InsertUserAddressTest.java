@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import it.maxmin.dao.jdbc.BaseTestUser;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
-import it.maxmin.model.jdbc.domain.pojo.PojoUser;
+import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
+import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
 class InsertUserAddressTest extends BaseTestUser {
 

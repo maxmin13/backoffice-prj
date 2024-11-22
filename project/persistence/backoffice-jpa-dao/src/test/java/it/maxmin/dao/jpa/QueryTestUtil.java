@@ -32,12 +32,12 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
 
-import it.maxmin.domain.jpa.pojo.PojoAddress;
-import it.maxmin.domain.jpa.pojo.PojoDepartment;
-import it.maxmin.domain.jpa.pojo.PojoState;
-import it.maxmin.domain.jpa.pojo.PojoUser;
-import it.maxmin.domain.jpa.pojo.PojoUserAddress;
-import it.maxmin.domain.jpa.pojo.PojoRole;
+import it.maxmin.model.jpa.dao.pojo.PojoAddress;
+import it.maxmin.model.jpa.dao.pojo.PojoDepartment;
+import it.maxmin.model.jpa.dao.pojo.PojoRole;
+import it.maxmin.model.jpa.dao.pojo.PojoState;
+import it.maxmin.model.jpa.dao.pojo.PojoUser;
+import it.maxmin.model.jpa.dao.pojo.PojoUserAddress;
 
 public class QueryTestUtil {
 

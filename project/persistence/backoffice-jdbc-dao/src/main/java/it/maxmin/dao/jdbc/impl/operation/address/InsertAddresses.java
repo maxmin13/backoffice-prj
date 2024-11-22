@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.BatchSqlUpdate;
 
-import it.maxmin.model.jdbc.domain.entity.Address;
+import it.maxmin.model.jdbc.dao.entity.Address;
 
 public class InsertAddresses extends BatchSqlUpdate {
 

@@ -5,8 +5,8 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import it.maxmin.dao.jdbc.impl.JdbcDaoException;
-import it.maxmin.model.jdbc.domain.entity.Address;
-import it.maxmin.model.jdbc.domain.entity.State;
+import it.maxmin.model.jdbc.dao.entity.Address;
+import it.maxmin.model.jdbc.dao.entity.State;
 
 public class ResultSetAddressBuilder {
 

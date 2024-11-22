@@ -20,11 +20,11 @@ import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.model.jdbc.domain.pojo.PojoDepartment;
-import it.maxmin.model.jdbc.domain.pojo.PojoState;
-import it.maxmin.model.jdbc.domain.pojo.PojoRole;
+import it.maxmin.model.jdbc.dao.pojo.PojoDepartment;
+import it.maxmin.model.jdbc.dao.pojo.PojoRole;
+import it.maxmin.model.jdbc.dao.pojo.PojoState;
 
-@SpringJUnitConfig(classes = { SpringTestContextCfg.class })
+@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)

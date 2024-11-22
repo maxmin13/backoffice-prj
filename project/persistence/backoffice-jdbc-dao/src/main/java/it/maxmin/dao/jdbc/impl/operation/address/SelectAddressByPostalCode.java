@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
-import it.maxmin.model.jdbc.domain.entity.Address;
+import it.maxmin.model.jdbc.dao.entity.Address;
 
 public class SelectAddressByPostalCode {
 

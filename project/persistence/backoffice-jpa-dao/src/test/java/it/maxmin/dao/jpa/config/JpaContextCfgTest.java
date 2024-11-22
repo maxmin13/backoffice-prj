@@ -8,18 +8,13 @@ import static org.hibernate.cfg.SchemaToolingSettings.HBM2DDL_AUTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.sql.SQLException;
 import java.util.Map;
-
-import javax.sql.DataSource;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.orm.jpa.JpaTransactionManager;
 
-import it.maxmin.dao.jpa.DataSourceTestUtil;
 import jakarta.persistence.EntityManagerFactory;
 
 /**
@@ -30,8 +25,6 @@ class JpaContextCfgTest {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(JpaContextCfgTest.class);
-
-	private static DataSourceTestUtil dataSourceTestUtil = new DataSourceTestUtil();
 
 	@Test
 	void testEntityManagerFactory() throws IllegalStateException {

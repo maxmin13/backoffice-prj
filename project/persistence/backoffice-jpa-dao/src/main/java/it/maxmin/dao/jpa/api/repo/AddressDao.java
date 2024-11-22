@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import it.maxmin.domain.jpa.entity.Address;
+import it.maxmin.model.jpa.dao.entity.Address;
 
 public interface AddressDao {
 	

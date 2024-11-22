@@ -22,7 +22,7 @@ import it.maxmin.dao.jdbc.impl.operation.user.SelectAllUsers;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByAccountName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByFirstName;
 import it.maxmin.dao.jdbc.impl.operation.user.UpdateUser;
-import it.maxmin.model.jdbc.domain.entity.User;
+import it.maxmin.model.jdbc.dao.entity.User;
 
 @Transactional
 @Repository("userDao")

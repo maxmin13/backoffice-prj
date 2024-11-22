@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import it.maxmin.dao.jdbc.BaseTestUser;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.model.jdbc.domain.entity.Role;
+import it.maxmin.model.jdbc.dao.entity.Role;
 
 class SelectRoleByRoleNameTest extends BaseTestUser {
 

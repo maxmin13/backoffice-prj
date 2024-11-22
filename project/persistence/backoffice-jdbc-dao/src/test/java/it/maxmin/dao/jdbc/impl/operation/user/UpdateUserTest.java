@@ -16,14 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import it.maxmin.dao.jdbc.BaseTestUser;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.model.jdbc.domain.entity.Address;
-import it.maxmin.model.jdbc.domain.entity.Department;
-import it.maxmin.model.jdbc.domain.entity.State;
-import it.maxmin.model.jdbc.domain.entity.User;
-import it.maxmin.model.jdbc.domain.entity.Role;
-import it.maxmin.model.jdbc.domain.pojo.PojoAddress;
-import it.maxmin.model.jdbc.domain.pojo.PojoUser;
-import it.maxmin.model.jdbc.domain.pojo.PojoRole;
+import it.maxmin.model.jdbc.dao.entity.Address;
+import it.maxmin.model.jdbc.dao.entity.Department;
+import it.maxmin.model.jdbc.dao.entity.Role;
+import it.maxmin.model.jdbc.dao.entity.State;
+import it.maxmin.model.jdbc.dao.entity.User;
+import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
+import it.maxmin.model.jdbc.dao.pojo.PojoRole;
+import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
 class UpdateUserTest extends BaseTestUser {
 

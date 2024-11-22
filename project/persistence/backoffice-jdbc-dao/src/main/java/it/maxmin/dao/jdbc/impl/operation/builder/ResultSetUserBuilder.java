@@ -7,9 +7,9 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 import it.maxmin.dao.jdbc.impl.JdbcDaoException;
-import it.maxmin.model.jdbc.domain.entity.Department;
-import it.maxmin.model.jdbc.domain.entity.Role;
-import it.maxmin.model.jdbc.domain.entity.User;
+import it.maxmin.model.jdbc.dao.entity.Department;
+import it.maxmin.model.jdbc.dao.entity.Role;
+import it.maxmin.model.jdbc.dao.entity.User;
 
 public class ResultSetUserBuilder {
 

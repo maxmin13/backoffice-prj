@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
-import it.maxmin.model.jdbc.domain.entity.Role;
+import it.maxmin.model.jdbc.dao.entity.Role;
 
 public class SelectRoleByRoleName {
 
