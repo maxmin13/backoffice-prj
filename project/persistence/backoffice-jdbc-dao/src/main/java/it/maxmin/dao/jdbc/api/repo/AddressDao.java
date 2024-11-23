@@ -1,16 +1,19 @@
 package it.maxmin.dao.jdbc.api.repo;
 
 import java.util.List;
+import java.util.Optional;
 
 import it.maxmin.model.jdbc.dao.entity.Address;
 
 public interface AddressDao {
 
-	List<Address> findAddressesByUserId(Long userId);
+	Optional<Address> selectAddressByPostalCode(String postalCode);
+	
+	List<Address> selectAddressesByUserId(Long userId);
 
-	Address create(Address address);
+	Address insert(Address address);
 
-	void create(List<Address> addresses);
+	void insertList(List<Address> addresses);
 
 	void update(Address address);
 }

@@ -21,15 +21,15 @@ import jakarta.persistence.EntityManagerFactory;
  * Verifies that by loading JpaContextCfg.class, in the Spring context there is
  * a EntityManagerFactory and a TransactionManager objects.
  */
-class JpaContextCfgTest {
+class JdbcDataSpringContextCfgTest {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(JpaContextCfgTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcDataSpringContextCfgTest.class);
 
 	@Test
 	void testEntityManagerFactory() throws IllegalStateException {
 
-		var springCtx = new AnnotationConfigApplicationContext(JpaContextCfg.class);
+		var springCtx = new AnnotationConfigApplicationContext(JpaDataContextSpringCfg.class);
 		var entityManagerFactory = springCtx.getBean("entityManagerFactory", EntityManagerFactory.class);
 
 		assertNotNull(entityManagerFactory);

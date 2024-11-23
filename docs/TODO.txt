@@ -6,10 +6,4 @@ There are various demands, and various places where you handle unchecked excepti
 *******************************************************************************************************************
 
 
-jdbc dao project, see: 
-
-UnitTestContextCfg.java imports JdbcContextCfg.java
-
-do the same in jpa dao project:
-
-                        imports JpaContextCfg.java
+chang userDao method names from find to select.....

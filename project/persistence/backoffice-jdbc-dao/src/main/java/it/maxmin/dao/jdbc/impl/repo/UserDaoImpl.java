@@ -51,13 +51,13 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<User> findAll() {
+	public List<User> selectAll() {
 		return this.selectAllUsers.execute();
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<User> findByAccountName(String accountName) {
+	public Optional<User> selectByAccountName(String accountName) {
 		notNull(accountName, "The account name must not be null");
 		User user = this.selectUserByAccountName.execute(accountName);
 		return user != null ? Optional.of(user) : Optional.empty();
@@ -65,13 +65,13 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<User> findByFirstName(String firstName) {
+	public List<User> selectByFirstName(String firstName) {
 		notNull(firstName, "The first name must not be null");
 		return this.selectUserByFirstName.execute(firstName);
 	}
 
 	@Override
-	public void create(User user) {
+	public void insert(User user) {
 		notNull(user, "The user must not be null");
 		if (user.getId() == null) {
 			LOGGER.info("Inserting new user ...");

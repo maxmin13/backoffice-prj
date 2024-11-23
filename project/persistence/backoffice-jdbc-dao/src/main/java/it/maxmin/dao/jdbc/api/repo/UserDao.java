@@ -7,13 +7,13 @@ import it.maxmin.model.jdbc.dao.entity.User;
 
 public interface UserDao {
 
-	List<User> findAll();
+	List<User> selectAll();
 
-	Optional<User> findByAccountName(String accountName);
+	Optional<User> selectByAccountName(String accountName);
 
-	List<User> findByFirstName(String firstName);
+	List<User> selectByFirstName(String firstName);
 
-	void create(User user);
+	void insert(User user);
 
 	void associateAddress(Long userId, Long addressId);
 

@@ -26,15 +26,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Import({ JndiDataSourceCfg.class, TransactionCfg.class })
 @ComponentScan(basePackages = { "it.maxmin.dao.jpa.impl.repo" })
 @EnableTransactionManagement
-public class JpaContextCfg {
+public class JpaDataContextSpringCfg {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(JpaContextCfg.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JpaDataContextSpringCfg.class);
 
 	private DataSource dataSource;
 
 	@Autowired
-	public JpaContextCfg(DataSource dataSource) {
+	public JpaDataContextSpringCfg(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 

@@ -122,7 +122,7 @@ public class User implements Serializable {
 		return addresses;
 	}
 
-	void setAddresses(Set<Address> addresses) {
+	public void setAddresses(Set<Address> addresses) {
 		this.addresses = addresses;
 	}
 
@@ -147,7 +147,7 @@ public class User implements Serializable {
 		return roles;
 	}
 
-	void setRoles(Set<Role> roles) {
+	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
 

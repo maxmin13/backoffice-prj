@@ -13,7 +13,7 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
-import it.maxmin.dao.jpa.config.JpaContextCfg;
+import it.maxmin.dao.jpa.config.JpaDataContextSpringCfg;
 
 /**
  * Starts an embedded MariaDB database and creates a Spring context for the unit
@@ -21,7 +21,7 @@ import it.maxmin.dao.jpa.config.JpaContextCfg;
  */
 
 @Configuration
-@Import(JpaContextCfg.class)
+@Import(JpaDataContextSpringCfg.class)
 public class UnitTestContextCfg {
 
 	@Bean

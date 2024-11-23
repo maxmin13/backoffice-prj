@@ -81,9 +81,9 @@ class UserDaoTest {
 	}
 
 	@Test
-	void testFindAll() {
+	void testselectAll() {
 
-		LOGGER.info("running test testFindAll");
+		LOGGER.info("running test testselectAll");
 
 		Address rome = Address.newInstance().withId(4l).withPostalCode("30010").withDescription("Via borgo di sotto")
 				.withCity("Rome").withRegion("County Lazio")
@@ -110,7 +110,7 @@ class UserDaoTest {
 		when(selectAllUsers.execute()).thenReturn(users);
 
 		// run the test
-		List<User> usersFound = userDao.findAll();
+		List<User> usersFound = userDao.selectAll();
 
 		verify(selectAllUsers, times(1)).execute();
 
@@ -168,21 +168,21 @@ class UserDaoTest {
 	}
 
 	@Test
-	void findByAccountNameWithNoAccountNameThrowsException() {
+	void selectByAccountNameWithNoAccountNameThrowsException() {
 
-		LOGGER.info("running test findByAccountNameWithNoAccountNameThrowsException");
+		LOGGER.info("running test selectByAccountNameWithNoAccountNameThrowsException");
 
 		String accountName = null;
 
-		Throwable throwable = assertThrows(Throwable.class, () -> userDao.findByAccountName(accountName));
+		Throwable throwable = assertThrows(Throwable.class, () -> userDao.selectByAccountName(accountName));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
-	void findByAccountName() {
+	void selectByAccountName() {
 
-		LOGGER.info("running test findByAccountName");
+		LOGGER.info("running test selectByAccountName");
 
 		Address dublin = Address.newInstance().withId(4l).withPostalCode("A65TF12").withDescription("Connolly street")
 				.withCity("Dublin").withRegion("County Dublin")
@@ -197,7 +197,7 @@ class UserDaoTest {
 		when(selectUserByAccountName.execute("artur")).thenReturn(artur);
 
 		// run the test
-		Optional<User> userFound = userDao.findByAccountName("artur");
+		Optional<User> userFound = userDao.selectByAccountName("artur");
 
 		verify(selectUserByAccountName, times(1)).execute("artur");
 
@@ -230,21 +230,21 @@ class UserDaoTest {
 	}
 
 	@Test
-	void findByFirstNameWithNoFirstNameThrowsException() {
+	void selectByFirstNameWithNoFirstNameThrowsException() {
 
-		LOGGER.info("running test findByFirstNameWithNoFirstNameThrowsException");
+		LOGGER.info("running test selectByFirstNameWithNoFirstNameThrowsException");
 
 		String firstName = null;
 
-		Throwable throwable = assertThrows(Throwable.class, () -> userDao.findByAccountName(firstName));
+		Throwable throwable = assertThrows(Throwable.class, () -> userDao.selectByAccountName(firstName));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
-	void findByFirstName() {
+	void selectByFirstName() {
 
-		LOGGER.info("running test findByFirstName");
+		LOGGER.info("running test selectByFirstName");
 
 		Address dublin = Address.newInstance().withId(4l).withPostalCode("A65TF12").withDescription("Connolly street")
 				.withCity("Dublin").withRegion("County Dublin")
@@ -261,7 +261,7 @@ class UserDaoTest {
 		when(selectUserByFirstName.execute("Arturo")).thenReturn(users);
 
 		// run the test
-		List<User> usersFound = userDao.findByFirstName("Arturo");
+		List<User> usersFound = userDao.selectByFirstName("Arturo");
 
 		verify(selectUserByFirstName, times(1)).execute("Arturo");
 
@@ -294,45 +294,45 @@ class UserDaoTest {
 	}
 
 	@Test
-	void createWithNoUserThrowsException() {
+	void insertWithNoUserThrowsException() {
 
-		LOGGER.info("running test createWithNoUserThrowsException");
+		LOGGER.info("running test insertWithNoUserThrowsException");
 
 		User user = null;
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
-			userDao.create(user);
+			userDao.insert(user);
 		});
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
-	void createWithUserIdThrowsException() {
+	void insertWithUserIdThrowsException() {
 
-		LOGGER.info("running test createWithUserIdThrowsException");
+		LOGGER.info("running test insertWithUserIdThrowsException");
 
 		User user = User.newInstance().withId(1l).withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi")
 				.withDepartment(Department.newInstance().withId(1l).withName(ACCOUNTS.getName()));
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
-			userDao.create(user);
+			userDao.insert(user);
 		});
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
-	void create() {
+	void insert() {
 
-		LOGGER.info("running test createWithAddresses");
+		LOGGER.info("running test insertWithAddresses");
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance().withId(1l));
 
 		// run the test
-		userDao.create(carl);
+		userDao.insert(carl);
 
 		verify(insertUser, times(1)).execute(carl);
 	}

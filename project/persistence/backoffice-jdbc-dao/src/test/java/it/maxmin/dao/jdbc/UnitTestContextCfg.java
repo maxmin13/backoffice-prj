@@ -14,13 +14,13 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
-import it.maxmin.dao.jdbc.config.JdbcContextCfg;
+import it.maxmin.dao.jdbc.config.JdbcDataSpringContextCfg;
 
 /**
  * Starts an embedded MariaDB database and overrides the datasource
  * */
 @Configuration
-@Import(JdbcContextCfg.class)
+@Import(JdbcDataSpringContextCfg.class)
 public class UnitTestContextCfg {
 
 	@Bean

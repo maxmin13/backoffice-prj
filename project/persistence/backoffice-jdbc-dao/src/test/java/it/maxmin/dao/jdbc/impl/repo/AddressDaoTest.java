@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddress;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddresses;
+import it.maxmin.dao.jdbc.impl.operation.address.SelectAddressByPostalCode;
 import it.maxmin.dao.jdbc.impl.operation.address.SelectAddressesByUserId;
 import it.maxmin.dao.jdbc.impl.operation.address.UpdateAddress;
 import it.maxmin.model.jdbc.dao.entity.Address;
@@ -46,6 +48,9 @@ class AddressDaoTest {
 	@Mock
 	private SelectAddressesByUserId selectAddressesByUserId;
 
+	@Mock
+	private SelectAddressByPostalCode selectAddressByPostalCode;
+
 	@InjectMocks
 	private AddressDaoImpl addressDao;
 
@@ -55,21 +60,21 @@ class AddressDaoTest {
 	}
 
 	@Test
-	void findAddressesByUserIdWithNoIdThrowsException() {
+	void selectAddressesByUserIdWithNoIdThrowsException() {
 
-		LOGGER.info("running test findAddressesByUserIdWithNoIdThrowsException");
+		LOGGER.info("running test selectAddressesByUserIdWithNoIdThrowsException");
 
 		Long userId = null;
 
-		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.findAddressesByUserId(userId));
+		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.selectAddressesByUserId(userId));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
-	void findAddressesByUserId() {
+	void selectAddressesByUserId() {
 
-		LOGGER.info("running test findAddressesByUserId");
+		LOGGER.info("running test selectAddressesByUserId");
 
 		Address address1 = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
@@ -81,7 +86,7 @@ class AddressDaoTest {
 		when(selectAddressesByUserId.execute(1l)).thenReturn(List.of(address1, address2));
 
 		// run the test
-		List<Address> addresses = addressDao.findAddressesByUserId(1l);
+		List<Address> addresses = addressDao.selectAddressesByUserId(1l);
 
 		verify(selectAddressesByUserId, times(1)).execute(1l);
 
@@ -95,35 +100,69 @@ class AddressDaoTest {
 	}
 
 	@Test
-	void createWithNoAddressThrowsException() {
+	void selectAddressesByPostalCodeWithNoIdThrowsException() {
 
-		LOGGER.info("running test createWithNoAddressThrowsException");
+		LOGGER.info("running test selectAddressesByPostalCodeWithNoIdThrowsException");
 
-		Address address = null;
+		Long postalCode = null;
 
-		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.create(address));
+		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.selectAddressesByUserId(postalCode));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
-	void createWithAddressIdThrowsException() {
+	void selectAddressesByPostalCode() {
 
-		LOGGER.info("running test createWithAddressIdThrowsException");
+		LOGGER.info("running test selectAddressesByPostalCode");
 
 		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
 				.withRegion("County Veneto").withPostalCode("30033");
 
-		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.create(address));
+		when(selectAddressByPostalCode.execute("30033")).thenReturn(address);
+
+		// run the test
+		Optional<Address> addressFound = addressDao.selectAddressByPostalCode("30033");
+
+		assertEquals(true, addressFound.isPresent());
+
+		verify(selectAddressByPostalCode, times(1)).execute("30033");
+
+		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "County Veneto", address);
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address.getState());
+	}
+
+	@Test
+	void insertWithNoAddressThrowsException() {
+
+		LOGGER.info("running test insertWithNoAddressThrowsException");
+
+		Address address = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.insert(address));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
-	void create() {
+	void insertWithAddressIdThrowsException() {
 
-		LOGGER.info("running test create");
+		LOGGER.info("running test insertWithAddressIdThrowsException");
+
+		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
+				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
+				.withRegion("County Veneto").withPostalCode("30033");
+
+		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.insert(address));
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void insert() {
+
+		LOGGER.info("running test insert");
 
 		Address address = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
@@ -132,7 +171,7 @@ class AddressDaoTest {
 		when(insertAddress.execute(address)).thenReturn(address);
 
 		// run the test
-		address = addressDao.create(address);
+		address = addressDao.insert(address);
 
 		verify(insertAddress, times(1)).execute(address);
 
@@ -141,21 +180,21 @@ class AddressDaoTest {
 	}
 
 	@Test
-	void createListWithNoAddressesThrowsException() {
+	void insertListWithNoAddressesThrowsException() {
 
-		LOGGER.info("running test createListWithNoAddressesThrowsException");
+		LOGGER.info("running test insertListWithNoAddressesThrowsException");
 
 		List<Address> addresses = null;
 
-		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.create(addresses));
+		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.insertList(addresses));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
-	void createList() {
+	void insertList() {
 
-		LOGGER.info("running test createList");
+		LOGGER.info("running test insertList");
 
 		Address address1 = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
@@ -167,7 +206,7 @@ class AddressDaoTest {
 		List<Address> addresses = List.of(address1, address2);
 
 		// run the test
-		addressDao.create(addresses);
+		addressDao.insertList(addresses);
 
 		verify(insertAddresses, times(1)).execute(addresses);
 	}
