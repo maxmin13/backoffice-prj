@@ -12,14 +12,17 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseTestUser;
+import it.maxmin.dao.jdbc.BaseDaoTest;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.UnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
-class InsertUserAddressTest extends BaseTestUser {
+@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
+class InsertUserAddressTest extends BaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertUserAddressTest.class);
 	private InsertUserAddress insertUserAddress;

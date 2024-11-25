@@ -5,5 +5,7 @@ There are various demands, and various places where you handle unchecked excepti
 
 *******************************************************************************************************************
 
+change RoleName to Name
+check all operations, add all notNull(), not only for id field
 
-chang userDao method names from find to select.....
+chage the role "user", it is always overidden by var user

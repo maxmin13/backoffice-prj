@@ -3,11 +3,11 @@ package it.maxmin.dao.jdbc;
 import static it.maxmin.dao.jdbc.impl.constant.Department.ACCOUNTS;
 import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
-import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
-import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
 import static it.maxmin.dao.jdbc.impl.constant.Role.USER;
 import static it.maxmin.dao.jdbc.impl.constant.Role.WORKER;
+import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
+import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,17 +18,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import it.maxmin.model.jdbc.dao.pojo.PojoDepartment;
 import it.maxmin.model.jdbc.dao.pojo.PojoRole;
 import it.maxmin.model.jdbc.dao.pojo.PojoState;
 
-@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public abstract class BaseTestUser {
+public abstract class BaseDaoTest {
 
 	protected JdbcQueryTestUtil jdbcQueryTestUtil;
 	protected JdbcUserTestUtil jdbcUserTestUtil;
@@ -42,21 +40,29 @@ public abstract class BaseTestUser {
 	protected PojoRole worker;
 
 	@Autowired
-	protected BaseTestUser(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil) {
+	protected BaseDaoTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil) {
 		this.jdbcQueryTestUtil = jdbcQueryTestUtil;
 		this.jdbcUserTestUtil = jdbcUserTestUtil;
 
 		String[] scripts = { "1_create_database.up.sql", "2_role.up.sql", "2_state.up.sql", "2_department.up.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
-		this.legal = jdbcQueryTestUtil.findDepartmentByName(LEGAL.getName());
-		this.accounts = jdbcQueryTestUtil.findDepartmentByName(ACCOUNTS.getName());
-		this.production = jdbcQueryTestUtil.findDepartmentByName(PRODUCTION.getName());
-		this.italy = jdbcQueryTestUtil.findStateByName(ITALY.getName());
-		this.ireland = jdbcQueryTestUtil.findStateByName(IRELAND.getName());
-		this.administrator = jdbcQueryTestUtil.findRoleByRoleName(ADMINISTRATOR.getRoleName());
-		this.worker = jdbcQueryTestUtil.findRoleByRoleName(WORKER.getRoleName());
-		this.user = jdbcQueryTestUtil.findRoleByRoleName(USER.getRoleName());
+		this.legal = jdbcQueryTestUtil.findDepartmentByName(LEGAL.getName())
+				.orElseThrow(() -> new DaoTestException("Error department not found"));
+		this.accounts = jdbcQueryTestUtil.findDepartmentByName(ACCOUNTS.getName())
+				.orElseThrow(() -> new DaoTestException("Error department not found"));
+		this.production = jdbcQueryTestUtil.findDepartmentByName(PRODUCTION.getName())
+				.orElseThrow(() -> new DaoTestException("Error department not found"));
+		this.italy = jdbcQueryTestUtil.findStateByName(ITALY.getName())
+				.orElseThrow(() -> new DaoTestException("Error state not found"));
+		this.ireland = jdbcQueryTestUtil.findStateByName(IRELAND.getName())
+				.orElseThrow(() -> new DaoTestException("Error state not found"));
+		this.administrator = jdbcQueryTestUtil.findRoleByRoleName(ADMINISTRATOR.getRoleName())
+				.orElseThrow(() -> new DaoTestException("Error role not found"));
+		this.worker = jdbcQueryTestUtil.findRoleByRoleName(WORKER.getRoleName())
+				.orElseThrow(() -> new DaoTestException("Error role not found"));
+		this.user = jdbcQueryTestUtil.findRoleByRoleName(USER.getRoleName())
+				.orElseThrow(() -> new DaoTestException("Error role not found"));
 	}
 
 	@BeforeEach
@@ -71,5 +77,5 @@ public abstract class BaseTestUser {
 				"2_department.down.sql", "2_role.down.sql", "1_create_database.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 	}
-	
+
 }

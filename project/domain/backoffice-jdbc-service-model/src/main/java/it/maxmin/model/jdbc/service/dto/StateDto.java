@@ -42,10 +42,6 @@ public final class StateDto implements Serializable {
 		return hcb.toHashCode();
 	}
 
-	public State toEntity() {
-		return State.newInstance().withCode(code).withName(name);
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

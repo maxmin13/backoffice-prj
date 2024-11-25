@@ -3,22 +3,28 @@ package it.maxmin.dao.jdbc.impl.operation.address;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Optional;
+
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseTestUser;
+import it.maxmin.dao.jdbc.BaseDaoTest;
+import it.maxmin.dao.jdbc.DaoTestException;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.UnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.State;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoState;
 
-class UpdateAddressTest extends BaseTestUser {
+@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
+class UpdateAddressTest extends BaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UpdateAddressTest.class);
 	private UpdateAddress updateAddress;
@@ -86,26 +92,29 @@ class UpdateAddressTest extends BaseTestUser {
 		LOGGER.info("running test update");
 
 		// Find an existing address
-		PojoAddress address = jdbcQueryTestUtil.findAddressByPostalCode("30010");
-
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address);
-		assertEquals(italy.getId(), address.getStateId());
+		Optional<PojoAddress> address = jdbcQueryTestUtil.findAddressByPostalCode("30010");
+		PojoAddress ad = address.orElseThrow(() -> new DaoTestException("Error address not found"));
+		
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", ad);
+		assertEquals(italy.getId(), ad.getStateId());
 
 		// Change the address
-		Address addressUpdated = Address.newInstance().withId(address.getId()).withDescription("Via Nuova")
+		Address addressUpdated = Address.newInstance().withId(ad.getId()).withDescription("Via Nuova")
 				.withCity("Venice").withState(State.newInstance().withId(italy.getId())).withRegion("Veneto")
 				.withPostalCode("33311");
 
 		// run the test
 		updateAddress.execute(addressUpdated);
 
-		PojoAddress updated = jdbcQueryTestUtil.findAddressByAddressId(address.getId());
+		Optional<PojoAddress> updated = jdbcQueryTestUtil.findAddressByAddressId(ad.getId());
+		PojoAddress up = updated.orElseThrow(() -> new DaoTestException("Error address not found"));
 
-		jdbcUserTestUtil.verifyAddress("33311", "Via Nuova", "Venice", "Veneto", updated);
+		jdbcUserTestUtil.verifyAddress("33311", "Via Nuova", "Venice", "Veneto", up);
 
-		PojoState state = jdbcQueryTestUtil.findStateByAddressPostalCode("33311");
-
-		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), state);
+		Optional<PojoState> state = jdbcQueryTestUtil.findStateByAddressPostalCode("33311");
+		PojoState st = state.orElseThrow(() -> new DaoTestException("Error state not found"));
+		
+		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), st);
 	}
 
 }

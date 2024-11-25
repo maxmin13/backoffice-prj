@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -12,10 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseTestUser;
+import it.maxmin.dao.jdbc.BaseDaoTest;
+import it.maxmin.dao.jdbc.DaoTestException;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.UnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Department;
 import it.maxmin.model.jdbc.dao.entity.Role;
@@ -26,7 +30,8 @@ import it.maxmin.model.jdbc.dao.pojo.PojoDepartment;
 import it.maxmin.model.jdbc.dao.pojo.PojoRole;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
-class InsertUserTest extends BaseTestUser {
+@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
+class InsertUserTest extends BaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertUserTest.class);
 	private InsertUser insertUser;
@@ -135,15 +140,17 @@ class InsertUserTest extends BaseTestUser {
 
 		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), user);
 
-		PojoUser newUser = jdbcQueryTestUtil.findUserByAccountName("carl23");
+		Optional<PojoUser> newUser = jdbcQueryTestUtil.findUserByAccountName("carl23");
+		PojoUser us = newUser.orElseThrow(() -> new DaoTestException("Error user not found"));
+		
+		jdbcUserTestUtil.verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), us);
 
-		jdbcUserTestUtil.verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), newUser);
+		Optional<PojoDepartment> department = jdbcQueryTestUtil.findDepartmentById(us.getDepartmentId());
+		PojoDepartment dep = department.orElseThrow(() -> new DaoTestException("Error department not found"));
 
-		PojoDepartment department = jdbcQueryTestUtil.findDepartmentById(newUser.getDepartmentId());
+		jdbcUserTestUtil.verifyDepartment(accounts.getName(), dep);
 
-		jdbcUserTestUtil.verifyDepartment(accounts.getName(), department);
-
-		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(us.getId());
 
 		assertEquals(0, addresses.size());
 

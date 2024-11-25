@@ -1,9 +1,10 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESS_BY_USER_POSTAL_CODE;
+import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -28,14 +29,10 @@ public class SelectAddressByPostalCode {
 		resultSetExtractor = selectAddressHelper.getResultSetExtractor();
 	}
 
-	public Address execute(String postalCode) {
+	public Optional<Address> execute(String postalCode) {
 		notNull(postalCode, "The postal code must not be null");
-		Address address = null;
 		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
-		List<Address> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_USER_POSTAL_CODE, param, resultSetExtractor);
-		if (addresses != null && !addresses.isEmpty()) {
-			address = addresses.get(0);
-		}
-		return address;
+		List<Address> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_POSTAL_CODE, param, resultSetExtractor);
+		return (addresses == null || addresses.isEmpty()) ? Optional.empty() : Optional.of(addresses.get(0));
 	}
 }

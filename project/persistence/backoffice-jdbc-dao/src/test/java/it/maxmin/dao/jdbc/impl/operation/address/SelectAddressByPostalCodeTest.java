@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
+import it.maxmin.dao.jdbc.DaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Department;
@@ -80,10 +82,11 @@ class SelectAddressByPostalCodeTest {
 				.thenReturn(addresses);
 
 		// run the test
-		Address foundAddress = selectAddressByPostalCode.execute("30010");
+		Optional<Address> foundAddress = selectAddressByPostalCode.execute("30010");
+		Address address = foundAddress.orElseThrow(() -> new DaoTestException("Error address not found"));
 
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", foundAddress);
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), foundAddress.getState());
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address);
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address.getState());
 	}
 
 }

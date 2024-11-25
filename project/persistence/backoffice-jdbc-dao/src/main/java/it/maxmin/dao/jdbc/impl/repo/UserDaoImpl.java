@@ -59,8 +59,7 @@ public class UserDaoImpl implements UserDao {
 	@Transactional(readOnly = true)
 	public Optional<User> selectByAccountName(String accountName) {
 		notNull(accountName, "The account name must not be null");
-		User user = this.selectUserByAccountName.execute(accountName);
-		return user != null ? Optional.of(user) : Optional.empty();
+		return this.selectUserByAccountName.execute(accountName);
 	}
 
 	@Override
@@ -71,12 +70,13 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public void insert(User user) {
+	public User insert(User user) {
 		notNull(user, "The user must not be null");
 		if (user.getId() == null) {
 			LOGGER.info("Inserting new user ...");
-			this.insertUser.execute(user);
+			User newUser = this.insertUser.execute(user);
 			LOGGER.info("User created with id: {}", user.getId());
+			return newUser;
 		}
 		else {
 			throw new IllegalArgumentException("The user ID must be null");

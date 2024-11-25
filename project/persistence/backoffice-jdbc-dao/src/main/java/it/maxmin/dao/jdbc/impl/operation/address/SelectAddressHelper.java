@@ -40,17 +40,19 @@ public class SelectAddressHelper {
 				state.ifPresent(requireNonNull(address)::withState);
 
 				String accountName = rs.getString("accountName");
-				requireNonNull(address).getUser(accountName).ifPresentOrElse(u -> {
-					Optional<Role> role = resultSetUserBuilder.buildRole(rs);
-					role.ifPresent(requireNonNull(u)::addRole);
-				}, () -> {
-					User user = resultSetUserBuilder.buildUser(rs).orElse(null);
-					Optional<Department> department = resultSetUserBuilder.buildDepartment(rs);
-					department.ifPresent(requireNonNull(user)::withDepartment);
-					Optional<Role> role = resultSetUserBuilder.buildRole(rs);
-					role.ifPresent(requireNonNull(user)::addRole);
-					address.addUser(user);
-				});
+				if (accountName != null) {
+					address.getUser(accountName).ifPresentOrElse(u -> {
+						Optional<Role> role = resultSetUserBuilder.buildRole(rs);
+						role.ifPresent(requireNonNull(u)::addRole);
+					}, () -> {
+						User user = resultSetUserBuilder.buildUser(rs).orElse(null);
+						Optional<Department> department = resultSetUserBuilder.buildDepartment(rs);
+						department.ifPresent(requireNonNull(user)::withDepartment);
+						Optional<Role> role = resultSetUserBuilder.buildRole(rs);
+						role.ifPresent(user::addRole);
+						address.addUser(user);
+					});	
+				}
 			}
 			return new ArrayList<>(map.values());
 		};

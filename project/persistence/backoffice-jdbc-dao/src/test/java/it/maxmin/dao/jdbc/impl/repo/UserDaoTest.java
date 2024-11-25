@@ -26,12 +26,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.maxmin.dao.jdbc.DaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.impl.operation.role.SelectRoleByRoleName;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUser;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserAddress;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserRole;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectAllUsers;
-import it.maxmin.dao.jdbc.impl.operation.user.SelectRoleByRoleName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByAccountName;
 import it.maxmin.dao.jdbc.impl.operation.user.SelectUserByFirstName;
 import it.maxmin.dao.jdbc.impl.operation.user.UpdateUser;
@@ -194,34 +195,31 @@ class UserDaoTest {
 		artur.addRole(user);
 		artur.addAddress(dublin);
 
-		when(selectUserByAccountName.execute("artur")).thenReturn(artur);
+		when(selectUserByAccountName.execute("artur")).thenReturn(Optional.of(artur));
 
 		// run the test
 		Optional<User> userFound = userDao.selectByAccountName("artur");
+		User u = userFound.orElseThrow(() -> new DaoTestException("Error user not found"));
 
 		verify(selectUserByAccountName, times(1)).execute("artur");
 
-		assertEquals(true, userFound.isPresent());
-
-		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12),
-				userFound.get());
+		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), u);
 
 		// roles
-		assertEquals(1, userFound.get().getRoles().size());
+		assertEquals(1, u.getRoles().size());
 
-		Optional<Role> role2 = userFound.get().getRole(USER.getRoleName());
+		Optional<Role> role2 = u.getRole(USER.getRoleName());
+		Role r2 = role2.orElseThrow(() -> new DaoTestException("Error role not found"));
 
-		assertEquals(true, role2.isPresent());
-
-		jdbcUserTestUtil.verifyRole(USER.getRoleName(), role2.get());
+		jdbcUserTestUtil.verifyRole(USER.getRoleName(), r2);
 
 		// department
-		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), userFound.get().getDepartment());
+		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), u.getDepartment());
 
 		// addresses
-		assertEquals(1, userFound.get().getAddresses().size());
+		assertEquals(1, u.getAddresses().size());
 
-		Optional<Address> address2 = userFound.get().getAddress("A65TF12");
+		Optional<Address> address2 = u.getAddress("A65TF12");
 
 		assertEquals(true, address2.isPresent());
 

@@ -53,22 +53,21 @@ public class AddressDaoImpl implements AddressDao {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Address> selectAddressByPostalCode(String postalCode) {
-		notNull(postalCode, "The user postal code must not be null");
-		return Optional.ofNullable(this.selectAddressByPostalCode.execute(postalCode));
+		notNull(postalCode, "The postal code must not be null");
+		return this.selectAddressByPostalCode.execute(postalCode);
 	}
 
 	@Override
 	public Address insert(Address address) {
 		notNull(address, "The address must not be null");
-		Address newAddress;
 		if (address.getId() == null) {
 			LOGGER.info("Inserting new address ...");
-			newAddress = this.insertAddress.execute(address);
+			Address newAddress = this.insertAddress.execute(address);
 			LOGGER.info("New address  {} inserted with id: {}", newAddress.getDescription(), newAddress.getId());
+			return newAddress;
 		} else {
 			throw new IllegalArgumentException("The address ID must be null");
 		}
-		return address;
 	}
 
 	@Override

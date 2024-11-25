@@ -23,6 +23,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
+import it.maxmin.dao.jdbc.DaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Department;
@@ -81,27 +82,28 @@ class SelectUserByAccountNameTest {
 				.thenReturn(users);
 
 		// run the test
-		User userFound = selectUserByAccountName.execute("maxmin13");
+		Optional<User> userFound = selectUserByAccountName.execute("maxmin13");
+		User user = userFound.orElseThrow(() -> new DaoTestException("Error user not found"));
 
 		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16),
-				userFound);
+				user);
 
 		// roles
-		assertEquals(1, userFound.getRoles().size());
+		assertEquals(1, user.getRoles().size());
 
-		Optional<Role> role1 = userFound.getRole(ADMINISTRATOR.getRoleName());
+		Optional<Role> role1 = user.getRole(ADMINISTRATOR.getRoleName());
 
 		assertEquals(true, role1.isPresent());
 
 		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
 
 		// department
-		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), userFound.getDepartment());
+		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), user.getDepartment());
 
 		// addresses
-		assertEquals(1, userFound.getAddresses().size());
+		assertEquals(1, user.getAddresses().size());
 
-		Optional<Address> address1 = userFound.getAddress("30010");
+		Optional<Address> address1 = user.getAddress("30010");
 
 		assertEquals(true, address1.isPresent());
 

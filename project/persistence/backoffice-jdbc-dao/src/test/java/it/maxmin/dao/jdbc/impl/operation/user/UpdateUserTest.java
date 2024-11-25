@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -12,10 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseTestUser;
+import it.maxmin.dao.jdbc.BaseDaoTest;
+import it.maxmin.dao.jdbc.DaoTestException;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.UnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Department;
 import it.maxmin.model.jdbc.dao.entity.Role;
@@ -25,7 +29,8 @@ import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoRole;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
-class UpdateUserTest extends BaseTestUser {
+@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
+class UpdateUserTest extends BaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertUserTest.class);
 	private UpdateUser updateUser;
@@ -112,19 +117,20 @@ class UpdateUserTest extends BaseTestUser {
 		LOGGER.info("running test execute");
 
 		// Find an existing user
-		PojoUser maxmin = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+		PojoUser us = pojoUser.orElseThrow(() -> new DaoTestException("Error user not found"));
+		
+		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), us);
 
-		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), maxmin);
+		assertEquals(production.getId(), us.getDepartmentId());
 
-		assertEquals(production.getId(), maxmin.getDepartmentId());
-
-		List<PojoRole> roles = jdbcQueryTestUtil.findRolesByUserId(maxmin.getId());
+		List<PojoRole> roles = jdbcQueryTestUtil.findRolesByUserId(us.getId());
 		assertEquals(3, roles.size());
 		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), roles.get(0));
 		jdbcUserTestUtil.verifyRole(user.getRoleName(), roles.get(1));
 		jdbcUserTestUtil.verifyRole(worker.getRoleName(), roles.get(2));
 
-		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(maxmin.getId());
+		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(us.getId());
 
 		assertEquals(2, addresses.size());
 
@@ -134,7 +140,7 @@ class UpdateUserTest extends BaseTestUser {
 		assertEquals(addresses.get(1).getStateId(), ireland.getId());
 
 		// update the user
-		User carl = User.newInstance().withId(maxmin.getId()).withAccountName("carl123").withFirstName("Carlo")
+		User carl = User.newInstance().withId(us.getId()).withAccountName("carl123").withFirstName("Carlo")
 				.withLastName("Rossi").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withDepartment(Department.newInstance().withId(accounts.getId()).withName(accounts.getName()));
 
@@ -148,19 +154,20 @@ class UpdateUserTest extends BaseTestUser {
 		// run the test
 		updateUser.execute(carl);
 
-		PojoUser updated = jdbcQueryTestUtil.findUserByUserId(maxmin.getId());
+		Optional<PojoUser> updated = jdbcQueryTestUtil.findUserByUserId(us.getId());
+		PojoUser up = updated.orElseThrow(() -> new DaoTestException("Error user not found"));
 
-		jdbcUserTestUtil.verifyUser("carl123", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), updated);
+		jdbcUserTestUtil.verifyUser("carl123", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), up);
 
-		assertEquals(accounts.getId(), updated.getDepartmentId());
+		assertEquals(accounts.getId(), up.getDepartmentId());
 
-		roles = jdbcQueryTestUtil.findRolesByUserId(maxmin.getId());
+		roles = jdbcQueryTestUtil.findRolesByUserId(us.getId());
 		assertEquals(3, roles.size());
 		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), roles.get(0));
 		jdbcUserTestUtil.verifyRole(user.getRoleName(), roles.get(1));
 		jdbcUserTestUtil.verifyRole(worker.getRoleName(), roles.get(2));
 
-		addresses = jdbcQueryTestUtil.findAddressesByUserId(maxmin.getId());
+		addresses = jdbcQueryTestUtil.findAddressesByUserId(us.getId());
 
 		assertEquals(2, addresses.size());
 

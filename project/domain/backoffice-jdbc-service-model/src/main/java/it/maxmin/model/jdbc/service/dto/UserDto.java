@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import it.maxmin.model.jdbc.dao.entity.Address;
-import it.maxmin.model.jdbc.dao.entity.Role;
 import it.maxmin.model.jdbc.dao.entity.User;
 
 public final class UserDto implements Serializable {
@@ -88,20 +86,6 @@ public final class UserDto implements Serializable {
 		}
 		return Optional.ofNullable(
 				roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst().orElse(null));
-	}
-
-	public User toEntity() {
-		User user = User.newInstance().withAccountName(credentials.getAccountName())
-				.withFirstName(credentials.getFirstName()).withLastName(credentials.getLastName())
-				.withBirthDate(birthDate).withCreatedAt(createdAt).withDepartment(department.toEntity());
-		user.setAddresses(this.getAddresses().stream()
-				.map(a -> Address.newInstance().withCity(a.getCity()).withDescription(a.getDescription())
-						.withPostalCode(a.getPostalCode()).withRegion(a.getRegion()).withState(a.getState().toEntity()))
-				.collect(Collectors.toSet()));
-		user.setRoles(this.getRoles().stream().map(r -> Role.newInstance().withRoleName(r.getRoleName()))
-				.collect(Collectors.toSet()));
-
-		return user;
 	}
 
 	@Override

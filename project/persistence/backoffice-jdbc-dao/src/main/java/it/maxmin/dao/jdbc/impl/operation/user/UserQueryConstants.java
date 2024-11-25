@@ -10,7 +10,7 @@ public enum UserQueryConstants {
 			+ "     a.Id AS AddressId, a.Description, a.City, a.Region, a.PostalCode, "
 			+ "     s.Id AS StateId, s.Name AS StateName, s.Code "
 			+ "FROM User u " 
-			+ "LEFT JOIN Department d ON u.DepartmentId = d.Id "
+			+ "INNER JOIN Department d ON u.DepartmentId = d.Id "
 			+ "LEFT JOIN UserRole ur ON u.Id = ur.UserId "
 			+ "LEFT JOIN Role r ON ur.RoleId = r.Id "
 			+ "LEFT JOIN UserAddress ua ON u.Id = ua.UserId "
@@ -44,7 +44,7 @@ public enum UserQueryConstants {
 	public static final String SELECT_ROLE_BY_ROLE_NAME = ""
 			+ "SELECT Id, RoleName "
 			+ "FROM Role "
-			+ "WHERE roleName = :roleName ";
+			+ "WHERE RoleName = :roleName ";
 
 	public static final String INSERT_USER_ROLE = "" 
 			+ "INSERT INTO UserRole "
@@ -53,4 +53,14 @@ public enum UserQueryConstants {
 	public static final String INSERT_USER_ADDRESS = "" 
 			+ "INSERT INTO UserAddress "
 			+ "SET UserId = :userId, AddressId = :addressId";
+	
+	public static final String SELECT_STATE_BY_STATE_NAME = ""
+			+ "SELECT Id, Name "
+			+ "FROM State "
+			+ "WHERE Name = :name ";
+	
+	public static final String SELECT_DEPARTMENT_BY_DEPARTMENT_NAME = ""
+			+ "SELECT Id, Name "
+			+ "FROM Department "
+			+ "WHERE Name = :name ";
 }

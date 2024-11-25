@@ -23,17 +23,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseTestUser;
+import it.maxmin.dao.jdbc.BaseDaoTest;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.UnitTestContextCfg;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Role;
 import it.maxmin.model.jdbc.dao.entity.User;
 
-class SelectUserHelperTest extends BaseTestUser {
+@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
+class SelectUserHelperTest extends BaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectUserHelperTest.class);
 	private DataSource dataSource;
@@ -59,14 +62,16 @@ class SelectUserHelperTest extends BaseTestUser {
 	@Test
 	void selectAllUsersNotFound() throws SQLException {
 
-		LOGGER.info("running test extractDataUserNotFound");
+		LOGGER.info("running test selectAllUsersNotFound");
 
 		// delete all users
 		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
-		PreparedStatement pstmt = dataSource.getConnection().prepareStatement(SELECT_ALL_USERS);
-		ResultSet rs = pstmt.executeQuery();
+		ResultSet rs = null;
+		try (PreparedStatement pstmt = dataSource.getConnection().prepareStatement(SELECT_ALL_USERS)) {
+			rs = pstmt.executeQuery();
+		}
 
 		// run the test
 		List<User> users = resultSetExtractor.extractData(rs);
@@ -75,12 +80,57 @@ class SelectUserHelperTest extends BaseTestUser {
 	}
 
 	@Test
+	void selectAllUsersWithNoAddressesAndNoRoles() throws SQLException {
+
+		LOGGER.info("running test selectAllUsersWithNoAddresses");
+
+		// users without roles and addresses
+		String[] scripts = { "2_useraddress.down.sql", "2_userrole.down.sql" };
+		jdbcQueryTestUtil.runDBScripts(scripts);
+
+		ResultSet rs = null;
+		try (PreparedStatement pstmt = dataSource.getConnection().prepareStatement(SELECT_ALL_USERS)) {
+			rs = pstmt.executeQuery();
+		}
+
+		// run the test
+		List<User> users = resultSetExtractor.extractData(rs);
+
+		assertEquals(2, users.size());
+
+		User maxmin = users.get(0);
+
+		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), maxmin);
+
+		// roles
+		assertEquals(0, maxmin.getRoles().size());
+
+		// department
+		jdbcUserTestUtil.verifyDepartment(production.getName(), maxmin.getDepartment());
+
+		// addresses
+		assertEquals(0, maxmin.getAddresses().size());
+
+		User artur = users.get(1);
+
+		jdbcUserTestUtil.verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), artur);
+
+		// roles
+		assertEquals(0, artur.getRoles().size());
+
+		// department
+		jdbcUserTestUtil.verifyDepartment(legal.getName(), artur.getDepartment());
+	}
+
+	@Test
 	void selectAllUsers() throws SQLException {
 
-		LOGGER.info("running test extractData");
+		LOGGER.info("running test selectAllUsers");
 
-		PreparedStatement pstmt = dataSource.getConnection().prepareStatement(SELECT_ALL_USERS);
-		ResultSet rs = pstmt.executeQuery();
+		ResultSet rs = null;
+		try (PreparedStatement pstmt = dataSource.getConnection().prepareStatement(SELECT_ALL_USERS)) {
+			rs = pstmt.executeQuery();
+		}
 
 		// run the test
 		List<User> users = resultSetExtractor.extractData(rs);

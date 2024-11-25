@@ -1,4 +1,4 @@
-package it.maxmin.dao.jdbc.impl.operation.user;
+package it.maxmin.dao.jdbc.impl.operation.role;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -9,13 +9,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseTestUser;
+import it.maxmin.dao.jdbc.BaseDaoTest;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.UnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.entity.Role;
 
-class SelectRoleByRoleNameTest extends BaseTestUser {
+@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
+class SelectRoleByRoleNameTest extends BaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectRoleByRoleNameTest.class);
 	private SelectRoleByRoleName selectRoleByRoleName;

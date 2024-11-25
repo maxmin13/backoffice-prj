@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -55,16 +56,18 @@ public class JdbcQueryTestUtil {
 		this.dataSource = dataSource;
 	}
 
-	public PojoUser findUserByUserId(long userId) {
+	public Optional<PojoUser> findUserByUserId(Long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
-		return jdbcTemplate.queryForObject(SELECT_USER_BY_USER_ID, param,
+		List<PojoUser> users = jdbcTemplate.query(SELECT_USER_BY_USER_ID, param,
 				BeanPropertyRowMapper.newInstance(PojoUser.class));
+		return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
 	}
 
-	public PojoUser findUserByAccountName(String accountName) {
+	public Optional<PojoUser> findUserByAccountName(String accountName) {
 		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
-		return jdbcTemplate.queryForObject(SELECT_USER_BY_ACCOUNT_NAME, param,
+		List<PojoUser> users = jdbcTemplate.query(SELECT_USER_BY_ACCOUNT_NAME, param,
 				BeanPropertyRowMapper.newInstance(PojoUser.class));
+		return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
 	}
 	
 	public List<PojoUser> findUsersByPostalCode(String postalCode) {
@@ -109,9 +112,10 @@ public class JdbcQueryTestUtil {
 				BeanPropertyRowMapper.newInstance(PojoRole.class));
 	}
 	
-	public PojoRole findRoleByRoleName(String name) {
+	public Optional<PojoRole> findRoleByRoleName(String name) {
 		SqlParameterSource param = new MapSqlParameterSource("roleName", name);
-		return jdbcTemplate.queryForObject(SELECT_ROLE_BY_NAME, param, BeanPropertyRowMapper.newInstance(PojoRole.class));
+		List<PojoRole> roles = jdbcTemplate.query(SELECT_ROLE_BY_NAME, param, BeanPropertyRowMapper.newInstance(PojoRole.class));
+		return roles.isEmpty() ? Optional.empty() : Optional.of(roles.get(0));
 	}
 
 	public List<PojoAddress> findAddressesByUserId(long userId) {
@@ -126,16 +130,18 @@ public class JdbcQueryTestUtil {
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
 	}
 	
-	public PojoAddress findAddressByPostalCode(String postalCode) {
+	public Optional<PojoAddress> findAddressByPostalCode(String postalCode) {
 		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
-		return jdbcTemplate.queryForObject(SELECT_ADDRESS_BY_POSTAL_CODE, param,
+		List<PojoAddress> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_POSTAL_CODE, param,
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
+		return addresses.isEmpty() ? Optional.empty() : Optional.of(addresses.get(0));
 	}
 
-	public PojoAddress findAddressByAddressId(long addressId) {
+	public Optional<PojoAddress> findAddressByAddressId(long addressId) {
 		SqlParameterSource param = new MapSqlParameterSource("addressId", addressId);
-		return jdbcTemplate.queryForObject(SELECT_ADDRESS_BY_ADDRESS_ID, param,
+		List<PojoAddress> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_ADDRESS_ID, param,
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
+		return addresses.isEmpty() ? Optional.empty() : Optional.of(addresses.get(0));
 	}
 
 	public List<PojoAddress> findAllAddresses() {
@@ -171,32 +177,37 @@ public class JdbcQueryTestUtil {
 		LOGGER.info("User {} associated with address {}", userAddress.getUserId(), userAddress.getAddressId());
 	}
 
-	public PojoState findStateByName(String name) {
+	public Optional<PojoState> findStateByName(String name) {
 		SqlParameterSource param = new MapSqlParameterSource("name", name);
-		return jdbcTemplate.queryForObject(SELECT_STATE_BY_NAME, param, BeanPropertyRowMapper.newInstance(PojoState.class));
+		List<PojoState> states = jdbcTemplate.query(SELECT_STATE_BY_NAME, param, BeanPropertyRowMapper.newInstance(PojoState.class));
+		return states.isEmpty() ? Optional.empty() : Optional.of(states.get(0));
 	}
 	
-	public PojoState findStateByAddressPostalCode(String postalCode) {
+	public Optional<PojoState> findStateByAddressPostalCode(String postalCode) {
 		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
-		return jdbcTemplate.queryForObject(SELECT_STATE_BY_ADDRESS_POSTAL_CODE, param, BeanPropertyRowMapper.newInstance(PojoState.class));
+		List<PojoState> states = jdbcTemplate.query(SELECT_STATE_BY_ADDRESS_POSTAL_CODE, param, BeanPropertyRowMapper.newInstance(PojoState.class));
+		return states.isEmpty() ? Optional.empty() : Optional.of(states.get(0));
 	}
 	
-	public PojoDepartment findDepartmentById(long id) {
+	public Optional<PojoDepartment> findDepartmentById(long id) {
 		SqlParameterSource param = new MapSqlParameterSource("id", id);
-		return jdbcTemplate.queryForObject(SELECT_DEPARTMENT_BY_ID, param,
+		List<PojoDepartment> departments = jdbcTemplate.query(SELECT_DEPARTMENT_BY_ID, param,
 				BeanPropertyRowMapper.newInstance(PojoDepartment.class));
+		return departments.isEmpty() ? Optional.empty() : Optional.of(departments.get(0));
 	}
 
-	public PojoDepartment findDepartmentByName(String name) {
+	public Optional<PojoDepartment> findDepartmentByName(String name) {
 		SqlParameterSource param = new MapSqlParameterSource("name", name);
-		return jdbcTemplate.queryForObject(SELECT_DEPARTMENT_BY_NAME, param,
+		List<PojoDepartment> departments = jdbcTemplate.query(SELECT_DEPARTMENT_BY_NAME, param,
 				BeanPropertyRowMapper.newInstance(PojoDepartment.class));
+		return departments.isEmpty() ? Optional.empty() : Optional.of(departments.get(0));
 	}
 	
-	public PojoDepartment findDepartmentByUserAccountName(String accountName) {
+	public Optional<PojoDepartment> findDepartmentByUserAccountName(String accountName) {
 		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
-		return jdbcTemplate.queryForObject(SELECT_DEPARTMENT_BY_USER_ACCOUNT_NAME, param,
+		List<PojoDepartment> departments = jdbcTemplate.query(SELECT_DEPARTMENT_BY_USER_ACCOUNT_NAME, param,
 				BeanPropertyRowMapper.newInstance(PojoDepartment.class));
+		return departments.isEmpty() ? Optional.empty() : Optional.of(departments.get(0));
 	}
 
 	public void runDBScripts(String[] scripts) {

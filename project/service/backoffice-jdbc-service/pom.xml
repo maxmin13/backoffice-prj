@@ -55,6 +55,24 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>it.maxmin.persistence</groupId>
+			<artifactId>backoffice-jdbc-dao</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>it.maxmin.domain</groupId>
+			<artifactId>backoffice-jdbc-dao-model</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.craftercms.mariaDB4j</groupId>

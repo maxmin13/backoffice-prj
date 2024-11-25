@@ -40,12 +40,12 @@ public class SelectUserHelper {
 				department.ifPresent(requireNonNull(user)::withDepartment);
 
 				Optional<Role> role = resultSetUserBuilder.buildRole(rs);
-				role.ifPresent(requireNonNull(user)::addRole);
+				role.ifPresent(user::addRole);
 
 				Optional<Address> address = resultSetAddressBuilder.buildAddress(rs);
 				Optional<State> state = resultSetAddressBuilder.buildState(rs);
 				address.ifPresent(a -> state.ifPresent(a::withState));
-				address.ifPresent(requireNonNull(user)::addAddress);
+				address.ifPresent(user::addAddress);
 			}
 			return new ArrayList<>(map.values());
 		};

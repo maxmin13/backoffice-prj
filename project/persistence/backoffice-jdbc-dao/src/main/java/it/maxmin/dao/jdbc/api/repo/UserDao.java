@@ -13,7 +13,7 @@ public interface UserDao {
 
 	List<User> selectByFirstName(String firstName);
 
-	void insert(User user);
+	User insert(User user);
 
 	void associateAddress(Long userId, Long addressId);
 

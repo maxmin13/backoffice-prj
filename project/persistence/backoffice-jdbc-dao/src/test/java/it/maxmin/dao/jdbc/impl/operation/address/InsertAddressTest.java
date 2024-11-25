@@ -4,22 +4,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Optional;
+
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseTestUser;
+import it.maxmin.dao.jdbc.BaseDaoTest;
+import it.maxmin.dao.jdbc.DaoTestException;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.UnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.State;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoState;
 
-class InsertAddressTest extends BaseTestUser {
+@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
+class InsertAddressTest extends BaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertAddressTest.class);
 	private InsertAddress insertAddress;
@@ -100,12 +106,14 @@ class InsertAddressTest extends BaseTestUser {
 		assertNotNull(address);
 		assertNotNull(address.getId());
 
-		PojoAddress newAddress = jdbcQueryTestUtil.findAddressByAddressId(address.getId());
+		Optional<PojoAddress> newAddress = jdbcQueryTestUtil.findAddressByAddressId(address.getId());
+		PojoAddress ad = newAddress.orElseThrow(() -> new DaoTestException("Error address not found"));
+		
+		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "Veneto", ad);
 
-		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "Veneto", newAddress);
+		Optional<PojoState> state = jdbcQueryTestUtil.findStateByAddressPostalCode("30033");
+		PojoState st = state.orElseThrow(() -> new DaoTestException("Error state not found"));
 
-		PojoState state = jdbcQueryTestUtil.findStateByAddressPostalCode("30033");
-
-		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), state);
+		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), st);
 	}
 }

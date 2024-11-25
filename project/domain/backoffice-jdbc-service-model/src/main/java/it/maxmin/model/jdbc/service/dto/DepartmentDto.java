@@ -28,10 +28,6 @@ public final class DepartmentDto implements Serializable {
 		return name;
 	}
 	
-	public Department toEntity() {
-		return Department.newInstance().withName(name);
-	}
-
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();

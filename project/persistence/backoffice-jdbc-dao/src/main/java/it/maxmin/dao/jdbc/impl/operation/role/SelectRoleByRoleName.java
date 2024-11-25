@@ -1,4 +1,4 @@
-package it.maxmin.dao.jdbc.impl.operation.user;
+package it.maxmin.dao.jdbc.impl.operation.role;
 
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_ROLE_BY_ROLE_NAME;
 import static org.springframework.util.Assert.notNull;

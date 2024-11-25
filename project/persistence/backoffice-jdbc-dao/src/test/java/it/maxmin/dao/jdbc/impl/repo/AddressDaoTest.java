@@ -120,7 +120,7 @@ class AddressDaoTest {
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
 				.withRegion("County Veneto").withPostalCode("30033");
 
-		when(selectAddressByPostalCode.execute("30033")).thenReturn(address);
+		when(selectAddressByPostalCode.execute("30033")).thenReturn(Optional.of(address));
 
 		// run the test
 		Optional<Address> addressFound = addressDao.selectAddressByPostalCode("30033");
