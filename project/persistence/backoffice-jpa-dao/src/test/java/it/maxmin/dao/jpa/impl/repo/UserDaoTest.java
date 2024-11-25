@@ -38,6 +38,7 @@ import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.maxmin.dao.jpa.DaoTestException;
 import it.maxmin.dao.jpa.QueryTestUtil;
 import it.maxmin.dao.jpa.UnitTestContextCfg;
 import it.maxmin.dao.jpa.api.repo.UserDao;
@@ -180,43 +181,38 @@ class UserDaoTest extends TestAbstract {
 		assertEquals(3, roles.size());
 
 		Optional<Role>  role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
+		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
 		
-		assertEquals(true, role1.isPresent());
-		
-		verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
+		verifyRole(ADMINISTRATOR.getRoleName(), r1);
 
 		Optional<Role>  role2 = maxmin.getRole(USER.getRoleName());
+		Role r2 = role2.orElseThrow(() -> new DaoTestException("Error role not found"));
 		
-		assertEquals(true, role2.isPresent());
-		
-		verifyRole(USER.getRoleName(), role2.get());
+		verifyRole(USER.getRoleName(), r2);
 
 		Optional<Role> role3 = maxmin.getRole(WORKER.getRoleName());
+		Role r3 = role3.orElseThrow(() -> new DaoTestException("Error role not found"));
 		
-		assertEquals(true, role3.isPresent());
-		
-		verifyRole(WORKER.getRoleName(), role3.get());
+		verifyRole(WORKER.getRoleName(),r3);
 
 		// addresses
 		Set<Address> addresses = maxmin.getAddresses();
 
 		assertEquals(2, addresses.size());
 
-		Optional<Address> address = maxmin.getAddress("30010");
-		
-		assertEquals(true, address.isPresent());
+		Optional<Address> address1 = maxmin.getAddress("30010");
+		Address a1 = address1.orElseThrow(() -> new DaoTestException("Error address not found"));
 
-		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address.get());
+		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", a1);
 
-		State state1 = address.get().getState();
+		State state1 = a1.getState();
 
 		verifyState(ITALY.getName(), ITALY.getCode(), state1);
 
 		Optional<Address> address2 = maxmin.getAddress("A65TF12");
-		
-		assertEquals(true, address2.isPresent());
+		Address a2 = address2.orElseThrow(() -> new DaoTestException("Error address not found"));
 
-		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2.get());
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a2);
 
 		State state2 = address2.get().getState();
 
@@ -229,32 +225,27 @@ class UserDaoTest extends TestAbstract {
 
 		assertEquals(2, roles.size());
 
-		assertEquals(2, roles.size());
-
 		Optional<Role> role4 = artur.getRole(ADMINISTRATOR.getRoleName());
+		Role r4 = role4.orElseThrow(() -> new DaoTestException("Error role not found"));
 		
-		assertEquals(true, role4.isPresent());
-		
-		verifyRole(ADMINISTRATOR.getRoleName(), role4.get());
+		verifyRole(ADMINISTRATOR.getRoleName(), r4);
 
 		Optional<Role> role5 = artur.getRole(USER.getRoleName());
+		Role r5 = role5.orElseThrow(() -> new DaoTestException("Error role not found"));
 		
-		assertEquals(true, role5.isPresent());
-		
-		verifyRole(USER.getRoleName(), role5.get());
+		verifyRole(USER.getRoleName(), r5);
 
 		// addresses
 		addresses = artur.getAddresses();
 
 		assertEquals(1, addresses.size());
 
-		address = artur.getAddress("A65TF12");
-		
-		assertEquals(true, address.isPresent());
+		Optional<Address> address3 = artur.getAddress("A65TF12");
+		Address a3 = address3.orElseThrow(() -> new DaoTestException("Error address not found"));
 
-		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address.get());
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a3);
 
-		State state = address.get().getState();
+		State state = a3.getState();
 
 		verifyState(IRELAND.getName(), IRELAND.getCode(), state);
 	}
@@ -300,16 +291,14 @@ class UserDaoTest extends TestAbstract {
 		assertEquals(2, roles.size());
 
 		Optional<Role> role1 = artur.getRole(ADMINISTRATOR.getRoleName());
+		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
 		
-		assertEquals(true, role1.isPresent());
-		
-		verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
+		verifyRole(ADMINISTRATOR.getRoleName(), r1);
 
 		Optional<Role> role2 = artur.getRole(USER.getRoleName());
+		Role r2 = role2.orElseThrow(() -> new DaoTestException("Error role not found"));
 		
-		assertEquals(true, role2.isPresent());
-		
-		verifyRole(USER.getRoleName(), role2.get());
+		verifyRole(USER.getRoleName(), r2);
 
 		// department
 		Department department = artur.getDepartment();
@@ -321,10 +310,9 @@ class UserDaoTest extends TestAbstract {
 		assertEquals(1, addresses.size());
 
 		Optional<Address> address = artur.getAddress("A65TF12");
+		Address a = address.orElseThrow(() -> new DaoTestException("Error address not found"));
 
-		assertEquals(true, address.isPresent());
-
-		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address.get());
+		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a);
 
 		State state = address.get().getState();
 

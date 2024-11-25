@@ -23,6 +23,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
+import it.maxmin.dao.jdbc.DaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Department;
@@ -94,10 +95,9 @@ class SelectUserByFirstNameTest {
 		assertEquals(1, userFound.getRoles().size());
 
 		Optional<Role> role1 = userFound.getRole(ADMINISTRATOR.getRoleName());
+		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
 
-		assertEquals(true, role1.isPresent());
-
-		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
+		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), userFound.getDepartment());
@@ -106,10 +106,9 @@ class SelectUserByFirstNameTest {
 		assertEquals(1, userFound.getAddresses().size());
 
 		Optional<Address> address1 = userFound.getAddress("30010");
+		Address a1 = address1.orElseThrow(() -> new DaoTestException("Error address not found"));
 
-		assertEquals(true, address1.isPresent());
-
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1.get());
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.get().getState());
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", a1);
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), a1.getState());
 	}
 }

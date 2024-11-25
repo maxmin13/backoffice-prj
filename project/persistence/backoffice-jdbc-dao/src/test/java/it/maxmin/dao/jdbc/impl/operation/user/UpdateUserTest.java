@@ -32,7 +32,7 @@ import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 @SpringJUnitConfig(classes = { DatabaseUnitTestContextCfg.class })
 class UpdateUserTest extends BaseDaoTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(InsertUserTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UpdateUserTest.class);
 	private UpdateUser updateUser;
 
 	@Autowired

@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.maxmin.dao.jdbc.DaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddress;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddresses;
@@ -124,13 +125,12 @@ class AddressDaoTest {
 
 		// run the test
 		Optional<Address> addressFound = addressDao.selectAddressByPostalCode("30033");
-
-		assertEquals(true, addressFound.isPresent());
+		Address a = addressFound.orElseThrow(() -> new DaoTestException("Error address not found"));
 
 		verify(selectAddressByPostalCode, times(1)).execute("30033");
 
-		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "County Veneto", address);
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address.getState());
+		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "County Veneto", a);
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), a.getState());
 	}
 
 	@Test
@@ -171,12 +171,12 @@ class AddressDaoTest {
 		when(insertAddress.execute(address)).thenReturn(address);
 
 		// run the test
-		address = addressDao.insert(address);
+		Address newAddress = addressDao.insert(address);
 
-		verify(insertAddress, times(1)).execute(address);
+		verify(insertAddress, times(1)).execute(newAddress);
 
-		jdbcUserTestUtil.verifyAddressWithoutId("30033", "Via Nuova", "Venice", "County Veneto", address);
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address.getState());
+		jdbcUserTestUtil.verifyAddressWithoutId("30033", "Via Nuova", "Venice", "County Veneto", newAddress);
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), newAddress.getState());
 	}
 
 	@Test

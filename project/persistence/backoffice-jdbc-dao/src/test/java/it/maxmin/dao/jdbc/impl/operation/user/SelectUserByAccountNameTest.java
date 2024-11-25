@@ -33,7 +33,7 @@ import it.maxmin.model.jdbc.dao.entity.User;
 
 class SelectUserByAccountNameTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SelectAllUsersTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SelectUserByAccountNameTest.class);
 
 	private JdbcUserTestUtil jdbcUserTestUtil;
 
@@ -92,10 +92,9 @@ class SelectUserByAccountNameTest {
 		assertEquals(1, user.getRoles().size());
 
 		Optional<Role> role1 = user.getRole(ADMINISTRATOR.getRoleName());
+		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
 
-		assertEquals(true, role1.isPresent());
-
-		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
+		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), user.getDepartment());
@@ -104,10 +103,9 @@ class SelectUserByAccountNameTest {
 		assertEquals(1, user.getAddresses().size());
 
 		Optional<Address> address1 = user.getAddress("30010");
+		Address a1 = address1.orElseThrow(() -> new DaoTestException("Error address not found"));
 
-		assertEquals(true, address1.isPresent());
-
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1.get());
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.get().getState());
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", a1);
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), a1.getState());
 	}
 }

@@ -240,22 +240,19 @@ class SelectAddressHelperTest extends BaseDaoTest {
 		assertEquals(3, maxmin.getRoles().size());
 
 		Optional<Role> role1 = maxmin.getRole(administrator.getRoleName());
+		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
 
-		assertEquals(true, role1.isPresent());
-
-		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), role1.get());
+		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), r1);
 
 		Optional<Role> role2 = maxmin.getRole(user.getRoleName());
+		Role r2 = role2.orElseThrow(() -> new DaoTestException("Error role not found"));
 
-		assertEquals(true, role2.isPresent());
-
-		jdbcUserTestUtil.verifyRole(user.getRoleName(), role2.get());
+		jdbcUserTestUtil.verifyRole(user.getRoleName(), r2);
 
 		Optional<Role> role3 = maxmin.getRole(worker.getRoleName());
+		Role r3 = role3.orElseThrow(() -> new DaoTestException("Error role not found"));
 
-		assertEquals(true, role3.isPresent());
-
-		jdbcUserTestUtil.verifyRole(worker.getRoleName(), role3.get());
+		jdbcUserTestUtil.verifyRole(worker.getRoleName(), r3);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(production.getName(), maxmin.getDepartment());
