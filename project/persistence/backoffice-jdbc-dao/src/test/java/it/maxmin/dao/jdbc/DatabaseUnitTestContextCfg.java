@@ -1,4 +1,4 @@
-package it.maxmin.service.jdbc;
+package it.maxmin.dao.jdbc;
 
 import java.sql.Driver;
 
@@ -14,18 +14,14 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
-import it.maxmin.dao.jdbc.DaoTestException;
-import it.maxmin.dao.jdbc.JdbcDataSourceTestUtil;
-import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
-import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.service.jdbc.config.JdbcServiceSpringContextCfg;
+import it.maxmin.dao.jdbc.config.JdbcDataSpringContextCfg;
 
 /**
  * Starts an embedded MariaDB database and overrides the datasource
  * */
 @Configuration
-@Import(JdbcServiceSpringContextCfg.class)
-public class UnitTestContextCfg {
+@Import(JdbcDataSpringContextCfg.class)
+public class DatabaseUnitTestContextCfg {
 
 	@Bean
 	public MariaDB4jSpringService mariaDB4jSpringService() {

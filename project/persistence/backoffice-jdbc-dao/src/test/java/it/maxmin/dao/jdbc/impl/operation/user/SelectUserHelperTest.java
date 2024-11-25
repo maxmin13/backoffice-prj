@@ -28,14 +28,14 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import it.maxmin.dao.jdbc.BaseDaoTest;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.UnitTestContextCfg;
+import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Role;
 import it.maxmin.model.jdbc.dao.entity.User;
 
-@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
+@SpringJUnitConfig(classes = { DatabaseUnitTestContextCfg.class })
 class SelectUserHelperTest extends BaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectUserHelperTest.class);

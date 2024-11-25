@@ -19,7 +19,7 @@ import it.maxmin.dao.jdbc.BaseDaoTest;
 import it.maxmin.dao.jdbc.DaoTestException;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.UnitTestContextCfg;
+import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Department;
 import it.maxmin.model.jdbc.dao.entity.Role;
@@ -29,7 +29,7 @@ import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoRole;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
-@SpringJUnitConfig(classes = { UnitTestContextCfg.class })
+@SpringJUnitConfig(classes = { DatabaseUnitTestContextCfg.class })
 class UpdateUserTest extends BaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertUserTest.class);
