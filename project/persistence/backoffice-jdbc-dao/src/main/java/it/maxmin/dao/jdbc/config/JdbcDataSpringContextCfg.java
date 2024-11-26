@@ -8,10 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableTransactionManagement
 @Import({ JndiDataSourceCfg.class, TransactionCfg.class })
 @ComponentScan(basePackages = { "it.maxmin.dao.jdbc.impl.repo" })
 public class JdbcDataSpringContextCfg {

@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.impl.repo.constant;
+package it.maxmin.dao.jpa.constant;
 
 public enum State {
 	ITALY("Italy","IT"), IRELAND("Ireland","IE");

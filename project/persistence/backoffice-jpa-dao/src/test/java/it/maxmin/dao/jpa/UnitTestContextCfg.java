@@ -55,7 +55,7 @@ public class UnitTestContextCfg {
 	}
 
 	@Bean
-	public QueryTestUtil queryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+	public QueryTestUtil jdbcQueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
 		return new QueryTestUtil(jdbcTemplate, dataSource);
 	}
 
@@ -67,6 +67,11 @@ public class UnitTestContextCfg {
 	@Bean
 	public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
 		return new NamedParameterJdbcTemplate(dataSource);
+	}
+	
+	@Bean
+	public UserTestUtil jdbcUserTestUtil() {
+		return new UserTestUtil();
 	}
 
 }

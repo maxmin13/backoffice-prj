@@ -11,20 +11,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import jakarta.persistence.EntityManagerFactory;
 
 /**
- * Verifies that by loading JpaContextCfg.class, in the Spring context there is
- * a EntityManagerFactory and a TransactionManager objects.
+ * Verifies that by loading {@link JpaDataContextSpringCfg}, in the Spring context there is
+ * a EntityManagerFactory.
  */
 class JdbcDataSpringContextCfgTest {
-
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcDataSpringContextCfgTest.class);
 
 	@Test
 	void testEntityManagerFactory() throws IllegalStateException {
