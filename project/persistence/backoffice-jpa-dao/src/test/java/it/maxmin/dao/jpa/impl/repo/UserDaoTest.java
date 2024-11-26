@@ -355,29 +355,33 @@ class UserDaoTest extends TestAbstract {
 
 		LOGGER.info("running test create");
 
-		PojoDepartment department = queryTestUtil.findDepartmentByName(ACCOUNTS.getName());
+		Optional<PojoDepartment> accounts = queryTestUtil.findDepartmentByName(ACCOUNTS.getName());
+		PojoDepartment acc = accounts.orElseThrow(() -> new DaoTestException("Error department not found"));
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi")
-				.withDepartment(Department.newInstance().withId(department.getId()));
+				.withDepartment(Department.newInstance().withId(acc.getId()));
 
-		PojoState state1 = queryTestUtil.findStateByName(ITALY.getName());
+		Optional<PojoState> italy = queryTestUtil.findStateByName(ITALY.getName());
+		PojoState it = italy.orElseThrow(() -> new DaoTestException("Error state not found"));
 
 		Address address1 = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
-				.withState(State.newInstance().withId(state1.getId())).withRegion("Emilia Romagna")
+				.withState(State.newInstance().withId(it.getId())).withRegion("Emilia Romagna")
 				.withPostalCode("33456");
 		carl.addAddress(address1);
 
-		PojoState state2 = queryTestUtil.findStateByName(IRELAND.getName());
-
+		Optional<PojoState> ireland = queryTestUtil.findStateByName(IRELAND.getName());
+		PojoState ir = ireland.orElseThrow(() -> new DaoTestException("Error state not found"));
+		
 		Address address2 = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
-				.withState(State.newInstance().withId(state2.getId())).withRegion("County Dublin")
+				.withState(State.newInstance().withId(ir.getId())).withRegion("County Dublin")
 				.withPostalCode("A65TF14");
 		carl.addAddress(address2);
 
-		PojoRole role = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
+		Optional<PojoRole> role = queryTestUtil.findRoleByRoleName(ADMINISTRATOR.getRoleName());
+		PojoRole r = role.orElseThrow(() -> new DaoTestException("Error role not found"));
 
-		carl.addRole(Role.newInstance().withId(role.getId()));
+		carl.addRole(Role.newInstance().withId(r.getId()));
 
 		// run the test
 		User user = userDao.create(carl);
@@ -385,20 +389,22 @@ class UserDaoTest extends TestAbstract {
 		assertNotNull(user);
 		assertNotNull(user.getId());
 
-		PojoUser newUser = queryTestUtil.findUserByAccountName("carl23");
+		Optional<PojoUser> carlo = queryTestUtil.findUserByAccountName("carl23");
+		PojoUser car = carlo.orElseThrow(() -> new DaoTestException("Error user not found"));
 
-		verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), newUser);
+		verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), car);
 
-		PojoDepartment userDepartment = queryTestUtil.findDepartmentByUserAccountName("carl23");
+		Optional<PojoDepartment> department = queryTestUtil.findDepartmentByUserAccountName("carl23");
+		PojoDepartment dep = department.orElseThrow(() -> new DaoTestException("Error department not found"));
 
-		verifyDepartment(ACCOUNTS.getName(), userDepartment);
+		verifyDepartment(ACCOUNTS.getName(), dep);
 
 		List<PojoRole> roles = queryTestUtil.findRolesByUserAccountName("carl23");
 
 		assertEquals(1, roles.size());
 		verifyRole(ADMINISTRATOR.getRoleName(), roles.get(0));
 
-		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(car.getId());
 
 		assertEquals(2, addresses.size());
 
@@ -406,17 +412,19 @@ class UserDaoTest extends TestAbstract {
 
 		verifyAddress("A65TF14", "Via Vecchia", "Dublin", "County Dublin", newAddress1);
 
-		PojoState newState1 = queryTestUtil.findStateByAddressPostalCode("33456");
+		Optional<PojoState> state1 = queryTestUtil.findStateByAddressPostalCode("33456");
+		PojoState st1 = state1.orElseThrow(() -> new DaoTestException("Error state not found"));
 
-		verifyState(ITALY.getName(), ITALY.getCode(), newState1);
+		verifyState(ITALY.getName(), ITALY.getCode(), st1);
 
 		PojoAddress newAddress2 = addresses.get(1);
 
 		verifyAddress("33456", "Via Nuova", "Venice", "Emilia Romagna", newAddress2);
 
-		PojoState newState2 = queryTestUtil.findStateByAddressPostalCode("A65TF14");
+		Optional<PojoState> state2 = queryTestUtil.findStateByAddressPostalCode("A65TF14");
+		PojoState st2 = state2.orElseThrow(() -> new DaoTestException("Error state not found"));
 
-		verifyState(IRELAND.getName(), IRELAND.getCode(), newState2);
+		verifyState(IRELAND.getName(), IRELAND.getCode(), st2);
 	}
 
 	@Test
@@ -429,30 +437,33 @@ class UserDaoTest extends TestAbstract {
 
 		LOGGER.info("running test createWithNoAddressAndWithNoRole");
 
-		PojoDepartment department = queryTestUtil.findDepartmentByName(LEGAL.getName());
+		Optional<PojoDepartment> legal = queryTestUtil.findDepartmentByName(LEGAL.getName());
+		PojoDepartment leg = legal.orElseThrow(() -> new DaoTestException("Error department not found"));
 
 		User franco = User.newInstance().withAccountName("franc123").withBirthDate(LocalDate.of(1981, 11, 12))
 				.withFirstName("Franco").withLastName("Red")
-				.withDepartment(Department.newInstance().withId(department.getId()));
+				.withDepartment(Department.newInstance().withId(leg.getId()));
 
 		// run the test
 		User user = userDao.create(franco);
 
 		assertNotNull(user.getId());
 
-		PojoUser newUser = queryTestUtil.findUserByAccountName("franc123");
+		Optional<PojoUser> newUser = queryTestUtil.findUserByAccountName("franc123");
+		PojoUser ne = newUser.orElseThrow(() -> new DaoTestException("Error user not found"));
 
-		verifyUser("franc123", "Franco", "Red", LocalDate.of(1981, 11, 12), newUser);
+		verifyUser("franc123", "Franco", "Red", LocalDate.of(1981, 11, 12), ne);
 
-		PojoDepartment newDepartment = queryTestUtil.findDepartmentByUserAccountName("franc123");
+		Optional<PojoDepartment> department = queryTestUtil.findDepartmentByUserAccountName("franc123");
+		PojoDepartment dep = department.orElseThrow(() -> new DaoTestException("Error department not found"));
 
-		verifyDepartment(LEGAL.getName(), newDepartment);
+		verifyDepartment(LEGAL.getName(), dep);
 
-		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(ne.getId());
 
 		assertEquals(0, addresses.size());
 
-		List<PojoRole> roles = queryTestUtil.findRolesByUserId(newUser.getId());
+		List<PojoRole> roles = queryTestUtil.findRolesByUserId(ne.getId());
 
 		assertEquals(0, roles.size());
 	}
@@ -469,17 +480,19 @@ class UserDaoTest extends TestAbstract {
 
 		LOGGER.info("running test createWithExistingAddressThrowsException");
 
-		PojoDepartment department = queryTestUtil.findDepartmentByName(ACCOUNTS.getName());
+		Optional<PojoDepartment> accounts = queryTestUtil.findDepartmentByName(ACCOUNTS.getName());
+		PojoDepartment acc = accounts.orElseThrow(() -> new DaoTestException("Error department not found"));
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi")
-				.withDepartment(Department.newInstance().withId(department.getId()));
+				.withDepartment(Department.newInstance().withId(acc.getId()));
 
-		PojoAddress address = queryTestUtil.findAddressByPostalCode("A65TF12");
+		Optional<PojoAddress> address = queryTestUtil.findAddressByPostalCode("A65TF12");
+		PojoAddress ad = address.orElseThrow(() -> new DaoTestException("Error address not found"));
 
 		assertNotNull(address);
 
-		Address existingAddress = Address.newInstance().withId(address.getId());
+		Address existingAddress = Address.newInstance().withId(ad.getId());
 
 		carl.addAddress(existingAddress);
 
@@ -534,11 +547,12 @@ class UserDaoTest extends TestAbstract {
 
 		LOGGER.info("running test createWithNotExistingRoleThrowsException");
 
-		PojoDepartment department = queryTestUtil.findDepartmentByName(ACCOUNTS.getName());
+		Optional<PojoDepartment> department = queryTestUtil.findDepartmentByName(ACCOUNTS.getName());
+		PojoDepartment dep = department.orElseThrow(() -> new DaoTestException("Error department not found"));
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi")
-				.withDepartment(Department.newInstance().withId(department.getId()));
+				.withDepartment(Department.newInstance().withId(dep.getId()));
 
 		carl.addRole(Role.newInstance().withId(23l).withRoleName("Mechanic"));
 
@@ -579,66 +593,86 @@ class UserDaoTest extends TestAbstract {
 		LOGGER.info("running test update");
 
 		// Get an existing user
-		PojoUser maxmin = queryTestUtil.findUserByAccountName("maxmin13");
-		PojoDepartment department = queryTestUtil.findDepartmentById(maxmin.getDepartmentId());
-		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(maxmin.getId());
-		List<PojoRole> roles = queryTestUtil.findRolesByUserId(maxmin.getId());
+		Optional<PojoUser> maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+		PojoUser max = maxmin.orElseThrow(() -> new DaoTestException("Error user not found"));
+		
+		Optional<PojoDepartment> department = queryTestUtil.findDepartmentById(max.getDepartmentId());
+		PojoDepartment dep = department.orElseThrow(() -> new DaoTestException("Error department not found"));
+		
+		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(max.getId());
+		List<PojoRole> roles = queryTestUtil.findRolesByUserId(max.getId());
 
 		// Assert the user's initial status
-		assertEquals(0, maxmin.getVersion());
-		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), maxmin);
-		verifyDepartment(PRODUCTION.getName(), department);
+		assertEquals(0, max.getVersion());
+		verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), max);
+		verifyDepartment(PRODUCTION.getName(), dep);
 		assertEquals(3, roles.size());
 		verifyRole(ADMINISTRATOR.getRoleName(), roles.get(0));
 		verifyRole(USER.getRoleName(), roles.get(1));
 		verifyRole(WORKER.getRoleName(), roles.get(2));
 		assertEquals(2, addresses.size());
 		verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", addresses.get(0));
-		PojoState state = queryTestUtil.findStateByAddressPostalCode("30010");
-		verifyState(ITALY.getName(), ITALY.getCode(), state);
+		Optional<PojoState> state1 = queryTestUtil.findStateByAddressPostalCode("30010");
+		PojoState st1 = state1.orElseThrow(() -> new DaoTestException("Error state not found"));
+		verifyState(ITALY.getName(), ITALY.getCode(), st1);
 		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", addresses.get(1));
-		state = queryTestUtil.findStateByAddressPostalCode("A65TF12");
-		verifyState(IRELAND.getName(), IRELAND.getCode(), state);
+		Optional<PojoState> state2 = queryTestUtil.findStateByAddressPostalCode("A65TF12");
+		PojoState st2 = state2.orElseThrow(() -> new DaoTestException("Error state not found"));
+		verifyState(IRELAND.getName(), IRELAND.getCode(), st2);
 
 		// Update the user
-		PojoDepartment newDepartment = queryTestUtil.findDepartmentByName(LEGAL.getName());
-		User newMaxmin = User.newInstance().withId(maxmin.getId()).withAccountName("maxmin1313").withFirstName("Maxi")
+		Optional<PojoDepartment> legal = queryTestUtil.findDepartmentByName(LEGAL.getName());
+		PojoDepartment leg = legal.orElseThrow(() -> new DaoTestException("Error department not found"));
+		User newMaxmin = User.newInstance().withId(max.getId()).withAccountName("maxmin1313").withFirstName("Maxi")
 				.withLastName("Miliano").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withDepartment(Department.newInstance().withId(newDepartment.getId()));
+				.withDepartment(Department.newInstance().withId(leg.getId()));
 
-		PojoState newState = queryTestUtil.findStateByName(IRELAND.getName());
-		PojoAddress address = queryTestUtil.findAddressByPostalCode("30010");
-		Address newAddress = Address.newInstance().withId(address.getId()).withCity("Cork")
+		Optional<PojoState> ireland = queryTestUtil.findStateByName(IRELAND.getName());
+		PojoState ir = ireland.orElseThrow(() -> new DaoTestException("Error state not found"));
+		Optional<PojoAddress> address = queryTestUtil.findAddressByPostalCode("30010");
+		PojoAddress ad = address.orElseThrow(() -> new DaoTestException("Error address not found"));
+		
+		Address newAddress = Address.newInstance().withId(ad.getId()).withCity("Cork")
 				.withDescription("Romolo street").withPostalCode("A89TF33").withRegion("County Cork")
-				.withState(State.newInstance().withId(newState.getId()));
+				.withState(State.newInstance().withId(ir.getId()));
 		newMaxmin.addAddress(newAddress);
 
-		PojoRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
-		newMaxmin.addRole(Role.newInstance().withId(newRole.getId()));
+		Optional<PojoRole> administrator = queryTestUtil.findRoleByRoleName(ADMINISTRATOR.getRoleName());
+		PojoRole adm = administrator.orElseThrow(() -> new DaoTestException("Error role not found"));
+		newMaxmin.addRole(Role.newInstance().withId(adm.getId()));
 
 		// run the test
 		userDao.update(newMaxmin);
 
-		assertThrows(Throwable.class, () -> queryTestUtil.findUserByAccountName("maxmin13"));
+		Optional<PojoUser> user = queryTestUtil.findUserByAccountName("maxmin13");
+			
+		assertEquals(false, user.isPresent());
 
 		// Verify the data
-		PojoUser newUser = queryTestUtil.findUserByAccountName("maxmin1313");
+		Optional<PojoUser> newUser = queryTestUtil.findUserByAccountName("maxmin1313");
+		PojoUser ne = newUser.orElseThrow(() -> new DaoTestException("Error user not found"));
 
-		assertEquals(1, newUser.getVersion());
+		assertEquals(1, ne.getVersion());
 
-		verifyUser("maxmin1313", "Maxi", "Miliano", LocalDate.of(1982, 9, 1), newUser);
+		verifyUser("maxmin1313", "Maxi", "Miliano", LocalDate.of(1982, 9, 1), ne);
 
-		verifyDepartment(LEGAL.getName(), queryTestUtil.findDepartmentByUserAccountName("maxmin1313"));
+		Optional<PojoDepartment> deparment = queryTestUtil.findDepartmentByUserAccountName("maxmin1313");
+		PojoDepartment de = deparment.orElseThrow(() -> new DaoTestException("Error department not found"));
+		
+		verifyDepartment(LEGAL.getName(), de);
 
-		List<PojoAddress> updatedAddresses = queryTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> updatedAddresses = queryTestUtil.findAddressesByUserId(ne.getId());
 
 		assertEquals(1, updatedAddresses.size());
 
 		verifyAddress("A89TF33", "Romolo street", "Cork", "County Cork", updatedAddresses.get(0));
 
-		verifyState(IRELAND.getName(), IRELAND.getCode(), queryTestUtil.findStateByAddressPostalCode("A89TF33"));
+		Optional<PojoState> state = queryTestUtil.findStateByAddressPostalCode("A89TF33");
+		PojoState st = state.orElseThrow(() -> new DaoTestException("Error state not found"));
+		
+		verifyState(IRELAND.getName(), IRELAND.getCode(), st);
 
-		List<PojoRole> updatedRoles = queryTestUtil.findRolesByUserId(newUser.getId());
+		List<PojoRole> updatedRoles = queryTestUtil.findRolesByUserId(ne.getId());
 
 		assertEquals(1, updatedRoles.size());
 
@@ -658,34 +692,37 @@ class UserDaoTest extends TestAbstract {
 		LOGGER.info("running test updateRemoveRoleAndAddress");
 
 		// Get an existing user
-		PojoUser maxmin = queryTestUtil.findUserByAccountName("maxmin13");
-		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(maxmin.getId());
-		List<PojoRole> roles = queryTestUtil.findRolesByUserId(maxmin.getId());
+		Optional<PojoUser> maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+		PojoUser max = maxmin.orElseThrow(() -> new DaoTestException("Error user not found"));
+		List<PojoAddress> addresses = queryTestUtil.findAddressesByUserId(max.getId());
+		List<PojoRole> roles = queryTestUtil.findRolesByUserId(max.getId());
 
 		// Assert the user's initial status
-		assertEquals(0, maxmin.getVersion());
+		assertEquals(0, max.getVersion());
 		assertEquals(3, roles.size());
 		assertEquals(2, addresses.size());
 
 		// Update the user without roles and addresses
-		PojoDepartment newDepartment = queryTestUtil.findDepartmentByName(LEGAL.getName());
-		User newMaxmin = User.newInstance().withId(maxmin.getId()).withAccountName("maxmin13").withFirstName("Maxi")
+		Optional<PojoDepartment> legal = queryTestUtil.findDepartmentByName(LEGAL.getName());
+		PojoDepartment leg = legal.orElseThrow(() -> new DaoTestException("Error department not found"));
+		User newMaxmin = User.newInstance().withId(max.getId()).withAccountName("maxmin13").withFirstName("Maxi")
 				.withLastName("Miliano").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withDepartment(Department.newInstance().withId(newDepartment.getId()));
+				.withDepartment(Department.newInstance().withId(leg.getId()));
 
 		// run the test
 		userDao.update(newMaxmin);
 
 		// Verify the data
-		PojoUser newUser = queryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> newUser = queryTestUtil.findUserByAccountName("maxmin13");
+		PojoUser ne = newUser.orElseThrow(() -> new DaoTestException("Error user not found"));
 
-		assertEquals(1, newUser.getVersion());
+		assertEquals(1, ne.getVersion());
 
-		List<PojoAddress> updatedAddresses = queryTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> updatedAddresses = queryTestUtil.findAddressesByUserId(ne.getId());
 
 		assertEquals(0, updatedAddresses.size());
 
-		List<PojoRole> updatedRoles = queryTestUtil.findRolesByUserId(newUser.getId());
+		List<PojoRole> updatedRoles = queryTestUtil.findRolesByUserId(ne.getId());
 
 		assertEquals(0, updatedRoles.size());
 	}
@@ -703,21 +740,25 @@ class UserDaoTest extends TestAbstract {
 		LOGGER.info("running test updateWithNoDepartmentThrowsException");
 
 		// Get an existing user
-		PojoUser maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+		PojoUser max = maxmin.orElseThrow(() -> new DaoTestException("Error user not found"));
 
 		// Update the user without setting a department
-		User newMaxmin = User.newInstance().withId(maxmin.getId()).withAccountName("maxmin13").withFirstName("Maxi")
+		User newMaxmin = User.newInstance().withId(max.getId()).withAccountName("maxmin13").withFirstName("Maxi")
 				.withLastName("Miliano").withBirthDate(LocalDate.of(1982, 9, 1));
 
-		PojoState newState = queryTestUtil.findStateByName(IRELAND.getName());
-		PojoAddress address = queryTestUtil.findAddressByPostalCode("30010");
-		Address newAddress = Address.newInstance().withId(address.getId()).withCity("Cork")
+		Optional<PojoState> ireland = queryTestUtil.findStateByName(IRELAND.getName());
+		PojoState ir = ireland.orElseThrow(() -> new DaoTestException("Error state not found"));
+		Optional<PojoAddress> address = queryTestUtil.findAddressByPostalCode("30010");
+		PojoAddress ad = address.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address newAddress = Address.newInstance().withId(ad.getId()).withCity("Cork")
 				.withDescription("Romolo street").withPostalCode("A89TF33").withRegion("County Cork")
-				.withState(State.newInstance().withId(newState.getId()));
+				.withState(State.newInstance().withId(ir.getId()));
 		newMaxmin.addAddress(newAddress);
 
-		PojoRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
-		newMaxmin.addRole(Role.newInstance().withId(newRole.getId()));
+		Optional<PojoRole> newRole = queryTestUtil.findRoleByRoleName(ADMINISTRATOR.getRoleName());
+		PojoRole r1 = newRole.orElseThrow(() -> new DaoTestException("Error role not found"));
+		newMaxmin.addRole(Role.newInstance().withId(r1.getId()));
 
 		// run the test
 		assertThrows(DataIntegrityViolationException.class, () -> userDao.update(newMaxmin));
@@ -736,24 +777,28 @@ class UserDaoTest extends TestAbstract {
 		LOGGER.info("running test updateWithNotExistingDepartmentThrowsException");
 
 		// Get an existing user
-		PojoUser maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+		PojoUser max = maxmin.orElseThrow(() -> new DaoTestException("Error user not found"));
 
 		// Update the user a department that doesn't exist
-		User newMaxmin = User.newInstance().withId(maxmin.getId()).withAccountName("maxmin13").withFirstName("Maxi")
+		User newMaxmin = User.newInstance().withId(max.getId()).withAccountName("maxmin13").withFirstName("Maxi")
 				.withLastName("Miliano").withBirthDate(LocalDate.of(1982, 9, 1));
 
 		Department newDepartment = Department.newInstance().withId(0l).withName("Agricolture");
 		newMaxmin.setDepartment(newDepartment);
 
-		PojoState newState = queryTestUtil.findStateByName(IRELAND.getName());
-		PojoAddress address = queryTestUtil.findAddressByPostalCode("30010");
-		Address newAddress = Address.newInstance().withId(address.getId()).withCity("Cork")
+		Optional<PojoState> ireland = queryTestUtil.findStateByName(IRELAND.getName());
+		PojoState ir = ireland.orElseThrow(() -> new DaoTestException("Error state not found"));
+		Optional<PojoAddress> address = queryTestUtil.findAddressByPostalCode("30010");
+		PojoAddress ad = address.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address newAddress = Address.newInstance().withId(ad.getId()).withCity("Cork")
 				.withDescription("Romolo street").withPostalCode("A89TF33").withRegion("County Cork")
-				.withState(State.newInstance().withId(newState.getId()));
+				.withState(State.newInstance().withId(ir.getId()));
 		newMaxmin.addAddress(newAddress);
 
-		PojoRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
-		newMaxmin.addRole(Role.newInstance().withId(newRole.getId()));
+		Optional<PojoRole> administrator = queryTestUtil.findRoleByRoleName(ADMINISTRATOR.getRoleName());
+		PojoRole adm = administrator.orElseThrow(() -> new DaoTestException("Error role not found"));
+		newMaxmin.addRole(Role.newInstance().withId(adm.getId()));
 
 		// run the test
 		assertThrows(EntityNotFoundException.class, () -> userDao.update(newMaxmin));
@@ -772,19 +817,23 @@ class UserDaoTest extends TestAbstract {
 		LOGGER.info("running test updateWithNotExistingRoleThrowsException");
 
 		// Get an existing user
-		PojoUser maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+		PojoUser max = maxmin.orElseThrow(() -> new DaoTestException("Error user not found"));
 
 		// Update the user with a role that doesn't exist
-		PojoDepartment newDepartment = queryTestUtil.findDepartmentByName(LEGAL.getName());
-		User newMaxmin = User.newInstance().withId(maxmin.getId()).withAccountName("maxmin13").withFirstName("Maxi")
+		Optional<PojoDepartment> legal = queryTestUtil.findDepartmentByName(LEGAL.getName());
+		PojoDepartment leg = legal.orElseThrow(() -> new DaoTestException("Error department not found"));
+		User newMaxmin = User.newInstance().withId(max.getId()).withAccountName("maxmin13").withFirstName("Maxi")
 				.withLastName("Miliano").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withDepartment(Department.newInstance().withId(newDepartment.getId()));
+				.withDepartment(Department.newInstance().withId(leg.getId()));
 
-		PojoState newState = queryTestUtil.findStateByName(IRELAND.getName());
-		PojoAddress address = queryTestUtil.findAddressByPostalCode("30010");
-		Address newAddress = Address.newInstance().withId(address.getId()).withCity("Cork")
+		Optional<PojoState> ireland = queryTestUtil.findStateByName(IRELAND.getName());
+		PojoState ir = ireland.orElseThrow(() -> new DaoTestException("Error state not found"));
+		Optional<PojoAddress> address = queryTestUtil.findAddressByPostalCode("30010");
+		PojoAddress ad = address.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address newAddress = Address.newInstance().withId(ad.getId()).withCity("Cork")
 				.withDescription("Romolo street").withPostalCode("A89TF33").withRegion("County Cork")
-				.withState(State.newInstance().withId(newState.getId()));
+				.withState(State.newInstance().withId(ir.getId()));
 		newMaxmin.addAddress(newAddress);
 
 		Role role = Role.newInstance().withId(0l).withRoleName("Inspector");
@@ -822,22 +871,26 @@ class UserDaoTest extends TestAbstract {
 		LOGGER.info("running test updateWithNotExistingAddressThrowsException");
 
 		// Get an existing user
-		PojoUser maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> maxmin = queryTestUtil.findUserByAccountName("maxmin13");
+		PojoUser max = maxmin.orElseThrow(() -> new DaoTestException("Error user not found"));
 
 		// Update the user with an address that doesn't exist.
-		PojoDepartment newDepartment = queryTestUtil.findDepartmentByName(LEGAL.getName());
-		User newMaxmin = User.newInstance().withId(maxmin.getId()).withAccountName("maxmin13").withFirstName("Maxi")
+		Optional<PojoDepartment> legal = queryTestUtil.findDepartmentByName(LEGAL.getName());
+		PojoDepartment leg = legal.orElseThrow(() -> new DaoTestException("Error department not found"));
+		User newMaxmin = User.newInstance().withId(max.getId()).withAccountName("maxmin13").withFirstName("Maxi")
 				.withLastName("Miliano").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withDepartment(Department.newInstance().withId(newDepartment.getId()));
+				.withDepartment(Department.newInstance().withId(leg.getId()));
 
-		PojoState newState = queryTestUtil.findStateByName(IRELAND.getName());
+		Optional<PojoState> ireland = queryTestUtil.findStateByName(IRELAND.getName());
+		PojoState ir = ireland.orElseThrow(() -> new DaoTestException("Error state not found"));
 		Address newAddress = Address.newInstance().withId(0l).withCity("Cork").withDescription("Romolo street")
 				.withPostalCode("A11TF22").withRegion("County Cork")
-				.withState(State.newInstance().withId(newState.getId()));
+				.withState(State.newInstance().withId(ir.getId()));
 		newMaxmin.addAddress(newAddress);
 
-		PojoRole newRole = queryTestUtil.findRoleByName(ADMINISTRATOR.getRoleName());
-		newMaxmin.addRole(Role.newInstance().withId(newRole.getId()));
+		Optional<PojoRole> administrator = queryTestUtil.findRoleByRoleName(ADMINISTRATOR.getRoleName());
+		PojoRole adm = administrator.orElseThrow(() -> new DaoTestException("Error role not found"));
+		newMaxmin.addRole(Role.newInstance().withId(adm.getId()));
 
 		// run the test
 		assertThrows(OptimisticLockException.class, () -> userDao.update(newMaxmin));
