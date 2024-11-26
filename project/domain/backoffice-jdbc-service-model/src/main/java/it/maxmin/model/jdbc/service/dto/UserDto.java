@@ -72,8 +72,7 @@ public final class UserDto implements Serializable {
 		if (postalCode == null) {
 			return Optional.empty();
 		}
-		return Optional.ofNullable(
-				addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst().orElse(null));
+		return addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst();
 	}
 
 	public Set<RoleDto> getRoles() {
@@ -84,8 +83,7 @@ public final class UserDto implements Serializable {
 		if (roleName == null) {
 			return Optional.empty();
 		}
-		return Optional.ofNullable(
-				roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst().orElse(null));
+		return roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst();
 	}
 
 	@Override

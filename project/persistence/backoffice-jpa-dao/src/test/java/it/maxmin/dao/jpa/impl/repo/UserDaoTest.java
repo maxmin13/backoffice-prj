@@ -71,11 +71,14 @@ class UserDaoTest extends TestAbstract {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);
 
-	@Autowired
 	QueryTestUtil queryTestUtil;
-
-	@Autowired
 	UserDao userDao;
+	
+	@Autowired
+	public UserDaoTest(UserDao userDao, QueryTestUtil queryTestUtil) {
+		this.userDao = userDao;
+		this.queryTestUtil = queryTestUtil;
+	}
 
 	@Test
 	@Order(1)
@@ -164,7 +167,7 @@ class UserDaoTest extends TestAbstract {
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("04. verify lazily loaded properties in the User entity: roles and addresses")
-	void testFindAll3() {
+	public void testFindAll3() {
 
 		LOGGER.info("running test testFindAll3");
 
@@ -214,7 +217,7 @@ class UserDaoTest extends TestAbstract {
 
 		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a2);
 
-		State state2 = address2.get().getState();
+		State state2 = a2.getState();
 
 		verifyState(IRELAND.getName(), IRELAND.getCode(), state2);
 
@@ -281,40 +284,41 @@ class UserDaoTest extends TestAbstract {
 		LOGGER.info("running test findByAccountName");
 
 		// run the test
-		User artur = userDao.findByAccountName("artur").get();
+		Optional<User> artur = userDao.findByAccountName("artur");
+		User ar = artur.orElseThrow(() -> new DaoTestException("Error user not found"));
 
-		verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), artur);
+		verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), ar);
 
 		// roles
-		Set<Role> roles = artur.getRoles();
+		Set<Role> roles = ar.getRoles();
 
 		assertEquals(2, roles.size());
 
-		Optional<Role> role1 = artur.getRole(ADMINISTRATOR.getRoleName());
+		Optional<Role> role1 = ar.getRole(ADMINISTRATOR.getRoleName());
 		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
 		
 		verifyRole(ADMINISTRATOR.getRoleName(), r1);
 
-		Optional<Role> role2 = artur.getRole(USER.getRoleName());
+		Optional<Role> role2 = ar.getRole(USER.getRoleName());
 		Role r2 = role2.orElseThrow(() -> new DaoTestException("Error role not found"));
 		
 		verifyRole(USER.getRoleName(), r2);
 
 		// department
-		Department department = artur.getDepartment();
+		Department department = ar.getDepartment();
 		verifyDepartment(LEGAL.getName(), department);
 
 		// addresses
-		Set<Address> addresses = artur.getAddresses();
+		Set<Address> addresses = ar.getAddresses();
 
 		assertEquals(1, addresses.size());
 
-		Optional<Address> address = artur.getAddress("A65TF12");
+		Optional<Address> address = ar.getAddress("A65TF12");
 		Address a = address.orElseThrow(() -> new DaoTestException("Error address not found"));
 
 		verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a);
 
-		State state = address.get().getState();
+		State state = a.getState();
 
 		verifyState(IRELAND.getName(), IRELAND.getCode(), state);
 	}
@@ -325,9 +329,7 @@ class UserDaoTest extends TestAbstract {
 
 		LOGGER.info("running test createWithNoUserThrowsException");
 
-		assertThrows(IllegalArgumentException.class, () -> {
-			userDao.create(null);
-		});
+		assertThrows(IllegalArgumentException.class, () -> userDao.create(null));
 	}
 
 	@Test
@@ -338,9 +340,7 @@ class UserDaoTest extends TestAbstract {
 
 		User user = User.newInstance().withId(1l);
 
-		assertThrows(IllegalArgumentException.class, () -> {
-			userDao.create(user);
-		});
+		assertThrows(IllegalArgumentException.class, () -> userDao.create(user));
 	}
 
 	@Test
@@ -484,9 +484,7 @@ class UserDaoTest extends TestAbstract {
 		carl.addAddress(existingAddress);
 
 		// run the test
-		assertThrows(EntityExistsException.class, () -> {
-			userDao.create(carl);
-		});
+		assertThrows(EntityExistsException.class, () -> userDao.create(carl));
 	}
 
 	@Test
@@ -503,9 +501,7 @@ class UserDaoTest extends TestAbstract {
 				.withFirstName("Franco").withLastName("Red");
 
 		// run the test
-		assertThrows(ConstraintViolationException.class, () -> {
-			userDao.create(franco);
-		});
+		assertThrows(ConstraintViolationException.class, () -> userDao.create(franco));
 	}
 
 	@Test
@@ -523,9 +519,7 @@ class UserDaoTest extends TestAbstract {
 				.withDepartment(Department.newInstance().withId(0l).withName("Agricolture"));
 
 		// run the test
-		assertThrows(ConstraintViolationException.class, () -> {
-			userDao.create(franco);
-		});
+		assertThrows(ConstraintViolationException.class, () -> userDao.create(franco));
 	}
 
 	@Test
@@ -549,9 +543,7 @@ class UserDaoTest extends TestAbstract {
 		carl.addRole(Role.newInstance().withId(23l).withRoleName("Mechanic"));
 
 		// run the test
-		assertThrows(DataIntegrityViolationException.class, () -> {
-			userDao.create(carl);
-		});
+		assertThrows(DataIntegrityViolationException.class, () -> userDao.create(carl));
 	}
 
 	@Test
@@ -560,9 +552,7 @@ class UserDaoTest extends TestAbstract {
 
 		LOGGER.info("running test updateWithNoUserThrowsException");
 
-		assertThrows(IllegalArgumentException.class, () -> {
-			userDao.update(null);
-		});
+		assertThrows(IllegalArgumentException.class, () -> userDao.update(null));
 	}
 
 	@Test
@@ -573,9 +563,7 @@ class UserDaoTest extends TestAbstract {
 
 		User user = User.newInstance();
 
-		assertThrows(IllegalArgumentException.class, () -> {
-			userDao.update(user);
-		});
+		assertThrows(IllegalArgumentException.class, () -> userDao.update(user));
 	}
 
 	@Test
@@ -631,9 +619,7 @@ class UserDaoTest extends TestAbstract {
 		// run the test
 		userDao.update(newMaxmin);
 
-		assertThrows(Throwable.class, () -> {
-			queryTestUtil.findUserByAccountName("maxmin13");
-		});
+		assertThrows(Throwable.class, () -> queryTestUtil.findUserByAccountName("maxmin13"));
 
 		// Verify the data
 		PojoUser newUser = queryTestUtil.findUserByAccountName("maxmin1313");
@@ -734,9 +720,7 @@ class UserDaoTest extends TestAbstract {
 		newMaxmin.addRole(Role.newInstance().withId(newRole.getId()));
 
 		// run the test
-		assertThrows(DataIntegrityViolationException.class, () -> {
-			userDao.update(newMaxmin);
-		});
+		assertThrows(DataIntegrityViolationException.class, () -> userDao.update(newMaxmin));
 	}
 
 	@Test
@@ -772,9 +756,7 @@ class UserDaoTest extends TestAbstract {
 		newMaxmin.addRole(Role.newInstance().withId(newRole.getId()));
 
 		// run the test
-		assertThrows(EntityNotFoundException.class, () -> {
-			userDao.update(newMaxmin);
-		});
+		assertThrows(EntityNotFoundException.class, () -> userDao.update(newMaxmin));
 	}
 
 	@Test
@@ -809,9 +791,7 @@ class UserDaoTest extends TestAbstract {
 		newMaxmin.addRole(role);
 
 		// run the test
-		assertThrows(EntityNotFoundException.class, () -> {
-			userDao.update(newMaxmin);
-		});
+		assertThrows(EntityNotFoundException.class, () -> userDao.update(newMaxmin));
 	}
 
 	@Test
@@ -860,9 +840,7 @@ class UserDaoTest extends TestAbstract {
 		newMaxmin.addRole(Role.newInstance().withId(newRole.getId()));
 
 		// run the test
-		assertThrows(OptimisticLockException.class, () -> {
-			userDao.update(newMaxmin);
-		});
+		assertThrows(OptimisticLockException.class, () -> userDao.update(newMaxmin));
 	}
 
 }

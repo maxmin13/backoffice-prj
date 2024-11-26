@@ -170,13 +170,13 @@ class SelectUserHelperTest extends BaseDaoTest {
 		Address a1 = address1.orElseThrow(() -> new DaoTestException("Error address not found"));
 
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", a1);
-		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), address1.get().getState());
+		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), a1.getState());
 
 		Optional<Address> address2 = maxmin.getAddress("A65TF12");
 		Address a2 = address2.orElseThrow(() -> new DaoTestException("Error address not found"));
 
 		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a2);
-		jdbcUserTestUtil.verifyState(ireland.getName(), ireland.getCode(), address2.get().getState());
+		jdbcUserTestUtil.verifyState(ireland.getName(), ireland.getCode(), a2.getState());
 
 		User artur = users.get(1);
 

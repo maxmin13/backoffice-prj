@@ -96,8 +96,9 @@ class SelectAllUsersTest {
 		assertEquals(1, user1.getRoles().size());
 
 		Optional<Role> role1 = user1.getRole(ADMINISTRATOR.getRoleName());
+		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
 
-		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), role1.get());
+		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), user1.getDepartment());

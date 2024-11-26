@@ -186,7 +186,7 @@ class UserTest {
 
 		Optional<Address> address = user.getAddress(null);
 
-		assertEquals(true, address.isEmpty());;
+		assertEquals(true, address.isEmpty());
 	}
 
 	@ParameterizedTest

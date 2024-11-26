@@ -170,8 +170,7 @@ public class User extends AbstractEntity {
 		if (postalCode == null) {
 			return Optional.empty();
 		}
-		return Optional.ofNullable(
-				addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst().orElse(null));
+		return addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst();
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -206,8 +205,7 @@ public class User extends AbstractEntity {
 		if (roleName == null) {
 			return Optional.empty();
 		}
-		return Optional.ofNullable(
-				roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst().orElse(null));
+		return roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst();
 	}
 
 	@Override

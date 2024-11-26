@@ -122,8 +122,7 @@ public class Address implements Serializable {
 		if (accountName == null) {
 			return Optional.empty();
 		}
-		return Optional.ofNullable(
-				users.stream().filter(each -> each.getAccountName().equals(accountName)).findFirst().orElse(null));
+		return users.stream().filter(each -> each.getAccountName().equals(accountName)).findFirst();
 	}
 
 	@Override
