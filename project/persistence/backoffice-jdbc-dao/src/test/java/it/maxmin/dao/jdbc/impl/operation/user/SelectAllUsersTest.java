@@ -1,5 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
+import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
@@ -96,7 +98,7 @@ class SelectAllUsersTest {
 		assertEquals(1, user1.getRoles().size());
 
 		Optional<Role> role1 = user1.getRole(ADMINISTRATOR.getRoleName());
-		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r1 = role1.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
 
@@ -107,7 +109,7 @@ class SelectAllUsersTest {
 		assertEquals(1, user1.getAddresses().size());
 
 		Optional<Address> address1 = user1.getAddress("30010");
-		Address a1 = address1.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address a1 = address1.orElseThrow(() -> new DaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", a1);
 		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), a1.getState());
@@ -120,7 +122,7 @@ class SelectAllUsersTest {
 		assertEquals(1, user2.getRoles().size());
 
 		Optional<Role> role2 = user2.getRole(USER.getRoleName());
-		Role r2 = role2.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r2 = role2.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(USER.getRoleName(), r2);
 
@@ -131,7 +133,7 @@ class SelectAllUsersTest {
 		assertEquals(1, user2.getAddresses().size());
 
 		Optional<Address> address2 = user2.getAddress("A65TF12");
-		Address a2 = address2.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address a2 = address2.orElseThrow(() -> new DaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a2);
 		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), a2.getState());

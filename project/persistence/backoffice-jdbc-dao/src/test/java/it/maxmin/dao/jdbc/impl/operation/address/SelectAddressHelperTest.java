@@ -1,5 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
+import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESSES_BY_USER_ID;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,9 +23,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import it.maxmin.dao.jdbc.BaseDaoTest;
 import it.maxmin.dao.jdbc.DaoTestException;
+import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
 import it.maxmin.model.jdbc.dao.entity.Address;
@@ -55,7 +57,7 @@ class SelectAddressHelperTest extends BaseDaoTest {
 		resultSetExtractor = selectAddressHelper.getResultSetExtractor();
 	}
 
-    @Test
+	@Test
 	void selectAddressesByUserIdAddressNotFound() {
 
 		LOGGER.info("running test selectAddressesByUserIdNotFound");
@@ -65,7 +67,7 @@ class SelectAddressHelperTest extends BaseDaoTest {
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
-		PojoUser maxmin = pojoUser.orElseThrow(() -> new DaoTestException("Error user not found"));
+		PojoUser maxmin = pojoUser.orElseThrow(() -> new DaoTestException(ERROR_USER_NOT_FOUND_MSG));
 
 		// run the test
 		MapSqlParameterSource param = new MapSqlParameterSource();
@@ -77,14 +79,14 @@ class SelectAddressHelperTest extends BaseDaoTest {
 		assertEquals(0, addresses.size());
 	}
 
-    @Test
+	@Test
 	void selectAddressesByUserId() {
 
 		LOGGER.info("running test selectAddressesByUserId");
 
 		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
-		PojoUser maxmin = pojoUser.orElseThrow(() -> new DaoTestException("Error user not found"));
-		
+		PojoUser maxmin = pojoUser.orElseThrow(() -> new DaoTestException(ERROR_USER_NOT_FOUND_MSG));
+
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		param.addValue("userId", maxmin.getId(), Types.VARCHAR);
 
@@ -103,23 +105,23 @@ class SelectAddressHelperTest extends BaseDaoTest {
 
 		// user
 		Optional<User> user1 = users1.stream().filter(each -> each.getAccountName().equals("maxmin13")).findFirst();
-		User us1 = user1.orElseThrow(() -> new DaoTestException("Error user not found"));
+		User us1 = user1.orElseThrow(() -> new DaoTestException(ERROR_USER_NOT_FOUND_MSG));
 
 		// roles
 		assertEquals(3, us1.getRoles().size());
 
 		Optional<Role> role1 = us1.getRole(administrator.getRoleName());
-		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r1 = role1.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), r1);
 
 		Optional<Role> role2 = us1.getRole(user.getRoleName());
-		Role r2 = role2.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r2 = role2.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(user.getRoleName(), r2);
 
 		Optional<Role> role3 = us1.getRole(worker.getRoleName());
-		Role r3 = role3.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r3 = role3.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(worker.getRoleName(), r3);
 
@@ -145,17 +147,17 @@ class SelectAddressHelperTest extends BaseDaoTest {
 		assertEquals(3, u2.getRoles().size());
 
 		role1 = u2.getRole(administrator.getRoleName());
-		r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
+		r1 = role1.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), r1);
 
 		role2 = u2.getRole(user.getRoleName());
-		r2 = role2.orElseThrow(() -> new DaoTestException("Error role not found"));
+		r2 = role2.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(user.getRoleName(), r2);
 
 		role3 = u2.getRole(worker.getRoleName());
-		r3 = role3.orElseThrow(() -> new DaoTestException("Error role not found"));
+		r3 = role3.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(worker.getRoleName(), r3);
 
@@ -166,7 +168,7 @@ class SelectAddressHelperTest extends BaseDaoTest {
 		assertEquals(0, u2.getAddresses().size());
 	}
 
-    @Test
+	@Test
 	void selectAddressesByPostalCodeAddressNotFound() {
 
 		LOGGER.info("running test selectAddressesByPostalCodeAddressNotFound");
@@ -212,7 +214,7 @@ class SelectAddressHelperTest extends BaseDaoTest {
 		assertEquals(0, users.size());
 	}
 
-    @Test
+	@Test
 	void selectAddressesByPostalCode() {
 
 		LOGGER.info("running test selectAddressesByPostalCode");
@@ -237,23 +239,23 @@ class SelectAddressHelperTest extends BaseDaoTest {
 
 		// user
 		Optional<User> maxmin = users.stream().filter(each -> each.getAccountName().equals("maxmin13")).findFirst();
-		User max = maxmin.orElseThrow(()-> new DaoTestException("Error user not found"));
-		
+		User max = maxmin.orElseThrow(() -> new DaoTestException(ERROR_USER_NOT_FOUND_MSG));
+
 		// roles
 		assertEquals(3, max.getRoles().size());
 
 		Optional<Role> role1 = max.getRole(administrator.getRoleName());
-		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r1 = role1.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), r1);
 
 		Optional<Role> role2 = max.getRole(user.getRoleName());
-		Role r2 = role2.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r2 = role2.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(user.getRoleName(), r2);
 
 		Optional<Role> role3 = max.getRole(worker.getRoleName());
-		Role r3 = role3.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r3 = role3.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(worker.getRoleName(), r3);
 

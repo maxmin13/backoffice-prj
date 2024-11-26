@@ -1,5 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
+import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -15,9 +17,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import it.maxmin.dao.jdbc.BaseDaoTest;
 import it.maxmin.dao.jdbc.DaoTestException;
+import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.State;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
@@ -72,7 +74,7 @@ class UpdateAddressTest extends BaseDaoTest {
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
-	
+
 	@Test
 	void executeWithNoStateIdThrowsException() {
 
@@ -93,8 +95,8 @@ class UpdateAddressTest extends BaseDaoTest {
 
 		// Find an existing address
 		Optional<PojoAddress> address = jdbcQueryTestUtil.findAddressByPostalCode("30010");
-		PojoAddress ad = address.orElseThrow(() -> new DaoTestException("Error address not found"));
-		
+		PojoAddress ad = address.orElseThrow(() -> new DaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
+
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", ad);
 		assertEquals(italy.getId(), ad.getStateId());
 
@@ -107,13 +109,13 @@ class UpdateAddressTest extends BaseDaoTest {
 		updateAddress.execute(addressUpdated);
 
 		Optional<PojoAddress> updated = jdbcQueryTestUtil.findAddressByAddressId(ad.getId());
-		PojoAddress up = updated.orElseThrow(() -> new DaoTestException("Error address not found"));
+		PojoAddress up = updated.orElseThrow(() -> new DaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("33311", "Via Nuova", "Venice", "Veneto", up);
 
 		Optional<PojoState> state = jdbcQueryTestUtil.findStateByAddressPostalCode("33311");
-		PojoState st = state.orElseThrow(() -> new DaoTestException("Error state not found"));
-		
+		PojoState st = state.orElseThrow(() -> new DaoTestException(ERROR_STATE_NOT_FOUND_MSG));
+
 		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), st);
 	}
 

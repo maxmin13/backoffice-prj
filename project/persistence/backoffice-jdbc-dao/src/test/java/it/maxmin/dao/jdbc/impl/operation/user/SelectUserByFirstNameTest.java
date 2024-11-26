@@ -1,6 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
+import static it.maxmin.dao.jdbc.TestMessageConstants.*;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
 import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -95,7 +96,7 @@ class SelectUserByFirstNameTest {
 		assertEquals(1, userFound.getRoles().size());
 
 		Optional<Role> role1 = userFound.getRole(ADMINISTRATOR.getRoleName());
-		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r1 = role1.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
 
@@ -106,7 +107,7 @@ class SelectUserByFirstNameTest {
 		assertEquals(1, userFound.getAddresses().size());
 
 		Optional<Address> address1 = userFound.getAddress("30010");
-		Address a1 = address1.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address a1 = address1.orElseThrow(() -> new DaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", a1);
 		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), a1.getState());

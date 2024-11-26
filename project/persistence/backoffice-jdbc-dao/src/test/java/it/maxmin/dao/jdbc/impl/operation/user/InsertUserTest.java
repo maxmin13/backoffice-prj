@@ -1,6 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static it.maxmin.dao.jdbc.TestMessageConstants.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
@@ -141,12 +142,12 @@ class InsertUserTest extends BaseDaoTest {
 		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), user);
 
 		Optional<PojoUser> newUser = jdbcQueryTestUtil.findUserByAccountName("carl23");
-		PojoUser us = newUser.orElseThrow(() -> new DaoTestException("Error user not found"));
+		PojoUser us = newUser.orElseThrow(() -> new DaoTestException(ERROR_USER_NOT_FOUND_MSG));
 		
 		jdbcUserTestUtil.verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), us);
 
 		Optional<PojoDepartment> department = jdbcQueryTestUtil.findDepartmentById(us.getDepartmentId());
-		PojoDepartment dep = department.orElseThrow(() -> new DaoTestException("Error department not found"));
+		PojoDepartment dep = department.orElseThrow(() -> new DaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyDepartment(accounts.getName(), dep);
 

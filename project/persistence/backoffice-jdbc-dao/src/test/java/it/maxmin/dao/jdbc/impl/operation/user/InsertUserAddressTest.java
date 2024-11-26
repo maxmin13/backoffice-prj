@@ -15,9 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import it.maxmin.dao.jdbc.BaseDaoTest;
+import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 

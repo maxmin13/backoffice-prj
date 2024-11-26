@@ -1,5 +1,8 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
+import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
 import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
@@ -83,16 +86,15 @@ class SelectUserByAccountNameTest {
 
 		// run the test
 		Optional<User> userFound = selectUserByAccountName.execute("maxmin13");
-		User user = userFound.orElseThrow(() -> new DaoTestException("Error user not found"));
+		User user = userFound.orElseThrow(() -> new DaoTestException(ERROR_USER_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16),
-				user);
+		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user);
 
 		// roles
 		assertEquals(1, user.getRoles().size());
 
 		Optional<Role> role1 = user.getRole(ADMINISTRATOR.getRoleName());
-		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r1 = role1.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
 
@@ -103,7 +105,7 @@ class SelectUserByAccountNameTest {
 		assertEquals(1, user.getAddresses().size());
 
 		Optional<Address> address1 = user.getAddress("30010");
-		Address a1 = address1.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address a1 = address1.orElseThrow(() -> new DaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", a1);
 		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), a1.getState());

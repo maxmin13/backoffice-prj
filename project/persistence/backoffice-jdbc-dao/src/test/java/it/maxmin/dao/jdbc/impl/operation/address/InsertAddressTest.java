@@ -1,5 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
+import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -16,9 +18,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import it.maxmin.dao.jdbc.BaseDaoTest;
 import it.maxmin.dao.jdbc.DaoTestException;
+import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.State;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
@@ -107,12 +109,12 @@ class InsertAddressTest extends BaseDaoTest {
 		assertNotNull(address.getId());
 
 		Optional<PojoAddress> newAddress = jdbcQueryTestUtil.findAddressByAddressId(address.getId());
-		PojoAddress ad = newAddress.orElseThrow(() -> new DaoTestException("Error address not found"));
+		PojoAddress ad = newAddress.orElseThrow(() -> new DaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 		
 		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "Veneto", ad);
 
 		Optional<PojoState> state = jdbcQueryTestUtil.findStateByAddressPostalCode("30033");
-		PojoState st = state.orElseThrow(() -> new DaoTestException("Error state not found"));
+		PojoState st = state.orElseThrow(() -> new DaoTestException(ERROR_STATE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), st);
 	}
