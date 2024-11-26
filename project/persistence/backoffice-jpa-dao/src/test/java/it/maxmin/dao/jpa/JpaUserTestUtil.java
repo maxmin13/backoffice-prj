@@ -16,7 +16,7 @@ import it.maxmin.model.jpa.dao.pojo.PojoRole;
 import it.maxmin.model.jpa.dao.pojo.PojoState;
 import it.maxmin.model.jpa.dao.pojo.PojoUser;
 
-public class UserTestUtil {
+public class JpaUserTestUtil {
 
 	public void verifyAddress(String postalCode, String description, String city, String region, Address actual) {
 		assertNotNull(actual.getId());

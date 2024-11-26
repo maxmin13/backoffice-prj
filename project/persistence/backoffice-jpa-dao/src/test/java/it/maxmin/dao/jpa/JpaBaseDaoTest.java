@@ -1,8 +1,8 @@
 package it.maxmin.dao.jpa;
 
-import static it.maxmin.dao.jpa.TestMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.TestMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.TestMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
+import static it.maxmin.dao.jpa.JpaTestMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
+import static it.maxmin.dao.jpa.JpaTestMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.dao.jpa.JpaTestMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static it.maxmin.dao.jpa.constant.Department.ACCOUNTS;
 import static it.maxmin.dao.jpa.constant.Department.LEGAL;
 import static it.maxmin.dao.jpa.constant.Department.PRODUCTION;
@@ -27,10 +27,10 @@ import it.maxmin.model.jpa.dao.pojo.PojoState;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public abstract class BaseDaoTest {
+public abstract class JpaBaseDaoTest {
 
-	protected QueryTestUtil jdbcQueryTestUtil;
-	protected UserTestUtil userTestUtil;
+	protected JpaQueryTestUtil jdbcQueryTestUtil;
+	protected JpaUserTestUtil userTestUtil;
 	protected PojoDepartment legal;
 	protected PojoDepartment accounts;
 	protected PojoDepartment production;
@@ -41,26 +41,26 @@ public abstract class BaseDaoTest {
 	protected PojoRole worker;
 
 	@Autowired
-	protected BaseDaoTest(QueryTestUtil jdbcQueryTestUtil, UserTestUtil userTestUtil) {
+	protected JpaBaseDaoTest(JpaQueryTestUtil jdbcQueryTestUtil, JpaUserTestUtil userTestUtil) {
 		this.jdbcQueryTestUtil = jdbcQueryTestUtil;
 		this.userTestUtil = userTestUtil;
 
 		this.legal = jdbcQueryTestUtil.findDepartmentByName(LEGAL.getName())
-				.orElseThrow(() -> new DaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
+				.orElseThrow(() -> new JpaDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 		this.accounts = jdbcQueryTestUtil.findDepartmentByName(ACCOUNTS.getName())
-				.orElseThrow(() -> new DaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
+				.orElseThrow(() -> new JpaDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 		this.production = jdbcQueryTestUtil.findDepartmentByName(PRODUCTION.getName())
-				.orElseThrow(() -> new DaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
+				.orElseThrow(() -> new JpaDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 		this.italy = jdbcQueryTestUtil.findStateByName(ITALY.getName())
-				.orElseThrow(() -> new DaoTestException(ERROR_STATE_NOT_FOUND_MSG));
+				.orElseThrow(() -> new JpaDaoTestException(ERROR_STATE_NOT_FOUND_MSG));
 		this.ireland = jdbcQueryTestUtil.findStateByName(IRELAND.getName())
-				.orElseThrow(() -> new DaoTestException(ERROR_STATE_NOT_FOUND_MSG));
+				.orElseThrow(() -> new JpaDaoTestException(ERROR_STATE_NOT_FOUND_MSG));
 		this.administrator = jdbcQueryTestUtil.findRoleByRoleName(ADMINISTRATOR.getRoleName())
-				.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
+				.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 		this.worker = jdbcQueryTestUtil.findRoleByRoleName(WORKER.getRoleName())
-				.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
+				.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 		this.user = jdbcQueryTestUtil.findRoleByRoleName(USER.getRoleName())
-				.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
+				.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 	}
 
 }

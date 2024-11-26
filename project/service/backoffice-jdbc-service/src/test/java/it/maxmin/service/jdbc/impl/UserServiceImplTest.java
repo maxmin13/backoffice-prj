@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseDaoTest;
-import it.maxmin.dao.jdbc.DaoTestException;
+import it.maxmin.dao.jdbc.JdbcBaseDaoTest;
+import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
@@ -35,7 +35,7 @@ import it.maxmin.service.jdbc.api.UserService;
 import it.maxmin.service.jdbc.exception.ServiceException;
 
 @SpringJUnitConfig(classes = { DatabaseUnitTestContextCfg.class })
-class UserServiceImplTest extends BaseDaoTest {
+class UserServiceImplTest extends JdbcBaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImplTest.class);
 
@@ -59,10 +59,10 @@ class UserServiceImplTest extends BaseDaoTest {
 
 		// find an existing address
 		Optional<PojoAddress> address = jdbcQueryTestUtil.findAddressByPostalCode("30010");
-		PojoAddress ad = address.orElseThrow(() -> new DaoTestException("Error address not found"));
+		PojoAddress ad = address.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", ad);
 		Optional<PojoState> state = jdbcQueryTestUtil.findStateByAddressPostalCode("30010");
-		PojoState st = state.orElseThrow(() -> new DaoTestException("Error state not found"));
+		PojoState st = state.orElseThrow(() -> new JdbcDaoTestException("Error state not found"));
 		jdbcUserTestUtil.verifyState("Italy", "IT", st);
 		AddressDto address1 = AddressDto.newInstance(ad.getDescription(), ad.getCity(), ad.getRegion(),
 				ad.getPostalCode(), StateDto.newInstance(st.getName(), st.getCode()));
@@ -89,10 +89,10 @@ class UserServiceImplTest extends BaseDaoTest {
 
 		// check the user
 		pojoUser = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
-		PojoUser us = pojoUser.orElseThrow(() -> new DaoTestException("Error user not found"));
+		PojoUser us = pojoUser.orElseThrow(() -> new JdbcDaoTestException("Error user not found"));
 		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), us);
 		Optional<PojoDepartment> department = jdbcQueryTestUtil.findDepartmentById(us.getDepartmentId());
-		PojoDepartment dep = department.orElseThrow(() -> new DaoTestException("Error department not found"));
+		PojoDepartment dep = department.orElseThrow(() -> new JdbcDaoTestException("Error department not found"));
 		jdbcUserTestUtil.verifyDepartment(production.getName(), dep);
 
 		// check the addresses
@@ -121,10 +121,10 @@ class UserServiceImplTest extends BaseDaoTest {
 
 		// find an existing address
 		Optional<PojoAddress> address = jdbcQueryTestUtil.findAddressByPostalCode("30010");
-		PojoAddress ad = address.orElseThrow(() -> new DaoTestException("Error address not found"));
+		PojoAddress ad = address.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", ad);
 		Optional<PojoState> state = jdbcQueryTestUtil.findStateByAddressPostalCode("30010");
-		PojoState st = state.orElseThrow(() -> new DaoTestException("Error state not found"));
+		PojoState st = state.orElseThrow(() -> new JdbcDaoTestException("Error state not found"));
 		jdbcUserTestUtil.verifyState("Italy", "IT", st);
 		AddressDto address1 = AddressDto.newInstance(ad.getDescription(), ad.getCity(), ad.getRegion(),
 				ad.getPostalCode(), StateDto.newInstance(st.getName(), st.getCode()));

@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.maxmin.dao.jdbc.DaoTestException;
+import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddress;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddresses;
@@ -125,7 +125,7 @@ class AddressDaoTest {
 
 		// run the test
 		Optional<Address> addressFound = addressDao.selectAddressByPostalCode("30033");
-		Address a = addressFound.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address a = addressFound.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 
 		verify(selectAddressByPostalCode, times(1)).execute("30033");
 

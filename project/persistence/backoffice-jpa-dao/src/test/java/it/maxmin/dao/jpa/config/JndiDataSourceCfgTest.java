@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import it.maxmin.dao.jpa.DataSourceTestUtil;
+import it.maxmin.dao.jpa.JpaDataSourceTestUtil;
 
 /**
  * Verifies that by loading JndiDataSourceCfg.class, in the Spring context a
@@ -16,7 +16,7 @@ import it.maxmin.dao.jpa.DataSourceTestUtil;
  */
 class JndiDataSourceCfgTest {
 
-	private DataSourceTestUtil dataSourceTestUtil = new DataSourceTestUtil();
+	private JpaDataSourceTestUtil dataSourceTestUtil = new JpaDataSourceTestUtil();
 
 	@Test
 	void testJndiDataSource() throws SQLException, IllegalStateException {

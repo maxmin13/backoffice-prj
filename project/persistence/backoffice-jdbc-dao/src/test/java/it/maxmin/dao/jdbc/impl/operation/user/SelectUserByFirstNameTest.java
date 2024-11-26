@@ -1,7 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
-import static it.maxmin.dao.jdbc.TestMessageConstants.*;
+import static it.maxmin.dao.jdbc.JdbcTestMessageConstants.*;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
 import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +24,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
-import it.maxmin.dao.jdbc.DaoTestException;
+import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Department;
@@ -96,7 +96,7 @@ class SelectUserByFirstNameTest {
 		assertEquals(1, userFound.getRoles().size());
 
 		Optional<Role> role1 = userFound.getRole(ADMINISTRATOR.getRoleName());
-		Role r1 = role1.orElseThrow(() -> new DaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
+		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
 
@@ -107,7 +107,7 @@ class SelectUserByFirstNameTest {
 		assertEquals(1, userFound.getAddresses().size());
 
 		Optional<Address> address1 = userFound.getAddress("30010");
-		Address a1 = address1.orElseThrow(() -> new DaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
+		Address a1 = address1.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", a1);
 		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), a1.getState());

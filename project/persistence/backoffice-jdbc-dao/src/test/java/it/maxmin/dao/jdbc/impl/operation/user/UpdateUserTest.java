@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static it.maxmin.dao.jdbc.TestMessageConstants.ERROR_USER_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.JdbcTestMessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseDaoTest;
-import it.maxmin.dao.jdbc.DaoTestException;
-import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
+import it.maxmin.dao.jdbc.JdbcBaseDaoTest;
+import it.maxmin.dao.jdbc.JdbcDaoTestException;
+import it.maxmin.dao.jdbc.JdbcDaoUnitTestContextCfg;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.dao.entity.Address;
@@ -30,8 +30,8 @@ import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoRole;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
-@SpringJUnitConfig(classes = { DatabaseUnitTestContextCfg.class })
-class UpdateUserTest extends BaseDaoTest {
+@SpringJUnitConfig(classes = { JdbcDaoUnitTestContextCfg.class })
+class UpdateUserTest extends JdbcBaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UpdateUserTest.class);
 	private UpdateUser updateUser;
@@ -119,7 +119,7 @@ class UpdateUserTest extends BaseDaoTest {
 
 		// Find an existing user
 		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
-		PojoUser us = pojoUser.orElseThrow(() -> new DaoTestException(ERROR_USER_NOT_FOUND_MSG));
+		PojoUser us = pojoUser.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 		
 		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), us);
 
@@ -156,7 +156,7 @@ class UpdateUserTest extends BaseDaoTest {
 		updateUser.execute(carl);
 
 		Optional<PojoUser> updated = jdbcQueryTestUtil.findUserByUserId(us.getId());
-		PojoUser up = updated.orElseThrow(() -> new DaoTestException(ERROR_USER_NOT_FOUND_MSG));
+		PojoUser up = updated.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyUser("carl123", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), up);
 

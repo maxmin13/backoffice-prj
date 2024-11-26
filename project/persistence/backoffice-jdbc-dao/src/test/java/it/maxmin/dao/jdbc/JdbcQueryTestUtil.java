@@ -94,7 +94,7 @@ public class JdbcQueryTestUtil {
 		if (key != null) {
 			user.setId(key.longValue());
 		} else {
-			throw new DaoTestException("User key not generated");
+			throw new JdbcDaoTestException("User key not generated");
 		}
 
 		return user;
@@ -160,7 +160,7 @@ public class JdbcQueryTestUtil {
 		if (key != null) {
 			address.setId(key.longValue());
 		} else {
-			throw new DaoTestException("Address key not generated");
+			throw new JdbcDaoTestException("Address key not generated");
 		}
 
 		return address;
@@ -217,7 +217,7 @@ public class JdbcQueryTestUtil {
 						.filter(line -> !line.trim().isEmpty()).toList()
 						.forEach(jdbcTemplate.getJdbcTemplate()::update);
 			} catch (IOException e) {
-				throw new DaoTestException("Error running DB scripts", e);
+				throw new JdbcDaoTestException("Error running DB scripts", e);
 			}
 		}
 	}

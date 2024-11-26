@@ -1,22 +1,22 @@
 package it.maxmin.dao.jpa;
 
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESSES_BY_USER_ACCOUNT_NAME;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESSES_BY_USER_USER_ID;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ALL_ADDRESSES;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_DEPARTMENT_BY_ID;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_DEPARTMENT_BY_USER_ACCOUNT_NAME;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLES_BY_USER_ACCOUNT_NAME;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLES_BY_USER_USER_ID;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_ROLE_BY_NAME;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_STATE_BY_ADDRESS_POSTAL_CODE;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_STATE_BY_NAME;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_USER_BY_ADDRESS_POSTAL_CODE;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_USER_BY_ROLE_NAME;
-import static it.maxmin.dao.jpa.QueryTestConstants.SELECT_USER_BY_USER_ID;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_ADDRESSES_BY_USER_ACCOUNT_NAME;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_ADDRESSES_BY_USER_USER_ID;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_ALL_ADDRESSES;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_DEPARTMENT_BY_ID;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_DEPARTMENT_BY_USER_ACCOUNT_NAME;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_ROLES_BY_USER_ACCOUNT_NAME;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_ROLES_BY_USER_USER_ID;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_ROLE_BY_NAME;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_STATE_BY_ADDRESS_POSTAL_CODE;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_STATE_BY_NAME;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_USER_BY_ADDRESS_POSTAL_CODE;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_USER_BY_ROLE_NAME;
+import static it.maxmin.dao.jpa.JpaQueryTestConstants.SELECT_USER_BY_USER_ID;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -41,14 +41,14 @@ import it.maxmin.model.jpa.dao.pojo.PojoState;
 import it.maxmin.model.jpa.dao.pojo.PojoUser;
 import it.maxmin.model.jpa.dao.pojo.PojoUserAddress;
 
-public class QueryTestUtil {
+public class JpaQueryTestUtil {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(QueryTestUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JpaQueryTestUtil.class);
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
 	private DataSource dataSource;
 
-	public QueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+	public JpaQueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.dataSource = dataSource;
 	}
@@ -91,7 +91,7 @@ public class QueryTestUtil {
 		if (key != null) {
 			user.setId(key.longValue());
 		} else {
-			throw new DaoTestException("User key not generated");
+			throw new JpaDaoTestException("User key not generated");
 		}
 
 		return user;
@@ -157,7 +157,7 @@ public class QueryTestUtil {
 		if (key != null) {
 			address.setId(key.longValue());
 		} else {
-			throw new DaoTestException("Address key not generated");
+			throw new JpaDaoTestException("Address key not generated");
 		}
 
 		return address;

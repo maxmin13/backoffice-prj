@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-public class DataSourceTestUtil {
+public class JpaDataSourceTestUtil {
 
 	public void testDataSource(DataSource dataSource) throws SQLException {
 		try (var connection = dataSource.getConnection();

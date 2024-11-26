@@ -21,7 +21,7 @@ import it.maxmin.dao.jdbc.config.JdbcDataSpringContextCfg;
  * */
 @Configuration
 @Import(JdbcDataSpringContextCfg.class)
-public class DatabaseUnitTestContextCfg {
+public class JdbcDaoUnitTestContextCfg {
 
 	@Bean
 	public MariaDB4jSpringService mariaDB4jSpringService() {
@@ -35,7 +35,7 @@ public class DatabaseUnitTestContextCfg {
 		try {
 			mariaDB4jSpringService.getDB().createDB("testDB");
 		} catch (ManagedProcessException e) {
-			throw new DaoTestException("Error creating the data source", e);
+			throw new JdbcDaoTestException("Error creating the data source", e);
 		}
 
 		DBConfigurationBuilder config = mariaDB4jSpringService.getConfiguration();
@@ -45,7 +45,7 @@ public class DatabaseUnitTestContextCfg {
 		try {
 			driver = (Class<? extends Driver>) Class.forName("org.mariadb.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			throw new DaoTestException("Error loading DB driver", e);
+			throw new JdbcDaoTestException("Error loading DB driver", e);
 		}
 		dataSource.setDriverClass(driver);
 		dataSource.setUrl("jdbc:mariadb://localhost:" + config.getPort() + "/testDB");

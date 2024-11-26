@@ -1,7 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static it.maxmin.dao.jdbc.TestMessageConstants.*;
+import static it.maxmin.dao.jdbc.JdbcTestMessageConstants.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
@@ -16,11 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseDaoTest;
-import it.maxmin.dao.jdbc.DaoTestException;
+import it.maxmin.dao.jdbc.JdbcBaseDaoTest;
+import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
+import it.maxmin.dao.jdbc.JdbcDaoUnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Department;
 import it.maxmin.model.jdbc.dao.entity.Role;
@@ -31,8 +31,8 @@ import it.maxmin.model.jdbc.dao.pojo.PojoDepartment;
 import it.maxmin.model.jdbc.dao.pojo.PojoRole;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
-@SpringJUnitConfig(classes = { DatabaseUnitTestContextCfg.class })
-class InsertUserTest extends BaseDaoTest {
+@SpringJUnitConfig(classes = { JdbcDaoUnitTestContextCfg.class })
+class InsertUserTest extends JdbcBaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertUserTest.class);
 	private InsertUser insertUser;
@@ -142,12 +142,12 @@ class InsertUserTest extends BaseDaoTest {
 		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), user);
 
 		Optional<PojoUser> newUser = jdbcQueryTestUtil.findUserByAccountName("carl23");
-		PojoUser us = newUser.orElseThrow(() -> new DaoTestException(ERROR_USER_NOT_FOUND_MSG));
+		PojoUser us = newUser.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 		
 		jdbcUserTestUtil.verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), us);
 
 		Optional<PojoDepartment> department = jdbcQueryTestUtil.findDepartmentById(us.getDepartmentId());
-		PojoDepartment dep = department.orElseThrow(() -> new DaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
+		PojoDepartment dep = department.orElseThrow(() -> new JdbcDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyDepartment(accounts.getName(), dep);
 

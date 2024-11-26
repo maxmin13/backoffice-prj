@@ -14,15 +14,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseDaoTest;
-import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
+import it.maxmin.dao.jdbc.JdbcBaseDaoTest;
+import it.maxmin.dao.jdbc.JdbcDaoUnitTestContextCfg;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
-@SpringJUnitConfig(classes = { DatabaseUnitTestContextCfg.class })
-class InsertUserAddressTest extends BaseDaoTest {
+@SpringJUnitConfig(classes = { JdbcDaoUnitTestContextCfg.class })
+class InsertUserAddressTest extends JdbcBaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertUserAddressTest.class);
 	private InsertUserAddress insertUserAddress;

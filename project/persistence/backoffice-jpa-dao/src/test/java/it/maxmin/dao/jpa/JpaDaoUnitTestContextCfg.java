@@ -22,7 +22,7 @@ import it.maxmin.dao.jpa.config.JpaDataContextSpringCfg;
 
 @Configuration
 @Import(JpaDataContextSpringCfg.class)
-public class UnitTestContextCfg {
+public class JpaDaoUnitTestContextCfg {
 
 	@Bean
 	public MariaDB4jSpringService mariaDB4jSpringService() {
@@ -35,7 +35,7 @@ public class UnitTestContextCfg {
 		try {
 			mariaDB4jSpringService.getDB().createDB("testDB");
 		} catch (ManagedProcessException e) {
-			throw new DaoTestException("Error creating the data source", e);
+			throw new JpaDaoTestException("Error creating the data source", e);
 		}
 
 		DBConfigurationBuilder config = mariaDB4jSpringService.getConfiguration();
@@ -45,7 +45,7 @@ public class UnitTestContextCfg {
 		try {
 			driver = (Class<? extends Driver>) Class.forName("org.mariadb.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			throw new DaoTestException("Error loading DB driver", e);
+			throw new JpaDaoTestException("Error loading DB driver", e);
 		}
 		ds.setDriverClass(driver);
 		ds.setUrl("jdbc:mariadb://localhost:" + config.getPort() + "/testDB");
@@ -55,13 +55,13 @@ public class UnitTestContextCfg {
 	}
 
 	@Bean
-	public QueryTestUtil jdbcQueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
-		return new QueryTestUtil(jdbcTemplate, dataSource);
+	public JpaQueryTestUtil jdbcQueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+		return new JpaQueryTestUtil(jdbcTemplate, dataSource);
 	}
 
 	@Bean
-	public DataSourceTestUtil dataSourceTestUtil() {
-		return new DataSourceTestUtil();
+	public JpaDataSourceTestUtil dataSourceTestUtil() {
+		return new JpaDataSourceTestUtil();
 	}
 
 	@Bean
@@ -70,8 +70,8 @@ public class UnitTestContextCfg {
 	}
 	
 	@Bean
-	public UserTestUtil jdbcUserTestUtil() {
-		return new UserTestUtil();
+	public JpaUserTestUtil jdbcUserTestUtil() {
+		return new JpaUserTestUtil();
 	}
 
 }

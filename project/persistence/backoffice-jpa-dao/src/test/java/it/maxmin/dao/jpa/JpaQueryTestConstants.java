@@ -1,6 +1,6 @@
 package it.maxmin.dao.jpa;
 
-public enum QueryTestConstants {
+public enum JpaQueryTestConstants {
 	;
 
 	public static final String SELECT_ROLES_BY_USER_USER_ID = ""

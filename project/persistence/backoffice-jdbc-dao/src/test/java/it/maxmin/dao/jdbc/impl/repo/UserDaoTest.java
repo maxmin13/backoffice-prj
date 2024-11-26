@@ -26,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.maxmin.dao.jdbc.DaoTestException;
+import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.dao.jdbc.impl.operation.role.SelectRoleByRoleName;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUser;
@@ -125,7 +125,7 @@ class UserDaoTest {
 		assertEquals(1, user1.getRoles().size());
 
 		Optional<Role> role1 = user1.getRole(ADMINISTRATOR.getRoleName());
-		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
 
 		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
 
@@ -136,7 +136,7 @@ class UserDaoTest {
 		assertEquals(1, user1.getAddresses().size());
 
 		Optional<Address> address1 = user1.getAddress("30010");
-		Address a1 = address1.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address a1 = address1.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", a1);
 		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), a1.getState());
@@ -149,7 +149,7 @@ class UserDaoTest {
 		assertEquals(1, user2.getRoles().size());
 
 		Optional<Role> role2 = user2.getRole(USER.getRoleName());
-		Role r2 = role2.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r2 = role2.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
 
 		jdbcUserTestUtil.verifyRole(USER.getRoleName(), r2);
 
@@ -160,7 +160,7 @@ class UserDaoTest {
 		assertEquals(1, user2.getAddresses().size());
 
 		Optional<Address> address2 = user2.getAddress("A65TF12");
-		Address a2 = address2.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address a2 = address2.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 
 		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a2);
 		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), a2.getState());
@@ -197,7 +197,7 @@ class UserDaoTest {
 
 		// run the test
 		Optional<User> userFound = userDao.selectByAccountName("artur");
-		User u = userFound.orElseThrow(() -> new DaoTestException("Error user not found"));
+		User u = userFound.orElseThrow(() -> new JdbcDaoTestException("Error user not found"));
 
 		verify(selectUserByAccountName, times(1)).execute("artur");
 
@@ -207,7 +207,7 @@ class UserDaoTest {
 		assertEquals(1, u.getRoles().size());
 
 		Optional<Role> role1 = u.getRole(USER.getRoleName());
-		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
 
 		jdbcUserTestUtil.verifyRole(USER.getRoleName(), r1);
 
@@ -218,7 +218,7 @@ class UserDaoTest {
 		assertEquals(1, u.getAddresses().size());
 
 		Optional<Address> address1 = u.getAddress("A65TF12");
-		Address a1 = address1.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address a1 = address1.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 
 		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a1);
 		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), a1.getState());
@@ -269,7 +269,7 @@ class UserDaoTest {
 		assertEquals(1, usersFound.get(0).getRoles().size());
 
 		Optional<Role> role1 = usersFound.get(0).getRole(USER.getRoleName());
-		Role r1 = role1.orElseThrow(() -> new DaoTestException("Error role not found"));
+		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
 
 		jdbcUserTestUtil.verifyRole(USER.getRoleName(), r1);
 
@@ -280,7 +280,7 @@ class UserDaoTest {
 		assertEquals(1, usersFound.get(0).getAddresses().size());
 
 		Optional<Address> address1 = usersFound.get(0).getAddress("A65TF12");
-		Address a1 = address1.orElseThrow(() -> new DaoTestException("Error address not found"));
+		Address a1 = address1.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 
 		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a1);
 		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), a1.getState());

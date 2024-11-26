@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Import;
 import it.maxmin.service.jdbc.config.JdbcServiceSpringContextCfg;
 
 @Configuration
-@Import({ JdbcServiceSpringContextCfg.class, it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg.class })
+@Import({ JdbcServiceSpringContextCfg.class, it.maxmin.dao.jdbc.JdbcDaoUnitTestContextCfg.class })
 public class DatabaseUnitTestContextCfg {
 
 }

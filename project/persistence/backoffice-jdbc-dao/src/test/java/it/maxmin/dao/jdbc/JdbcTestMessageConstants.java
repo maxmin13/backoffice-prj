@@ -1,6 +1,6 @@
-package it.maxmin.dao.jpa;
+package it.maxmin.dao.jdbc;
 
-public enum TestMessageConstants {
+public enum JdbcTestMessageConstants {
 	;
 	
 	public static final String ERROR_DEPARTMENT_NOT_FOUND_MSG = "Error department not found";

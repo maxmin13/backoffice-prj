@@ -11,14 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.BaseDaoTest;
+import it.maxmin.dao.jdbc.JdbcBaseDaoTest;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.DatabaseUnitTestContextCfg;
+import it.maxmin.dao.jdbc.JdbcDaoUnitTestContextCfg;
 import it.maxmin.model.jdbc.dao.entity.Role;
 
-@SpringJUnitConfig(classes = { DatabaseUnitTestContextCfg.class })
-class SelectRoleByRoleNameTest extends BaseDaoTest {
+@SpringJUnitConfig(classes = { JdbcDaoUnitTestContextCfg.class })
+class SelectRoleByRoleNameTest extends JdbcBaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectRoleByRoleNameTest.class);
 	private SelectRoleByRoleName selectRoleByRoleName;
