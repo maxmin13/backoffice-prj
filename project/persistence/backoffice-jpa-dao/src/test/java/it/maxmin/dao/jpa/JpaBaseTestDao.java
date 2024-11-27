@@ -1,11 +1,11 @@
 package it.maxmin.dao.jpa;
 
-import static it.maxmin.dao.jpa.JpaTestMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.JpaTestMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.JpaTestMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static it.maxmin.dao.jpa.constant.Department.ACCOUNTS;
 import static it.maxmin.dao.jpa.constant.Department.LEGAL;
 import static it.maxmin.dao.jpa.constant.Department.PRODUCTION;
+import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
+import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static it.maxmin.dao.jpa.constant.Role.ADMINISTRATOR;
 import static it.maxmin.dao.jpa.constant.Role.USER;
 import static it.maxmin.dao.jpa.constant.Role.WORKER;
@@ -27,7 +27,7 @@ import it.maxmin.model.jpa.dao.pojo.PojoState;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public abstract class JpaBaseDaoTest {
+public abstract class JpaBaseTestDao {
 
 	protected JpaQueryTestUtil jdbcQueryTestUtil;
 	protected JpaUserTestUtil userTestUtil;
@@ -41,7 +41,7 @@ public abstract class JpaBaseDaoTest {
 	protected PojoRole worker;
 
 	@Autowired
-	protected JpaBaseDaoTest(JpaQueryTestUtil jdbcQueryTestUtil, JpaUserTestUtil userTestUtil) {
+	protected JpaBaseTestDao(JpaQueryTestUtil jdbcQueryTestUtil, JpaUserTestUtil userTestUtil) {
 		this.jdbcQueryTestUtil = jdbcQueryTestUtil;
 		this.userTestUtil = userTestUtil;
 

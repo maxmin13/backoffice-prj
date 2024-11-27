@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static it.maxmin.dao.jdbc.constant.MessageConstants.FIRST_NAME_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_USERS_BY_FIRST_NAME;
 import static org.springframework.util.Assert.notNull;
 
@@ -30,7 +30,7 @@ public class SelectUserByFirstName {
 
 	public List<User> execute(String firstName) {
 
-		notNull(firstName, FIRST_NAME_NOT_NULL_MSG);
+		notNull(firstName, ERROR_FIRST_NAME_NOT_NULL_MSG);
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		param.addValue("firstName", firstName, Types.VARCHAR);

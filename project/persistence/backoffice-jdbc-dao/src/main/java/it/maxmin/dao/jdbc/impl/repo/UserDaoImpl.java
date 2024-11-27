@@ -1,11 +1,11 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
-import static it.maxmin.dao.jdbc.constant.MessageConstants.ACCOUNT_NAME_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.ADDRESS_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.FIRST_NAME_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.ROLE_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.USER_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.USER_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -64,20 +64,20 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<User> selectByAccountName(String accountName) {
-		notNull(accountName, ACCOUNT_NAME_NOT_NULL_MSG);
+		notNull(accountName, ERROR_ACCOUNT_NAME_NOT_NULL_MSG);
 		return this.selectUserByAccountName.execute(accountName);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<User> selectByFirstName(String firstName) {
-		notNull(firstName, FIRST_NAME_NOT_NULL_MSG);
+		notNull(firstName, ERROR_FIRST_NAME_NOT_NULL_MSG);
 		return this.selectUserByFirstName.execute(firstName);
 	}
 
 	@Override
 	public User insert(User user) {
-		notNull(user, USER_NOT_NULL_MSG);
+		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		if (user.getId() == null) {
 			LOGGER.info("Inserting new user ...");
 			User newUser = this.insertUser.execute(user);
@@ -91,23 +91,23 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public void associateAddress(Long userId, Long addressId) {
-		notNull(userId, USER_ID_NOT_NULL_MSG);
-		notNull(addressId, ADDRESS_ID_NOT_NULL_MSG);
+		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
+		notNull(addressId, ERROR_ADDRESS_ID_NOT_NULL_MSG);
 		this.insertUserAddress.execute(userId, addressId);
 		LOGGER.info("User {} associated with address {}", userId, addressId);
 	}
 
 	@Override
 	public void associateRole(Long userId, Long roleId) {
-		notNull(userId, USER_ID_NOT_NULL_MSG);
-		notNull(roleId, ROLE_ID_NOT_NULL_MSG);
+		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
+		notNull(roleId, ERROR_ROLE_ID_NOT_NULL_MSG);
 		this.insertUserRole.execute(userId, roleId);
 		LOGGER.info("User {} associated with role {}", userId, roleId);
 	}
 
 	@Override
 	public void update(User user) {
-		notNull(user, USER_NOT_NULL_MSG);
+		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		if (user.getId() == null) {
 			throw new IllegalArgumentException("The user ID must not be null");
 		}

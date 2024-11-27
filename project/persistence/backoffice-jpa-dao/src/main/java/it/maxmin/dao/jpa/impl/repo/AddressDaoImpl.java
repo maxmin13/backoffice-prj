@@ -1,6 +1,6 @@
 package it.maxmin.dao.jpa.impl.repo;
 
-import static it.maxmin.dao.jpa.constant.MessageConstants.ADDRESS_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_ADDRESS_ID_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.sql.Date;
@@ -49,7 +49,7 @@ public class AddressDaoImpl implements AddressDao {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Address> findById(long addressId) {
-		notNull(addressId, ADDRESS_ID_NOT_NULL_MSG);
+		notNull(addressId, ERROR_ADDRESS_ID_NOT_NULL_MSG);
 		try {
 			return Optional.of(em.createNamedQuery("Address.findById", Address.class).setParameter("id", addressId)
 					.getSingleResult());

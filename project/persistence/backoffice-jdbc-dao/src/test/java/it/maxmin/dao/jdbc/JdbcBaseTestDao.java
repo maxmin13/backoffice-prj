@@ -1,8 +1,8 @@
 package it.maxmin.dao.jdbc;
 
-import static it.maxmin.dao.jdbc.JdbcTestMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.JdbcTestMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.JdbcTestMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.constant.Department.ACCOUNTS;
 import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
@@ -29,7 +29,7 @@ import it.maxmin.model.jdbc.dao.pojo.PojoState;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public abstract class JdbcBaseDaoTest {
+public abstract class JdbcBaseTestDao {
 
 	protected JdbcQueryTestUtil jdbcQueryTestUtil;
 	protected JdbcUserTestUtil jdbcUserTestUtil;
@@ -43,7 +43,7 @@ public abstract class JdbcBaseDaoTest {
 	protected PojoRole worker;
 
 	@Autowired
-	protected JdbcBaseDaoTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil) {
+	protected JdbcBaseTestDao(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil) {
 		this.jdbcQueryTestUtil = jdbcQueryTestUtil;
 		this.jdbcUserTestUtil = jdbcUserTestUtil;
 

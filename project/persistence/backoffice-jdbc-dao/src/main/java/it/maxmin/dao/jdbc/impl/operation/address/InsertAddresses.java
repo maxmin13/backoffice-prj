@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.constant.MessageConstants.ADDRESSES_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESSES_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.INSERT_ADDRESS;
 import static org.springframework.util.Assert.notNull;
 
@@ -30,7 +30,7 @@ public class InsertAddresses extends BatchSqlUpdate {
 	}
 
 	public void execute(List<Address> addresses) {
-		notNull(addresses, ADDRESSES_NOT_NULL_MSG);
+		notNull(addresses, ERROR_ADDRESSES_NOT_NULL_MSG);
 
 		for (Address address : addresses) {
 			updateByNamedParam(Map.of("description", address.getDescription(), "city", address.getCity(), "stateId",

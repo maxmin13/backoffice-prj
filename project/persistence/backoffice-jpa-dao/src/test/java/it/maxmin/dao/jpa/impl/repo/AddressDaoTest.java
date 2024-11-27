@@ -1,11 +1,11 @@
 package it.maxmin.dao.jpa.impl.repo;
 
-import static it.maxmin.dao.jpa.JpaTestMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.JpaTestMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.JpaTestMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.JpaTestMessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static it.maxmin.dao.jpa.constant.Department.LEGAL;
 import static it.maxmin.dao.jpa.constant.Department.PRODUCTION;
+import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
+import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static it.maxmin.dao.jpa.constant.Role.ADMINISTRATOR;
 import static it.maxmin.dao.jpa.constant.Role.USER;
 import static it.maxmin.dao.jpa.constant.Role.WORKER;
@@ -34,10 +34,10 @@ import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
-import it.maxmin.dao.jpa.JpaBaseDaoTest;
+import it.maxmin.dao.jpa.JpaBaseTestDao;
+import it.maxmin.dao.jpa.JpaDaoSpringContextTestCfg;
 import it.maxmin.dao.jpa.JpaDaoTestException;
 import it.maxmin.dao.jpa.JpaQueryTestUtil;
-import it.maxmin.dao.jpa.JpaDaoTestSpringContextCfg;
 import it.maxmin.dao.jpa.JpaUserTestUtil;
 import it.maxmin.dao.jpa.api.repo.AddressDao;
 import it.maxmin.model.jpa.dao.entity.Address;
@@ -57,8 +57,8 @@ import jakarta.persistence.EntityExistsException;
 @Sql(scripts = { "classpath:database/2_state.down.sql", "classpath:database/2_department.down.sql",
 		"classpath:database/2_role.down.sql",
 		"classpath:database/1_create_database.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
-@SpringJUnitConfig(classes = { JpaDaoTestSpringContextCfg.class })
-class AddressDaoTest extends JpaBaseDaoTest {
+@SpringJUnitConfig(classes = { JpaDaoSpringContextTestCfg.class })
+class AddressDaoTest extends JpaBaseTestDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
 

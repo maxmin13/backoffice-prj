@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.constant.MessageConstants.POSTAL_CODE_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_POSTAL_CODE_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
 import static org.springframework.util.Assert.notNull;
 
@@ -31,7 +31,7 @@ public class SelectAddressByPostalCode {
 	}
 
 	public Optional<Address> execute(String postalCode) {
-		notNull(postalCode, POSTAL_CODE_NOT_NULL_MSG);
+		notNull(postalCode, ERROR_POSTAL_CODE_NOT_NULL_MSG);
 		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
 		List<Address> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_POSTAL_CODE, param, resultSetExtractor);
 		return (addresses == null || addresses.isEmpty()) ? Optional.empty() : Optional.of(addresses.get(0));

@@ -1,6 +1,7 @@
 package it.maxmin.service.jdbc.impl;
 
 import static java.util.Objects.requireNonNull;
+import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.*;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.Optional;
@@ -52,15 +53,15 @@ public class UserServiceImpl implements UserService {
 		LOGGER.info("Creating new user {}", userDto);
 
 		notNull(userDto, "The user must not be null");
-		notNull(userDto.getCredentials(), "The user credentials must not be null");
-		notNull(userDto.getCredentials().getAccountName(), "The user account name must not be null");
-		notNull(userDto.getCredentials().getFirstName(), "The user first name must not be null");
-		notNull(userDto.getCredentials().getLastName(), "The user last name must not be null");
-		notNull(userDto.getBirthDate(), "The user birthday must not be null");
-		notNull(userDto.getDepartment().getName(), "The department name must not be null");
+		notNull(userDto.getCredentials(), ERROR_USER_CREDENTIALS_NOT_NULL_MSG);
+		notNull(userDto.getCredentials().getAccountName(), ERROR_ACCOUNT_NAME_NOT_NULL_MSG);
+		notNull(userDto.getCredentials().getFirstName(), ERROR_FIRST_NAME_NOT_NULL_MSG);
+		notNull(userDto.getCredentials().getLastName(), ERROR_LAST_NAME_NOT_NULL_MSG);
+		notNull(userDto.getBirthDate(), ERROR_BIRTHDAY_NOT_NULL_MSG);
+		notNull(userDto.getDepartment().getName(), ERROR_DEPARTMENT_NAME_NOT_NULL_MSG);
 
 		Department department = departmentDao.selectByDepartmentName(userDto.getDepartment().getName())
-				.orElseThrow(() -> new ServiceException("Error department not found"));
+				.orElseThrow(() -> new ServiceException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 
 		User user = User.newInstance().withAccountName(userDto.getCredentials().getAccountName())
 				.withFirstName(userDto.getCredentials().getFirstName())
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
 					a -> userDao.associateAddress(requireNonNull(newUser).getId(), a.getId()), 
 					() -> {
 						State state = stateDao.selectByStateName(adt.getState().getName())
-								.orElseThrow(() -> new ServiceException("Error state not found"));
+								.orElseThrow(() -> new ServiceException(ERROR_STATE_NOT_FOUND_MSG));
 						Address ad = Address.newInstance().withCity(adt.getCity()).withDescription(adt.getDescription())
 								.withPostalCode(adt.getPostalCode()).withRegion(adt.getRegion()).withState(state);
 						Address newAddress = addressDao.insert(ad);
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
 		});
 
 		userDto.getRoles().stream().forEach(rdt -> {
-			Role role = roleDao.selectByRoleName(rdt.getRoleName()).orElseThrow(() -> new ServiceException("Error role not found"));
+			Role role = roleDao.selectByRoleName(rdt.getRoleName()).orElseThrow(() -> new ServiceException(ERROR_ROLE_NOT_FOUND_MSG));
 			userDao.associateRole(requireNonNull(newUser).getId(), role.getId());
 		});
 	}

@@ -1,7 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.JdbcTestMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.JdbcTestMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.JdbcBaseDaoTest;
+import it.maxmin.dao.jdbc.JdbcBaseTestDao;
+import it.maxmin.dao.jdbc.JdbcDaoSpringContextTestCfg;
 import it.maxmin.dao.jdbc.JdbcDaoTestException;
-import it.maxmin.dao.jdbc.JdbcDaoTestSpringContextCfg;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.dao.entity.Address;
@@ -25,8 +25,8 @@ import it.maxmin.model.jdbc.dao.entity.State;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoState;
 
-@SpringJUnitConfig(classes = { JdbcDaoTestSpringContextCfg.class })
-class UpdateAddressTest extends JdbcBaseDaoTest {
+@SpringJUnitConfig(classes = { JdbcDaoSpringContextTestCfg.class })
+class UpdateAddressTest extends JdbcBaseTestDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UpdateAddressTest.class);
 	private UpdateAddress updateAddress;

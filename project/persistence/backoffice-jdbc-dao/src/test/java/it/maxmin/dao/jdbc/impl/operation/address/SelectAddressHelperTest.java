@@ -1,7 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.JdbcTestMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.JdbcTestMessageConstants.ERROR_USER_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESSES_BY_USER_ID;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,9 +21,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.JdbcBaseDaoTest;
+import it.maxmin.dao.jdbc.JdbcBaseTestDao;
+import it.maxmin.dao.jdbc.JdbcDaoSpringContextTestCfg;
 import it.maxmin.dao.jdbc.JdbcDaoTestException;
-import it.maxmin.dao.jdbc.JdbcDaoTestSpringContextCfg;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
@@ -34,8 +34,8 @@ import it.maxmin.model.jdbc.dao.entity.User;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
-@SpringJUnitConfig(classes = { JdbcDaoTestSpringContextCfg.class })
-class SelectAddressHelperTest extends JdbcBaseDaoTest {
+@SpringJUnitConfig(classes = { JdbcDaoSpringContextTestCfg.class })
+class SelectAddressHelperTest extends JdbcBaseTestDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectAddressHelperTest.class);
 	private NamedParameterJdbcTemplate jdbcTemplate;

@@ -1,13 +1,13 @@
 package it.maxmin.service.jdbc;
 
 import org.springframework.context.annotation.Configuration;
-import it.maxmin.dao.jdbc.JdbcDaoTestSpringContextCfg;
+import it.maxmin.dao.jdbc.JdbcDaoSpringContextTestCfg;
 import org.springframework.context.annotation.Import;
 
 import it.maxmin.service.jdbc.config.JdbcServiceSpringContextCfg;
 
 @Configuration
-@Import({ JdbcServiceSpringContextCfg.class,JdbcDaoTestSpringContextCfg.class })
-public class JdbcServiceTestSpringContextCfg {
+@Import({ JdbcServiceSpringContextCfg.class,JdbcDaoSpringContextTestCfg.class })
+public class JdbcServiceSpringContextTestCfg {
 
 }

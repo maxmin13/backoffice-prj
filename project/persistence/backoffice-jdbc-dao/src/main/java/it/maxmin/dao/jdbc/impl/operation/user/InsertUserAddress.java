@@ -1,7 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static it.maxmin.dao.jdbc.constant.MessageConstants.ADDRESS_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.USER_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.INSERT_USER_ADDRESS;
 import static org.springframework.util.Assert.notNull;
 
@@ -22,8 +22,8 @@ public class InsertUserAddress extends SqlUpdate {
 	}
 
 	public void execute(Long userId, Long addressId) {
-		notNull(userId, USER_ID_NOT_NULL_MSG);
-		notNull(addressId, ADDRESS_ID_NOT_NULL_MSG);
+		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
+		notNull(addressId, ERROR_ADDRESS_ID_NOT_NULL_MSG);
 		updateByNamedParam(Map.of("userId", userId, "addressId", addressId));
 	}
 }

@@ -1,5 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_ALL_USERS;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_USERS_BY_FIRST_NAME;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_USER_BY_ACCOUNT_NAME;
@@ -25,20 +27,19 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jdbc.JdbcBaseDaoTest;
+import it.maxmin.dao.jdbc.JdbcBaseTestDao;
+import it.maxmin.dao.jdbc.JdbcDaoSpringContextTestCfg;
 import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.JdbcDaoTestSpringContextCfg;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Role;
 import it.maxmin.model.jdbc.dao.entity.User;
-import static it.maxmin.dao.jdbc.JdbcTestMessageConstants.*;
 
-@SpringJUnitConfig(classes = { JdbcDaoTestSpringContextCfg.class })
-class SelectUserHelperTest extends JdbcBaseDaoTest {
+@SpringJUnitConfig(classes = { JdbcDaoSpringContextTestCfg.class })
+class SelectUserHelperTest extends JdbcBaseTestDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectUserHelperTest.class);
 	private DataSource dataSource;

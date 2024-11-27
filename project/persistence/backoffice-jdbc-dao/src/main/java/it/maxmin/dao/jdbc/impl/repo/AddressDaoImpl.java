@@ -1,9 +1,9 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
-import static it.maxmin.dao.jdbc.constant.MessageConstants.ADDRESSES_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.ADDRESS_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.POSTAL_CODE_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.USER_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESSES_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_POSTAL_CODE_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -50,20 +50,20 @@ public class AddressDaoImpl implements AddressDao {
 	@Override
 	@Transactional(readOnly = true)
 	public List<Address> selectAddressesByUserId(Long userId) {
-		notNull(userId, USER_ID_NOT_NULL_MSG);
+		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
 		return this.selectAddressesByUserId.execute(userId);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Address> selectAddressByPostalCode(String postalCode) {
-		notNull(postalCode, POSTAL_CODE_NOT_NULL_MSG);
+		notNull(postalCode, ERROR_POSTAL_CODE_NOT_NULL_MSG);
 		return this.selectAddressByPostalCode.execute(postalCode);
 	}
 
 	@Override
 	public Address insert(Address address) {
-		notNull(address, ADDRESS_NOT_NULL_MSG);
+		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
 		if (address.getId() == null) {
 			LOGGER.info("Inserting new address ...");
 			Address newAddress = this.insertAddress.execute(address);
@@ -76,14 +76,14 @@ public class AddressDaoImpl implements AddressDao {
 
 	@Override
 	public void insertList(List<Address> addresses) {
-		notNull(addresses, ADDRESSES_NOT_NULL_MSG);
+		notNull(addresses, ERROR_ADDRESSES_NOT_NULL_MSG);
 		this.insertAddresses.execute(addresses);
 		LOGGER.info("New addresses inserted");
 	}
 
 	@Override
 	public void update(Address address) {
-		notNull(address, ADDRESS_NOT_NULL_MSG);
+		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
 		if (address.getId() == null) {
 			throw new IllegalArgumentException("The address ID must not be null");
 		} else {

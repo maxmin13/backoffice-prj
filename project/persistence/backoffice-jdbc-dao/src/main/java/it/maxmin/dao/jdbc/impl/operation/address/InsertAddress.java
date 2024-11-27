@@ -1,9 +1,9 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.constant.MessageConstants.ADDRESS_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.ADDRESS_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.STATE_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.MessageConstants.STATE_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_STATE_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_STATE_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.INSERT_ADDRESS;
 import static org.springframework.util.Assert.notNull;
 
@@ -38,12 +38,12 @@ public class InsertAddress extends SqlUpdate {
 	}
 
 	public Address execute(Address address) {
-		notNull(address, ADDRESS_NOT_NULL_MSG);
+		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
 		if (address.getId() != null) {
-			throw new IllegalArgumentException(ADDRESS_ID_NOT_NULL_MSG);
+			throw new IllegalArgumentException(ERROR_ADDRESS_ID_NOT_NULL_MSG);
 		}
-		notNull(address.getState(), STATE_NOT_NULL_MSG);
-		notNull(address.getState().getId(), STATE_ID_NOT_NULL_MSG);
+		notNull(address.getState(), ERROR_STATE_NOT_NULL_MSG);
+		notNull(address.getState().getId(), ERROR_STATE_ID_NOT_NULL_MSG);
 
 		var keyHolder = new GeneratedKeyHolder();
 		updateByNamedParam(Map.of("description", address.getDescription(), "city",
