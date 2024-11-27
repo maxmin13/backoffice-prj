@@ -1,5 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.state;
 
+import static it.maxmin.dao.jdbc.constant.MessageConstants.STATE_NAME_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_STATE_BY_STATE_NAME;
 import static org.springframework.util.Assert.notNull;
 
@@ -22,7 +23,7 @@ public class SelectStateByStateName {
 
 	public State execute(String name) {
 
-		notNull(name, "The state name must not be null");
+		notNull(name, STATE_NAME_NOT_NULL_MSG);
 
 		SqlParameterSource param = new MapSqlParameterSource("name", name);
 

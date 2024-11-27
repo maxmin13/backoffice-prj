@@ -1,5 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
+import static it.maxmin.dao.jdbc.constant.MessageConstants.ACCOUNT_NAME_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static org.springframework.util.Assert.notNull;
 
@@ -30,7 +31,7 @@ public class SelectUserByAccountName {
 
 	public Optional<User> execute(String accountName) {
 
-		notNull(accountName, "The account name must not be null");
+		notNull(accountName, ACCOUNT_NAME_NOT_NULL_MSG);
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		param.addValue("accountName", accountName, Types.VARCHAR);

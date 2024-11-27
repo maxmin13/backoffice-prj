@@ -1,5 +1,9 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
+import static it.maxmin.dao.jdbc.constant.MessageConstants.ADDRESS_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.MessageConstants.ADDRESS_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.MessageConstants.STATE_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.MessageConstants.STATE_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.UPDATE_ADDRESS;
 import static org.springframework.util.Assert.notNull;
 
@@ -26,10 +30,10 @@ public class UpdateAddress extends SqlUpdate {
 	}
 
 	public void execute(Address address) {
-		notNull(address, "The address must not be null");
-		notNull(address.getId(), "The address ID must not be null");
-		notNull(address.getState(), "The state must not be null");
-		notNull(address.getState().getId(), "The state ID must not be null");
+		notNull(address, ADDRESS_NOT_NULL_MSG);
+		notNull(address.getId(), ADDRESS_ID_NOT_NULL_MSG);
+		notNull(address.getState(), STATE_NOT_NULL_MSG);
+		notNull(address.getState().getId(), STATE_ID_NOT_NULL_MSG);
 		updateByNamedParam(Map.of("addressId", address.getId(), "description", address.getDescription(), "city",
 				address.getCity(), "stateId", address.getState().getId(), "region", address.getRegion(), "postalCode",
 				address.getPostalCode()));

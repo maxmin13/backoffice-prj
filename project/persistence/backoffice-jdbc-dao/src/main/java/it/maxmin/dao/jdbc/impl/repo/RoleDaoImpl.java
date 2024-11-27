@@ -1,5 +1,6 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
+import static it.maxmin.dao.jdbc.constant.MessageConstants.ROLE_NAME_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class RoleDaoImpl implements RoleDao {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Role> selectByRoleName(String roleName) {
-		notNull(roleName, "The role name must not be null");
+		notNull(roleName, ROLE_NAME_NOT_NULL_MSG);
 		Role role = this.selectRoleByRoleName.execute(roleName);
 		return role != null ? Optional.of(role) : Optional.empty();
 	}

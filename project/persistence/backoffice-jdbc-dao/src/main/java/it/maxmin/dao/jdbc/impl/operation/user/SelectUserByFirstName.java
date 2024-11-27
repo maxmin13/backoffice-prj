@@ -1,5 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
+import static it.maxmin.dao.jdbc.constant.MessageConstants.FIRST_NAME_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_USERS_BY_FIRST_NAME;
 import static org.springframework.util.Assert.notNull;
 
@@ -13,7 +14,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
 import it.maxmin.model.jdbc.dao.entity.User;
-
+	
 public class SelectUserByFirstName {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
@@ -29,7 +30,7 @@ public class SelectUserByFirstName {
 
 	public List<User> execute(String firstName) {
 
-		notNull(firstName, "The first name must not be null");
+		notNull(firstName, FIRST_NAME_NOT_NULL_MSG);
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		param.addValue("firstName", firstName, Types.VARCHAR);

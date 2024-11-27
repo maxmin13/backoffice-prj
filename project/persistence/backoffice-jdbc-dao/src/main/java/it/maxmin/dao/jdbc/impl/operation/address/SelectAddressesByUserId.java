@@ -1,5 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
+import static it.maxmin.dao.jdbc.constant.MessageConstants.USER_ID_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESSES_BY_USER_ID;
 import static org.springframework.util.Assert.notNull;
 
@@ -29,7 +30,7 @@ public class SelectAddressesByUserId {
 	}
 
 	public List<Address> execute(Long userId) {
-		notNull(userId, "The user ID must not be null");
+		notNull(userId, USER_ID_NOT_NULL_MSG);
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
 		return jdbcTemplate.query(SELECT_ADDRESSES_BY_USER_ID, param, resultSetExtractor);
 	}

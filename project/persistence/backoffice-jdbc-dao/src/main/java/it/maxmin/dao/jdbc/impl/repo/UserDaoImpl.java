@@ -1,5 +1,11 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
+import static it.maxmin.dao.jdbc.constant.MessageConstants.ACCOUNT_NAME_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.MessageConstants.ADDRESS_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.MessageConstants.FIRST_NAME_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.MessageConstants.ROLE_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.MessageConstants.USER_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.MessageConstants.USER_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -58,20 +64,20 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<User> selectByAccountName(String accountName) {
-		notNull(accountName, "The account name must not be null");
+		notNull(accountName, ACCOUNT_NAME_NOT_NULL_MSG);
 		return this.selectUserByAccountName.execute(accountName);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<User> selectByFirstName(String firstName) {
-		notNull(firstName, "The first name must not be null");
+		notNull(firstName, FIRST_NAME_NOT_NULL_MSG);
 		return this.selectUserByFirstName.execute(firstName);
 	}
 
 	@Override
 	public User insert(User user) {
-		notNull(user, "The user must not be null");
+		notNull(user, USER_NOT_NULL_MSG);
 		if (user.getId() == null) {
 			LOGGER.info("Inserting new user ...");
 			User newUser = this.insertUser.execute(user);
@@ -85,23 +91,23 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public void associateAddress(Long userId, Long addressId) {
-		notNull(userId, "The user ID must not be null");
-		notNull(addressId, "The address ID must not be null");
+		notNull(userId, USER_ID_NOT_NULL_MSG);
+		notNull(addressId, ADDRESS_ID_NOT_NULL_MSG);
 		this.insertUserAddress.execute(userId, addressId);
 		LOGGER.info("User {} associated with address {}", userId, addressId);
 	}
 
 	@Override
 	public void associateRole(Long userId, Long roleId) {
-		notNull(userId, "The user ID must not be null");
-		notNull(roleId, "The role ID must not be null");
+		notNull(userId, USER_ID_NOT_NULL_MSG);
+		notNull(roleId, ROLE_ID_NOT_NULL_MSG);
 		this.insertUserRole.execute(userId, roleId);
 		LOGGER.info("User {} associated with role {}", userId, roleId);
 	}
 
 	@Override
 	public void update(User user) {
-		notNull(user, "The user must not be null");
+		notNull(user, USER_NOT_NULL_MSG);
 		if (user.getId() == null) {
 			throw new IllegalArgumentException("The user ID must not be null");
 		}

@@ -1,5 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.role;
 
+import static it.maxmin.dao.jdbc.constant.MessageConstants.ROLE_NAME_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_ROLE_BY_ROLE_NAME;
 import static org.springframework.util.Assert.notNull;
 
@@ -22,7 +23,7 @@ public class SelectRoleByRoleName {
 
 	public Role execute(String roleName) {
 
-		notNull(roleName, "The role name must not be null");
+		notNull(roleName, ROLE_NAME_NOT_NULL_MSG);
 
 		SqlParameterSource param = new MapSqlParameterSource("roleName", roleName);
 

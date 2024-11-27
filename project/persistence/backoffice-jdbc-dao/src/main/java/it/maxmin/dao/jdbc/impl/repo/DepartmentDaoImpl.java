@@ -1,5 +1,6 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
+import static it.maxmin.dao.jdbc.constant.MessageConstants.DEPARTMENT_NAME_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Department> selectByDepartmentName(String departmentName) {
-		notNull(departmentName, "The department name must not be null");
+		notNull(departmentName, DEPARTMENT_NAME_NOT_NULL_MSG);
 		Department department = this.selectDepartmentByDepartmentName.execute(departmentName);
 		return department != null ? Optional.of(department) : Optional.empty();
 	}
