@@ -36,7 +36,7 @@ public class UserDaoImpl implements UserDao {
 	@Transactional(readOnly = true)
 	@Override
 	public List<User> findAllWithAddressAndRole() {
-		return null; // use createNameQuery, verify eagerly loaded
+		return null; //TODO  use createNameQuery, verify eagerly loaded
 
 	}
 
