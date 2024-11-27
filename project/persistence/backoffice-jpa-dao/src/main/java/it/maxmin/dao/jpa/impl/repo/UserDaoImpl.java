@@ -1,6 +1,7 @@
 package it.maxmin.dao.jpa.impl.repo;
 
 import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
+import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_USER_ID_NOT_NULL_MSG;
 import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_USER_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
@@ -61,7 +62,7 @@ public class UserDaoImpl implements UserDao {
 			em.persist(user);
 			LOGGER.info("User created with id: {}", user.getId());
 		} else {
-			throw new IllegalArgumentException("The user ID must be null");
+			throw new IllegalArgumentException(ERROR_USER_ID_NOT_NULL_MSG);
 		}
 		return user;
 	}
@@ -70,7 +71,7 @@ public class UserDaoImpl implements UserDao {
 	public User update(User user) {	
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		if (user.getId() == null) {
-			throw new IllegalArgumentException("The user ID must not be null");
+			throw new IllegalArgumentException(ERROR_USER_ID_NOT_NULL_MSG);
 		} else {
 			LOGGER.info("Updating new user ...");
 			em.merge(user);

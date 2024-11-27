@@ -1,6 +1,8 @@
 package it.maxmin.dao.jpa.impl.repo;
 
+import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_ADDRESSES_NOT_NULL_MSG;
 import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_ADDRESS_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.sql.Date;
@@ -113,22 +115,22 @@ public class AddressDaoImpl implements AddressDao {
 
 	@Override
 	public Address create(Address address) {
-		notNull(address, "The address must not be null");
+		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
 		if (address.getId() == null) {
 			LOGGER.info("Inserting new address ...");
 			em.persist(address);
 			LOGGER.info("User created with id: {}", address.getId());
 		} else {
-			throw new IllegalArgumentException("The address ID must be null");
+			throw new IllegalArgumentException(ERROR_ADDRESS_ID_NOT_NULL_MSG);
 		}
 		return address;
 	}
 
 	@Override
 	public Address update(Address address) {
-		notNull(address, "The address must not be null");
+		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
 		if (address.getId() == null) {
-			throw new IllegalArgumentException("The address ID must not be null");
+			throw new IllegalArgumentException(ERROR_ADDRESS_ID_NOT_NULL_MSG);
 		} else {
 			LOGGER.info("Updating new address ...");
 			em.merge(address);
@@ -139,7 +141,7 @@ public class AddressDaoImpl implements AddressDao {
 
 	@Override
 	public void saveList(List<Address> addresses) {
-		notNull(addresses, "The addresses must not be null");
+		notNull(addresses, ERROR_ADDRESSES_NOT_NULL_MSG);
 		// TODO IMPLEMENT BATCH INSERT
 		// this.insertAddresses.execute(addresses);
 		LOGGER.info("New addresses inserted");

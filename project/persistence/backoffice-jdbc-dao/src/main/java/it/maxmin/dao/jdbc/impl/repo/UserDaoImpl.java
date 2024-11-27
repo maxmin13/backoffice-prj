@@ -85,7 +85,7 @@ public class UserDaoImpl implements UserDao {
 			return newUser;
 		}
 		else {
-			throw new IllegalArgumentException("The user ID must be null");
+			throw new IllegalArgumentException(ERROR_USER_ID_NOT_NULL_MSG);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class UserDaoImpl implements UserDao {
 	public void update(User user) {
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		if (user.getId() == null) {
-			throw new IllegalArgumentException("The user ID must not be null");
+			throw new IllegalArgumentException(ERROR_USER_ID_NOT_NULL_MSG);
 		}
 		else {
 			LOGGER.info("Updating new user ...");

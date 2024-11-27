@@ -11,3 +11,5 @@ check all operations, add all notNull(), not only for id field
 chage the role "user", it is always overidden by var user
 
 in the tests, try to use search...byId, not by name
+
+DO Lock on updates
