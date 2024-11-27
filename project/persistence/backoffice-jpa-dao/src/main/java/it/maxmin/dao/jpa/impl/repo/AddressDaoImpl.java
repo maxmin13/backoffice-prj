@@ -1,5 +1,6 @@
 package it.maxmin.dao.jpa.impl.repo;
 
+import static it.maxmin.dao.jpa.constant.MessageConstants.ADDRESS_ID_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.sql.Date;
@@ -37,10 +38,8 @@ public class AddressDaoImpl implements AddressDao {
 			+ "SELECT DISTINCT a.Id AS AddressId, a.PostalCode AS PostalCode, a.Description AS Description, a.City AS City, a.Region AS Region, "
 			+ "          u.Id AS UserId, u.AccountName AS AccountName, u.FirstName AS FirstName, u.LastName AS LastName, u.BirthDate AS BirthDate, u.CreatedAt AS CreatedAt, "
 			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName, "
-			+ "          d.Id as DepartmentId, d.Name AS DepartmentName " 
-			+ "      FROM Address a "
-			+ "      LEFT JOIN UserAddress ua ON a.Id = ua.AddressId " 
-			+ "      LEFT JOIN User u ON ua.UserId = u.Id "
+			+ "          d.Id as DepartmentId, d.Name AS DepartmentName " + "      FROM Address a "
+			+ "      LEFT JOIN UserAddress ua ON a.Id = ua.AddressId " + "      LEFT JOIN User u ON ua.UserId = u.Id "
 			+ "      LEFT JOIN Department d ON u.DepartmentId = d.Id "
 			+ "      INNER JOIN State s ON a.StateId = s.Id ";
 
@@ -50,24 +49,22 @@ public class AddressDaoImpl implements AddressDao {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Address> findById(long addressId) {
-		notNull(addressId, "The address ID must not be null");
+		notNull(addressId, ADDRESS_ID_NOT_NULL_MSG);
 		try {
-			return Optional.of(em.createNamedQuery("Address.findById", Address.class)
-				.setParameter("id", addressId).getSingleResult());
-		}
-		catch(NoResultException e) {
+			return Optional.of(em.createNamedQuery("Address.findById", Address.class).setParameter("id", addressId)
+					.getSingleResult());
+		} catch (NoResultException e) {
 			return Optional.empty();
 		}
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Set<Address> findAll() {
 
 		@SuppressWarnings("unchecked")
-		Stream<Tuple> result = em.createNativeQuery(SELECT_ALL, Tuple.class)
-				.getResultList().stream();
-		
+		Stream<Tuple> result = em.createNativeQuery(SELECT_ALL, Tuple.class).getResultList().stream();
+
 		Map<Long, Address> map = new HashMap<>();
 		return result.map(tuple -> {
 
@@ -115,7 +112,7 @@ public class AddressDaoImpl implements AddressDao {
 	}
 
 	@Override
-	public Address create(Address address) {	
+	public Address create(Address address) {
 		notNull(address, "The address must not be null");
 		if (address.getId() == null) {
 			LOGGER.info("Inserting new address ...");
@@ -126,9 +123,9 @@ public class AddressDaoImpl implements AddressDao {
 		}
 		return address;
 	}
-	
+
 	@Override
-	public Address update(Address address) {	
+	public Address update(Address address) {
 		notNull(address, "The address must not be null");
 		if (address.getId() == null) {
 			throw new IllegalArgumentException("The address ID must not be null");
@@ -147,5 +144,5 @@ public class AddressDaoImpl implements AddressDao {
 		// this.insertAddresses.execute(addresses);
 		LOGGER.info("New addresses inserted");
 	}
-	
+
 }

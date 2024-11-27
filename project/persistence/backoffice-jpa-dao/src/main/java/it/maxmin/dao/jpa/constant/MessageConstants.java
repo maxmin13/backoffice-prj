@@ -1,4 +1,4 @@
-package it.maxmin.dao.jdbc.constant;
+package it.maxmin.dao.jpa.constant;
 
 public enum MessageConstants {
 	;

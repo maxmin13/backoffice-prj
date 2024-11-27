@@ -1,5 +1,7 @@
 package it.maxmin.dao.jpa.impl.repo;
 
+import static it.maxmin.dao.jpa.constant.MessageConstants.ACCOUNT_NAME_NOT_NULL_MSG;
+import static it.maxmin.dao.jpa.constant.MessageConstants.USER_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -41,7 +43,7 @@ public class UserDaoImpl implements UserDao {
 	@Transactional(readOnly = true)
 	@Override
 	public Optional<User> findByAccountName(String accountName) {
-		notNull(accountName, "The account name must not be null");
+		notNull(accountName, ACCOUNT_NAME_NOT_NULL_MSG);
 		try {
 			return Optional.of(em.createNamedQuery("User.findByAccountName", User.class)
 				.setParameter("accountName", accountName).getSingleResult());
@@ -53,7 +55,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public User create(User user) {	
-		notNull(user, "The user must not be null");
+		notNull(user, USER_NOT_NULL_MSG);
 		if (user.getId() == null) {
 			LOGGER.info("Inserting new user ...");
 			em.persist(user);
@@ -66,7 +68,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public User update(User user) {	
-		notNull(user, "The user must not be null");
+		notNull(user, USER_NOT_NULL_MSG);
 		if (user.getId() == null) {
 			throw new IllegalArgumentException("The user ID must not be null");
 		} else {
