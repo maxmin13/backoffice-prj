@@ -16,7 +16,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import jakarta.persistence.EntityManagerFactory;
 
 /**
- * Verifies that by loading {@link JpaDataContextSpringCfg}, in the Spring context there is
+ * Verifies that by loading {@link JpaDaoSpringContextCfg}, in the Spring context there is
  * a EntityManagerFactory.
  */
 class JdbcDataSpringContextCfgTest {
@@ -24,7 +24,7 @@ class JdbcDataSpringContextCfgTest {
 	@Test
 	void testEntityManagerFactory() throws IllegalStateException {
 
-		var springCtx = new AnnotationConfigApplicationContext(JpaDataContextSpringCfg.class);
+		var springCtx = new AnnotationConfigApplicationContext(JpaDaoSpringContextCfg.class);
 		var entityManagerFactory = springCtx.getBean("entityManagerFactory", EntityManagerFactory.class);
 
 		assertNotNull(entityManagerFactory);

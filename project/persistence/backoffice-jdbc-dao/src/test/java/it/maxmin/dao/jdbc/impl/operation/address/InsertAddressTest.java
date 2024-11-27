@@ -18,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import it.maxmin.dao.jdbc.JdbcBaseDaoTest;
 import it.maxmin.dao.jdbc.JdbcDaoTestException;
-import it.maxmin.dao.jdbc.JdbcDaoUnitTestContextCfg;
+import it.maxmin.dao.jdbc.JdbcDaoTestSpringContextCfg;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.model.jdbc.dao.entity.Address;
@@ -26,7 +26,7 @@ import it.maxmin.model.jdbc.dao.entity.State;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoState;
 
-@SpringJUnitConfig(classes = { JdbcDaoUnitTestContextCfg.class })
+@SpringJUnitConfig(classes = { JdbcDaoTestSpringContextCfg.class })
 class InsertAddressTest extends JdbcBaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertAddressTest.class);

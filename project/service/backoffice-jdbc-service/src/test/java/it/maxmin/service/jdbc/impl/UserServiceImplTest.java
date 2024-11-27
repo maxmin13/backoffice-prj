@@ -30,11 +30,11 @@ import it.maxmin.model.jdbc.service.dto.DepartmentDto;
 import it.maxmin.model.jdbc.service.dto.RoleDto;
 import it.maxmin.model.jdbc.service.dto.StateDto;
 import it.maxmin.model.jdbc.service.dto.UserDto;
-import it.maxmin.service.jdbc.DatabaseUnitTestContextCfg;
+import it.maxmin.service.jdbc.JdbcServiceTestSpringContextCfg;
 import it.maxmin.service.jdbc.api.UserService;
 import it.maxmin.service.jdbc.exception.ServiceException;
 
-@SpringJUnitConfig(classes = { DatabaseUnitTestContextCfg.class })
+@SpringJUnitConfig(classes = { JdbcServiceTestSpringContextCfg.class })
 class UserServiceImplTest extends JdbcBaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImplTest.class);

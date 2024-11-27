@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @Configuration
 @Import({ JndiDataSourceCfg.class, TransactionCfg.class })
 @ComponentScan(basePackages = { "it.maxmin.dao.jdbc.impl.repo" })
-public class JdbcDataSpringContextCfg {
+public class JdbcDaoSpringContextCfg {
 
 	/**
 	 * An instance of this template class is thread-safe once configured. The

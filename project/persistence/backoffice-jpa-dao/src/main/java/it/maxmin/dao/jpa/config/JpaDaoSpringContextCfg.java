@@ -24,12 +24,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Import({ JndiDataSourceCfg.class, TransactionCfg.class })
 @ComponentScan(basePackages = { "it.maxmin.dao.jpa.impl.repo" })
 @EnableTransactionManagement
-public class JpaDataContextSpringCfg {
+public class JpaDaoSpringContextCfg {
 
 	private DataSource dataSource;
 
 	@Autowired
-	public JpaDataContextSpringCfg(DataSource dataSource) {
+	public JpaDaoSpringContextCfg(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 

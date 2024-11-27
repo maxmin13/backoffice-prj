@@ -20,7 +20,7 @@ import it.maxmin.dao.jdbc.JdbcBaseDaoTest;
 import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.JdbcDaoUnitTestContextCfg;
+import it.maxmin.dao.jdbc.JdbcDaoTestSpringContextCfg;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Department;
 import it.maxmin.model.jdbc.dao.entity.Role;
@@ -31,7 +31,7 @@ import it.maxmin.model.jdbc.dao.pojo.PojoDepartment;
 import it.maxmin.model.jdbc.dao.pojo.PojoRole;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 
-@SpringJUnitConfig(classes = { JdbcDaoUnitTestContextCfg.class })
+@SpringJUnitConfig(classes = { JdbcDaoTestSpringContextCfg.class })
 class InsertUserTest extends JdbcBaseDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsertUserTest.class);

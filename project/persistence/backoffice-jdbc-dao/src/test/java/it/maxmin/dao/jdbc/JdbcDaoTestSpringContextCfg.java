@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa;
+package it.maxmin.dao.jdbc;
 
 import java.sql.Driver;
 
@@ -7,22 +7,21 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
-import it.maxmin.dao.jpa.config.JpaDataContextSpringCfg;
+import it.maxmin.dao.jdbc.config.JdbcDaoSpringContextCfg;
 
 /**
- * Starts an embedded MariaDB database and creates a Spring context for the unit
- * tests.
- */
-
+ * Starts an embedded MariaDB database and overrides the datasource
+ * */
 @Configuration
-@Import(JpaDataContextSpringCfg.class)
-public class JpaDaoUnitTestContextCfg {
+@Import(JdbcDaoSpringContextCfg.class)
+public class JdbcDaoTestSpringContextCfg {
 
 	@Bean
 	public MariaDB4jSpringService mariaDB4jSpringService() {
@@ -31,47 +30,42 @@ public class JpaDaoUnitTestContextCfg {
 
 	@SuppressWarnings("unchecked")
 	@Bean
+	@Primary
 	public DataSource dataSource(MariaDB4jSpringService mariaDB4jSpringService) {
 		try {
 			mariaDB4jSpringService.getDB().createDB("testDB");
 		} catch (ManagedProcessException e) {
-			throw new JpaDaoTestException("Error creating the data source", e);
+			throw new JdbcDaoTestException("Error creating the data source", e);
 		}
 
 		DBConfigurationBuilder config = mariaDB4jSpringService.getConfiguration();
 
-		var ds = new SimpleDriverDataSource();
+		var dataSource = new SimpleDriverDataSource();
 		Class<? extends Driver> driver;
 		try {
 			driver = (Class<? extends Driver>) Class.forName("org.mariadb.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			throw new JpaDaoTestException("Error loading DB driver", e);
+			throw new JdbcDaoTestException("Error loading DB driver", e);
 		}
-		ds.setDriverClass(driver);
-		ds.setUrl("jdbc:mariadb://localhost:" + config.getPort() + "/testDB");
-		ds.setUsername("root");
-		ds.setPassword("root");
-		return ds;
+		dataSource.setDriverClass(driver);
+		dataSource.setUrl("jdbc:mariadb://localhost:" + config.getPort() + "/testDB");
+		dataSource.setUsername("root");
+		dataSource.setPassword("root");
+		return dataSource;
 	}
 
 	@Bean
-	public JpaQueryTestUtil jdbcQueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
-		return new JpaQueryTestUtil(jdbcTemplate, dataSource);
+	public JdbcQueryTestUtil jdbcQueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+		return new JdbcQueryTestUtil(jdbcTemplate, dataSource);
 	}
 
 	@Bean
-	public JpaDataSourceTestUtil dataSourceTestUtil() {
-		return new JpaDataSourceTestUtil();
+	public JdbcDataSourceTestUtil jdbcDataSourceTestUtil() {
+		return new JdbcDataSourceTestUtil();
 	}
 
 	@Bean
-	public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
-		return new NamedParameterJdbcTemplate(dataSource);
+	public JdbcUserTestUtil jdbcUserTestUtil() {
+		return new JdbcUserTestUtil();
 	}
-	
-	@Bean
-	public JpaUserTestUtil jdbcUserTestUtil() {
-		return new JpaUserTestUtil();
-	}
-
 }
