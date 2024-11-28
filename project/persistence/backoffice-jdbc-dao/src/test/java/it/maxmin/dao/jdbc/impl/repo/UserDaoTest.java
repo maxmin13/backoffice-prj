@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
-import it.maxmin.dao.jdbc.impl.operation.role.SelectRoleByRoleName;
+import it.maxmin.dao.jdbc.impl.operation.role.SelectRoleByName;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUser;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserAddress;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserRole;
@@ -68,7 +68,7 @@ class UserDaoTest {
 	private SelectUserByFirstName selectUserByFirstName;
 
 	@Mock
-	private SelectRoleByRoleName selectRoleByRoleName;
+	private SelectRoleByName selectRoleByName;
 
 	@Mock
 	private UpdateUser updateUser;
@@ -90,7 +90,7 @@ class UserDaoTest {
 				.withCity("Rome").withRegion("County Lazio")
 				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()));
 		Department production = Department.newInstance().withId(3l).withName(PRODUCTION.getName());
-		Role administrator = Role.newInstance().withId(2l).withRoleName(ADMINISTRATOR.getRoleName());
+		Role administrator = Role.newInstance().withId(2l).withName(ADMINISTRATOR.getName());
 		User maxmin = User.newInstance().withId(1l).withAccountName("maxmin13").withFirstName("Max")
 				.withLastName("Minardi").withBirthDate(LocalDate.of(1977, 10, 16)).withDepartment(production);
 		maxmin.addRole(administrator);
@@ -100,7 +100,7 @@ class UserDaoTest {
 				.withCity("Dublin").withRegion("County Dublin")
 				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
 		Department legal = Department.newInstance().withId(3l).withName(LEGAL.getName());
-		Role user = Role.newInstance().withId(2l).withRoleName(USER.getRoleName());
+		Role user = Role.newInstance().withId(2l).withName(USER.getName());
 		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
 				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal);
 		artur.addRole(user);
@@ -124,10 +124,10 @@ class UserDaoTest {
 		// roles
 		assertEquals(1, user1.getRoles().size());
 
-		Optional<Role> role1 = user1.getRole(ADMINISTRATOR.getRoleName());
+		Optional<Role> role1 = user1.getRole(ADMINISTRATOR.getName());
 		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
 
-		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
+		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getName(), r1);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), user1.getDepartment());
@@ -148,10 +148,10 @@ class UserDaoTest {
 		// roles
 		assertEquals(1, user2.getRoles().size());
 
-		Optional<Role> role2 = user2.getRole(USER.getRoleName());
+		Optional<Role> role2 = user2.getRole(USER.getName());
 		Role r2 = role2.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
 
-		jdbcUserTestUtil.verifyRole(USER.getRoleName(), r2);
+		jdbcUserTestUtil.verifyRole(USER.getName(), r2);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), user2.getDepartment());
@@ -187,7 +187,7 @@ class UserDaoTest {
 				.withCity("Dublin").withRegion("County Dublin")
 				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
 		Department legal = Department.newInstance().withId(3l).withName(LEGAL.getName());
-		Role user = Role.newInstance().withId(2l).withRoleName(USER.getRoleName());
+		Role user = Role.newInstance().withId(2l).withName(USER.getName());
 		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
 				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal);
 		artur.addRole(user);
@@ -206,10 +206,10 @@ class UserDaoTest {
 		// roles
 		assertEquals(1, u.getRoles().size());
 
-		Optional<Role> role1 = u.getRole(USER.getRoleName());
+		Optional<Role> role1 = u.getRole(USER.getName());
 		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
 
-		jdbcUserTestUtil.verifyRole(USER.getRoleName(), r1);
+		jdbcUserTestUtil.verifyRole(USER.getName(), r1);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), u.getDepartment());
@@ -245,7 +245,7 @@ class UserDaoTest {
 				.withCity("Dublin").withRegion("County Dublin")
 				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
 		Department legal = Department.newInstance().withId(3l).withName(LEGAL.getName());
-		Role user = Role.newInstance().withId(2l).withRoleName(USER.getRoleName());
+		Role user = Role.newInstance().withId(2l).withName(USER.getName());
 		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
 				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal);
 		artur.addRole(user);
@@ -268,10 +268,10 @@ class UserDaoTest {
 		// roles
 		assertEquals(1, usersFound.get(0).getRoles().size());
 
-		Optional<Role> role1 = usersFound.get(0).getRole(USER.getRoleName());
+		Optional<Role> role1 = usersFound.get(0).getRole(USER.getName());
 		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
 
-		jdbcUserTestUtil.verifyRole(USER.getRoleName(), r1);
+		jdbcUserTestUtil.verifyRole(USER.getName(), r1);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), usersFound.get(0).getDepartment());

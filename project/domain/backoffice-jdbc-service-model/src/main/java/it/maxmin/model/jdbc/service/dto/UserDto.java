@@ -79,11 +79,11 @@ public final class UserDto implements Serializable {
 		return new HashSet<>(roles);
 	}
 
-	public Optional<RoleDto> getRole(String roleName) {
-		if (roleName == null) {
+	public Optional<RoleDto> getRole(String name) {
+		if (name == null) {
 			return Optional.empty();
 		}
-		return roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst();
+		return roles.stream().filter(each -> each.getName().equals(name)).findFirst();
 	}
 
 	@Override

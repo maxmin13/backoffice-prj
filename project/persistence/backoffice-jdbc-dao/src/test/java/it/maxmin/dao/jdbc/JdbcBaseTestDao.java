@@ -60,11 +60,11 @@ public abstract class JdbcBaseTestDao {
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_STATE_NOT_FOUND_MSG));
 		this.ireland = jdbcQueryTestUtil.selectStateByName(IRELAND.getName())
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_STATE_NOT_FOUND_MSG));
-		this.administrator = jdbcQueryTestUtil.selectRoleByRoleName(ADMINISTRATOR.getRoleName())
+		this.administrator = jdbcQueryTestUtil.selectRoleByName(ADMINISTRATOR.getName())
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
-		this.worker = jdbcQueryTestUtil.selectRoleByRoleName(WORKER.getRoleName())
+		this.worker = jdbcQueryTestUtil.selectRoleByName(WORKER.getName())
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
-		this.user = jdbcQueryTestUtil.selectRoleByRoleName(USER.getRoleName())
+		this.user = jdbcQueryTestUtil.selectRoleByName(USER.getName())
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 	}
 

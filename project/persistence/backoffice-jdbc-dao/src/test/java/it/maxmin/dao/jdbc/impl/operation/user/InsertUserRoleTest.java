@@ -63,7 +63,7 @@ class InsertUserRoleTest extends JdbcBaseTestDao {
 
 		LOGGER.info("running test execute");
 
-		List<PojoUser> users = jdbcQueryTestUtil.selectUsersByRoleName(worker.getRoleName());
+		List<PojoUser> users = jdbcQueryTestUtil.selectUsersByRoleName(worker.getName());
 
 		assertEquals(1, users.size());
 
@@ -77,7 +77,7 @@ class InsertUserRoleTest extends JdbcBaseTestDao {
 		// run the test
 		insertUserRole.execute(newUser.getId(), worker.getId());
 
-		users = jdbcQueryTestUtil.selectUsersByRoleName(worker.getRoleName());
+		users = jdbcQueryTestUtil.selectUsersByRoleName(worker.getName());
 
 		assertEquals(2, users.size());
 

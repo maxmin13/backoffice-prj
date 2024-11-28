@@ -8,7 +8,7 @@ public enum AddressQueryConstants {
 			+ "         s.Id AS StateId, s.Name AS StateName, s.Code, " 
 			+ "         u.Id AS UserId, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, "
 			+ "         d.Id AS DepartmentId, d.Name AS DepartmentName, "
-			+ "         r.Id AS RoleId, r.RoleName "
+			+ "         r.Id AS RoleId, r.Name "
 			+ "FROM Address a "
 			+ "INNER JOIN State s ON a.StateId = s.Id " 
 			+ "LEFT JOIN UserAddress ua ON a.Id = ua.AddressId " 

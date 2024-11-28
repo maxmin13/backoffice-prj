@@ -33,7 +33,7 @@ public class ResultSetUserBuilder {
 		Role role = null;
 		try {
 			if (rs.getLong("RoleId") > 0) {
-				role = Role.newInstance().withId(rs.getLong("RoleId")).withRoleName(rs.getString("RoleName"));
+				role = Role.newInstance().withId(rs.getLong("RoleId")).withName(rs.getString("Name"));
 			}
 			return Optional.ofNullable(role);
 		}

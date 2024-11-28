@@ -81,10 +81,10 @@ class UserTest {
 
 	@ParameterizedTest
 	@CsvSource({ "Administrator, Administrator" })
-	void addSameRoleTwice(String roleName1, String roleName2) {
+	void addSameRoleTwice(String name1, String name2) {
 
-		Role role1 = Role.newInstance().withId(1l).withRoleName(roleName1);
-		Role role2 = Role.newInstance().withId(1l).withRoleName(roleName2);
+		Role role1 = Role.newInstance().withId(1l).withName(name1);
+		Role role2 = Role.newInstance().withId(1l).withName(name2);
 
 		User user = User.newInstance();
 		user.addRole(role1);
@@ -95,10 +95,10 @@ class UserTest {
 
 	@ParameterizedTest
 	@CsvSource({ "Administrator, User", })
-	void addDifferentRoles(String roleName1, String roleName2) {
+	void addDifferentRoles(String name1, String name2) {
 
-		Role role1 = Role.newInstance().withId(1l).withRoleName(roleName1);
-		Role role2 = Role.newInstance().withId(1l).withRoleName(roleName2);
+		Role role1 = Role.newInstance().withId(1l).withName(name1);
+		Role role2 = Role.newInstance().withId(1l).withName(name2);
 
 		User user = User.newInstance();
 		user.addRole(role1);
@@ -162,9 +162,9 @@ class UserTest {
 
 	@ParameterizedTest
 	@CsvSource({ "Administrator" })
-	void getRole(String roleName) {
+	void getRole(String name) {
 
-		Role role = Role.newInstance().withId(1l).withRoleName(roleName);
+		Role role = Role.newInstance().withId(1l).withName(name);
 
 		User user = User.newInstance();
 		user.getRoles().add(role);

@@ -10,28 +10,28 @@ public final class RoleDto implements Serializable {
 
 	private static final long serialVersionUID = 2498809195948472094L;
 
-	private String roleName;
+	private String name;
 
-	public static RoleDto newInstance(String roleName) {
-		return new RoleDto(roleName);
+	public static RoleDto newInstance(String name) {
+		return new RoleDto(name);
 	}
 
 	public static RoleDto newInstance(Role role) {
-		return new RoleDto(role.getRoleName());
+		return new RoleDto(role.getName());
 	}
 
-	RoleDto(String roleName) {
-		this.roleName = roleName;
+	RoleDto(String name) {
+		this.name = name;
 	}
 
-	public String getRoleName() {
-		return roleName;
+	public String getName() {
+		return name;
 	}
 
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(roleName);
+		hcb.append(name);
 		return hcb.toHashCode();
 	}
 
@@ -44,12 +44,12 @@ public final class RoleDto implements Serializable {
 			return false;
 		}
 		RoleDto that = (RoleDto) obj;
-		return roleName.equals(that.roleName);
+		return name.equals(that.name);
 	}
 
 	@Override
 	public String toString() {
-		return "Role [roleName=" + roleName + "]";
+		return "Role [name=" + name + "]";
 	}
 
 }

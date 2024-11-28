@@ -82,7 +82,7 @@ class UpdateUserTest extends JdbcBaseTestDao {
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withRoleName(administrator.getRoleName());
+		Role role = Role.newInstance().withId(null).withName(administrator.getName());
 		carl.addRole(role);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> updateUser.execute(carl));
@@ -104,7 +104,7 @@ class UpdateUserTest extends JdbcBaseTestDao {
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withRoleName(administrator.getRoleName());
+		Role role = Role.newInstance().withId(null).withName(administrator.getName());
 		carl.addRole(role);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> updateUser.execute(carl));
@@ -127,9 +127,9 @@ class UpdateUserTest extends JdbcBaseTestDao {
 
 		List<PojoRole> roles = jdbcQueryTestUtil.selectRolesByUserId(us.getId());
 		assertEquals(3, roles.size());
-		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), roles.get(0));
-		jdbcUserTestUtil.verifyRole(user.getRoleName(), roles.get(1));
-		jdbcUserTestUtil.verifyRole(worker.getRoleName(), roles.get(2));
+		jdbcUserTestUtil.verifyRole(administrator.getName(), roles.get(0));
+		jdbcUserTestUtil.verifyRole(user.getName(), roles.get(1));
+		jdbcUserTestUtil.verifyRole(worker.getName(), roles.get(2));
 
 		List<PojoAddress> addresses = jdbcQueryTestUtil.selectAddressesByUserId(us.getId());
 
@@ -149,7 +149,7 @@ class UpdateUserTest extends JdbcBaseTestDao {
 				.withRegion("Veneto").withPostalCode("30033");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(administrator.getId()).withRoleName(administrator.getRoleName());
+		Role role = Role.newInstance().withId(administrator.getId()).withName(administrator.getName());
 		carl.addRole(role);
 
 		// run the test
@@ -164,9 +164,9 @@ class UpdateUserTest extends JdbcBaseTestDao {
 
 		roles = jdbcQueryTestUtil.selectRolesByUserId(us.getId());
 		assertEquals(3, roles.size());
-		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), roles.get(0));
-		jdbcUserTestUtil.verifyRole(user.getRoleName(), roles.get(1));
-		jdbcUserTestUtil.verifyRole(worker.getRoleName(), roles.get(2));
+		jdbcUserTestUtil.verifyRole(administrator.getName(), roles.get(0));
+		jdbcUserTestUtil.verifyRole(user.getName(), roles.get(1));
+		jdbcUserTestUtil.verifyRole(worker.getName(), roles.get(2));
 
 		addresses = jdbcQueryTestUtil.selectAddressesByUserId(us.getId());
 

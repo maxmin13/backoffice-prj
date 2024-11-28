@@ -13,9 +13,9 @@ class RoleTest {
 	
 	@ParameterizedTest
 	@ValueSource(strings = {"Administrator"})
-	void testSameObjectIsEqual(String roleName) {
+	void testSameObjectIsEqual(String name) {
 
-		Role role = Role.newInstance().withId(1l).withRoleName(roleName);
+		Role role = Role.newInstance().withId(1l).withName(name);
 		
 		Set<Role> roles = new HashSet<>();
 		roles.add(role);
@@ -26,10 +26,10 @@ class RoleTest {
 	
 	@ParameterizedTest
 	@CsvSource({ "Administrator, Administrator" })
-	void testSameRoleNamesAreEqual(String roleName1, String roleName2) {
+	void testSameRoleNamesAreEqual(String name1, String name2) {
 
-		Role role1 = Role.newInstance().withId(1l).withRoleName(roleName1);
-		Role role2 = Role.newInstance().withId(1l).withRoleName(roleName2);
+		Role role1 = Role.newInstance().withId(1l).withName(name1);
+		Role role2 = Role.newInstance().withId(1l).withName(name2);
 
 		Set<Role> roles = new HashSet<>();
 		roles.add(role1);
@@ -41,10 +41,10 @@ class RoleTest {
 	
 	@ParameterizedTest
 	@CsvSource({ "Administrator, Legal" })
-	void testDifferentRoleNamesAreNotEqual(String roleName1, String roleName2) {
+	void testDifferentRoleNamesAreNotEqual(String name1, String name2) {
 
-		Role role1 = Role.newInstance().withId(1l).withRoleName(roleName1);
-		Role role2 = Role.newInstance().withId(1l).withRoleName(roleName2);
+		Role role1 = Role.newInstance().withId(1l).withName(name1);
+		Role role2 = Role.newInstance().withId(1l).withName(name2);
 
 		Set<Role> roles = new HashSet<>();
 		roles.add(role1);

@@ -215,20 +215,20 @@ class AddressDaoTest extends JpaBaseTestDao {
 
 		assertEquals(3, roles.size());
 
-		Optional<Role> role1 = max.getRole(ADMINISTRATOR.getRoleName());
+		Optional<Role> role1 = max.getRole(ADMINISTRATOR.getName());
 		Role r1 = role1.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		userTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
+		userTestUtil.verifyRole(ADMINISTRATOR.getName(), r1);
 
-		Optional<Role> role2 = max.getRole(USER.getRoleName());
+		Optional<Role> role2 = max.getRole(USER.getName());
 		Role r2 = role2.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		userTestUtil.verifyRole(USER.getRoleName(), r2);
+		userTestUtil.verifyRole(USER.getName(), r2);
 
-		Optional<Role> role3 = max.getRole(WORKER.getRoleName());
+		Optional<Role> role3 = max.getRole(WORKER.getName());
 		Role r3 = role3.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		userTestUtil.verifyRole(WORKER.getRoleName(), r3);
+		userTestUtil.verifyRole(WORKER.getName(), r3);
 
 		// addresses
 		Set<Address> addresses = max.getAddresses();
@@ -643,7 +643,7 @@ class AddressDaoTest extends JpaBaseTestDao {
 				.withBirthDate(LocalDate.of(1911, 10, 16)).withFirstName("Carlo").withLastName("Carli")
 				.withDepartment(Department.newInstance().withId(production.getId()));
 
-		user.addRole(Role.newInstance().withId(worker.getId()).withRoleName(worker.getRoleName()));
+		user.addRole(Role.newInstance().withId(worker.getId()).withName(worker.getName()));
 
 		address.addUser(user);
 

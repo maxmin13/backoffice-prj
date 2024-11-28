@@ -18,16 +18,16 @@ import it.maxmin.dao.jdbc.JdbcDaoSpringContextTestCfg;
 import it.maxmin.model.jdbc.dao.entity.Role;
 
 @SpringJUnitConfig(classes = { JdbcDaoSpringContextTestCfg.class })
-class SelectRoleByRoleNameTest extends JdbcBaseTestDao {
+class SelectRoleByNameTest extends JdbcBaseTestDao {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SelectRoleByRoleNameTest.class);
-	private SelectRoleByRoleName selectRoleByRoleName;
+	private static final Logger LOGGER = LoggerFactory.getLogger(SelectRoleByNameTest.class);
+	private SelectRoleByName selectRoleByName;
 
 	@Autowired
-	SelectRoleByRoleNameTest(NamedParameterJdbcTemplate jdbcTemplate, JdbcQueryTestUtil jdbcQueryTestUtil,
+	SelectRoleByNameTest(NamedParameterJdbcTemplate jdbcTemplate, JdbcQueryTestUtil jdbcQueryTestUtil,
 			JdbcUserTestUtil jdbcUserTestUtil) {
 		super(jdbcQueryTestUtil, jdbcUserTestUtil);
-		this.selectRoleByRoleName = new SelectRoleByRoleName(jdbcTemplate);
+		this.selectRoleByName = new SelectRoleByName(jdbcTemplate);
 	}
 
 	@Test
@@ -35,9 +35,9 @@ class SelectRoleByRoleNameTest extends JdbcBaseTestDao {
 
 		LOGGER.info("running test executeWithNoRoleName");
 
-		String roleName = null;
+		String name = null;
 
-		Throwable throwable = assertThrows(Throwable.class, () -> selectRoleByRoleName.execute(roleName));
+		Throwable throwable = assertThrows(Throwable.class, () -> selectRoleByName.execute(name));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
@@ -52,7 +52,7 @@ class SelectRoleByRoleNameTest extends JdbcBaseTestDao {
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// run the test
-		Role role = selectRoleByRoleName.execute(administrator.getRoleName());
+		Role role = selectRoleByName.execute(administrator.getName());
 
 		assertNull(role);
 	}
@@ -63,9 +63,9 @@ class SelectRoleByRoleNameTest extends JdbcBaseTestDao {
 		LOGGER.info("running test execute");
 
 		// run the test
-		Role role = selectRoleByRoleName.execute(administrator.getRoleName());
+		Role role = selectRoleByName.execute(administrator.getName());
 
-		this.jdbcUserTestUtil.verifyRole(administrator.getRoleName(), role);
+		this.jdbcUserTestUtil.verifyRole(administrator.getName(), role);
 	}
 
 }

@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
 		});
 
 		userDto.getRoles().stream().forEach(rdt -> {
-			Role role = roleDao.selectByRoleName(rdt.getRoleName()).orElseThrow(() -> new ServiceException(ERROR_ROLE_NOT_FOUND_MSG));
+			Role role = roleDao.selectByRoleName(rdt.getName()).orElseThrow(() -> new ServiceException(ERROR_ROLE_NOT_FOUND_MSG));
 			userDao.associateRole(requireNonNull(newUser).getId(), role.getId());
 		});
 	}

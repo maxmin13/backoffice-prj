@@ -13,19 +13,19 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import it.maxmin.model.jdbc.dao.entity.Role;
 
-public class SelectRoleByRoleName {
+public class SelectRoleByName {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
 
-	public SelectRoleByRoleName(NamedParameterJdbcTemplate jdbcTemplate) {
+	public SelectRoleByName(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public Role execute(String roleName) {
+	public Role execute(String name) {
 
-		notNull(roleName, ERROR_ROLE_NAME_NOT_NULL_MSG);
+		notNull(name, ERROR_ROLE_NAME_NOT_NULL_MSG);
 
-		SqlParameterSource param = new MapSqlParameterSource("roleName", roleName);
+		SqlParameterSource param = new MapSqlParameterSource("name", name);
 
 		List<Role> roles = jdbcTemplate.query(SELECT_ROLE_BY_ROLE_NAME, param,
 				BeanPropertyRowMapper.newInstance(Role.class));

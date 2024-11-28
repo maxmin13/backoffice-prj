@@ -9,7 +9,7 @@ public class Role implements Serializable {
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private Long id;
-	private String roleName;
+	private String name;
 
 	public static Role newInstance() {
 		return new Role();
@@ -28,23 +28,23 @@ public class Role implements Serializable {
 		return this;
 	}
 
-	public String getRoleName() {
-		return roleName;
+	public String getName() {
+		return name;
 	}
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public Role withRoleName(String roleName) {
-		this.roleName = roleName;
+	public Role withName(String name) {
+		this.name = name;
 		return this;
 	}
 
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(roleName);
+		hcb.append(name);
 		return hcb.toHashCode();
 	}
 
@@ -57,12 +57,12 @@ public class Role implements Serializable {
 			return false;
 		}
 		Role that = (Role) obj;
-		return roleName.equals(that.roleName);
+		return name.equals(that.name);
 	}
 
 	@Override
 	public String toString() {
-		return  "Role [id=" + id + ", roleName=" + roleName + "]";
+		return  "Role [id=" + id + ", name=" + name + "]";
 	}
 
 }

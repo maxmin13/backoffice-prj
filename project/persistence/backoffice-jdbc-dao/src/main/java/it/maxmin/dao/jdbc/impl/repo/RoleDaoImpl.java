@@ -10,25 +10,25 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.maxmin.dao.jdbc.api.repo.RoleDao;
-import it.maxmin.dao.jdbc.impl.operation.role.SelectRoleByRoleName;
+import it.maxmin.dao.jdbc.impl.operation.role.SelectRoleByName;
 import it.maxmin.model.jdbc.dao.entity.Role;
 
 @Transactional
 @Repository("roleDao")
 public class RoleDaoImpl implements RoleDao {
 	
-	private SelectRoleByRoleName selectRoleByRoleName;
+	private SelectRoleByName selectRoleByName;
 
 	public RoleDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
 		super();
-		this.selectRoleByRoleName = new SelectRoleByRoleName(jdbcTemplate);
+		this.selectRoleByName = new SelectRoleByName(jdbcTemplate);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Role> selectByRoleName(String roleName) {
-		notNull(roleName, ERROR_ROLE_NAME_NOT_NULL_MSG);
-		Role role = this.selectRoleByRoleName.execute(roleName);
+	public Optional<Role> selectByRoleName(String name) {
+		notNull(name, ERROR_ROLE_NAME_NOT_NULL_MSG);
+		Role role = this.selectRoleByName.execute(name);
 		return role != null ? Optional.of(role) : Optional.empty();
 	}
 

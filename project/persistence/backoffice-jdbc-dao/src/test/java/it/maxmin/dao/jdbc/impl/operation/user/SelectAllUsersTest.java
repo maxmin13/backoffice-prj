@@ -63,7 +63,7 @@ class SelectAllUsersTest {
 				.withCity("Rome").withRegion("County Lazio")
 				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()));
 		Department production = Department.newInstance().withId(3l).withName(PRODUCTION.getName());
-		Role administrator = Role.newInstance().withId(2l).withRoleName(ADMINISTRATOR.getRoleName());
+		Role administrator = Role.newInstance().withId(2l).withName(ADMINISTRATOR.getName());
 		User maxmin = User.newInstance().withId(1l).withAccountName("maxmin13").withFirstName("Max")
 				.withLastName("Minardi").withBirthDate(LocalDate.of(1977, 10, 16)).withDepartment(production);
 		maxmin.addRole(administrator);
@@ -73,7 +73,7 @@ class SelectAllUsersTest {
 				.withCity("Dublin").withRegion("County Dublin")
 				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
 		Department legal = Department.newInstance().withId(3l).withName(LEGAL.getName());
-		Role user = Role.newInstance().withId(2l).withRoleName(USER.getRoleName());
+		Role user = Role.newInstance().withId(2l).withName(USER.getName());
 		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
 				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal);
 		artur.addRole(user);
@@ -97,10 +97,10 @@ class SelectAllUsersTest {
 		// roles
 		assertEquals(1, user1.getRoles().size());
 
-		Optional<Role> role1 = user1.getRole(ADMINISTRATOR.getRoleName());
+		Optional<Role> role1 = user1.getRole(ADMINISTRATOR.getName());
 		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
+		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getName(), r1);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), user1.getDepartment());
@@ -121,10 +121,10 @@ class SelectAllUsersTest {
 		// roles
 		assertEquals(1, user2.getRoles().size());
 
-		Optional<Role> role2 = user2.getRole(USER.getRoleName());
+		Optional<Role> role2 = user2.getRole(USER.getName());
 		Role r2 = role2.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(USER.getRoleName(), r2);
+		jdbcUserTestUtil.verifyRole(USER.getName(), r2);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), user2.getDepartment());

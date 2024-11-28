@@ -110,20 +110,20 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 		// roles
 		assertEquals(3, us1.getRoles().size());
 
-		Optional<Role> role1 = us1.getRole(administrator.getRoleName());
+		Optional<Role> role1 = us1.getRole(administrator.getName());
 		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), r1);
+		jdbcUserTestUtil.verifyRole(administrator.getName(), r1);
 
-		Optional<Role> role2 = us1.getRole(user.getRoleName());
+		Optional<Role> role2 = us1.getRole(user.getName());
 		Role r2 = role2.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(user.getRoleName(), r2);
+		jdbcUserTestUtil.verifyRole(user.getName(), r2);
 
-		Optional<Role> role3 = us1.getRole(worker.getRoleName());
+		Optional<Role> role3 = us1.getRole(worker.getName());
 		Role r3 = role3.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(worker.getRoleName(), r3);
+		jdbcUserTestUtil.verifyRole(worker.getName(), r3);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(production.getName(), us1.getDepartment());
@@ -146,20 +146,20 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 		// roles
 		assertEquals(3, u2.getRoles().size());
 
-		role1 = u2.getRole(administrator.getRoleName());
+		role1 = u2.getRole(administrator.getName());
 		r1 = role1.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), r1);
+		jdbcUserTestUtil.verifyRole(administrator.getName(), r1);
 
-		role2 = u2.getRole(user.getRoleName());
+		role2 = u2.getRole(user.getName());
 		r2 = role2.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(user.getRoleName(), r2);
+		jdbcUserTestUtil.verifyRole(user.getName(), r2);
 
-		role3 = u2.getRole(worker.getRoleName());
+		role3 = u2.getRole(worker.getName());
 		r3 = role3.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(worker.getRoleName(), r3);
+		jdbcUserTestUtil.verifyRole(worker.getName(), r3);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(production.getName(), u2.getDepartment());
@@ -244,20 +244,20 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 		// roles
 		assertEquals(3, max.getRoles().size());
 
-		Optional<Role> role1 = max.getRole(administrator.getRoleName());
+		Optional<Role> role1 = max.getRole(administrator.getName());
 		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), r1);
+		jdbcUserTestUtil.verifyRole(administrator.getName(), r1);
 
-		Optional<Role> role2 = max.getRole(user.getRoleName());
+		Optional<Role> role2 = max.getRole(user.getName());
 		Role r2 = role2.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(user.getRoleName(), r2);
+		jdbcUserTestUtil.verifyRole(user.getName(), r2);
 
-		Optional<Role> role3 = max.getRole(worker.getRoleName());
+		Optional<Role> role3 = max.getRole(worker.getName());
 		Role r3 = role3.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(worker.getRoleName(), r3);
+		jdbcUserTestUtil.verifyRole(worker.getName(), r3);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(production.getName(), max.getDepartment());

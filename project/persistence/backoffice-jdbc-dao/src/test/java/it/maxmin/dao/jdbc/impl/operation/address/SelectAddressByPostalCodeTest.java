@@ -71,7 +71,7 @@ class SelectAddressByPostalCodeTest {
 				.withCity("Rome").withRegion("County Lazio")
 				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()));
 		Department production = Department.newInstance().withId(3l).withName(PRODUCTION.getName());
-		Role administrator = Role.newInstance().withId(2l).withRoleName(ADMINISTRATOR.getRoleName());
+		Role administrator = Role.newInstance().withId(2l).withName(ADMINISTRATOR.getName());
 		User maxmin = User.newInstance().withId(1l).withAccountName("maxmin13").withFirstName("Max")
 				.withLastName("Minardi").withBirthDate(LocalDate.of(1977, 10, 16)).withDepartment(production);
 		maxmin.addRole(administrator);

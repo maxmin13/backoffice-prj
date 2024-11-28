@@ -73,7 +73,7 @@ class SelectUserByAccountNameTest {
 				.withCity("Rome").withRegion("County Lazio")
 				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()));
 		Department production = Department.newInstance().withId(3l).withName(PRODUCTION.getName());
-		Role administrator = Role.newInstance().withId(2l).withRoleName(ADMINISTRATOR.getRoleName());
+		Role administrator = Role.newInstance().withId(2l).withName(ADMINISTRATOR.getName());
 		User maxmin = User.newInstance().withId(1l).withAccountName("maxmin13").withFirstName("Max")
 				.withLastName("Minardi").withBirthDate(LocalDate.of(1977, 10, 16)).withDepartment(production);
 		maxmin.addRole(administrator);
@@ -93,10 +93,10 @@ class SelectUserByAccountNameTest {
 		// roles
 		assertEquals(1, user.getRoles().size());
 
-		Optional<Role> role1 = user.getRole(ADMINISTRATOR.getRoleName());
+		Optional<Role> role1 = user.getRole(ADMINISTRATOR.getName());
 		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
+		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getName(), r1);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), user.getDepartment());

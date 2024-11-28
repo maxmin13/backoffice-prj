@@ -159,11 +159,11 @@ public class User implements Serializable {
 		}
 	}
 
-	public Optional<Role> getRole(String roleName) {
-		if (roleName == null) {
+	public Optional<Role> getRole(String name) {
+		if (name == null) {
 			return Optional.empty();
 		}
-		return roles.stream().filter(each -> each.getRoleName().equals(roleName)).findFirst();
+		return roles.stream().filter(each -> each.getName().equals(name)).findFirst();
 	}
 
 	@Override

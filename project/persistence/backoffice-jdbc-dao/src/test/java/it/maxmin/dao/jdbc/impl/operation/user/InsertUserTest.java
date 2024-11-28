@@ -85,7 +85,7 @@ class InsertUserTest extends JdbcBaseTestDao {
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withRoleName(administrator.getRoleName());
+		Role role = Role.newInstance().withId(null).withName(administrator.getName());
 		carl.addRole(role);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> insertUser.execute(carl));
@@ -107,7 +107,7 @@ class InsertUserTest extends JdbcBaseTestDao {
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withRoleName(administrator.getRoleName());
+		Role role = Role.newInstance().withId(null).withName(administrator.getName());
 		carl.addRole(role);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> insertUser.execute(carl));
@@ -134,7 +134,7 @@ class InsertUserTest extends JdbcBaseTestDao {
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withRoleName(administrator.getRoleName());
+		Role role = Role.newInstance().withId(null).withName(administrator.getName());
 		carl.addRole(role);
 
 		// run the test

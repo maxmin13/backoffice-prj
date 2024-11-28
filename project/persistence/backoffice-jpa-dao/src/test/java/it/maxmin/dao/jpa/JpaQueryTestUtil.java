@@ -84,8 +84,8 @@ public class JpaQueryTestUtil {
 				BeanPropertyRowMapper.newInstance(PojoUser.class));
 	}
 
-	public List<PojoUser> selectUsersByRoleName(String roleName) {
-		SqlParameterSource param = new MapSqlParameterSource("roleName", roleName);
+	public List<PojoUser> selectUsersByRoleName(String name) {
+		SqlParameterSource param = new MapSqlParameterSource("name", name);
 		return jdbcTemplate.query(SELECT_USERS_BY_ROLE_NAME, param, BeanPropertyRowMapper.newInstance(PojoUser.class));
 	}
 
@@ -118,8 +118,8 @@ public class JpaQueryTestUtil {
 				BeanPropertyRowMapper.newInstance(PojoRole.class));
 	}
 
-	public Optional<PojoRole> selectRoleByRoleName(String name) {
-		SqlParameterSource param = new MapSqlParameterSource("roleName", name);
+	public Optional<PojoRole> selectRoleByName(String name) {
+		SqlParameterSource param = new MapSqlParameterSource("name", name);
 		List<PojoRole> roles = jdbcTemplate.query(SELECT_ROLE_BY_NAME, param,
 				BeanPropertyRowMapper.newInstance(PojoRole.class));
 		return roles.isEmpty() ? Optional.empty() : Optional.of(roles.get(0));

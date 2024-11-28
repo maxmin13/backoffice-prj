@@ -4,14 +4,14 @@ public enum JpaQueryTestConstants {
 	;
 
 	public static final String SELECT_ROLES_BY_USER_ID = ""
-			+ "SELECT r.Id, r.RoleName "
+			+ "SELECT r.Id, r.Name "
 			+ "FROM Role r "
 			+ "INNER JOIN UserRole ur ON r.Id = ur.RoleId "
 			+ "WHERE ur.UserId = :userId "
 			+ "ORDER BY r.Id";
 	
 	public static final String SELECT_ROLES_BY_USER_ACCOUNT_NAME = ""
-			+ "SELECT r.Id, r.RoleName "
+			+ "SELECT r.Id, r.Name "
 			+ "FROM Role r "
 			+ "INNER JOIN UserRole ur ON r.Id = ur.RoleId "
 			+ "INNER JOIN User u ON u.Id = ur.UserId "
@@ -19,9 +19,9 @@ public enum JpaQueryTestConstants {
 			+ "ORDER BY r.Id";	
 	
 	public static final String SELECT_ROLE_BY_NAME = ""
-			+ "SELECT Id, RoleName "
+			+ "SELECT Id, Name "
 			+ "FROM Role "
-			+ "WHERE roleName = :roleName ";
+			+ "WHERE name = :name ";
 	
 	public static final String SELECT_ADDRESSES_BY_USER_ID = ""
 			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode "
@@ -86,7 +86,7 @@ public enum JpaQueryTestConstants {
 			+ "FROM User u "
 			+ "INNER JOIN UserRole ur ON u.Id = ur.UserId "
 			+ "INNER JOIN Role r ON ur.RoleId = r.Id "
-			+ "WHERE r.RoleName = :roleName "
+			+ "WHERE r.Name = :name "
 			+ "ORDER BY u.Id";
     
 	public static final String SELECT_STATE_BY_NAME = ""

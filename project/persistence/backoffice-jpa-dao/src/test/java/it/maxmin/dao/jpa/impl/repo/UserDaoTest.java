@@ -180,20 +180,20 @@ class UserDaoTest extends JpaBaseTestDao {
 
 		assertEquals(3, roles.size());
 
-		Optional<Role> role1 = maxmin.getRole(ADMINISTRATOR.getRoleName());
+		Optional<Role> role1 = maxmin.getRole(ADMINISTRATOR.getName());
 		Role r1 = role1.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		userTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
+		userTestUtil.verifyRole(ADMINISTRATOR.getName(), r1);
 
-		Optional<Role> role2 = maxmin.getRole(USER.getRoleName());
+		Optional<Role> role2 = maxmin.getRole(USER.getName());
 		Role r2 = role2.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		userTestUtil.verifyRole(USER.getRoleName(), r2);
+		userTestUtil.verifyRole(USER.getName(), r2);
 
-		Optional<Role> role3 = maxmin.getRole(WORKER.getRoleName());
+		Optional<Role> role3 = maxmin.getRole(WORKER.getName());
 		Role r3 = role3.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		userTestUtil.verifyRole(WORKER.getRoleName(), r3);
+		userTestUtil.verifyRole(WORKER.getName(), r3);
 
 		// addresses
 		Set<Address> addresses1 = maxmin.getAddresses();
@@ -225,15 +225,15 @@ class UserDaoTest extends JpaBaseTestDao {
 
 		assertEquals(2, roles.size());
 
-		Optional<Role> role4 = artur.getRole(ADMINISTRATOR.getRoleName());
+		Optional<Role> role4 = artur.getRole(ADMINISTRATOR.getName());
 		Role r4 = role4.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		userTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r4);
+		userTestUtil.verifyRole(ADMINISTRATOR.getName(), r4);
 
-		Optional<Role> role5 = artur.getRole(USER.getRoleName());
+		Optional<Role> role5 = artur.getRole(USER.getName());
 		Role r5 = role5.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		userTestUtil.verifyRole(USER.getRoleName(), r5);
+		userTestUtil.verifyRole(USER.getName(), r5);
 
 		// addresses
 		Set<Address> addresses2 = artur.getAddresses();
@@ -291,15 +291,15 @@ class UserDaoTest extends JpaBaseTestDao {
 
 		assertEquals(2, roles.size());
 
-		Optional<Role> role1 = ar.getRole(ADMINISTRATOR.getRoleName());
+		Optional<Role> role1 = ar.getRole(ADMINISTRATOR.getName());
 		Role r1 = role1.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		userTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), r1);
+		userTestUtil.verifyRole(ADMINISTRATOR.getName(), r1);
 
-		Optional<Role> role2 = ar.getRole(USER.getRoleName());
+		Optional<Role> role2 = ar.getRole(USER.getName());
 		Role r2 = role2.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		userTestUtil.verifyRole(USER.getRoleName(), r2);
+		userTestUtil.verifyRole(USER.getName(), r2);
 
 		// department
 		Department department = ar.getDepartment();
@@ -387,7 +387,7 @@ class UserDaoTest extends JpaBaseTestDao {
 		List<PojoRole> roles = jdbcQueryTestUtil.selectRolesByUserId(car.getId());
 
 		assertEquals(1, roles.size());
-		userTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), roles.get(0));
+		userTestUtil.verifyRole(ADMINISTRATOR.getName(), roles.get(0));
 
 		List<PojoAddress> addresses = jdbcQueryTestUtil.selectAddressesByUserId(car.getId());
 
@@ -528,7 +528,7 @@ class UserDaoTest extends JpaBaseTestDao {
 				.withFirstName("Carlo").withLastName("Rossi")
 				.withDepartment(Department.newInstance().withId(accounts.getId()));
 
-		carl.addRole(Role.newInstance().withId(23l).withRoleName("Mechanic"));
+		carl.addRole(Role.newInstance().withId(23l).withName("Mechanic"));
 
 		// run the test
 		assertThrows(DataIntegrityViolationException.class, () -> userDao.create(carl));
@@ -581,9 +581,9 @@ class UserDaoTest extends JpaBaseTestDao {
 		userTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), max);
 		userTestUtil.verifyDepartment(PRODUCTION.getName(), dep);
 		assertEquals(3, roles.size());
-		userTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), roles.get(0));
-		userTestUtil.verifyRole(USER.getRoleName(), roles.get(1));
-		userTestUtil.verifyRole(WORKER.getRoleName(), roles.get(2));
+		userTestUtil.verifyRole(ADMINISTRATOR.getName(), roles.get(0));
+		userTestUtil.verifyRole(USER.getName(), roles.get(1));
+		userTestUtil.verifyRole(WORKER.getName(), roles.get(2));
 		assertEquals(2, addresses.size());
 		userTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", addresses.get(0));
 		Optional<PojoState> state1 = jdbcQueryTestUtil.selectStateByAddressPostalCode("30010");
@@ -646,7 +646,7 @@ class UserDaoTest extends JpaBaseTestDao {
 
 		assertEquals(1, updatedRoles.size());
 
-		userTestUtil.verifyRole(ADMINISTRATOR.getRoleName(), updatedRoles.get(0));
+		userTestUtil.verifyRole(ADMINISTRATOR.getName(), updatedRoles.get(0));
 	}
 
 	@Test
@@ -722,7 +722,7 @@ class UserDaoTest extends JpaBaseTestDao {
 				.withState(State.newInstance().withId(ireland.getId()));
 		newUser.addAddress(newAddress);
 
-		Optional<PojoRole> newRole = jdbcQueryTestUtil.selectRoleByRoleName(ADMINISTRATOR.getRoleName());
+		Optional<PojoRole> newRole = jdbcQueryTestUtil.selectRoleByName(ADMINISTRATOR.getName());
 		PojoRole r1 = newRole.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 		newUser.addRole(Role.newInstance().withId(r1.getId()));
 
@@ -794,7 +794,7 @@ class UserDaoTest extends JpaBaseTestDao {
 				.withState(State.newInstance().withId(ireland.getId()));
 		newUser.addAddress(newAddress);
 
-		Role role = Role.newInstance().withId(0l).withRoleName("Inspector");
+		Role role = Role.newInstance().withId(0l).withName("Inspector");
 		newUser.addRole(role);
 
 		// run the test

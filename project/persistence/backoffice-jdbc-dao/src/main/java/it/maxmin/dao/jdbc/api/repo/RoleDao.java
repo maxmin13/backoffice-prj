@@ -6,5 +6,5 @@ import it.maxmin.model.jdbc.dao.entity.Role;
 
 public interface RoleDao {
 
-	Optional<Role> selectByRoleName(String roleName);
+	Optional<Role> selectByRoleName(String name);
 }

@@ -6,7 +6,7 @@ public enum UserQueryConstants {
 	public static final String BASE_SELECT_USERS = ""
 			+ "SELECT DISTINCT u.Id AS UserId, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, "
 			+ "     d.Id AS DepartmentId, d.Name AS DepartmentName, "
-			+ "     r.Id AS RoleId, r.RoleName, "
+			+ "     r.Id AS RoleId, r.Name, "
 			+ "     a.Id AS AddressId, a.Description, a.City, a.Region, a.PostalCode, "
 			+ "     s.Id AS StateId, s.Name AS StateName, s.Code "
 			+ "FROM User u " 
@@ -42,9 +42,9 @@ public enum UserQueryConstants {
 			+ "SET AccountName = :accountName, FirstName = :firstName, LastName = :lastName, DepartmentId = :departmentId, BirthDate = :birtDate";
 	
 	public static final String SELECT_ROLE_BY_ROLE_NAME = ""
-			+ "SELECT Id, RoleName "
+			+ "SELECT Id, Name "
 			+ "FROM Role "
-			+ "WHERE RoleName = :roleName ";
+			+ "WHERE Name = :name ";
 
 	public static final String INSERT_USER_ROLE = "" 
 			+ "INSERT INTO UserRole "

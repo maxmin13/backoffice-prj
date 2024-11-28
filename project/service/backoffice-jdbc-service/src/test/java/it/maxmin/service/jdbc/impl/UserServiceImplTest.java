@@ -74,7 +74,7 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 				StateDto.newInstance(italy.getName(), italy.getCode()));
 
 		Set<AddressDto> addresses = Set.of(addressDto1, addressDto2);
-		Set<RoleDto> roles = Set.of(RoleDto.newInstance(administrator.getRoleName()), RoleDto.newInstance(user.getRoleName()));
+		Set<RoleDto> roles = Set.of(RoleDto.newInstance(administrator.getName()), RoleDto.newInstance(user.getName()));
 
 		// check the user doesn't exist
 		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.selectUserByAccountName("maxmin13");
@@ -103,8 +103,8 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		// check the roles
 		List<PojoRole> userRoles = jdbcQueryTestUtil.selectRolesByUserId(us.getId());
 		assertEquals(2, userRoles.size());
-		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), userRoles.get(0));
-		jdbcUserTestUtil.verifyRole(user.getRoleName(), userRoles.get(1));
+		jdbcUserTestUtil.verifyRole(administrator.getName(), userRoles.get(0));
+		jdbcUserTestUtil.verifyRole(user.getName(), userRoles.get(1));
 	}
 
 	@Test
@@ -137,7 +137,7 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		Set<AddressDto> addresses = Set.of(address1, address2);
 		
 		// non existent role to cause an exception.
-		Set<RoleDto> roles = Set.of(RoleDto.newInstance(administrator.getRoleName()), RoleDto.newInstance("supervisor")); 
+		Set<RoleDto> roles = Set.of(RoleDto.newInstance(administrator.getName()), RoleDto.newInstance("supervisor")); 
 
 		// check the user doesn't exist
 		Optional<PojoUser> user = jdbcQueryTestUtil.selectUserByAccountName("maxmin13");

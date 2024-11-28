@@ -87,13 +87,13 @@ public class JpaUserTestUtil {
 		assertNotNull(actual.getCreatedAt());
 	}
 
-	public void verifyRole(String roleName, Role actual) {
+	public void verifyRole(String name, Role actual) {
 		assertNotNull(actual.getId());
-		assertEquals(roleName, actual.getRoleName());
+		assertEquals(name, actual.getName());
 	}
 	
-	public void verifyRole(String roleName, PojoRole actual) {
+	public void verifyRole(String name, PojoRole actual) {
 		assertNotNull(actual.getId());
-		assertEquals(roleName, actual.getRoleName());
+		assertEquals(name, actual.getName());
 	}
 }
