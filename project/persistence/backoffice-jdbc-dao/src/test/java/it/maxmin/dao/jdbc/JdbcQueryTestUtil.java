@@ -12,6 +12,7 @@ import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ROLES_BY_USER_ACC
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ROLES_BY_USER_USER_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ROLE_BY_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_ADDRESS_POSTAL_CODE;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ADDRESS_POSTAL_CODE;
@@ -175,6 +176,12 @@ public class JdbcQueryTestUtil {
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(userAddress);
 		simpleJdbcInsert.execute(paramSource);
 		LOGGER.info("User {} associated with address {}", userAddress.getUserId(), userAddress.getAddressId());
+	}
+	
+	public Optional<PojoState> findStateById(Long id) {
+		SqlParameterSource param = new MapSqlParameterSource("id", id);
+		List<PojoState> states = jdbcTemplate.query(SELECT_STATE_BY_ID, param, BeanPropertyRowMapper.newInstance(PojoState.class));
+		return states.isEmpty() ? Optional.empty() : Optional.of(states.get(0));
 	}
 
 	public Optional<PojoState> findStateByName(String name) {

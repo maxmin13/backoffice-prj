@@ -45,21 +45,21 @@ public abstract class JpaBaseTestDao {
 		this.jdbcQueryTestUtil = jdbcQueryTestUtil;
 		this.userTestUtil = userTestUtil;
 
-		this.legal = jdbcQueryTestUtil.findDepartmentByName(LEGAL.getName())
+		this.legal = jdbcQueryTestUtil.selectDepartmentByName(LEGAL.getName())
 				.orElseThrow(() -> new JpaDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
-		this.accounts = jdbcQueryTestUtil.findDepartmentByName(ACCOUNTS.getName())
+		this.accounts = jdbcQueryTestUtil.selectDepartmentByName(ACCOUNTS.getName())
 				.orElseThrow(() -> new JpaDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
-		this.production = jdbcQueryTestUtil.findDepartmentByName(PRODUCTION.getName())
+		this.production = jdbcQueryTestUtil.selectDepartmentByName(PRODUCTION.getName())
 				.orElseThrow(() -> new JpaDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
-		this.italy = jdbcQueryTestUtil.findStateByName(ITALY.getName())
+		this.italy = jdbcQueryTestUtil.selectStateByName(ITALY.getName())
 				.orElseThrow(() -> new JpaDaoTestException(ERROR_STATE_NOT_FOUND_MSG));
-		this.ireland = jdbcQueryTestUtil.findStateByName(IRELAND.getName())
+		this.ireland = jdbcQueryTestUtil.selectStateByName(IRELAND.getName())
 				.orElseThrow(() -> new JpaDaoTestException(ERROR_STATE_NOT_FOUND_MSG));
-		this.administrator = jdbcQueryTestUtil.findRoleByRoleName(ADMINISTRATOR.getRoleName())
+		this.administrator = jdbcQueryTestUtil.selectRoleByRoleName(ADMINISTRATOR.getRoleName())
 				.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
-		this.worker = jdbcQueryTestUtil.findRoleByRoleName(WORKER.getRoleName())
+		this.worker = jdbcQueryTestUtil.selectRoleByRoleName(WORKER.getRoleName())
 				.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
-		this.user = jdbcQueryTestUtil.findRoleByRoleName(USER.getRoleName())
+		this.user = jdbcQueryTestUtil.selectRoleByRoleName(USER.getRoleName())
 				.orElseThrow(() -> new JpaDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 	}
 

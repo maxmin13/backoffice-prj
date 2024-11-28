@@ -81,6 +81,11 @@ public enum JdbcQueryTestConstants {
 			+ "WHERE r.RoleName = :roleName "
 			+ "ORDER BY u.Id";
     
+	public static final String SELECT_STATE_BY_ID = ""
+			+ "SELECT Id, Name, Code "
+			+ "FROM State "
+			+ "WHERE Id = :id ";
+	
 	public static final String SELECT_STATE_BY_NAME = ""
 			+ "SELECT Id, Name, Code "
 			+ "FROM State "

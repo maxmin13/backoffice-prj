@@ -95,7 +95,7 @@ class AddressDaoTest extends JpaBaseTestDao {
 
 		LOGGER.info("running test findById1");
 
-		Optional<PojoAddress> pojoAddress = jdbcQueryTestUtil.findAddressByPostalCode("A65TF12");
+		Optional<PojoAddress> pojoAddress = jdbcQueryTestUtil.selectAddressByPostalCode("A65TF12");
 		PojoAddress pjad = pojoAddress.orElseThrow(() -> new JpaDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		// run the test
@@ -145,7 +145,7 @@ class AddressDaoTest extends JpaBaseTestDao {
 
 		LOGGER.info("running test findById2");
 
-		Optional<PojoAddress> pojoAddress = jdbcQueryTestUtil.findAddressByPostalCode("A65TF12");
+		Optional<PojoAddress> pojoAddress = jdbcQueryTestUtil.selectAddressByPostalCode("A65TF12");
 		PojoAddress pjad = pojoAddress.orElseThrow(() -> new JpaDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		// run the test
@@ -185,7 +185,7 @@ class AddressDaoTest extends JpaBaseTestDao {
 
 		LOGGER.info("running test findById3");
 
-		Optional<PojoAddress> pojoAddress = jdbcQueryTestUtil.findAddressByPostalCode("A65TF12");
+		Optional<PojoAddress> pojoAddress = jdbcQueryTestUtil.selectAddressByPostalCode("A65TF12");
 		PojoAddress pjad = pojoAddress.orElseThrow(() -> new JpaDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		// run the test
@@ -266,7 +266,7 @@ class AddressDaoTest extends JpaBaseTestDao {
 
 		LOGGER.info("running test findById4");
 
-		Optional<PojoAddress> pojoAddress = jdbcQueryTestUtil.findAddressByPostalCode("31210");
+		Optional<PojoAddress> pojoAddress = jdbcQueryTestUtil.selectAddressByPostalCode("31210");
 		PojoAddress pjad = pojoAddress.orElseThrow(() -> new JpaDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		// run the test
@@ -461,14 +461,14 @@ class AddressDaoTest extends JpaBaseTestDao {
 		assertNotNull(newAddress);
 		assertNotNull(newAddress.getId());
 
-		Optional<PojoAddress> pojoAddress = this.jdbcQueryTestUtil.findAddressByPostalCode("33322");
+		Optional<PojoAddress> pojoAddress = jdbcQueryTestUtil.selectAddressByAddressId(newAddress.getId());
 		PojoAddress pjad = pojoAddress.orElseThrow(() -> new JpaDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		userTestUtil.verifyAddress("33322", "Via borgo di sotto", "Rome", "County Lazio", pjad);
 
 		assertEquals(italy.getId(), pjad.getStateId());
 
-		List<PojoUser> users = jdbcQueryTestUtil.findUsersByPostalCode("33322");
+		List<PojoUser> users = jdbcQueryTestUtil.selectUsersByAddressId(newAddress.getId());
 
 		assertEquals(2, users.size());
 
@@ -479,8 +479,8 @@ class AddressDaoTest extends JpaBaseTestDao {
 
 		assertEquals(production.getId(), u1.getDepartmentId());
 
-		assertEquals(0, jdbcQueryTestUtil.findRolesByUserAccountName("franco123").size());
-		assertEquals(1, jdbcQueryTestUtil.findAddressesByUserAccountName("franco123").size());
+		assertEquals(0, jdbcQueryTestUtil.selectRolesByUserId(u1.getId()).size());
+		assertEquals(1, jdbcQueryTestUtil.selectAddressesByUserId(u1.getId()).size());
 
 		Optional<PojoUser> user2 = users.stream().filter(u -> u.getAccountName().equals("carlo123")).findFirst();
 		PojoUser u2 = user2.orElseThrow(() -> new JpaDaoTestException(ERROR_USER_NOT_FOUND_MSG));
@@ -489,8 +489,8 @@ class AddressDaoTest extends JpaBaseTestDao {
 
 		assertEquals(production.getId(), u2.getDepartmentId());
 
-		assertEquals(0, jdbcQueryTestUtil.findRolesByUserAccountName("carlo123").size());
-		assertEquals(1, jdbcQueryTestUtil.findAddressesByUserAccountName("carlo123").size());
+		assertEquals(0, jdbcQueryTestUtil.selectRolesByUserId(u2.getId()).size());
+		assertEquals(1, jdbcQueryTestUtil.selectAddressesByUserId(u2.getId()).size());
 	}
 
 	@Test
@@ -512,14 +512,14 @@ class AddressDaoTest extends JpaBaseTestDao {
 		assertNotNull(newAddress);
 		assertNotNull(newAddress.getId());
 
-		Optional<PojoAddress> pojoAddress = jdbcQueryTestUtil.findAddressByPostalCode("33322");
+		Optional<PojoAddress> pojoAddress = jdbcQueryTestUtil.selectAddressByAddressId(newAddress.getId());
 		PojoAddress pjad = pojoAddress.orElseThrow(() -> new JpaDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		userTestUtil.verifyAddress("33322", "Via borgo di sotto", "Rome", "County Lazio", pjad);
 
 		assertEquals(italy.getId(), pjad.getStateId());
 
-		List<PojoUser> users = jdbcQueryTestUtil.findUsersByPostalCode("33322");
+		List<PojoUser> users = jdbcQueryTestUtil.selectUsersByAddressId(newAddress.getId());
 
 		assertEquals(0, users.size());
 	}
@@ -539,9 +539,10 @@ class AddressDaoTest extends JpaBaseTestDao {
 		Address address = Address.newInstance().withPostalCode("33322").withDescription("Via borgo di sotto")
 				.withCity("Rome").withRegion("County Lazio").withState(State.newInstance().withId(italy.getId()));
 
-		Optional<PojoUser> maxmin = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+		// find an existing user
+		Optional<PojoUser> maxmin = jdbcQueryTestUtil.selectUserByAccountName("maxmin13");
 		PojoUser max = maxmin.orElseThrow(() -> new JpaDaoTestException(ERROR_USER_NOT_FOUND_MSG));
-		Optional<PojoDepartment> department = jdbcQueryTestUtil.findDepartmentById(max.getDepartmentId());
+		Optional<PojoDepartment> department = jdbcQueryTestUtil.selectDepartmentById(max.getDepartmentId());
 		PojoDepartment dp = department.orElseThrow(() -> new JpaDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 
 		address.addUser(User.newInstance().withId(max.getId()).withAccountName(max.getAccountName())
@@ -620,7 +621,7 @@ class AddressDaoTest extends JpaBaseTestDao {
 		LOGGER.info("running test update");
 
 		// Find an existing address
-		Optional<PojoAddress> address1 = jdbcQueryTestUtil.findAddressByPostalCode("30010");
+		Optional<PojoAddress> address1 = jdbcQueryTestUtil.selectAddressByPostalCode("30010");
 		PojoAddress ad1 = address1.orElseThrow(() -> new JpaDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		// TODO assert address before changing it?????????
@@ -634,7 +635,7 @@ class AddressDaoTest extends JpaBaseTestDao {
 						.withId(ireland.getId()).withCode(ireland.getCode()).withName(ireland.getName()));
 
 		// Find an existing user
-		Optional<PojoUser> maxmin = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> maxmin = jdbcQueryTestUtil.selectUserByAccountName("maxmin13");
 		PojoUser max = maxmin.orElseThrow(() -> new JpaDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 
 		// Change the user
@@ -652,14 +653,14 @@ class AddressDaoTest extends JpaBaseTestDao {
 		assertNotNull(updatedAddress);
 		assertEquals(address.getId(), updatedAddress.getId());
 
-		Optional<PojoAddress> newAddress = this.jdbcQueryTestUtil.findAddressByAddressId(updatedAddress.getId());
+		Optional<PojoAddress> newAddress = this.jdbcQueryTestUtil.selectAddressByAddressId(updatedAddress.getId());
 		PojoAddress ad = newAddress.orElseThrow(() -> new JpaDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		userTestUtil.verifyAddress("333222", "Via dei mille", "Padova", "County Veneto", ad);
 
 		assertEquals(ireland.getId(), ad.getStateId());
 
-		List<PojoUser> users = jdbcQueryTestUtil.findUsersByPostalCode("333222");
+		List<PojoUser> users = jdbcQueryTestUtil.selectUsersByAddressId(updatedAddress.getId());
 
 		assertEquals(1, users.size());
 
@@ -670,8 +671,8 @@ class AddressDaoTest extends JpaBaseTestDao {
 
 		assertEquals(production.getId(), cl.getDepartmentId());
 
-		assertEquals(1, jdbcQueryTestUtil.findRolesByUserAccountName("carlo123").size());
-		assertEquals(1, jdbcQueryTestUtil.findAddressesByUserAccountName("carlo123").size());
+		assertEquals(1, jdbcQueryTestUtil.selectRolesByUserId(cl.getId()).size());
+		assertEquals(1, jdbcQueryTestUtil.selectAddressesByUserId(cl.getId()).size());
 	}
 
 	void updateRemoveUser() {

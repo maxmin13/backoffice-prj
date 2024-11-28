@@ -142,7 +142,7 @@ class InsertUserTest extends JdbcBaseTestDao {
 
 		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), user);
 
-		Optional<PojoUser> newUser = jdbcQueryTestUtil.findUserByAccountName("carl23");
+		Optional<PojoUser> newUser = jdbcQueryTestUtil.findUserByUserId(user.getId());
 		PojoUser us = newUser.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 		
 		jdbcUserTestUtil.verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), us);

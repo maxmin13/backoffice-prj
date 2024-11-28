@@ -3,7 +3,7 @@ package it.maxmin.dao.jpa;
 public enum JpaQueryTestConstants {
 	;
 
-	public static final String SELECT_ROLES_BY_USER_USER_ID = ""
+	public static final String SELECT_ROLES_BY_USER_ID = ""
 			+ "SELECT r.Id, r.RoleName "
 			+ "FROM Role r "
 			+ "INNER JOIN UserRole ur ON r.Id = ur.RoleId "
@@ -23,7 +23,7 @@ public enum JpaQueryTestConstants {
 			+ "FROM Role "
 			+ "WHERE roleName = :roleName ";
 	
-	public static final String SELECT_ADDRESSES_BY_USER_USER_ID = ""
+	public static final String SELECT_ADDRESSES_BY_USER_ID = ""
 			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode "
 			+ "FROM Address a "
 			+ "INNER JOIN UserAddress ua ON a.Id = ua.AddressId "
@@ -39,10 +39,10 @@ public enum JpaQueryTestConstants {
 			+ "WHERE u.AccountName = :accountName "
 			+ "ORDER BY a.Id";
 	
-	public static final String SELECT_ADDRESS_BY_ADDRESS_ID = ""
+	public static final String SELECT_ADDRESS_BY_ID = ""
 			+ "SELECT Id, Description, City, StateId, Region, PostalCode "
 			+ "FROM Address "
-			+ "WHERE Id = :addressId ";
+			+ "WHERE Id = :id ";
 	
 	public static final String SELECT_ADDRESS_BY_POSTAL_CODE = ""
 			+ "SELECT Id, Description, City, StateId, Region, PostalCode "
@@ -65,7 +65,15 @@ public enum JpaQueryTestConstants {
 			+ "FROM User "
 			+ "WHERE AccountName = :accountName ";
 	
-	public static final String SELECT_USER_BY_ADDRESS_POSTAL_CODE = ""
+	public static final String SELECT_USERS_BY_ADDRESS_ID = ""
+			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId, u.Version "
+			+ "FROM User u "
+			+ "INNER JOIN UserAddress ua ON u.Id = ua.UserId "
+			+ "INNER JOIN Address a ON ua.AddressId = a.Id "
+			+ "WHERE a.Id = :id "
+			+ "ORDER BY u.Id";
+	
+	public static final String SELECT_USERS_BY_ADDRESS_POSTAL_CODE = ""
 			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId, u.Version "
 			+ "FROM User u "
 			+ "INNER JOIN UserAddress ua ON u.Id = ua.UserId "
@@ -73,7 +81,7 @@ public enum JpaQueryTestConstants {
 			+ "WHERE a.PostalCode = :postalCode "
 			+ "ORDER BY u.Id";
 	
-	public static final String SELECT_USER_BY_ROLE_NAME = ""
+	public static final String SELECT_USERS_BY_ROLE_NAME = ""
 			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId "
 			+ "FROM User u "
 			+ "INNER JOIN UserRole ur ON u.Id = ur.UserId "
@@ -85,6 +93,12 @@ public enum JpaQueryTestConstants {
 			+ "SELECT Id, Name, Code "
 			+ "FROM State "
 			+ "WHERE Name = :name ";
+
+	public static final String SELECT_STATE_BY_ADDRESS_ID = ""
+			+ "SELECT s.Id, s.Name, s.Code "
+			+ "FROM State s "
+			+ "INNER JOIN Address a ON a.StateId = s.Id "
+			+ "WHERE a.Id = :addressId ";
 	
 	public static final String SELECT_STATE_BY_ADDRESS_POSTAL_CODE = ""
 			+ "SELECT s.Id, s.Name, s.Code "
@@ -101,6 +115,12 @@ public enum JpaQueryTestConstants {
 			+ "SELECT Id, Name "
 			+ "FROM Department "
 			+ "WHERE Name = :name ";
+	
+	public static final String SELECT_DEPARTMENT_BY_USER_ID = ""
+			+ "SELECT d.Id, d.Name "
+			+ "FROM Department d "
+			+ "INNER JOIN User u ON u.DepartmentId = d.Id "
+			+ "WHERE u.Id = :userId ";	
 	
 	public static final String SELECT_DEPARTMENT_BY_USER_ACCOUNT_NAME = ""
 			+ "SELECT d.Id, d.Name "
