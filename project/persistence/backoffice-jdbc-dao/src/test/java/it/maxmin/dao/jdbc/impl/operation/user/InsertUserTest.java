@@ -142,21 +142,21 @@ class InsertUserTest extends JdbcBaseTestDao {
 
 		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), user);
 
-		Optional<PojoUser> newUser = jdbcQueryTestUtil.findUserByUserId(user.getId());
+		Optional<PojoUser> newUser = jdbcQueryTestUtil.selectUserByUserId(user.getId());
 		PojoUser us = newUser.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 		
 		jdbcUserTestUtil.verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), us);
 
-		Optional<PojoDepartment> department = jdbcQueryTestUtil.findDepartmentById(us.getDepartmentId());
+		Optional<PojoDepartment> department = jdbcQueryTestUtil.selectDepartmentById(us.getDepartmentId());
 		PojoDepartment dep = department.orElseThrow(() -> new JdbcDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyDepartment(accounts.getName(), dep);
 
-		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(us.getId());
+		List<PojoAddress> addresses = jdbcQueryTestUtil.selectAddressesByUserId(us.getId());
 
 		assertEquals(0, addresses.size());
 
-		List<PojoRole> roles = jdbcQueryTestUtil.findRolesByUserId(user.getId());
+		List<PojoRole> roles = jdbcQueryTestUtil.selectRolesByUserId(user.getId());
 
 		assertEquals(0, roles.size());
 	}

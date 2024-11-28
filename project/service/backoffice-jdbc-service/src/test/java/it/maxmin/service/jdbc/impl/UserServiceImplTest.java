@@ -58,17 +58,17 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// find an existing address
-		Optional<PojoAddress> address1 = jdbcQueryTestUtil.findAddressByPostalCode("30010");
+		Optional<PojoAddress> address1 = jdbcQueryTestUtil.selectAddressByPostalCode("30010");
 		PojoAddress ad1 = address1.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", ad1);
-		Optional<PojoState> state = jdbcQueryTestUtil.findStateByAddressPostalCode("30010");
+		Optional<PojoState> state = jdbcQueryTestUtil.selectStateByAddressPostalCode("30010");
 		PojoState st = state.orElseThrow(() -> new JdbcDaoTestException("Error state not found"));
 		jdbcUserTestUtil.verifyState("Italy", "IT", st);
 		AddressDto addressDto1 = AddressDto.newInstance(ad1.getDescription(), ad1.getCity(), ad1.getRegion(),
 				ad1.getPostalCode(), StateDto.newInstance(st.getName(), st.getCode()));
 
 		// create a new address
-		Optional<PojoAddress>  address2 = jdbcQueryTestUtil.findAddressByPostalCode("50033");
+		Optional<PojoAddress>  address2 = jdbcQueryTestUtil.selectAddressByPostalCode("50033");
 		assertEquals(true, address2.isEmpty()); 
 		AddressDto addressDto2 = AddressDto.newInstance("Via della resistenza", "Florence", "County Liguria", "50033",
 				StateDto.newInstance(italy.getName(), italy.getCode()));
@@ -77,7 +77,7 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		Set<RoleDto> roles = Set.of(RoleDto.newInstance(administrator.getRoleName()), RoleDto.newInstance(user.getRoleName()));
 
 		// check the user doesn't exist
-		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.selectUserByAccountName("maxmin13");
 		assertEquals(true, pojoUser.isEmpty());
 		UserDto maxmin = UserDto.newInstance(CredentialsDto.newInstance("maxmin13", "Max", "Minardi"),
 				LocalDate.of(1977, 10, 16), null, DepartmentDto.newInstance(production.getName()), addresses, roles);
@@ -86,22 +86,22 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		userService.createUser(maxmin);
 
 		// check the user
-		Optional<PojoUser> newPojoUser = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> newPojoUser = jdbcQueryTestUtil.selectUserByAccountName("maxmin13");
 		PojoUser us = newPojoUser.orElseThrow(() -> new JdbcDaoTestException("Error user not found"));
 		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), us);
-		Optional<PojoDepartment> department = jdbcQueryTestUtil.findDepartmentById(us.getDepartmentId());
+		Optional<PojoDepartment> department = jdbcQueryTestUtil.selectDepartmentById(us.getDepartmentId());
 		PojoDepartment dep = department.orElseThrow(() -> new JdbcDaoTestException("Error department not found"));
 		jdbcUserTestUtil.verifyDepartment(production.getName(), dep);
 
 		// check the addresses
-		List<PojoAddress> userAddresses = jdbcQueryTestUtil.findAddressesByUserId(us.getId());
+		List<PojoAddress> userAddresses = jdbcQueryTestUtil.selectAddressesByUserId(us.getId());
 		assertEquals(2, userAddresses.size());
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", userAddresses.get(0));
 		jdbcUserTestUtil.verifyAddress("50033", "Via della resistenza", "Florence", "County Liguria",
 				userAddresses.get(1));
 
 		// check the roles
-		List<PojoRole> userRoles = jdbcQueryTestUtil.findRolesByUserId(us.getId());
+		List<PojoRole> userRoles = jdbcQueryTestUtil.selectRolesByUserId(us.getId());
 		assertEquals(2, userRoles.size());
 		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), userRoles.get(0));
 		jdbcUserTestUtil.verifyRole(user.getRoleName(), userRoles.get(1));
@@ -118,17 +118,17 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// find an existing address
-		Optional<PojoAddress> address = jdbcQueryTestUtil.findAddressByPostalCode("30010");
+		Optional<PojoAddress> address = jdbcQueryTestUtil.selectAddressByPostalCode("30010");
 		PojoAddress ad = address.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", ad);
-		Optional<PojoState> state = jdbcQueryTestUtil.findStateByAddressPostalCode("30010");
+		Optional<PojoState> state = jdbcQueryTestUtil.selectStateByAddressPostalCode("30010");
 		PojoState st = state.orElseThrow(() -> new JdbcDaoTestException("Error state not found"));
 		jdbcUserTestUtil.verifyState("Italy", "IT", st);
 		AddressDto address1 = AddressDto.newInstance(ad.getDescription(), ad.getCity(), ad.getRegion(),
 				ad.getPostalCode(), StateDto.newInstance(st.getName(), st.getCode()));
 
 		// create a new address
-		address = jdbcQueryTestUtil.findAddressByPostalCode("50033");
+		address = jdbcQueryTestUtil.selectAddressByPostalCode("50033");
 		assertEquals(true, address.isEmpty()); 
 
 		AddressDto address2 = AddressDto.newInstance("Via della resistenza", "Florence", "County Liguria", "50033",
@@ -140,7 +140,7 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		Set<RoleDto> roles = Set.of(RoleDto.newInstance(administrator.getRoleName()), RoleDto.newInstance("supervisor")); 
 
 		// check the user doesn't exist
-		Optional<PojoUser> user = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> user = jdbcQueryTestUtil.selectUserByAccountName("maxmin13");
 		assertEquals(true, user.isEmpty());
 
 		UserDto maxmin = UserDto.newInstance(CredentialsDto.newInstance("maxmin13", "Max", "Minardi"),
@@ -152,15 +152,15 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		assertEquals(ServiceException.class, throwable.getClass());
 	
 		// check the user
-		user = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+		user = jdbcQueryTestUtil.selectUserByAccountName("maxmin13");
 		assertEquals(true, user.isEmpty());
 
 		// check the addresses
-		List<PojoAddress> userAddresses = jdbcQueryTestUtil.findAddressesByUserAccountName("maxmin13");
+		List<PojoAddress> userAddresses = jdbcQueryTestUtil.selectAddressesByUserAccountName("maxmin13");
 		assertEquals(0, userAddresses.size());
 		
 		// check the role
-		List<PojoRole> userRoles = jdbcQueryTestUtil.findRolesByUserAccountName("maxmin13");
+		List<PojoRole> userRoles = jdbcQueryTestUtil.selectRolesByUserAccountName("maxmin13");
 		assertEquals(0, userRoles.size());
 	}
 }

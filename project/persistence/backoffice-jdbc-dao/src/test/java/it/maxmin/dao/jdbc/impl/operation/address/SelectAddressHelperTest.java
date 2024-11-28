@@ -66,7 +66,7 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
-		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.selectUserByAccountName("maxmin13");
 		PojoUser maxmin = pojoUser.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 
 		// run the test
@@ -84,7 +84,7 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 
 		LOGGER.info("running test selectAddressesByUserId");
 
-		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.selectUserByAccountName("maxmin13");
 		PojoUser maxmin = pojoUser.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
@@ -195,7 +195,7 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
-		Optional<PojoAddress> address = jdbcQueryTestUtil.findAddressByPostalCode("30010");
+		Optional<PojoAddress> address = jdbcQueryTestUtil.selectAddressByPostalCode("30010");
 		PojoAddress add = address.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
@@ -219,7 +219,7 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 
 		LOGGER.info("running test selectAddressesByPostalCode");
 
-		Optional<PojoAddress> address = jdbcQueryTestUtil.findAddressByPostalCode("30010");
+		Optional<PojoAddress> address = jdbcQueryTestUtil.selectAddressByPostalCode("30010");
 		PojoAddress ad = address.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 
 		MapSqlParameterSource param = new MapSqlParameterSource();

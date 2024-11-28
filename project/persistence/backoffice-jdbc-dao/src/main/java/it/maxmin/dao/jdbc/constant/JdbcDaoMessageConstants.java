@@ -22,6 +22,7 @@ public enum JdbcDaoMessageConstants {
 	public static final String ERROR_STATE_NOT_NULL_MSG = "The state must not be null";
 	public static final String ERROR_STATE_ID_NOT_NULL_MSG = "The state ID must not be null";
 	public static final String ERROR_STATE_NAME_NOT_NULL_MSG = "The state name must not be null";
+	public static final String ERROR_USER_ADDRESS_NOT_NULL_MSG = "The user address must not be null";
 	public static final String ERROR_USER_NOT_FOUND_MSG = "Error user not found";
 	public static final String ERROR_USER_NOT_NULL_MSG = "The user must not be null";
 	public static final String ERROR_USER_ID_NOT_NULL_MSG = "The user ID must not be null";

@@ -1,23 +1,28 @@
 package it.maxmin.dao.jdbc;
 
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESSES_BY_USER_ACCOUNT_NAME;
-import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESSES_BY_USER_USER_ID;
-import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESS_BY_ADDRESS_ID;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESSES_BY_USER_ID;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESS_BY_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ALL_ADDRESSES;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_DEPARTMENT_BY_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_DEPARTMENT_BY_USER_ACCOUNT_NAME;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_DEPARTMENT_BY_USER_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ROLES_BY_USER_ACCOUNT_NAME;
-import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ROLES_BY_USER_USER_ID;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ROLES_BY_USER_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ROLE_BY_NAME;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_ADDRESS_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_ADDRESS_POSTAL_CODE;
-import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_STATE_BY_NAME;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USERS_BY_ADDRESS_ID;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USERS_BY_ADDRESS_POSTAL_CODE;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USERS_BY_ROLE_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
-import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ADDRESS_POSTAL_CODE;
-import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ROLE_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_USER_ID;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ADDRESS_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.IOException;
@@ -57,34 +62,38 @@ public class JdbcQueryTestUtil {
 		this.dataSource = dataSource;
 	}
 
-	public Optional<PojoUser> findUserByUserId(Long userId) {
+	public Optional<PojoUser> selectUserByUserId(Long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
 		List<PojoUser> users = jdbcTemplate.query(SELECT_USER_BY_USER_ID, param,
 				BeanPropertyRowMapper.newInstance(PojoUser.class));
 		return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
 	}
 
-	public Optional<PojoUser> findUserByAccountName(String accountName) {
+	public Optional<PojoUser> selectUserByAccountName(String accountName) {
 		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
 		List<PojoUser> users = jdbcTemplate.query(SELECT_USER_BY_ACCOUNT_NAME, param,
 				BeanPropertyRowMapper.newInstance(PojoUser.class));
 		return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
 	}
-	
-	public List<PojoUser> findUsersByPostalCode(String postalCode) {
-		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
-		return jdbcTemplate.query(SELECT_USER_BY_ADDRESS_POSTAL_CODE, param,
-				BeanPropertyRowMapper.newInstance(PojoUser.class));
+
+	public List<PojoUser> selectUsersByAddressId(Long id) {
+		SqlParameterSource param = new MapSqlParameterSource("id", id);
+		return jdbcTemplate.query(SELECT_USERS_BY_ADDRESS_ID, param, BeanPropertyRowMapper.newInstance(PojoUser.class));
 	}
-	
-	public List<PojoUser> findUsersByRoleName(String roleName) {
-		SqlParameterSource param = new MapSqlParameterSource("roleName", roleName);
-		return jdbcTemplate.query(SELECT_USER_BY_ROLE_NAME, param,
+
+	public List<PojoUser> selectUsersByPostalCode(String postalCode) {
+		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
+		return jdbcTemplate.query(SELECT_USERS_BY_ADDRESS_POSTAL_CODE, param,
 				BeanPropertyRowMapper.newInstance(PojoUser.class));
 	}
 
-	public PojoUser createUser(PojoUser user) {
-		notNull(user, "The user must not be null");
+	public List<PojoUser> selectUsersByRoleName(String roleName) {
+		SqlParameterSource param = new MapSqlParameterSource("roleName", roleName);
+		return jdbcTemplate.query(SELECT_USERS_BY_ROLE_NAME, param, BeanPropertyRowMapper.newInstance(PojoUser.class));
+	}
+
+	public PojoUser insertUser(PojoUser user) {
+		notNull(user, ERROR_USER_NOT_NULL_MSG);
 
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		simpleJdbcInsert.usingGeneratedKeyColumns("Id");
@@ -101,56 +110,56 @@ public class JdbcQueryTestUtil {
 		return user;
 	}
 
-	public List<PojoRole> findRolesByUserId(long userId) {
+	public List<PojoRole> selectRolesByUserId(long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
-		return jdbcTemplate.query(SELECT_ROLES_BY_USER_USER_ID, param,
-				BeanPropertyRowMapper.newInstance(PojoRole.class));
+		return jdbcTemplate.query(SELECT_ROLES_BY_USER_ID, param, BeanPropertyRowMapper.newInstance(PojoRole.class));
 	}
-	
-	public List<PojoRole> findRolesByUserAccountName(String accountName) {
+
+	public List<PojoRole> selectRolesByUserAccountName(String accountName) {
 		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
 		return jdbcTemplate.query(SELECT_ROLES_BY_USER_ACCOUNT_NAME, param,
 				BeanPropertyRowMapper.newInstance(PojoRole.class));
 	}
-	
-	public Optional<PojoRole> findRoleByRoleName(String name) {
+
+	public Optional<PojoRole> selectRoleByRoleName(String name) {
 		SqlParameterSource param = new MapSqlParameterSource("roleName", name);
-		List<PojoRole> roles = jdbcTemplate.query(SELECT_ROLE_BY_NAME, param, BeanPropertyRowMapper.newInstance(PojoRole.class));
+		List<PojoRole> roles = jdbcTemplate.query(SELECT_ROLE_BY_NAME, param,
+				BeanPropertyRowMapper.newInstance(PojoRole.class));
 		return roles.isEmpty() ? Optional.empty() : Optional.of(roles.get(0));
 	}
 
-	public List<PojoAddress> findAddressesByUserId(long userId) {
+	public List<PojoAddress> selectAddressesByUserId(long userId) {
 		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
-		return jdbcTemplate.query(SELECT_ADDRESSES_BY_USER_USER_ID, param,
+		return jdbcTemplate.query(SELECT_ADDRESSES_BY_USER_ID, param,
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
 	}
-	
-	public List<PojoAddress> findAddressesByUserAccountName(String accountName) {
+
+	public List<PojoAddress> selectAddressesByUserAccountName(String accountName) {
 		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
 		return jdbcTemplate.query(SELECT_ADDRESSES_BY_USER_ACCOUNT_NAME, param,
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
 	}
-	
-	public Optional<PojoAddress> findAddressByPostalCode(String postalCode) {
+
+	public Optional<PojoAddress> selectAddressByPostalCode(String postalCode) {
 		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
 		List<PojoAddress> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_POSTAL_CODE, param,
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
 		return addresses.isEmpty() ? Optional.empty() : Optional.of(addresses.get(0));
 	}
 
-	public Optional<PojoAddress> findAddressByAddressId(long addressId) {
-		SqlParameterSource param = new MapSqlParameterSource("addressId", addressId);
-		List<PojoAddress> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_ADDRESS_ID, param,
+	public Optional<PojoAddress> selectAddressByAddressId(long addressId) {
+		SqlParameterSource param = new MapSqlParameterSource("id", addressId);
+		List<PojoAddress> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_ID, param,
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
 		return addresses.isEmpty() ? Optional.empty() : Optional.of(addresses.get(0));
 	}
 
-	public List<PojoAddress> findAllAddresses() {
+	public List<PojoAddress> selectAllAddresses() {
 		return jdbcTemplate.query(SELECT_ALL_ADDRESSES, BeanPropertyRowMapper.newInstance(PojoAddress.class));
 	}
 
-	public PojoAddress createAddress(PojoAddress address) {
-		notNull(address, "The address must not be null");
+	public PojoAddress insertAddress(PojoAddress address) {
+		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
 
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		simpleJdbcInsert.usingGeneratedKeyColumns("Id");
@@ -168,7 +177,7 @@ public class JdbcQueryTestUtil {
 	}
 
 	public void associateUserAddress(PojoUserAddress userAddress) {
-		notNull(userAddress, "The user address must not be null");
+		notNull(userAddress, ERROR_USER_ADDRESS_NOT_NULL_MSG);
 
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		simpleJdbcInsert.usingGeneratedKeyColumns("Id");
@@ -177,40 +186,50 @@ public class JdbcQueryTestUtil {
 		simpleJdbcInsert.execute(paramSource);
 		LOGGER.info("User {} associated with address {}", userAddress.getUserId(), userAddress.getAddressId());
 	}
-	
-	public Optional<PojoState> findStateById(Long id) {
-		SqlParameterSource param = new MapSqlParameterSource("id", id);
-		List<PojoState> states = jdbcTemplate.query(SELECT_STATE_BY_ID, param, BeanPropertyRowMapper.newInstance(PojoState.class));
+
+	public Optional<PojoState> selectStateByName(String name) {
+		SqlParameterSource param = new MapSqlParameterSource("name", name);
+		List<PojoState> states = jdbcTemplate.query(SELECT_STATE_BY_NAME, param,
+				BeanPropertyRowMapper.newInstance(PojoState.class));
 		return states.isEmpty() ? Optional.empty() : Optional.of(states.get(0));
 	}
 
-	public Optional<PojoState> findStateByName(String name) {
-		SqlParameterSource param = new MapSqlParameterSource("name", name);
-		List<PojoState> states = jdbcTemplate.query(SELECT_STATE_BY_NAME, param, BeanPropertyRowMapper.newInstance(PojoState.class));
+	public Optional<PojoState> selectStateByAddressId(Long addressId) {
+		SqlParameterSource param = new MapSqlParameterSource("addressId", addressId);
+		List<PojoState> states = jdbcTemplate.query(SELECT_STATE_BY_ADDRESS_ID, param,
+				BeanPropertyRowMapper.newInstance(PojoState.class));
 		return states.isEmpty() ? Optional.empty() : Optional.of(states.get(0));
 	}
-	
-	public Optional<PojoState> findStateByAddressPostalCode(String postalCode) {
+
+	public Optional<PojoState> selectStateByAddressPostalCode(String postalCode) {
 		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
-		List<PojoState> states = jdbcTemplate.query(SELECT_STATE_BY_ADDRESS_POSTAL_CODE, param, BeanPropertyRowMapper.newInstance(PojoState.class));
+		List<PojoState> states = jdbcTemplate.query(SELECT_STATE_BY_ADDRESS_POSTAL_CODE, param,
+				BeanPropertyRowMapper.newInstance(PojoState.class));
 		return states.isEmpty() ? Optional.empty() : Optional.of(states.get(0));
 	}
-	
-	public Optional<PojoDepartment> findDepartmentById(long id) {
+
+	public Optional<PojoDepartment> selectDepartmentById(long id) {
 		SqlParameterSource param = new MapSqlParameterSource("id", id);
 		List<PojoDepartment> departments = jdbcTemplate.query(SELECT_DEPARTMENT_BY_ID, param,
 				BeanPropertyRowMapper.newInstance(PojoDepartment.class));
 		return departments.isEmpty() ? Optional.empty() : Optional.of(departments.get(0));
 	}
 
-	public Optional<PojoDepartment> findDepartmentByName(String name) {
+	public Optional<PojoDepartment> selectDepartmentByName(String name) {
 		SqlParameterSource param = new MapSqlParameterSource("name", name);
 		List<PojoDepartment> departments = jdbcTemplate.query(SELECT_DEPARTMENT_BY_NAME, param,
 				BeanPropertyRowMapper.newInstance(PojoDepartment.class));
 		return departments.isEmpty() ? Optional.empty() : Optional.of(departments.get(0));
 	}
-	
-	public Optional<PojoDepartment> findDepartmentByUserAccountName(String accountName) {
+
+	public Optional<PojoDepartment> selectDepartmentByUserId(Long userId) {
+		SqlParameterSource param = new MapSqlParameterSource("userId", userId);
+		List<PojoDepartment> departments = jdbcTemplate.query(SELECT_DEPARTMENT_BY_USER_ID, param,
+				BeanPropertyRowMapper.newInstance(PojoDepartment.class));
+		return departments.isEmpty() ? Optional.empty() : Optional.of(departments.get(0));
+	}
+
+	public Optional<PojoDepartment> selectDepartmentByUserAccountName(String accountName) {
 		SqlParameterSource param = new MapSqlParameterSource("accountName", accountName);
 		List<PojoDepartment> departments = jdbcTemplate.query(SELECT_DEPARTMENT_BY_USER_ACCOUNT_NAME, param,
 				BeanPropertyRowMapper.newInstance(PojoDepartment.class));

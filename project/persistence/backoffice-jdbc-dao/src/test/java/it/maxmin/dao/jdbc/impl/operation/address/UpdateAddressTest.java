@@ -94,7 +94,7 @@ class UpdateAddressTest extends JdbcBaseTestDao {
 		LOGGER.info("running test update");
 
 		// Find an existing address
-		Optional<PojoAddress> address = jdbcQueryTestUtil.findAddressByPostalCode("30010");
+		Optional<PojoAddress> address = jdbcQueryTestUtil.selectAddressByPostalCode("30010");
 		PojoAddress ad = address.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", ad);
@@ -108,12 +108,12 @@ class UpdateAddressTest extends JdbcBaseTestDao {
 		// run the test
 		updateAddress.execute(addressUpdated);
 
-		Optional<PojoAddress> updated = jdbcQueryTestUtil.findAddressByAddressId(ad.getId());
+		Optional<PojoAddress> updated = jdbcQueryTestUtil.selectAddressByAddressId(ad.getId());
 		PojoAddress up = updated.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("33311", "Via Nuova", "Venice", "Veneto", up);
 
-		Optional<PojoState> state = jdbcQueryTestUtil.findStateByAddressPostalCode("33311");
+		Optional<PojoState> state = jdbcQueryTestUtil.selectStateByAddressPostalCode("33311");
 		PojoState st = state.orElseThrow(() -> new JdbcDaoTestException(ERROR_STATE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), st);

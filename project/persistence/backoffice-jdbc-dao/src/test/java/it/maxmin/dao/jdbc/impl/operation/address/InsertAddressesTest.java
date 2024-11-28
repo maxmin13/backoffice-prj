@@ -66,7 +66,7 @@ class InsertAddressesTest extends JdbcBaseTestDao {
 		// run the test
 		insertAddresses.execute(addresses);
 
-		List<PojoAddress> newAddresses = jdbcQueryTestUtil.findAllAddresses();
+		List<PojoAddress> newAddresses = jdbcQueryTestUtil.selectAllAddresses();
 
 		assertEquals(2, newAddresses.size());
 

@@ -108,12 +108,12 @@ class InsertAddressTest extends JdbcBaseTestDao {
 		assertNotNull(address);
 		assertNotNull(address.getId());
 
-		Optional<PojoAddress> newAddress = jdbcQueryTestUtil.findAddressByAddressId(address.getId());
+		Optional<PojoAddress> newAddress = jdbcQueryTestUtil.selectAddressByAddressId(address.getId());
 		PojoAddress ad = newAddress.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 		
 		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "Veneto", ad);
 
-		Optional<PojoState> state = jdbcQueryTestUtil.findStateByAddressPostalCode("30033");
+		Optional<PojoState> state = jdbcQueryTestUtil.selectStateByAddressPostalCode("30033");
 		PojoState st = state.orElseThrow(() -> new JdbcDaoTestException(ERROR_STATE_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), st);

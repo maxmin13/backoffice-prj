@@ -118,20 +118,20 @@ class UpdateUserTest extends JdbcBaseTestDao {
 		LOGGER.info("running test execute");
 
 		// Find an existing user
-		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.findUserByAccountName("maxmin13");
+		Optional<PojoUser> pojoUser = jdbcQueryTestUtil.selectUserByAccountName("maxmin13");
 		PojoUser us = pojoUser.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 		
 		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), us);
 
 		assertEquals(production.getId(), us.getDepartmentId());
 
-		List<PojoRole> roles = jdbcQueryTestUtil.findRolesByUserId(us.getId());
+		List<PojoRole> roles = jdbcQueryTestUtil.selectRolesByUserId(us.getId());
 		assertEquals(3, roles.size());
 		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), roles.get(0));
 		jdbcUserTestUtil.verifyRole(user.getRoleName(), roles.get(1));
 		jdbcUserTestUtil.verifyRole(worker.getRoleName(), roles.get(2));
 
-		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(us.getId());
+		List<PojoAddress> addresses = jdbcQueryTestUtil.selectAddressesByUserId(us.getId());
 
 		assertEquals(2, addresses.size());
 
@@ -155,20 +155,20 @@ class UpdateUserTest extends JdbcBaseTestDao {
 		// run the test
 		updateUser.execute(carl);
 
-		Optional<PojoUser> updated = jdbcQueryTestUtil.findUserByUserId(us.getId());
+		Optional<PojoUser> updated = jdbcQueryTestUtil.selectUserByUserId(us.getId());
 		PojoUser up = updated.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyUser("carl123", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), up);
 
 		assertEquals(accounts.getId(), up.getDepartmentId());
 
-		roles = jdbcQueryTestUtil.findRolesByUserId(us.getId());
+		roles = jdbcQueryTestUtil.selectRolesByUserId(us.getId());
 		assertEquals(3, roles.size());
 		jdbcUserTestUtil.verifyRole(administrator.getRoleName(), roles.get(0));
 		jdbcUserTestUtil.verifyRole(user.getRoleName(), roles.get(1));
 		jdbcUserTestUtil.verifyRole(worker.getRoleName(), roles.get(2));
 
-		addresses = jdbcQueryTestUtil.findAddressesByUserId(us.getId());
+		addresses = jdbcQueryTestUtil.selectAddressesByUserId(us.getId());
 
 		assertEquals(2, addresses.size());
 

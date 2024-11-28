@@ -68,17 +68,17 @@ class InsertUserAddressTest extends JdbcBaseTestDao {
 		PojoUser franco = PojoUser.newInstance().withAccountName("franc").withBirthDate(LocalDate.of(1981, 11, 12))
 				.withFirstName("Franco").withLastName("Red").withDepartmentId(legal.getId());
 
-		PojoUser newUser = jdbcQueryTestUtil.createUser(franco);
+		PojoUser newUser = jdbcQueryTestUtil.insertUser(franco);
 
 		PojoAddress address = PojoAddress.newInstance().withDescription("Via Nuova").withCity("Venice")
 				.withStateId(italy.getId()).withRegion("Veneto").withPostalCode("30033");
 
-		PojoAddress newAddress = jdbcQueryTestUtil.createAddress(address);
+		PojoAddress newAddress = jdbcQueryTestUtil.insertAddress(address);
 
 		// run the test
 		insertUserAddress.execute(newUser.getId(), newAddress.getId());
 
-		List<PojoAddress> addresses = jdbcQueryTestUtil.findAddressesByUserId(newUser.getId());
+		List<PojoAddress> addresses = jdbcQueryTestUtil.selectAddressesByUserId(newUser.getId());
 
 		assertEquals(1, addresses.size());
 
