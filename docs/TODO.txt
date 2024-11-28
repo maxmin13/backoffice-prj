@@ -5,7 +5,7 @@ There are various demands, and various places where you handle unchecked excepti
 
 *******************************************************************************************************************
 
-change RoleName to Name
+
 check all operations, add all notNull(), not only for id field
 
 
