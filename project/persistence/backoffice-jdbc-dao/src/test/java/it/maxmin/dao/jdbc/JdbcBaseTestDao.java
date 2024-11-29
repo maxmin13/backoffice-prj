@@ -76,10 +76,11 @@ public abstract class JdbcBaseTestDao {
 	}
 
 	@AfterEach
-	void cleanUp() { //TODO why delete all the tables? check
-		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_transactiontype.down.sql", "2_accountstatus.down.sql", "2_accounttype.down.sql",
-				"2_useraddress.down.sql", "2_user.down.sql", "2_address.down.sql", "2_state.down.sql",
-				"2_department.down.sql", "2_role.down.sql", "1_create_database.down.sql" };
+	void destroy() {
+		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_transactiontype.down.sql",
+				"2_accountstatus.down.sql", "2_accounttype.down.sql", "2_useraddress.down.sql", "2_user.down.sql",
+				"2_address.down.sql", "2_state.down.sql", "2_department.down.sql", "2_role.down.sql",
+				"1_create_database.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 	}
 
