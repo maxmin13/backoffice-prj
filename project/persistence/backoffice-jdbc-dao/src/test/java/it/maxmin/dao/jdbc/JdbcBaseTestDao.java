@@ -47,7 +47,8 @@ public abstract class JdbcBaseTestDao {
 		this.jdbcQueryTestUtil = jdbcQueryTestUtil;
 		this.jdbcUserTestUtil = jdbcUserTestUtil;
 
-		String[] scripts = { "1_create_database.up.sql", "2_role.up.sql", "2_state.up.sql", "2_department.up.sql" };
+		String[] scripts = { "1_create_database.up.sql", "2_role.up.sql", "2_state.up.sql", "2_department.up.sql",
+				"2_transactiontype.up.sql", "2_accountstatus.up.sql", "2_accounttype.up.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		this.legal = jdbcQueryTestUtil.selectDepartmentByName(LEGAL.getName())
@@ -70,13 +71,14 @@ public abstract class JdbcBaseTestDao {
 
 	@BeforeEach
 	void init() {
-		String[] scripts = { "2_address.up.sql", "2_user.up.sql" };
+		String[] scripts = { "2_address.up.sql", "2_user.up.sql", "2_account.up.sql", "2_transaction.up.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 	}
 
 	@AfterEach
-	void cleanUp() {
-		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql", "2_address.down.sql", "2_state.down.sql",
+	void cleanUp() { //TODO why delete all the tables? check
+		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_transactiontype.down.sql", "2_accountstatus.down.sql", "2_accounttype.down.sql",
+				"2_useraddress.down.sql", "2_user.down.sql", "2_address.down.sql", "2_state.down.sql",
 				"2_department.down.sql", "2_role.down.sql", "1_create_database.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 	}

@@ -192,7 +192,7 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 		LOGGER.info("running test selectAddressesByPostalCode");
 
 		// delete all the users
-		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
+		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		Optional<PojoAddress> address = jdbcQueryTestUtil.selectAddressByPostalCode("30010");

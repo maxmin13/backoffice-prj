@@ -1,0 +1,2 @@
+INSERT INTO Account (AccountNumber, UserId, AccountTypeId, AccountStatusId, CurrentBalance) VALUES ('123456789', (SELECT Id FROM User WHERE AccountName = "maxmin13"), (SELECT Id FROM AccountType WHERE Type = "STUDENT"), (SELECT Id FROM AccountStatus WHERE status = "ACTIVE"), 1200.22);
+INSERT INTO Account (AccountNumber, UserId, AccountTypeId, AccountStatusId, CurrentBalance) VALUES ('567856785', (SELECT Id FROM User WHERE AccountName = "artur"), (SELECT Id FROM AccountType WHERE Type = "BUSINNESS"), (SELECT Id FROM AccountStatus WHERE status = "ACTIVE"), 4500.09);

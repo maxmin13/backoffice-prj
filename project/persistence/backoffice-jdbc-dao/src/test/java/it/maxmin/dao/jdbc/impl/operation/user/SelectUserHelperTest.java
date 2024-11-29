@@ -68,7 +68,7 @@ class SelectUserHelperTest extends JdbcBaseTestDao {
 		LOGGER.info("running test selectAllUsersNotFound");
 
 		// delete all users
-		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
+		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		ResultSet rs = null;
@@ -200,7 +200,7 @@ class SelectUserHelperTest extends JdbcBaseTestDao {
 		LOGGER.info("running test selectUserByAccountNameNotFound");
 
 		// delete all users
-		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
+		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
@@ -261,7 +261,7 @@ class SelectUserHelperTest extends JdbcBaseTestDao {
 		LOGGER.info("running test selectUserByFirstNameNotFound");
 
 		// delete all users
-		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
+		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		MapSqlParameterSource param = new MapSqlParameterSource();

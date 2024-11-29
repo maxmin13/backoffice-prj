@@ -54,7 +54,7 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		LOGGER.info("running test createUserTest");
 
 		// delete all the users
-		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
+		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// find an existing address
@@ -114,7 +114,7 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		LOGGER.info("running test createUserTestError");
 
 		// Delete all the users. 
-		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
+		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// find an existing address

@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,13 +56,6 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;
 
-@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
-@Sql(scripts = { "classpath:database/1_create_database.up.sql", "classpath:database/2_role.up.sql",
-		"classpath:database/2_state.up.sql",
-		"classpath:database/2_department.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = { "classpath:database/2_state.down.sql", "classpath:database/2_department.down.sql",
-		"classpath:database/2_role.down.sql",
-		"classpath:database/1_create_database.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 @SpringJUnitConfig(classes = { JpaDaoSpringContextTestCfg.class })
 class UserDaoTest extends JpaBaseTestDao {
 

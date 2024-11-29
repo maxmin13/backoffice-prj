@@ -40,8 +40,10 @@ public class AddressDaoImpl implements AddressDao {
 			+ "SELECT DISTINCT a.Id AS AddressId, a.PostalCode AS PostalCode, a.Description AS Description, a.City AS City, a.Region AS Region, "
 			+ "          u.Id AS UserId, u.AccountName AS AccountName, u.FirstName AS FirstName, u.LastName AS LastName, u.BirthDate AS BirthDate, u.CreatedAt AS CreatedAt, "
 			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName, "
-			+ "          d.Id as DepartmentId, d.Name AS DepartmentName " + "      FROM Address a "
-			+ "      LEFT JOIN UserAddress ua ON a.Id = ua.AddressId " + "      LEFT JOIN User u ON ua.UserId = u.Id "
+			+ "          d.Id as DepartmentId, d.Name AS DepartmentName "
+			+ "      FROM Address a "
+			+ "      LEFT JOIN UserAddress ua ON a.Id = ua.AddressId " 
+			+ "      LEFT JOIN User u ON ua.UserId = u.Id "
 			+ "      LEFT JOIN Department d ON u.DepartmentId = d.Id "
 			+ "      INNER JOIN State s ON a.StateId = s.Id ";
 

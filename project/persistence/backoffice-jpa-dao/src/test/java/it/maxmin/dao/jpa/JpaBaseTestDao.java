@@ -19,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 
 import it.maxmin.model.jpa.dao.pojo.PojoDepartment;
 import it.maxmin.model.jpa.dao.pojo.PojoRole;
@@ -27,6 +29,13 @@ import it.maxmin.model.jpa.dao.pojo.PojoState;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
+@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
+@Sql(scripts = { "classpath:database/1_create_database.up.sql", "classpath:database/2_role.up.sql",
+		"classpath:database/2_state.up.sql",
+		"classpath:database/2_department.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = { "classpath:database/2_state.down.sql", "classpath:database/2_department.down.sql",
+		"classpath:database/2_role.down.sql",
+		"classpath:database/1_create_database.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 public abstract class JpaBaseTestDao {
 
 	protected JpaQueryTestUtil jdbcQueryTestUtil;
