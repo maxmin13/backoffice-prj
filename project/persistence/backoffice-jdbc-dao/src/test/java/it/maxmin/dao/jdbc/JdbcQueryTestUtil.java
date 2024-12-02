@@ -97,6 +97,7 @@ public class JdbcQueryTestUtil {
 
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		simpleJdbcInsert.usingGeneratedKeyColumns("Id");
+		simpleJdbcInsert.usingColumns("AccountName", "FirstName", "LastName", "DepartmentId", "BirthDate");
 		simpleJdbcInsert.withTableName("User");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(user);
 		KeyHolder result = simpleJdbcInsert.executeAndReturnKeyHolder(paramSource);
@@ -160,9 +161,10 @@ public class JdbcQueryTestUtil {
 
 	public PojoAddress insertAddress(PojoAddress address) {
 		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
-
+		
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		simpleJdbcInsert.usingGeneratedKeyColumns("Id");
+		simpleJdbcInsert.usingColumns("Description", "City", "Region", "PostalCode", "StateId");
 		simpleJdbcInsert.withTableName("Address");
 		BeanPropertySqlParameterSource paramSource = new BeanPropertySqlParameterSource(address);
 		KeyHolder result = simpleJdbcInsert.executeAndReturnKeyHolder(paramSource);

@@ -15,6 +15,7 @@ public class PojoUser implements Serializable {
 	private LocalDate birthDate;
 	private LocalDateTime createdAt;
 	private Long departmentId;
+	private Long version;
 	
 	public static PojoUser newInstance() {
 		return new PojoUser();
@@ -110,5 +111,12 @@ public class PojoUser implements Serializable {
 		this.createdAt = createdAt;
 		return this;
 	}
+
+	public Long getVersion() {
+		return version;
+	}
 	
+	public void setVersion(Long version) {
+		this.version = version;
+	}
 }

@@ -21,7 +21,7 @@ public enum JdbcQueryTestConstants {
 	public static final String SELECT_ROLE_BY_NAME = ""
 			+ "SELECT Id, Name "
 			+ "FROM Role "
-			+ "WHERE Name = :name ";
+			+ "WHERE name = :name ";
 	
 	public static final String SELECT_ADDRESSES_BY_USER_ID = ""
 			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode "
@@ -56,17 +56,17 @@ public enum JdbcQueryTestConstants {
 			+ "ORDER BY Id";
 	
 	public static final String SELECT_USER_BY_USER_ID = ""
-			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt, DepartmentId "
+			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt, DepartmentId, Version "
 			+ "FROM User "
 			+ "WHERE Id = :userId ";
 	
 	public static final String SELECT_USER_BY_ACCOUNT_NAME = ""
-			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt, DepartmentId "
+			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt, DepartmentId, Version "
 			+ "FROM User "
 			+ "WHERE AccountName = :accountName ";
 	
 	public static final String SELECT_USERS_BY_ADDRESS_ID = ""
-			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId "
+			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId, u.Version "
 			+ "FROM User u "
 			+ "INNER JOIN UserAddress ua ON u.Id = ua.UserId "
 			+ "INNER JOIN Address a ON ua.AddressId = a.Id "
@@ -74,7 +74,7 @@ public enum JdbcQueryTestConstants {
 			+ "ORDER BY u.Id";
 	
 	public static final String SELECT_USERS_BY_ADDRESS_POSTAL_CODE = ""
-			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId "
+			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId, u.Version "
 			+ "FROM User u "
 			+ "INNER JOIN UserAddress ua ON u.Id = ua.UserId "
 			+ "INNER JOIN Address a ON ua.AddressId = a.Id "

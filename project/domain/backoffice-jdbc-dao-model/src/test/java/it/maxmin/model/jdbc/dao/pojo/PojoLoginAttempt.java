@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 
 public class PojoLoginAttempt implements Serializable {
 
-	private static final long serialVersionUID = -5879326955628574552L;
+	private static final long serialVersionUID = -7491511375460153833L;
 	
 	private Long id;
 	private boolean success;
 	private LocalDateTime createdAt;
 	private String userId;
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -19,7 +19,7 @@ public class PojoLoginAttempt implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	
 	public String getUserId() {
 		return userId;
 	}
