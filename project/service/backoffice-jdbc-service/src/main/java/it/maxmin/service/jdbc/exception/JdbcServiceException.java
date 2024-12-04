@@ -1,4 +1,4 @@
-package it.maxmin.service.jdbc.impl;
+package it.maxmin.service.jdbc.exception;
 
 public class JdbcServiceException extends RuntimeException  {
 
@@ -6,5 +6,9 @@ public class JdbcServiceException extends RuntimeException  {
 
 	public JdbcServiceException(String message, Throwable cause) {
 		super(message, cause);
+	}
+	
+	public JdbcServiceException(String message) {
+		super(message);
 	}
 }

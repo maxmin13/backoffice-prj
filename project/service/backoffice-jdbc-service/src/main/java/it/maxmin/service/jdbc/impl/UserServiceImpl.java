@@ -4,6 +4,7 @@ import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_BIRTHDAY_NOT_NULL_MSG;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_DEPARTMENT_NAME_NOT_NULL_MSG;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
+import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_LAST_NAME_NOT_NULL_MSG;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
@@ -16,8 +17,7 @@ import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_
 import static java.util.Objects.requireNonNull;
 import static org.springframework.util.Assert.notNull;
 
-import java.util.Optional;
-
+import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ import it.maxmin.model.jdbc.dao.entity.State;
 import it.maxmin.model.jdbc.dao.entity.User;
 import it.maxmin.model.jdbc.service.dto.UserDto;
 import it.maxmin.service.jdbc.api.UserService;
-import it.maxmin.service.jdbc.exception.ServiceException;
+import it.maxmin.service.jdbc.exception.JdbcServiceException;
 
 @Transactional
 @Service("userService")
@@ -87,22 +87,21 @@ public class UserServiceImpl implements UserService {
 
 		User newUser = userDao.insert(user);
 
-		userDto.getAddresses().forEach(adt -> {
-			addressDao.selectAddressByPostalCode(adt.getPostalCode())
-					.ifPresentOrElse(a -> userDao.associateAddress(requireNonNull(newUser).getId(), a.getId()), () -> {
-						State state = stateDao.selectByStateName(adt.getState().getName())
-								.orElseThrow(() -> new ServiceException(ERROR_STATE_NOT_FOUND_MSG));
-						Address ad = Address.newInstance().withCity(adt.getCity()).withDescription(adt.getDescription())
-								.withPostalCode(adt.getPostalCode()).withRegion(adt.getRegion()).withState(state);
-						Address newAddress = addressDao.insert(ad);
-						userDao.associateAddress(newUser.getId(), requireNonNull(newAddress).getId());
-					});
-		});
+		userDto.getAddresses().forEach(address -> addressDao.selectAddressByPostalCode(address.getPostalCode())
+				.ifPresentOrElse(a -> userDao.associateAddress(requireNonNull(newUser).getId(), a.getId()), () -> {
+					State state = stateDao.selectByStateName(address.getState().getName())
+							.orElseThrow(() -> new ServiceException(ERROR_STATE_NOT_FOUND_MSG));
+					Address ad = Address.newInstance().withCity(address.getCity())
+							.withDescription(address.getDescription()).withPostalCode(address.getPostalCode())
+							.withRegion(address.getRegion()).withState(state);
+					Address newAddress = addressDao.insert(ad);
+					userDao.associateAddress(newUser.getId(), requireNonNull(newAddress).getId());
+				}));
 
-		userDto.getRoles().stream().forEach(r -> {
-			Role role = roleDao.selectByRoleName(r.getName())
+		userDto.getRoles().stream().forEach(role -> {
+			Role r = roleDao.selectByRoleName(role.getName())
 					.orElseThrow(() -> new ServiceException(ERROR_ROLE_NOT_FOUND_MSG));
-			userDao.associateRole(requireNonNull(newUser).getId(), role.getId());
+			userDao.associateRole(requireNonNull(newUser).getId(), r.getId());
 		});
 	}
 
@@ -116,19 +115,20 @@ public class UserServiceImpl implements UserService {
 		notNull(userDto.getCredentials().getFirstName(), ERROR_FIRST_NAME_NOT_NULL_MSG);
 		notNull(userDto.getCredentials().getLastName(), ERROR_LAST_NAME_NOT_NULL_MSG);
 		notNull(userDto.getBirthDate(), ERROR_BIRTHDAY_NOT_NULL_MSG);
+		notNull(userDto.getDepartment(), ERROR_DEPARTMENT_NOT_NULL_MSG);
 		notNull(userDto.getDepartment().getName(), ERROR_DEPARTMENT_NAME_NOT_NULL_MSG);
 
 		// check the user exists
 		User user = userDao.selectByAccountName(userDto.getCredentials().getAccountName())
-				.orElseThrow(() -> new ServiceException(ERROR_USER_NOT_FOUND_MSG));
-
-		Long userId = user.getId();
-		Long userInitialVersion = user.getVersion();
+				.orElseThrow(() -> new JdbcServiceException(ERROR_USER_NOT_FOUND_MSG));
 
 		Department department = departmentDao.selectByDepartmentName(userDto.getDepartment().getName())
-				.orElseThrow(() -> new ServiceException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
+				.orElseThrow(() -> new JdbcServiceException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
+		
+		Long userId = user.getId();
 
-		User updatedUser = User.newInstance().withId(userId).withVersion(userInitialVersion)
+		// prepare the user
+		User updatedUser = User.newInstance().withId(userId).withVersion(user.getVersion())
 				.withAccountName(userDto.getCredentials().getAccountName())
 				.withFirstName(userDto.getCredentials().getFirstName())
 				.withLastName(userDto.getCredentials().getLastName()).withBirthDate(userDto.getBirthDate())

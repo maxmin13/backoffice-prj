@@ -22,6 +22,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.maxmin.dao.jdbc.api.repo.UserDao;
+import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserAddress;
+import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserRole;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUser;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserAddress;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserRole;
@@ -43,17 +45,21 @@ public class UserDaoImpl implements UserDao {
 	private UpdateUser updateUser;
 	private InsertUser insertUser;
 	private InsertUserAddress insertUserAddress;
+	private DeleteUserAddress deleteUserAddress;
 	private InsertUserRole insertUserRole;
+	private DeleteUserRole deleteUserRole;
 
 	@Autowired
 	public UserDaoImpl(DataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
-		this.updateUser = new UpdateUser(dataSource);
-		this.insertUser = new InsertUser(dataSource);
-		this.insertUserAddress = new InsertUserAddress(dataSource);
-		this.insertUserRole = new InsertUserRole(dataSource);
-		this.selectUserByFirstName = new SelectUserByFirstName(jdbcTemplate);
-		this.selectUserByAccountName = new SelectUserByAccountName(jdbcTemplate);
-		this.selectAllUsers = new SelectAllUsers(jdbcTemplate);
+		updateUser = new UpdateUser(dataSource);
+		insertUser = new InsertUser(dataSource);
+		insertUserAddress = new InsertUserAddress(dataSource);
+		deleteUserAddress = new DeleteUserAddress(dataSource);
+		insertUserRole = new InsertUserRole(dataSource);
+		deleteUserRole = new DeleteUserRole(dataSource);
+		selectUserByFirstName = new SelectUserByFirstName(jdbcTemplate);
+		selectUserByAccountName = new SelectUserByAccountName(jdbcTemplate);
+		selectAllUsers = new SelectAllUsers(jdbcTemplate);
 	}
 
 	@Override
@@ -93,16 +99,32 @@ public class UserDaoImpl implements UserDao {
 	public void associateAddress(Long userId, Long addressId) {
 		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
 		notNull(addressId, ERROR_ADDRESS_ID_NOT_NULL_MSG);
-		this.insertUserAddress.execute(userId, addressId);
+		insertUserAddress.execute(userId, addressId);
 		LOGGER.info("User {} associated with address {}", userId, addressId);
+	}
+
+	@Override
+	public void removeAddress(Long userId, Long addressId) {
+		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
+		notNull(addressId, ERROR_ADDRESS_ID_NOT_NULL_MSG);
+		deleteUserAddress.execute(userId, addressId);
+		LOGGER.info("Address {} removed from user {}", addressId, userId);
 	}
 
 	@Override
 	public void associateRole(Long userId, Long roleId) {
 		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
 		notNull(roleId, ERROR_ROLE_ID_NOT_NULL_MSG);
-		this.insertUserRole.execute(userId, roleId);
+		insertUserRole.execute(userId, roleId);
 		LOGGER.info("User {} associated with role {}", userId, roleId);
+	}
+
+	@Override
+	public void removeRole(Long userId, Long roleId) {
+		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
+		notNull(roleId, ERROR_ROLE_ID_NOT_NULL_MSG);
+		deleteUserRole.execute(userId, roleId);
+		LOGGER.info("Role {} removed from user {}", roleId, userId);
 	}
 
 	@Override
@@ -115,4 +137,5 @@ public class UserDaoImpl implements UserDao {
 			return updateUser.execute(user);
 		}
 	}
+
 }

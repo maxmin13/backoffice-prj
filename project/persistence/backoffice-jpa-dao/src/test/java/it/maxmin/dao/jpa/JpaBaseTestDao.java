@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 
+import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.model.jpa.dao.pojo.PojoDepartment;
 import it.maxmin.model.jpa.dao.pojo.PojoRole;
 import it.maxmin.model.jpa.dao.pojo.PojoState;

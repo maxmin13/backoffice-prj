@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import it.maxmin.dao.jdbc.exception.JdbcDaoTestException;
 import it.maxmin.model.jdbc.dao.pojo.PojoDepartment;
 import it.maxmin.model.jdbc.dao.pojo.PojoRole;
 import it.maxmin.model.jdbc.dao.pojo.PojoState;

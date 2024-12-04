@@ -1,4 +1,4 @@
-package it.maxmin.dao.jdbc.impl;
+package it.maxmin.dao.jdbc.exception;
 
 public class JdbcDaoException extends RuntimeException  {
 
@@ -6,5 +6,9 @@ public class JdbcDaoException extends RuntimeException  {
 
 	public JdbcDaoException(String message, Throwable cause) {
 		super(message, cause);
+	}
+	
+	public JdbcDaoException(String msg) {
+		super(msg);
 	}
 }

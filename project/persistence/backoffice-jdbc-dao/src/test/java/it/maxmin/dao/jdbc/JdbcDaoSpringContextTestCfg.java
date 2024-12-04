@@ -15,6 +15,7 @@ import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
 import it.maxmin.dao.jdbc.config.JdbcDaoSpringContextCfg;
+import it.maxmin.dao.jdbc.exception.JdbcDaoTestException;
 
 /**
  * Starts an embedded MariaDB database and overrides the datasource

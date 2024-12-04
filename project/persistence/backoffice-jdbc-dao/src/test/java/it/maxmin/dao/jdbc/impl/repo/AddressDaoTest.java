@@ -20,8 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.exception.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddress;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddresses;
 import it.maxmin.dao.jdbc.impl.operation.address.SelectAddressByPostalCode;

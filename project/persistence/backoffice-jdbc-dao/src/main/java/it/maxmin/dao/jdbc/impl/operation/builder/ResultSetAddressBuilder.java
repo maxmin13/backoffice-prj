@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import it.maxmin.dao.jdbc.impl.JdbcDaoException;
+import it.maxmin.dao.jdbc.exception.JdbcDaoException;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.State;
 

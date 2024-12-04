@@ -38,10 +38,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.maxmin.dao.jpa.JpaBaseTestDao;
 import it.maxmin.dao.jpa.JpaDaoSpringContextTestCfg;
-import it.maxmin.dao.jpa.JpaDaoTestException;
 import it.maxmin.dao.jpa.JpaQueryTestUtil;
 import it.maxmin.dao.jpa.JpaUserTestUtil;
 import it.maxmin.dao.jpa.api.repo.UserDao;
+import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.model.jpa.dao.entity.Address;
 import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.Role;
@@ -156,7 +156,7 @@ class UserDaoTest extends JpaBaseTestDao {
 			"classpath:database/2_user.down.sql",
 			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("04. verify lazily loaded properties in the User entity: roles and addresses")
-	public void testFindAll3() {
+	void testFindAll3() {
 
 		LOGGER.info("running test testFindAll3");
 

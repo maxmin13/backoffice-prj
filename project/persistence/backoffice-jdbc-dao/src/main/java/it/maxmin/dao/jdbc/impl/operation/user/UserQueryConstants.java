@@ -50,10 +50,20 @@ public enum UserQueryConstants {
 	public static final String INSERT_USER_ROLE = "" 
 			+ "INSERT INTO UserRole "
 			+ "SET UserId = :userId, RoleId = :roleId";
+
+	public static final String DELETE_USER_ROLE = "" 
+			+ "DELETE FROM UserRole "
+			+ "WHERE UserId = :userId "
+			+ "AND RoleId = :roleId";
 	
 	public static final String INSERT_USER_ADDRESS = "" 
 			+ "INSERT INTO UserAddress "
 			+ "SET UserId = :userId, AddressId = :addressId";
+	
+	public static final String DELETE_USER_ADDRESS = "" 
+			+ "DELETE FROM UserAddress "
+			+ "WHERE UserId = :userId "
+			+ "AND AddressId = :addressId";
 	
 	public static final String SELECT_STATE_BY_STATE_NAME = ""
 			+ "SELECT Id, Name "

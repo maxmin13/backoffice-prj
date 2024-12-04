@@ -1,4 +1,4 @@
-package it.maxmin.service.jdbc.impl;
+package it.maxmin.service.jdbc.exception;
 
 public class JdbcServiceTestException extends RuntimeException {
 

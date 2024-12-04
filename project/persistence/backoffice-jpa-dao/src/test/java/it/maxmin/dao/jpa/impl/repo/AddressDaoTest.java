@@ -35,10 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.maxmin.dao.jpa.JpaBaseTestDao;
 import it.maxmin.dao.jpa.JpaDaoSpringContextTestCfg;
-import it.maxmin.dao.jpa.JpaDaoTestException;
 import it.maxmin.dao.jpa.JpaQueryTestUtil;
 import it.maxmin.dao.jpa.JpaUserTestUtil;
 import it.maxmin.dao.jpa.api.repo.AddressDao;
+import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.model.jpa.dao.entity.Address;
 import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.Role;

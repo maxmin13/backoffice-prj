@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa;
+package it.maxmin.dao.jpa.exception;
 
 public class JpaDaoTestException extends RuntimeException {
 	

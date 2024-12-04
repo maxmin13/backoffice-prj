@@ -30,9 +30,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.exception.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.impl.operation.role.SelectRoleByName;
+import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserAddress;
+import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserRole;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUser;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserAddress;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserRole;
@@ -60,7 +62,13 @@ class UserDaoTest {
 	private InsertUserAddress insertUserAddress;
 
 	@Mock
+	private DeleteUserAddress deleteUserAddress;
+
+	@Mock
 	private InsertUserRole insertUserRole;
+
+	@Mock
+	private DeleteUserRole deleteUserRole;
 
 	@Mock
 	private SelectAllUsers selectAllUsers;
@@ -380,6 +388,46 @@ class UserDaoTest {
 	}
 
 	@Test
+	void removeAddressWithNoUserIdThrowsException() {
+
+		LOGGER.info("running test removeAddressWithNoUserIdThrowsException");
+
+		Long userId = null;
+		Long addressId = 2l;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.removeAddress(userId, addressId);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void removeAddressWithNoAddressIdThrowsException() {
+
+		LOGGER.info("running test removeAddressWithNoAddressIdThrowsException");
+
+		Long userId = 2l;
+		Long addressId = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.removeAddress(userId, addressId);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void removeAddress() {
+
+		LOGGER.info("running test removeAddress");
+
+		userDao.removeAddress(1l, 2l);
+
+		verify(deleteUserAddress, times(1)).execute(1l, 2l);
+	}
+
+	@Test
 	void associateRoleWithNoUserIdThrowsException() {
 
 		LOGGER.info("running test associateAddressWithNoUserIdThrowsException");
@@ -417,6 +465,46 @@ class UserDaoTest {
 		userDao.associateRole(1l, 2l);
 
 		verify(insertUserRole, times(1)).execute(1l, 2l);
+	}
+
+	@Test
+	void removeRoleWithNoUserIdThrowsException() {
+
+		LOGGER.info("running test removeRoleWithNoUserIdThrowsException");
+
+		Long userId = null;
+		Long roleId = 2l;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.removeRole(userId, roleId);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void removeRoleWithNoRoleIdThrowsException() {
+
+		LOGGER.info("running test removeRoleWithNoRoleIdThrowsException");
+
+		Long userId = 2l;
+		Long roleId = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.removeRole(userId, roleId);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void removeRole() {
+
+		LOGGER.info("running test removeRole");
+
+		userDao.removeRole(1l, 2l);
+
+		verify(deleteUserRole, times(1)).execute(1l, 2l);
 	}
 
 	@Test

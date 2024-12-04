@@ -43,6 +43,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
 
+import it.maxmin.dao.jdbc.exception.JdbcDaoTestException;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;
 import it.maxmin.model.jdbc.dao.pojo.PojoDepartment;
 import it.maxmin.model.jdbc.dao.pojo.PojoRole;

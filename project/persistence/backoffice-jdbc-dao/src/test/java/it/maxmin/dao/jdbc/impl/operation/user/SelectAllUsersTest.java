@@ -28,8 +28,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.exception.JdbcDaoTestException;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.Department;
 import it.maxmin.model.jdbc.dao.entity.Role;

@@ -16,9 +16,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import it.maxmin.dao.jdbc.JdbcBaseTestDao;
 import it.maxmin.dao.jdbc.JdbcDaoSpringContextTestCfg;
-import it.maxmin.dao.jdbc.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.JdbcQueryTestUtil;
 import it.maxmin.dao.jdbc.JdbcUserTestUtil;
+import it.maxmin.dao.jdbc.exception.JdbcDaoTestException;
 import it.maxmin.model.jdbc.dao.entity.Address;
 import it.maxmin.model.jdbc.dao.entity.State;
 import it.maxmin.model.jdbc.dao.pojo.PojoAddress;

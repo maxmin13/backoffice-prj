@@ -1,4 +1,4 @@
-package it.maxmin.dao.jdbc;
+package it.maxmin.dao.jdbc.exception;
 
 public class JdbcDaoTestException extends RuntimeException {
 	
