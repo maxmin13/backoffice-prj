@@ -15,5 +15,5 @@ public interface AddressDao {
 
 	void insertList(List<Address> addresses);
 
-	void update(Address address);
+	Integer update(Address address);
 }

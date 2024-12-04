@@ -16,6 +16,7 @@ public class Address implements Serializable {
 	private String city;
 	private String region;
 	private String postalCode;
+	private Long version;
 	private State state;
 	private Set<User> users = new HashSet<>();
 
@@ -98,6 +99,19 @@ public class Address implements Serializable {
 
 	public Address withPostalCode(String postalCode) {
 		this.postalCode = postalCode;
+		return this;
+	}
+	
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
+	public Address withVersion(Long version) {
+		this.version = version;
 		return this;
 	}
 

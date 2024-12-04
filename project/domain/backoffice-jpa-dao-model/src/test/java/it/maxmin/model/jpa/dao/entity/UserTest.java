@@ -169,14 +169,11 @@ class UserTest {
 		User user = User.newInstance();
 		user.getRoles().add(role);
 
-		Optional<Role> role1 = user.getRole("Administrator");
-		Role r1 = role1.orElseThrow(() -> new ModelTestException("Error role not found"));
-		
-		assertEquals(1l, r1.getId());
+		Role role1 = user.getRole("Administrator").orElseThrow(() -> new ModelTestException("Error role not found"));
 
-		Optional<Role> role2 = user.getRole("User");
+		assertEquals(1l, role1.getId());
 
-		assertEquals(true, role2.isEmpty());
+		assertEquals(true, user.getRole("User").isEmpty());
 	}
 
 	@Test
@@ -199,12 +196,11 @@ class UserTest {
 		User user = User.newInstance();
 		user.addAddress(address);
 
-		Optional<Address> address1 = user.getAddress("30030");
-		Address a1 = address1.orElseThrow(() -> new ModelTestException("Error address not found"));
-		
-		assertEquals(1l, a1.getId());
+		Address address1 = user.getAddress("30030")
+				.orElseThrow(() -> new ModelTestException("Error address not found"));
 
-		Optional<Address> address2 = user.getAddress("111111");
-		assertEquals(true, address2.isEmpty());
+		assertEquals(1l, address1.getId());
+
+		assertEquals(true, user.getAddress("111111").isEmpty());
 	}
 }

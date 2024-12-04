@@ -5,4 +5,6 @@ import it.maxmin.model.jdbc.service.dto.UserDto;
 public interface UserService {
 
 	void createUser(UserDto user);
+	
+	void updateUser(UserDto user);
 }

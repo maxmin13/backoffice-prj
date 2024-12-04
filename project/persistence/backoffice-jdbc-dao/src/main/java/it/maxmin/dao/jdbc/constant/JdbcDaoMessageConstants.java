@@ -6,6 +6,7 @@ public enum JdbcDaoMessageConstants {
 	public static final String ERROR_ADDRESS_NOT_FOUND_MSG = "Error address not found";
 	public static final String ERROR_ACCOUNT_NAME_NOT_NULL_MSG = "The account name must not be null";
 	public static final String ERROR_ADDRESS_NOT_NULL_MSG = "The address must not be null";
+	public static final String ERROR_ADDRESS_ID_NULL_MSG = "The address ID must be null";
 	public static final String ERROR_ADDRESS_ID_NOT_NULL_MSG = "The address ID must not be null";
 	public static final String ERROR_ADDRESSES_NOT_NULL_MSG = "The addresses must not be null";
 	public static final String ERROR_DEPARTMENT_NOT_FOUND_MSG = "Error department not found";
@@ -25,6 +26,8 @@ public enum JdbcDaoMessageConstants {
 	public static final String ERROR_USER_ADDRESS_NOT_NULL_MSG = "The user address must not be null";
 	public static final String ERROR_USER_NOT_FOUND_MSG = "Error user not found";
 	public static final String ERROR_USER_NOT_NULL_MSG = "The user must not be null";
+	public static final String ERROR_USER_ID_NULL_MSG = "The user ID must be null";
 	public static final String ERROR_USER_ID_NOT_NULL_MSG = "The user ID must not be null";
+	public static final String ERROR_VERSION_NOT_NULL_MSG = "The version must not be null";
 	
 }

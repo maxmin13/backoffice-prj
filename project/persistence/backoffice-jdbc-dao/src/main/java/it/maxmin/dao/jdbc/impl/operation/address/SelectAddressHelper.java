@@ -6,16 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetAddressBuilder;
 import it.maxmin.dao.jdbc.impl.operation.builder.ResultSetUserBuilder;
 import it.maxmin.model.jdbc.dao.entity.Address;
-import it.maxmin.model.jdbc.dao.entity.Department;
-import it.maxmin.model.jdbc.dao.entity.Role;
-import it.maxmin.model.jdbc.dao.entity.State;
 import it.maxmin.model.jdbc.dao.entity.User;
 
 public class SelectAddressHelper {
@@ -36,22 +32,18 @@ public class SelectAddressHelper {
 				Long addressId = rs.getLong("AddressId");
 				Address address = map.computeIfAbsent(addressId,
 						id -> resultSetAddressBuilder.buildAddress(rs).orElse(null));
-				Optional<State> state = resultSetAddressBuilder.buildState(rs);
-				state.ifPresent(requireNonNull(address)::withState);
+				resultSetAddressBuilder.buildState(rs).ifPresent(requireNonNull(address)::withState);
 
 				String accountName = rs.getString("accountName");
 				if (accountName != null) {
 					address.getUser(accountName).ifPresentOrElse(u -> {
-						Optional<Role> role = resultSetUserBuilder.buildRole(rs);
-						role.ifPresent(requireNonNull(u)::addRole);
+						resultSetUserBuilder.buildRole(rs).ifPresent(requireNonNull(u)::addRole);
 					}, () -> {
 						User user = resultSetUserBuilder.buildUser(rs).orElse(null);
-						Optional<Department> department = resultSetUserBuilder.buildDepartment(rs);
-						department.ifPresent(requireNonNull(user)::withDepartment);
-						Optional<Role> role = resultSetUserBuilder.buildRole(rs);
-						role.ifPresent(user::addRole);
+						resultSetUserBuilder.buildDepartment(rs).ifPresent(requireNonNull(user)::withDepartment);
+						resultSetUserBuilder.buildRole(rs).ifPresent(user::addRole);
 						address.addUser(user);
-					});	
+					});
 				}
 			}
 			return new ArrayList<>(map.values());

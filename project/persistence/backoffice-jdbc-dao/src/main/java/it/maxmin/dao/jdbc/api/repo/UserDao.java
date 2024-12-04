@@ -19,5 +19,5 @@ public interface UserDao {
 
 	void associateRole(Long userId, Long roleId);
 
-	void update(User user);
+	Integer update(User user);
 }

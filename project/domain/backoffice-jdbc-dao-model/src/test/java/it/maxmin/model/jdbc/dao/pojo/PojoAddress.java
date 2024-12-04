@@ -11,6 +11,7 @@ public class PojoAddress implements Serializable {
 	private String city;
 	private String region;
 	private String postalCode;
+	private Long version;
 	private Long stateId;
 	
 	public static PojoAddress newInstance() {
@@ -92,6 +93,19 @@ public class PojoAddress implements Serializable {
 	
 	public PojoAddress withPostalCode(String postalCode) {
 		this.postalCode = postalCode;
+		return this;
+	}
+	
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
+	public PojoAddress withVersion(Long version) {
+		this.version = version;
 		return this;
 	}
 }

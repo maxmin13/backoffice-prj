@@ -4,7 +4,7 @@ public enum AddressQueryConstants {
 	;
 	
 	public static final String BASE_SELECT_ADDRESSES = ""
-			+ "SELECT a.Id AS AddressId, a.Description, a.City, a.Region, a.PostalCode, "
+			+ "SELECT a.Id AS AddressId, a.Description, a.City, a.Region, a.PostalCode, a.Version, "
 			+ "         s.Id AS StateId, s.Name AS StateName, s.Code, " 
 			+ "         u.Id AS UserId, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, "
 			+ "         d.Id AS DepartmentId, d.Name AS DepartmentName, "

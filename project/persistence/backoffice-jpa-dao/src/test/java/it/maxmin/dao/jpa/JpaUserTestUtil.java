@@ -85,6 +85,7 @@ public class JpaUserTestUtil {
 		assertEquals(lastName, actual.getLastName());
 		assertEquals(birthDate, actual.getBirthDate());
 		assertNotNull(actual.getCreatedAt());
+		assertNotNull(actual.getVersion());
 	}
 
 	public void verifyRole(String name, Role actual) {

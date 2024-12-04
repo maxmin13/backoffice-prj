@@ -1,5 +1,8 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.constant.Department.ACCOUNTS;
 import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
@@ -14,6 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,21 +92,25 @@ class UserDaoTest {
 
 		Address rome = Address.newInstance().withId(4l).withPostalCode("30010").withDescription("Via borgo di sotto")
 				.withCity("Rome").withRegion("County Lazio")
-				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()));
+				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()))
+				.withVersion(1l);
 		Department production = Department.newInstance().withId(3l).withName(PRODUCTION.getName());
 		Role administrator = Role.newInstance().withId(2l).withName(ADMINISTRATOR.getName());
 		User maxmin = User.newInstance().withId(1l).withAccountName("maxmin13").withFirstName("Max")
-				.withLastName("Minardi").withBirthDate(LocalDate.of(1977, 10, 16)).withDepartment(production);
+				.withLastName("Minardi").withBirthDate(LocalDate.of(1977, 10, 16)).withDepartment(production)
+				.withVersion(1l).withCreatedAt(LocalDateTime.now());
 		maxmin.addRole(administrator);
 		maxmin.addAddress(rome);
 
 		Address dublin = Address.newInstance().withId(4l).withPostalCode("A65TF12").withDescription("Connolly street")
 				.withCity("Dublin").withRegion("County Dublin")
-				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
+				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()))
+				.withVersion(1l);
 		Department legal = Department.newInstance().withId(3l).withName(LEGAL.getName());
 		Role user = Role.newInstance().withId(2l).withName(USER.getName());
 		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
-				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal);
+				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal).withVersion(1l)
+				.withCreatedAt(LocalDateTime.now());
 		artur.addRole(user);
 		artur.addAddress(dublin);
 
@@ -119,15 +127,15 @@ class UserDaoTest {
 
 		User user1 = usersFound.get(0);
 
-		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user1);
+		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user1);
 
 		// roles
 		assertEquals(1, user1.getRoles().size());
 
-		Optional<Role> role1 = user1.getRole(ADMINISTRATOR.getName());
-		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
+		Role role1 = user1.getRole(ADMINISTRATOR.getName())
+				.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
 
-		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getName(), r1);
+		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getName(), role1);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), user1.getDepartment());
@@ -135,23 +143,22 @@ class UserDaoTest {
 		// addresses
 		assertEquals(1, user1.getAddresses().size());
 
-		Optional<Address> address1 = user1.getAddress("30010");
-		Address a1 = address1.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
+		Address address1 = user1.getAddress("30010")
+				.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", a1);
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), a1.getState());
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.getState());
 
 		User user2 = usersFound.get(1);
 
-		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), user2);
+		jdbcUserTestUtil.verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), user2);
 
 		// roles
 		assertEquals(1, user2.getRoles().size());
 
-		Optional<Role> role2 = user2.getRole(USER.getName());
-		Role r2 = role2.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
+		Role role2 = user2.getRole(USER.getName()).orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
 
-		jdbcUserTestUtil.verifyRole(USER.getName(), r2);
+		jdbcUserTestUtil.verifyRole(USER.getName(), role2);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), user2.getDepartment());
@@ -159,11 +166,11 @@ class UserDaoTest {
 		// addresses
 		assertEquals(1, user2.getAddresses().size());
 
-		Optional<Address> address2 = user2.getAddress("A65TF12");
-		Address a2 = address2.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
+		Address address2 = user2.getAddress("A65TF12")
+				.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 
-		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a2);
-		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), a2.getState());
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
+		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address2.getState());
 	}
 
 	@Test
@@ -183,45 +190,46 @@ class UserDaoTest {
 
 		LOGGER.info("running test selectByAccountName");
 
+		// prepare a user
+		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
+				.withBirthDate(LocalDate.of(1923, 10, 12))
+				.withDepartment(Department.newInstance().withId(3l).withName(LEGAL.getName())).withVersion(1l)
+				.withCreatedAt(LocalDateTime.now());
 		Address dublin = Address.newInstance().withId(4l).withPostalCode("A65TF12").withDescription("Connolly street")
 				.withCity("Dublin").withRegion("County Dublin")
-				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
-		Department legal = Department.newInstance().withId(3l).withName(LEGAL.getName());
-		Role user = Role.newInstance().withId(2l).withName(USER.getName());
-		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
-				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal);
-		artur.addRole(user);
+				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()))
+				.withVersion(1l);
+		artur.addRole(Role.newInstance().withId(2l).withName(USER.getName()));
 		artur.addAddress(dublin);
 
 		when(selectUserByAccountName.execute("artur")).thenReturn(Optional.of(artur));
 
 		// run the test
-		Optional<User> userFound = userDao.selectByAccountName("artur");
-		User u = userFound.orElseThrow(() -> new JdbcDaoTestException("Error user not found"));
+		User user = userDao.selectByAccountName("artur")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 
 		verify(selectUserByAccountName, times(1)).execute("artur");
 
-		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), u);
+		jdbcUserTestUtil.verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), user);
 
 		// roles
-		assertEquals(1, u.getRoles().size());
+		assertEquals(1, user.getRoles().size());
 
-		Optional<Role> role1 = u.getRole(USER.getName());
-		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
+		Role role1 = user.getRole(USER.getName()).orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(USER.getName(), r1);
+		jdbcUserTestUtil.verifyRole(USER.getName(), role1);
 
 		// department
-		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), u.getDepartment());
+		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), user.getDepartment());
 
 		// addresses
-		assertEquals(1, u.getAddresses().size());
+		assertEquals(1, user.getAddresses().size());
 
-		Optional<Address> address1 = u.getAddress("A65TF12");
-		Address a1 = address1.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
+		Address address1 = user.getAddress("A65TF12")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a1);
-		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), a1.getState());
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address1);
+		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address1.getState());
 	}
 
 	@Test
@@ -243,11 +251,13 @@ class UserDaoTest {
 
 		Address dublin = Address.newInstance().withId(4l).withPostalCode("A65TF12").withDescription("Connolly street")
 				.withCity("Dublin").withRegion("County Dublin")
-				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()));
+				.withState(State.newInstance().withId(5l).withName(IRELAND.getName()).withCode(IRELAND.getCode()))
+				.withVersion(1l);
 		Department legal = Department.newInstance().withId(3l).withName(LEGAL.getName());
 		Role user = Role.newInstance().withId(2l).withName(USER.getName());
 		User artur = User.newInstance().withId(1l).withAccountName("artur").withFirstName("Arturo").withLastName("Art")
-				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal);
+				.withBirthDate(LocalDate.of(1923, 10, 12)).withDepartment(legal).withVersion(1l)
+				.withCreatedAt(LocalDateTime.now());
 		artur.addRole(user);
 		artur.addAddress(dublin);
 
@@ -262,16 +272,15 @@ class UserDaoTest {
 
 		assertEquals(1, usersFound.size());
 
-		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12),
-				usersFound.get(0));
+		jdbcUserTestUtil.verifyUser("artur", "Arturo", "Art", LocalDate.of(1923, 10, 12), usersFound.get(0));
 
 		// roles
 		assertEquals(1, usersFound.get(0).getRoles().size());
 
-		Optional<Role> role1 = usersFound.get(0).getRole(USER.getName());
-		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
+		Role role1 = usersFound.get(0).getRole(USER.getName())
+				.orElseThrow(() -> new JdbcDaoTestException("Error role not found"));
 
-		jdbcUserTestUtil.verifyRole(USER.getName(), r1);
+		jdbcUserTestUtil.verifyRole(USER.getName(), role1);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(LEGAL.getName(), usersFound.get(0).getDepartment());
@@ -279,11 +288,11 @@ class UserDaoTest {
 		// addresses
 		assertEquals(1, usersFound.get(0).getAddresses().size());
 
-		Optional<Address> address1 = usersFound.get(0).getAddress("A65TF12");
-		Address a1 = address1.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
+		Address address1 = usersFound.get(0).getAddress("A65TF12")
+				.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 
-		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", a1);
-		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), a1.getState());
+		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address1);
+		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address1.getState());
 	}
 
 	@Test

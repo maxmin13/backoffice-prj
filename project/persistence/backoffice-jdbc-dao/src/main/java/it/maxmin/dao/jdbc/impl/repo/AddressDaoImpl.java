@@ -2,6 +2,7 @@ package it.maxmin.dao.jdbc.impl.repo;
 
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESSES_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_ID_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_POSTAL_CODE_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NOT_NULL_MSG;
@@ -71,7 +72,7 @@ public class AddressDaoImpl implements AddressDao {
 			LOGGER.info("New address  {} inserted with id: {}", newAddress.getDescription(), newAddress.getId());
 			return newAddress;
 		} else {
-			throw new IllegalArgumentException(ERROR_ADDRESS_ID_NOT_NULL_MSG);
+			throw new IllegalArgumentException(ERROR_ADDRESS_ID_NULL_MSG);
 		}
 	}
 
@@ -83,14 +84,13 @@ public class AddressDaoImpl implements AddressDao {
 	}
 
 	@Override
-	public void update(Address address) {
+	public Integer update(Address address) {
 		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
 		if (address.getId() == null) {
 			throw new IllegalArgumentException(ERROR_ADDRESS_ID_NOT_NULL_MSG);
 		} else {
 			LOGGER.info("Updating new address ...");
-			updateAddress.execute(address);
-			LOGGER.info("Address saved with id: {}", address.getId());
+			return updateAddress.execute(address);
 		}
 	}
 

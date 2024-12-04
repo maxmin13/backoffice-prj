@@ -14,13 +14,13 @@ public class ResultSetAddressBuilder {
 		Address address = null;
 		try {
 			if (rs.getLong("AddressId") > 0) {
-				address = Address.newInstance().withId(rs.getLong("AddressId")).withDescription(rs.getString("Description"))
-						.withCity(rs.getString("City")).withPostalCode(rs.getString("PostalCode"))
-						.withRegion(rs.getString("Region"));
+				address = Address.newInstance().withId(rs.getLong("AddressId"))
+						.withDescription(rs.getString("Description")).withCity(rs.getString("City"))
+						.withPostalCode(rs.getString("PostalCode")).withRegion(rs.getString("Region"))
+						.withVersion(rs.getLong("Version"));
 			}
 			return Optional.ofNullable(address);
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new JdbcDaoException(e.getMessage(), e);
 		}
 	}
@@ -33,8 +33,7 @@ public class ResultSetAddressBuilder {
 						.withName(rs.getString("StateName"));
 			}
 			return Optional.ofNullable(state);
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new JdbcDaoException(e.getMessage(), e);
 		}
 	}

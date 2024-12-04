@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -69,7 +68,8 @@ class SelectAddressByPostalCodeTest {
 
 		Address rome = Address.newInstance().withId(4l).withPostalCode("30010").withDescription("Via borgo di sotto")
 				.withCity("Rome").withRegion("County Lazio")
-				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()));
+				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()))
+				.withVersion(2l);
 		Department production = Department.newInstance().withId(3l).withName(PRODUCTION.getName());
 		Role administrator = Role.newInstance().withId(2l).withName(ADMINISTRATOR.getName());
 		User maxmin = User.newInstance().withId(1l).withAccountName("maxmin13").withFirstName("Max")
@@ -83,8 +83,8 @@ class SelectAddressByPostalCodeTest {
 				.thenReturn(addresses);
 
 		// run the test
-		Optional<Address> foundAddress = selectAddressByPostalCode.execute("30010");
-		Address address = foundAddress.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
+		Address address = selectAddressByPostalCode.execute("30010")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address);
 		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address.getState());

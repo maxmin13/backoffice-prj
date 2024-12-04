@@ -13,8 +13,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -71,11 +71,13 @@ class SelectUserByAccountNameTest {
 
 		Address rome = Address.newInstance().withId(4l).withPostalCode("30010").withDescription("Via borgo di sotto")
 				.withCity("Rome").withRegion("County Lazio")
-				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()));
+				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()))
+				.withVersion(1l);
 		Department production = Department.newInstance().withId(3l).withName(PRODUCTION.getName());
 		Role administrator = Role.newInstance().withId(2l).withName(ADMINISTRATOR.getName());
 		User maxmin = User.newInstance().withId(1l).withAccountName("maxmin13").withFirstName("Max")
-				.withLastName("Minardi").withBirthDate(LocalDate.of(1977, 10, 16)).withDepartment(production);
+				.withLastName("Minardi").withBirthDate(LocalDate.of(1977, 10, 16)).withDepartment(production)
+				.withVersion(1l).withCreatedAt(LocalDateTime.now());
 		maxmin.addRole(administrator);
 		maxmin.addAddress(rome);
 
@@ -85,18 +87,18 @@ class SelectUserByAccountNameTest {
 				.thenReturn(users);
 
 		// run the test
-		Optional<User> userFound = selectUserByAccountName.execute("maxmin13");
-		User user = userFound.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
+		User user = selectUserByAccountName.execute("maxmin13")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user);
+		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user);
 
 		// roles
 		assertEquals(1, user.getRoles().size());
 
-		Optional<Role> role1 = user.getRole(ADMINISTRATOR.getName());
-		Role r1 = role1.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
+		Role role1 = user.getRole(ADMINISTRATOR.getName())
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getName(), r1);
+		jdbcUserTestUtil.verifyRole(ADMINISTRATOR.getName(), role1);
 
 		// department
 		jdbcUserTestUtil.verifyDepartment(PRODUCTION.getName(), user.getDepartment());
@@ -104,10 +106,10 @@ class SelectUserByAccountNameTest {
 		// addresses
 		assertEquals(1, user.getAddresses().size());
 
-		Optional<Address> address1 = user.getAddress("30010");
-		Address a1 = address1.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
+		Address address1 = user.getAddress("30010")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", a1);
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), a1.getState());
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.getState());
 	}
 }

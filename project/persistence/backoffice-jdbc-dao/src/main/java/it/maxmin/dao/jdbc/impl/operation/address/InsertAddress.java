@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_ID_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_STATE_ID_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_STATE_NOT_NULL_MSG;
@@ -40,7 +40,7 @@ public class InsertAddress extends SqlUpdate {
 	public Address execute(Address address) {
 		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
 		if (address.getId() != null) {
-			throw new IllegalArgumentException(ERROR_ADDRESS_ID_NOT_NULL_MSG);
+			throw new IllegalArgumentException(ERROR_ADDRESS_ID_NULL_MSG);
 		}
 		notNull(address.getState(), ERROR_STATE_NOT_NULL_MSG);
 		notNull(address.getState().getId(), ERROR_STATE_ID_NOT_NULL_MSG);

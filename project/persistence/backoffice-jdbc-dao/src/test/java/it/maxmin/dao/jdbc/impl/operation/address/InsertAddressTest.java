@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Optional;
-
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.Test;
@@ -33,8 +31,7 @@ class InsertAddressTest extends JdbcBaseTestDao {
 	private InsertAddress insertAddress;
 
 	@Autowired
-	InsertAddressTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil,
-			DataSource dataSource) {
+	InsertAddressTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil, DataSource dataSource) {
 		super(jdbcQueryTestUtil, jdbcUserTestUtil);
 		this.insertAddress = new InsertAddress(dataSource);
 	}
@@ -57,13 +54,13 @@ class InsertAddressTest extends JdbcBaseTestDao {
 		LOGGER.info("running test executeWithAddressIdThrowsException");
 
 		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
-				.withState(State.newInstance().withId(italy.getId())).withRegion("Veneto").withPostalCode("30033");
+				.withState(State.newInstance().withId(italyState.getId())).withRegion("Veneto").withPostalCode("30033");
 
 		Throwable throwable = assertThrows(Throwable.class, () -> insertAddress.execute(address));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
-	
+
 	@Test
 	void executeWithNoStateThrowsException() {
 
@@ -76,7 +73,7 @@ class InsertAddressTest extends JdbcBaseTestDao {
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
-	
+
 	@Test
 	void executeWithNoStateIdThrowsException() {
 
@@ -100,7 +97,7 @@ class InsertAddressTest extends JdbcBaseTestDao {
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		Address address = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
-				.withState(State.newInstance().withId(italy.getId())).withRegion("Veneto").withPostalCode("30033");
+				.withState(State.newInstance().withId(italyState.getId())).withRegion("Veneto").withPostalCode("30033");
 
 		// run the test
 		address = insertAddress.execute(address);
@@ -108,14 +105,14 @@ class InsertAddressTest extends JdbcBaseTestDao {
 		assertNotNull(address);
 		assertNotNull(address.getId());
 
-		Optional<PojoAddress> newAddress = jdbcQueryTestUtil.selectAddressByAddressId(address.getId());
-		PojoAddress ad = newAddress.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
-		
-		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "Veneto", ad);
+		PojoAddress newAddress = jdbcQueryTestUtil.selectAddressByAddressId(address.getId())
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
-		Optional<PojoState> state = jdbcQueryTestUtil.selectStateByAddressPostalCode("30033");
-		PojoState st = state.orElseThrow(() -> new JdbcDaoTestException(ERROR_STATE_NOT_FOUND_MSG));
+		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "Veneto", newAddress);
 
-		jdbcUserTestUtil.verifyState(italy.getName(), italy.getCode(), st);
+		PojoState state = jdbcQueryTestUtil.selectStateByAddressPostalCode("30033")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_STATE_NOT_FOUND_MSG));
+
+		jdbcUserTestUtil.verifyState(italyState.getName(), italyState.getCode(), state);
 	}
 }

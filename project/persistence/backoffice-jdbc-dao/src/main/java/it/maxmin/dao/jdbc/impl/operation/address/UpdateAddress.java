@@ -29,12 +29,12 @@ public class UpdateAddress extends SqlUpdate {
 		super.declareParameter(new SqlParameter("addressId", Types.INTEGER));
 	}
 
-	public void execute(Address address) {
+	public Integer execute(Address address) {
 		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
 		notNull(address.getId(), ERROR_ADDRESS_ID_NOT_NULL_MSG);
 		notNull(address.getState(), ERROR_STATE_NOT_NULL_MSG);
 		notNull(address.getState().getId(), ERROR_STATE_ID_NOT_NULL_MSG);
-		updateByNamedParam(Map.of("addressId", address.getId(), "description", address.getDescription(), "city",
+		return updateByNamedParam(Map.of("addressId", address.getId(), "description", address.getDescription(), "city",
 				address.getCity(), "stateId", address.getState().getId(), "region", address.getRegion(), "postalCode",
 				address.getPostalCode()));
 	}

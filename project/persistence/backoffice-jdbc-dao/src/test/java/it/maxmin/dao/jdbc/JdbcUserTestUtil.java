@@ -19,16 +19,18 @@ import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 public class JdbcUserTestUtil {
 
 	public void verifyAddress(String postalCode, String description, String city, String region, Address actual) {
+		verifyAddressIgnoringIdField(postalCode, description, city, region, actual);
 		assertNotNull(actual.getId());
-		verifyAddressWithoutId(postalCode, description, city, region, actual);
 	}
-	
-	public void verifyAddressWithoutId(String postalCode, String description, String city, String region, Address actual) {
+
+	public void verifyAddressIgnoringIdField(String postalCode, String description, String city, String region,
+			Address actual) {
 		assertNotNull(actual);
 		assertEquals(postalCode, actual.getPostalCode());
 		assertEquals(description, actual.getDescription());
 		assertEquals(city, actual.getCity());
 		assertEquals(region, actual.getRegion());
+		assertNotNull(actual.getVersion());
 	}
 
 	public void verifyAddress(String postalCode, String description, String city, String region, PojoAddress actual) {
@@ -38,6 +40,7 @@ public class JdbcUserTestUtil {
 		assertEquals(description, actual.getDescription());
 		assertEquals(city, actual.getCity());
 		assertEquals(region, actual.getRegion());
+		assertNotNull(actual.getVersion());
 	}
 
 	public void verifyState(String name, String code, State actual) {
@@ -45,7 +48,7 @@ public class JdbcUserTestUtil {
 		assertEquals(name, actual.getName());
 		assertEquals(code, actual.getCode());
 	}
-	
+
 	public void verifyState(String name, String code, PojoState actual) {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());
@@ -56,18 +59,13 @@ public class JdbcUserTestUtil {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());
 	}
-	
+
 	public void verifyDepartment(String name, PojoDepartment actual) {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());
 	}
 
 	public void verifyUser(String accountName, String firstName, String lastName, LocalDate birthDate, User actual) {
-		verifyUserWithNoCreatedAtDate(accountName, firstName, lastName, birthDate, actual);
-		assertNotNull(actual.getCreatedAt());
-	}
-	
-	public void verifyUserWithNoCreatedAtDate(String accountName, String firstName, String lastName, LocalDate birthDate, User actual) {
 		assertNotNull(actual.getId());
 		assertEquals(accountName, actual.getAccountName());
 		assertEquals(firstName, actual.getFirstName());
@@ -76,22 +74,26 @@ public class JdbcUserTestUtil {
 		assertNotNull(actual.getDepartment());
 		assertNotNull(actual.getAddresses());
 		assertNotNull(actual.getRoles());
+		assertNotNull(actual.getCreatedAt());
+		assertNotNull(actual.getVersion());
 	}
 
-	public void verifyUser(String accountName, String firstName, String lastName, LocalDate birthDate, PojoUser actual) {
+	public void verifyUser(String accountName, String firstName, String lastName, LocalDate birthDate,
+			PojoUser actual) {
 		assertNotNull(actual.getId());
 		assertEquals(accountName, actual.getAccountName());
 		assertEquals(firstName, actual.getFirstName());
 		assertEquals(lastName, actual.getLastName());
 		assertEquals(birthDate, actual.getBirthDate());
 		assertNotNull(actual.getCreatedAt());
+		assertNotNull(actual.getVersion());
 	}
 
 	public void verifyRole(String name, Role actual) {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());
 	}
-	
+
 	public void verifyRole(String name, PojoRole actual) {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());

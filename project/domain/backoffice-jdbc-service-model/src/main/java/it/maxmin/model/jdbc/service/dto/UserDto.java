@@ -2,7 +2,6 @@ package it.maxmin.model.jdbc.service.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -18,31 +17,29 @@ public final class UserDto implements Serializable {
 
 	private final CredentialsDto credentials;
 	private final LocalDate birthDate;
-	private final LocalDateTime createdAt;
 	private final DepartmentDto department;
 	private final Set<AddressDto> addresses;
 	private final Set<RoleDto> roles;
 
-	public static UserDto newInstance(CredentialsDto credentials, LocalDate birthDate, LocalDateTime createAt,
-			DepartmentDto department, Set<AddressDto> addresses, Set<RoleDto> roles) {
-		return new UserDto(credentials, birthDate, createAt, department, addresses, roles);
+	public static UserDto newInstance(CredentialsDto credentials, LocalDate birthDate, DepartmentDto department,
+			Set<AddressDto> addresses, Set<RoleDto> roles) {
+		return new UserDto(credentials, birthDate, department, addresses, roles);
 	}
 
 	public static UserDto newInstance(User user) {
 		CredentialsDto credentials = CredentialsDto.newInstance(user.getAccountName(), user.getFirstName(),
 				user.getLastName());
 		DepartmentDto department = DepartmentDto.newInstance(user.getDepartment().getName());
-		return new UserDto(credentials, user.getBirthDate(), user.getCreatedAt(), department,
+		return new UserDto(credentials, user.getBirthDate(), department,
 				user.getAddresses().stream().map(AddressDto::newInstance).collect(Collectors.toSet()),
 				user.getRoles().stream().map(RoleDto::newInstance).collect(Collectors.toSet()));
 	}
 
-	UserDto(CredentialsDto credentials, LocalDate birthDate, LocalDateTime createAt, DepartmentDto department,
-			Set<AddressDto> addresses, Set<RoleDto> roles) {
+	UserDto(CredentialsDto credentials, LocalDate birthDate, DepartmentDto department, Set<AddressDto> addresses,
+			Set<RoleDto> roles) {
 		super();
 		this.credentials = credentials;
 		this.birthDate = birthDate;
-		this.createdAt = createAt;
 		this.department = department;
 		this.addresses = addresses;
 		this.roles = roles;
@@ -58,10 +55,6 @@ public final class UserDto implements Serializable {
 
 	public LocalDate getBirthDate() {
 		return birthDate;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
 	}
 
 	public Set<AddressDto> getAddresses() {
@@ -109,7 +102,7 @@ public final class UserDto implements Serializable {
 	public String toString() {
 		return "User [accountName=" + credentials.getAccountName() + ", firstName=" + credentials.getFirstName()
 				+ ", lastName=" + credentials.getLastName() + ", department=" + department + ", birthDate=" + birthDate
-				+ ", createdAt=" + createdAt + ", addresses=" + addresses + ", roles=" + roles + "]";
+				+ ", addresses=" + addresses + ", roles=" + roles + "]";
 	}
 
 }

@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -62,9 +62,8 @@ class InsertUserTest extends JdbcBaseTestDao {
 		LOGGER.info("running test executeWithNoUserIdThrowsException");
 
 		User carl = User.newInstance().withId(1l).withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withFirstName("Carlo").withLastName("Rossi")
-				.withDepartment(Department.newInstance().withId(accounts.getId())
-						.withName(accounts.getName()));
+				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance()
+						.withId(accountsDepartment.getId()).withName(accountsDepartment.getName()));
 
 		// run the test
 		Throwable throwable = assertThrows(Throwable.class, () -> insertUser.execute(carl));
@@ -81,11 +80,11 @@ class InsertUserTest extends JdbcBaseTestDao {
 				.withFirstName("Carlo").withLastName("Rossi");
 
 		Address address = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
-				.withState(State.newInstance().withId(ireland.getId())).withRegion("County Dublin")
+				.withState(State.newInstance().withId(irelandState.getId())).withRegion("County Dublin")
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withName(administrator.getName());
+		Role role = Role.newInstance().withId(null).withName(administratorRole.getName());
 		carl.addRole(role);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> insertUser.execute(carl));
@@ -99,15 +98,15 @@ class InsertUserTest extends JdbcBaseTestDao {
 		LOGGER.info("running test executeWithNoDepartmentIdThrowsException");
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance()
-						.withName(accounts.getName()));
+				.withFirstName("Carlo").withLastName("Rossi")
+				.withDepartment(Department.newInstance().withName(accountsDepartment.getName()));
 
 		Address address = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
-				.withState(State.newInstance().withId(ireland.getId())).withRegion("County Dublin")
+				.withState(State.newInstance().withId(irelandState.getId())).withRegion("County Dublin")
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withName(administrator.getName());
+		Role role = Role.newInstance().withId(null).withName(administratorRole.getName());
 		carl.addRole(role);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> insertUser.execute(carl));
@@ -121,36 +120,38 @@ class InsertUserTest extends JdbcBaseTestDao {
 		LOGGER.info("running test execute");
 
 		// delete all users
-		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql", "2_user.down.sql" };
+		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql",
+				"2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withFirstName("Carlo").withLastName("Rossi")
-				.withDepartment(Department.newInstance().withId(accounts.getId())
-						.withName(accounts.getName()));
+				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance()
+						.withId(accountsDepartment.getId()).withName(accountsDepartment.getName()))
+				.withVersion(1l).withCreatedAt(LocalDateTime.now());
 
 		Address address = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
-				.withState(State.newInstance().withId(ireland.getId())).withRegion("County Dublin")
+				.withState(State.newInstance().withId(irelandState.getId())).withRegion("County Dublin")
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withName(administrator.getName());
+		Role role = Role.newInstance().withId(null).withName(administratorRole.getName());
 		carl.addRole(role);
 
 		// run the test
 		User user = insertUser.execute(carl);
 
-		jdbcUserTestUtil.verifyUserWithNoCreatedAtDate("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), user);
+		jdbcUserTestUtil.verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), user);
 
-		Optional<PojoUser> newUser = jdbcQueryTestUtil.selectUserByUserId(user.getId());
-		PojoUser us = newUser.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
-		
+		PojoUser us = jdbcQueryTestUtil.selectUserByUserId(user.getId())
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
+
 		jdbcUserTestUtil.verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), us);
+		assertEquals(0, us.getVersion());
 
-		Optional<PojoDepartment> department = jdbcQueryTestUtil.selectDepartmentById(us.getDepartmentId());
-		PojoDepartment dep = department.orElseThrow(() -> new JdbcDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
+		PojoDepartment department = jdbcQueryTestUtil.selectDepartmentById(us.getDepartmentId())
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyDepartment(accounts.getName(), dep);
+		jdbcUserTestUtil.verifyDepartment(accountsDepartment.getName(), department);
 
 		List<PojoAddress> addresses = jdbcQueryTestUtil.selectAddressesByUserId(us.getId());
 

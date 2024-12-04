@@ -5,6 +5,7 @@ import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_ID_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
@@ -58,21 +59,21 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	@Transactional(readOnly = true)
 	public List<User> selectAll() {
-		return this.selectAllUsers.execute();
+		return selectAllUsers.execute();
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<User> selectByAccountName(String accountName) {
 		notNull(accountName, ERROR_ACCOUNT_NAME_NOT_NULL_MSG);
-		return this.selectUserByAccountName.execute(accountName);
+		return selectUserByAccountName.execute(accountName);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<User> selectByFirstName(String firstName) {
 		notNull(firstName, ERROR_FIRST_NAME_NOT_NULL_MSG);
-		return this.selectUserByFirstName.execute(firstName);
+		return selectUserByFirstName.execute(firstName);
 	}
 
 	@Override
@@ -80,12 +81,11 @@ public class UserDaoImpl implements UserDao {
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		if (user.getId() == null) {
 			LOGGER.info("Inserting new user ...");
-			User newUser = this.insertUser.execute(user);
+			User newUser = insertUser.execute(user);
 			LOGGER.info("User created with id: {}", user.getId());
 			return newUser;
-		}
-		else {
-			throw new IllegalArgumentException(ERROR_USER_ID_NOT_NULL_MSG);
+		} else {
+			throw new IllegalArgumentException(ERROR_USER_ID_NULL_MSG);
 		}
 	}
 
@@ -106,15 +106,13 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public void update(User user) {
+	public Integer update(User user) {
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		if (user.getId() == null) {
 			throw new IllegalArgumentException(ERROR_USER_ID_NOT_NULL_MSG);
-		}
-		else {
+		} else {
 			LOGGER.info("Updating new user ...");
-			updateUser.execute(user);
-			LOGGER.info("User saved with id: {}", user.getId());
+			return updateUser.execute(user);
 		}
 	}
 }

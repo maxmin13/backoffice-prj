@@ -79,10 +79,10 @@ class AddressDaoTest {
 
 		Address address1 = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
-				.withRegion("County Veneto").withPostalCode("30033");
+				.withRegion("County Veneto").withPostalCode("30033").withVersion(1l);
 		Address address2 = Address.newInstance().withId(3l).withDescription("Via Vecchia").withCity("Rome")
 				.withState(State.newInstance().withId(4l).withName(IRELAND.getName()).withCode(IRELAND.getCode()))
-				.withRegion("County Lazio").withPostalCode("20021");
+				.withRegion("County Lazio").withPostalCode("20021").withVersion(1l);
 
 		when(selectAddressesByUserId.execute(1l)).thenReturn(List.of(address1, address2));
 
@@ -119,18 +119,19 @@ class AddressDaoTest {
 
 		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
-				.withRegion("County Veneto").withPostalCode("30033");
+				.withRegion("County Veneto").withPostalCode("30033").withVersion(1l);
 
 		when(selectAddressByPostalCode.execute("30033")).thenReturn(Optional.of(address));
 
 		// run the test
-		Optional<Address> addressFound = addressDao.selectAddressByPostalCode("30033");
-		Address a = addressFound.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
+
+		Address addressFound = addressDao.selectAddressByPostalCode("30033")
+				.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
 
 		verify(selectAddressByPostalCode, times(1)).execute("30033");
 
-		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "County Veneto", a);
-		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), a.getState());
+		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "County Veneto", addressFound);
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), addressFound.getState());
 	}
 
 	@Test
@@ -166,7 +167,7 @@ class AddressDaoTest {
 
 		Address address = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
-				.withRegion("County Veneto").withPostalCode("30033");
+				.withRegion("County Veneto").withPostalCode("30033").withVersion(0l);
 
 		when(insertAddress.execute(address)).thenReturn(address);
 
@@ -175,7 +176,7 @@ class AddressDaoTest {
 
 		verify(insertAddress, times(1)).execute(newAddress);
 
-		jdbcUserTestUtil.verifyAddressWithoutId("30033", "Via Nuova", "Venice", "County Veneto", newAddress);
+		jdbcUserTestUtil.verifyAddressIgnoringIdField("30033", "Via Nuova", "Venice", "County Veneto", newAddress);
 		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), newAddress.getState());
 	}
 

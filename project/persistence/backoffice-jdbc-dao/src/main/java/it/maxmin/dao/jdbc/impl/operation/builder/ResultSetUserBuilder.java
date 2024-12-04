@@ -20,11 +20,11 @@ public class ResultSetUserBuilder {
 				user = User.newInstance().withId(rs.getLong("UserId")).withAccountName(rs.getString("AccountName"))
 						.withFirstName(rs.getString("FirstName")).withLastName(rs.getString("LastName"))
 						.withBirthDate(rs.getDate("BirthDate").toLocalDate())
-						.withCreatedAt(LocalDateTime.of(rs.getDate("CreatedAt").toLocalDate(), LocalTime.of(0, 0)));
+						.withCreatedAt(LocalDateTime.of(rs.getDate("CreatedAt").toLocalDate(), LocalTime.of(0, 0)))
+						.withVersion(rs.getLong("Version"));
 			}
 			return Optional.ofNullable(user);
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new JdbcDaoException(e.getMessage(), e);
 		}
 	}
@@ -36,8 +36,7 @@ public class ResultSetUserBuilder {
 				role = Role.newInstance().withId(rs.getLong("RoleId")).withName(rs.getString("Name"));
 			}
 			return Optional.ofNullable(role);
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new JdbcDaoException(e.getMessage(), e);
 		}
 	}
@@ -50,8 +49,7 @@ public class ResultSetUserBuilder {
 						.withName(rs.getString("DepartmentName"));
 			}
 			return Optional.ofNullable(department);
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new JdbcDaoException(e.getMessage(), e);
 		}
 	}

@@ -52,7 +52,7 @@ class SelectRoleByNameTest extends JdbcBaseTestDao {
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// run the test
-		Role role = selectRoleByName.execute(administrator.getName());
+		Role role = selectRoleByName.execute(administratorRole.getName());
 
 		assertNull(role);
 	}
@@ -63,9 +63,9 @@ class SelectRoleByNameTest extends JdbcBaseTestDao {
 		LOGGER.info("running test execute");
 
 		// run the test
-		Role role = selectRoleByName.execute(administrator.getName());
+		Role role = selectRoleByName.execute(administratorRole.getName());
 
-		this.jdbcUserTestUtil.verifyRole(administrator.getName(), role);
+		this.jdbcUserTestUtil.verifyRole(administratorRole.getName(), role);
 	}
 
 }

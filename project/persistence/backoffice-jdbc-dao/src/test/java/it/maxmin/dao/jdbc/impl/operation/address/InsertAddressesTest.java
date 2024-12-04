@@ -55,10 +55,10 @@ class InsertAddressesTest extends JdbcBaseTestDao {
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		Address address1 = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
-				.withState(State.newInstance().withId(italy.getId())).withRegion("Veneto").withPostalCode("30033");
+				.withState(State.newInstance().withId(italyState.getId())).withRegion("Veneto").withPostalCode("30033");
 
 		Address address2 = Address.newInstance().withDescription("Connolly street").withCity("Dublin")
-				.withState(State.newInstance().withId(ireland.getId())).withRegion("County Dublin")
+				.withState(State.newInstance().withId(irelandState.getId())).withRegion("County Dublin")
 				.withPostalCode("A65TF12");
 
 		List<Address> addresses = List.of(address1, address2);
@@ -71,9 +71,9 @@ class InsertAddressesTest extends JdbcBaseTestDao {
 		assertEquals(2, newAddresses.size());
 
 		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "Veneto", newAddresses.get(0));
-		assertEquals(italy.getId(), newAddresses.get(0).getStateId());
+		assertEquals(italyState.getId(), newAddresses.get(0).getStateId());
 		
 		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", newAddresses.get(1));
-		assertEquals(ireland.getId(), newAddresses.get(1).getStateId());
+		assertEquals(irelandState.getId(), newAddresses.get(1).getStateId());
 	}
 }

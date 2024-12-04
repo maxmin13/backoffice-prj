@@ -4,7 +4,7 @@ public enum UserQueryConstants {
 	;
 	
 	public static final String BASE_SELECT_USERS = ""
-			+ "SELECT DISTINCT u.Id AS UserId, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, "
+			+ "SELECT DISTINCT u.Id AS UserId, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.Version, "
 			+ "     d.Id AS DepartmentId, d.Name AS DepartmentName, "
 			+ "     r.Id AS RoleId, r.Name, "
 			+ "     a.Id AS AddressId, a.Description, a.City, a.Region, a.PostalCode, "
@@ -34,8 +34,9 @@ public enum UserQueryConstants {
 
 	public static final String UPDATE_USER = ""
 			+ "UPDATE User "
-			+ "SET AccountName=:accountName, FirstName=:firstName, LastName=:lastName, BirthDate=:birthData, DepartmentId=:departmentId "
-			+ "WHERE Id = :userId";
+			+ "SET AccountName=:accountName, FirstName=:firstName, LastName=:lastName, BirthDate=:birthData, DepartmentId=:departmentId, Version=(:version + 1) "
+			+ "WHERE Id = :userId "
+			+ "  AND Version = :version";
 
 	public static final String INSERT_USER = "" 
 			+ "INSERT INTO User "

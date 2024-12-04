@@ -19,6 +19,7 @@ public class User implements Serializable {
 	private String lastName;
 	private LocalDate birthDate;
 	private LocalDateTime createdAt;
+	private Long version;
 	private Department department;
 	private Set<Address> addresses = new HashSet<>();
 	private Set<Role> roles = new HashSet<>();
@@ -78,7 +79,20 @@ public class User implements Serializable {
 		this.lastName = lastName;
 		return this;
 	}
+	
+	public Long getVersion() {
+		return version;
+	}
+	
+	public void setVersion(Long version) {
+		this.version = version;
+	}
 
+	public User withVersion(Long version) {
+		this.version = version;
+		return this;
+	}
+	
 	public Department getDepartment() {
 		return department;
 	}

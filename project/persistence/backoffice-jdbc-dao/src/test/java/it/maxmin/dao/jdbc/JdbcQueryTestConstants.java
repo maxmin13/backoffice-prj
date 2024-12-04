@@ -24,7 +24,7 @@ public enum JdbcQueryTestConstants {
 			+ "WHERE name = :name ";
 	
 	public static final String SELECT_ADDRESSES_BY_USER_ID = ""
-			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode "
+			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode, a.Version "
 			+ "FROM Address a "
 			+ "INNER JOIN UserAddress ua ON a.Id = ua.AddressId "
 			+ "INNER JOIN User u ON u.Id = ua.UserId "
@@ -32,7 +32,7 @@ public enum JdbcQueryTestConstants {
 			+ "ORDER BY a.Id";
 		
 	public static final String SELECT_ADDRESSES_BY_USER_ACCOUNT_NAME = ""
-			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode "
+			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode, a.Version "
 			+ "FROM Address a "
 			+ "INNER JOIN UserAddress ua ON a.Id = ua.AddressId "
 			+ "INNER JOIN User u ON u.Id = ua.UserId "
@@ -40,18 +40,18 @@ public enum JdbcQueryTestConstants {
 			+ "ORDER BY a.Id";
 	
 	public static final String SELECT_ADDRESS_BY_ID = ""
-			+ "SELECT Id, Description, City, StateId, Region, PostalCode "
+			+ "SELECT Id, Description, City, StateId, Region, PostalCode, Version "
 			+ "FROM Address "
 			+ "WHERE Id = :id ";
 	
 	public static final String SELECT_ADDRESS_BY_POSTAL_CODE = ""
-			+ "SELECT Id, Description, City, StateId, Region, PostalCode "
+			+ "SELECT Id, Description, City, StateId, Region, PostalCode, Version "
 			+ "FROM Address "
 			+ "WHERE PostalCode = :postalCode "
 			+ "ORDER BY Id";
 	
 	public static final String SELECT_ALL_ADDRESSES = ""
-			+ "SELECT Id, Description, City, StateId, Region, PostalCode "
+			+ "SELECT Id, Description, City, StateId, Region, PostalCode, Version "
 			+ "FROM Address "
 			+ "ORDER BY Id";
 	
@@ -82,7 +82,7 @@ public enum JdbcQueryTestConstants {
 			+ "ORDER BY u.Id";
 	
 	public static final String SELECT_USERS_BY_ROLE_NAME = ""
-			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId "
+			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId, u.Version "
 			+ "FROM User u "
 			+ "INNER JOIN UserRole ur ON u.Id = ur.UserId "
 			+ "INNER JOIN Role r ON ur.RoleId = r.Id "
