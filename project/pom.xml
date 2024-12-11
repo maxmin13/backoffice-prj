@@ -13,13 +13,13 @@
 	<modules>
 		<module>ui/backoffice-webapp</module>
 		<module>config/backoffice-config</module>
-		
+
 		<module>persistence/backoffice-jpa-dao</module>
 		<module>domain/backoffice-jpa-dao-model</module>
-		
+
 		<module>persistence/backoffice-jdbc-dao</module>
 		<module>domain/backoffice-jdbc-dao-model</module>
-		
+
 		<module>service/backoffice-jdbc-service</module>
 		<module>domain/backoffice-jdbc-service-model</module>
 	</modules>
@@ -27,27 +27,35 @@
 	<properties>
 		<env>dev</env>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
-		<org.springframework.version>6.1.3</org.springframework.version>
-		<jakarta.servlet.version>6.0.0</jakarta.servlet.version>
-		<mariadb.client.version>3.3.3</mariadb.client.version>
-		<hibernate.version>6.4.4.Final</hibernate.version>
-		<hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		
 		<logback.version>1.4.8</logback.version>
 		<slf4j.version>2.0.7</slf4j.version>
+			
+		<mariadb.client.version>3.3.3</mariadb.client.version>
+		
+		<hibernate.version>6.6.0.Final</hibernate.version>
+		<hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
+		
+		<org.springframework.version>6.1.3</org.springframework.version>
+		<jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+		<jakarta.annotation.version>3.0.0</jakarta.annotation.version>
 		<jakarta.servlet.jsp.jstl.version>3.0.0</jakarta.servlet.jsp.jstl.version>
-		<org.junit.version>5.10.3</org.junit.version>
-		<org.springframework.test.version>6.1.11</org.springframework.test.version>
+		<org.apache.commons.version>3.16.0</org.apache.commons.version>
+		
+		<mokito.junit.jupiter.version>5.14.2</mokito.junit.jupiter.version>
+		<junit.jupiter.version>5.11.3</junit.jupiter.version>
+		<mockito.inline.version>5.2.0</mockito.inline.version>
+		<mockito.core.version>5.14.2</mockito.core.version>
 		<org.hamcrest.version>1.3</org.hamcrest.version>
+		
+		<org.springframework.test.version>6.1.11</org.springframework.test.version>
+		
 		<simple.jndi.version>0.11.4.1</simple.jndi.version>
-		<org.mockito.version>4.0.0</org.mockito.version>
-		<org.craftercms.mariaDB4j.version>2.4.2.3</org.craftercms.mariaDB4j.version>
+		<org.craftercms.mariaDB4j.version>3.1.0.3</org.craftercms.mariaDB4j.version>
 		<com.h2database.version>2.1.214</com.h2database.version>
 		<com.google.code.findbugs.version>3.0.2</com.google.code.findbugs.version>
-		<hibernate.version>6.6.0.Final</hibernate.version>
-		<jakarta.annotation.version>3.0.0</jakarta.annotation.version>
-		<org.apache.commons.version>3.16.0</org.apache.commons.version>
 	</properties>
 
 	<profiles>
@@ -79,25 +87,25 @@
 				<artifactId>backoffice-jdbc-dao</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>it.maxmin.persistence</groupId>
 				<artifactId>backoffice-jpa-dao</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>it.maxmin.domain</groupId>
 				<artifactId>backoffice-jdbc-dao-model</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>it.maxmin.domain</groupId>
 				<artifactId>backoffice-jpa-dao-model</artifactId>
 				<version>${project.parent.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>it.maxmin.domain</groupId>
 				<artifactId>backoffice-jdbc-service-model</artifactId>
@@ -148,7 +156,7 @@
 				<artifactId>spring-orm</artifactId>
 				<version>${org.springframework.version}</version>
 			</dependency>
-			
+
 			<!-- Hibernate lib -->
 			<dependency>
 				<groupId>org.hibernate.orm</groupId>
@@ -196,23 +204,42 @@
 			</dependency>
 
 			<!-- test dependencies -->
+			
+			<dependency>
+			    <groupId>org.junit.jupiter</groupId>
+			    <artifactId>junit-jupiter-engine</artifactId>
+			    <version>${junit.jupiter.version}</version>
+			    <scope>test</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-params</artifactId>
+				<version>${junit.jupiter.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-junit-jupiter</artifactId>
+				<version>${mokito.junit.jupiter.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-inline</artifactId>
+				<version>${mockito.inline.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>${mockito.core.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.craftercms.mariaDB4j</groupId>
 				<artifactId>mariaDB4j-springboot</artifactId>
 				<version>${org.craftercms.mariaDB4j.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-engine</artifactId>
-				<version>${org.junit.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-params</artifactId>
-				<version>${org.junit.version}</version>
 			</dependency>
 
 			<dependency>
@@ -234,23 +261,11 @@
 			</dependency>
 
 			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-inline</artifactId>
-				<version>${org.mockito.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-junit-jupiter</artifactId>
-				<version>${org.mockito.version}</version>
-			</dependency>
-
-			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
 				<version>${com.h2database.version}</version>
 			</dependency>
-			
+
 		</dependencies>
 	</dependencyManagement>
 

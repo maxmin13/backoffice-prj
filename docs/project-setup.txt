@@ -242,7 +242,9 @@ chmod +x delete.sh
 # Unit tests:
 ###################################################################
 
-sudo yum install libncurses*
+// in Fedora 40 it was necessary to install:
+sudo dnf install ncurses-compat-libs
+sudo dnf install libxcrypt-compat
 
 cd project
 
