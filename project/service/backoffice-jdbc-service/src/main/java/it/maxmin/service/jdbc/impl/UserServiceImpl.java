@@ -86,7 +86,10 @@ public class UserServiceImpl implements UserService {
 				.withDepartment(Department.newInstance().withId(department.getId()));
 
 		User newUser = userDao.insert(user);
+		
+		// TODO TEST IF THE ADDRESS IS ALREADY ASSOCIATED
 
+		// if the address exists, associate it to the user, if the address is new, create it and associate it to the user.
 		userDto.getAddresses().forEach(address -> addressDao.selectAddressByPostalCode(address.getPostalCode())
 				.ifPresentOrElse(a -> userDao.associateAddress(requireNonNull(newUser).getId(), a.getId()), () -> {
 					State state = stateDao.selectByStateName(address.getState().getName())
@@ -98,6 +101,8 @@ public class UserServiceImpl implements UserService {
 					userDao.associateAddress(newUser.getId(), requireNonNull(newAddress).getId());
 				}));
 
+		// TODO TEST IF THE ROLE IS ALREADY ASSOCIATED
+		
 		userDto.getRoles().stream().forEach(role -> {
 			Role r = roleDao.selectByRoleName(role.getName())
 					.orElseThrow(() -> new ServiceException(ERROR_ROLE_NOT_FOUND_MSG));
