@@ -31,6 +31,9 @@ public class UpdateUser extends SqlUpdate {
 		super.declareParameter(new SqlParameter("version", Types.INTEGER));
 	}
 
+	/**
+	 * @return the number of rows affected by the update
+	 */
 	public Integer execute(User user) {
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		notNull(user.getId(), ERROR_USER_ID_NOT_NULL_MSG);

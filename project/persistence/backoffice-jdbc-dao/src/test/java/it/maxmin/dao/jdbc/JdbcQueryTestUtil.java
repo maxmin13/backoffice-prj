@@ -4,6 +4,7 @@ import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESSES_BY_USER
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESSES_BY_USER_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESS_BY_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
+import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESS_BY_USER_ID_AND_POSTAL_CODE;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ALL_ADDRESSES;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_DEPARTMENT_BY_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_DEPARTMENT_BY_NAME;
@@ -145,6 +146,16 @@ public class JdbcQueryTestUtil {
 	public Optional<PojoAddress> selectAddressByPostalCode(String postalCode) {
 		SqlParameterSource param = new MapSqlParameterSource("postalCode", postalCode);
 		List<PojoAddress> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_POSTAL_CODE, param,
+				BeanPropertyRowMapper.newInstance(PojoAddress.class));
+		return addresses.isEmpty() ? Optional.empty() : Optional.of(addresses.get(0));
+	}
+	
+
+	public Optional<PojoAddress> selectAddressByUserIdPostalCode(Long userId, String postalCode) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("userId", userId);
+		params.addValue("postalCode", postalCode);
+		List<PojoAddress> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_USER_ID_AND_POSTAL_CODE, params,
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
 		return addresses.isEmpty() ? Optional.empty() : Optional.of(addresses.get(0));
 	}

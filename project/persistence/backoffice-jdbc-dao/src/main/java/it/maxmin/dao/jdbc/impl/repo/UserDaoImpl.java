@@ -23,7 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.maxmin.dao.jdbc.api.repo.UserDao;
 import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserAddress;
+import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserAddresses;
 import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserRole;
+import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserRoles;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUser;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserAddress;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserRole;
@@ -46,8 +48,10 @@ public class UserDaoImpl implements UserDao {
 	private InsertUser insertUser;
 	private InsertUserAddress insertUserAddress;
 	private DeleteUserAddress deleteUserAddress;
+	private DeleteUserAddresses deleteUserAddresses; 
 	private InsertUserRole insertUserRole;
 	private DeleteUserRole deleteUserRole;
+	private DeleteUserRoles deleteUserRoles;
 
 	@Autowired
 	public UserDaoImpl(DataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
@@ -55,11 +59,13 @@ public class UserDaoImpl implements UserDao {
 		insertUser = new InsertUser(dataSource);
 		insertUserAddress = new InsertUserAddress(dataSource);
 		deleteUserAddress = new DeleteUserAddress(dataSource);
+		deleteUserAddresses = new DeleteUserAddresses(dataSource);
 		insertUserRole = new InsertUserRole(dataSource);
 		deleteUserRole = new DeleteUserRole(dataSource);
 		selectUserByFirstName = new SelectUserByFirstName(jdbcTemplate);
 		selectUserByAccountName = new SelectUserByAccountName(jdbcTemplate);
 		selectAllUsers = new SelectAllUsers(jdbcTemplate);
+		deleteUserRoles = new DeleteUserRoles(dataSource);
 	}
 
 	@Override
@@ -90,49 +96,94 @@ public class UserDaoImpl implements UserDao {
 			User newUser = insertUser.execute(user);
 			LOGGER.info("User created with id: {}", user.getId());
 			return newUser;
-		} else {
+		}
+		else {
 			throw new IllegalArgumentException(ERROR_USER_ID_NULL_MSG);
 		}
 	}
 
 	@Override
-	public void associateAddress(Long userId, Long addressId) {
+	/**
+	 * @return the number of rows affected by the update
+	 */
+	public Integer associateAddress(Long userId, Long addressId) {
 		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
 		notNull(addressId, ERROR_ADDRESS_ID_NOT_NULL_MSG);
-		insertUserAddress.execute(userId, addressId);
+		Integer rows = insertUserAddress.execute(userId, addressId);
 		LOGGER.info("User {} associated with address {}", userId, addressId);
+		return rows;
 	}
 
 	@Override
-	public void removeAddress(Long userId, Long addressId) {
+	/**
+	 * @return the number of rows affected by the update
+	 */
+	public Integer removeAddress(Long userId, Long addressId) {
 		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
 		notNull(addressId, ERROR_ADDRESS_ID_NOT_NULL_MSG);
-		deleteUserAddress.execute(userId, addressId);
+		Integer rows = deleteUserAddress.execute(userId, addressId);
 		LOGGER.info("Address {} removed from user {}", addressId, userId);
+		return rows;
 	}
 
 	@Override
-	public void associateRole(Long userId, Long roleId) {
+	/**
+	 * @return the number of rows affected by the update
+	 */
+	public Integer removeAllAddresses(Long userId) {
+		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
+		Integer rows = deleteUserAddresses.execute(userId);
+		LOGGER.info("Addresses removed from user {}", userId);
+		return rows;
+	}
+
+	@Override
+	/**
+	 * @return the number of rows affected by the update
+	 */
+	public Integer associateRole(Long userId, Long roleId) {
 		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
 		notNull(roleId, ERROR_ROLE_ID_NOT_NULL_MSG);
-		insertUserRole.execute(userId, roleId);
+		Integer rows = insertUserRole.execute(userId, roleId);
 		LOGGER.info("User {} associated with role {}", userId, roleId);
+		return rows;
 	}
 
 	@Override
-	public void removeRole(Long userId, Long roleId) {
+	/**
+	 * @return the number of rows affected by the update
+	 */
+	public Integer removeRole(Long userId, Long roleId) {
 		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
 		notNull(roleId, ERROR_ROLE_ID_NOT_NULL_MSG);
-		deleteUserRole.execute(userId, roleId);
+		Integer rows = deleteUserRole.execute(userId, roleId);
 		LOGGER.info("Role {} removed from user {}", roleId, userId);
+		return rows;
 	}
+	
 
 	@Override
+	/**
+	 * @return the number of rows affected by the update
+	 */
+	public Integer removeAllRoles(Long userId) {
+		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
+		Integer rows = deleteUserRoles.execute(userId);
+		LOGGER.info("Roles removed from user {}", userId);
+		return rows;
+	}
+
+
+	@Override
+	/**
+	 * @return the number of rows affected by the update
+	 */
 	public Integer update(User user) {
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		if (user.getId() == null) {
 			throw new IllegalArgumentException(ERROR_USER_ID_NOT_NULL_MSG);
-		} else {
+		}
+		else {
 			LOGGER.info("Updating new user ...");
 			return updateUser.execute(user);
 		}

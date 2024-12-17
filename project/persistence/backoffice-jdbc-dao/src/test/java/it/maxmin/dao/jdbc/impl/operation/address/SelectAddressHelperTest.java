@@ -1,9 +1,11 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESSES_BY_USER_ID;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
+import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESS_BY_USER_ID_AND_POSTAL_CODE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Types;
@@ -57,9 +59,9 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 	}
 
 	@Test
-	void selectAddressesByUserIdAddressNotFound() {
+	void selectAddressByUserIdNotFound() {
 
-		LOGGER.info("running test selectAddressesByUserIdNotFound");
+		LOGGER.info("running test selectAddressByUserIdNotFound");
 
 		// delete all the addresses
 		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
@@ -79,9 +81,9 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 	}
 
 	@Test
-	void selectAddressesByUserId() {
+	void selectAddressByUserId() {
 
-		LOGGER.info("running test selectAddressesByUserId");
+		LOGGER.info("running test selectAddressByUserId");
 
 		PojoUser maxmin = jdbcQueryTestUtil.selectUserByAccountName("maxmin13")
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
@@ -168,9 +170,9 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 	}
 
 	@Test
-	void selectAddressesByPostalCodeAddressNotFound() {
+	void selectAddressByPostalCodeNotFound() {
 
-		LOGGER.info("running test selectAddressesByPostalCodeAddressNotFound");
+		LOGGER.info("running test selectAddressByPostalCodeNotFound");
 
 		// delete all the addresses
 		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
@@ -186,9 +188,9 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 	}
 
 	@Test
-	void selectAddressesByPostalCodeWithNoUser() {
+	void selectAddressByPostalCodeWithNoUser() {
 
-		LOGGER.info("running test selectAddressesByPostalCode");
+		LOGGER.info("running test selectAddressByPostalCodeWithNoUser");
 
 		// delete all the users
 		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql",
@@ -196,7 +198,7 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		PojoAddress address = jdbcQueryTestUtil.selectAddressByPostalCode("30010")
-				.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		param.addValue("postalCode", address.getPostalCode(), Types.VARCHAR);
@@ -215,18 +217,122 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 	}
 
 	@Test
-	void selectAddressesByPostalCode() {
+	void selectAddressByPostalCode() {
 
-		LOGGER.info("running test selectAddressesByPostalCode");
+		LOGGER.info("running test selectAddressByPostalCode");
 
 		PojoAddress address = jdbcQueryTestUtil.selectAddressByPostalCode("30010")
-				.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		param.addValue("postalCode", address.getPostalCode(), Types.VARCHAR);
 
 		// run the test
 		List<Address> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_POSTAL_CODE, param, resultSetExtractor);
+
+		assertEquals(1, addresses.size());
+
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", addresses.get(0));
+		jdbcUserTestUtil.verifyState(italyState.getName(), italyState.getCode(), addresses.get(0).getState());
+
+		Set<User> users = addresses.get(0).getUsers();
+
+		assertEquals(1, users.size());
+
+		// user
+		User maxmin = users.stream().filter(each -> each.getAccountName().equals("maxmin13")).findFirst()
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
+
+		// roles
+		assertEquals(3, maxmin.getRoles().size());
+
+		Role role1 = maxmin.getRole(administratorRole.getName())
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
+
+		jdbcUserTestUtil.verifyRole(administratorRole.getName(), role1);
+
+		Role role2 = maxmin.getRole(userRole.getName())
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
+
+		jdbcUserTestUtil.verifyRole(userRole.getName(), role2);
+
+		Role role3 = maxmin.getRole(workerRole.getName())
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ROLE_NOT_FOUND_MSG));
+
+		jdbcUserTestUtil.verifyRole(workerRole.getName(), role3);
+
+		// department
+		jdbcUserTestUtil.verifyDepartment(productionDepartment.getName(), maxmin.getDepartment());
+
+		// addresses
+		assertEquals(0, maxmin.getAddresses().size());
+	}
+
+	@Test
+	void selectAddressByAccountNameAndPostalCodeNotFound() {
+
+		LOGGER.info("running test selectAddressByAccountNameAndPostalCodeNotFound");
+
+		// delete all the addresses
+		String[] scripts = { "2_useraddress.down.sql", "2_address.down.sql" };
+		jdbcQueryTestUtil.runDBScripts(scripts);
+
+		PojoUser user = jdbcQueryTestUtil.selectUserByAccountName("maxmin13")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
+
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("userId", user.getId());
+		params.addValue("postalCode", "30010");
+
+		// run the test
+		List<Address> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_USER_ID_AND_POSTAL_CODE, params,
+				resultSetExtractor);
+
+		assertEquals(0, addresses.size());
+	}
+
+	@Test
+	void selectAddressByUserIdAndPostalCodeWithNoUser() {
+
+		LOGGER.info("running test selectAddressByUserIdAndPostalCodeWithNoUser");
+
+		// delete all the users
+		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql",
+				"2_user.down.sql" };
+		jdbcQueryTestUtil.runDBScripts(scripts);
+
+		PojoAddress address = jdbcQueryTestUtil.selectAddressByPostalCode("30010")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
+
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("userId", address.getPostalCode());
+		params.addValue("postalCode", address.getPostalCode());
+
+		// run the test
+		List<Address> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_USER_ID_AND_POSTAL_CODE, params,
+				resultSetExtractor);
+
+		assertEquals(0, addresses.size());
+	}
+
+	@Test
+	void selectAddressByUserIdAndPostalCode() {
+
+		LOGGER.info("running test selectAddressByUserIdAndPostalCode");
+		
+		PojoUser user = jdbcQueryTestUtil.selectUserByAccountName("maxmin13")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
+
+		PojoAddress address = jdbcQueryTestUtil.selectAddressByUserIdPostalCode(user.getId(), "30010")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
+
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("userId", user.getId());
+		params.addValue("postalCode", address.getPostalCode());
+
+		// run the test
+		List<Address> addresses = jdbcTemplate.query(SELECT_ADDRESS_BY_USER_ID_AND_POSTAL_CODE, params,
+				resultSetExtractor);
 
 		assertEquals(1, addresses.size());
 

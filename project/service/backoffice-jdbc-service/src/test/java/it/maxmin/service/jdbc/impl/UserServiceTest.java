@@ -36,8 +36,6 @@ import it.maxmin.model.jdbc.dao.pojo.PojoRole;
 import it.maxmin.model.jdbc.dao.pojo.PojoState;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 import it.maxmin.model.jdbc.service.dto.AddressDto;
-import it.maxmin.model.jdbc.service.dto.CredentialsDto;
-import it.maxmin.model.jdbc.service.dto.DepartmentDto;
 import it.maxmin.model.jdbc.service.dto.RoleDto;
 import it.maxmin.model.jdbc.service.dto.StateDto;
 import it.maxmin.model.jdbc.service.dto.UserDto;
@@ -47,130 +45,22 @@ import it.maxmin.service.jdbc.exception.JdbcServiceException;
 import it.maxmin.service.jdbc.exception.JdbcServiceTestException;
 
 @SpringJUnitConfig(classes = { JdbcServiceSpringContextTestCfg.class })
-class UserServiceImplTest extends JdbcBaseTestDao {
+class UserServiceTest extends JdbcBaseTestDao {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImplTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceTest.class);
 
 	private UserService userService;
 
 	@Autowired
-	protected UserServiceImplTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil,
+	protected UserServiceTest(JdbcQueryTestUtil jdbcQueryTestUtil, JdbcUserTestUtil jdbcUserTestUtil,
 			UserService userService) {
 		super(jdbcQueryTestUtil, jdbcUserTestUtil);
 		this.userService = userService;
 	}
-	
 
 	@Test
-	@DisplayName("01. should throw an exception")
 	@Order(1)
-	void updateUserWithNoCredentialsThrowsError() {
-
-		LOGGER.info("running test updateUserWithNoCredentialsThrowsError");
-
-		UserDto maxmin = UserDto.newInstance(null, LocalDate.of(1940, 9, 11),
-				DepartmentDto.newInstance(legalDepartment.getName()), null, null);
-
-		Throwable throwable = assertThrows(Throwable.class, () -> userService.updateUser(maxmin));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-
-	@Test
-	@DisplayName("02. should throw an exception")
-	@Order(2)
-	void updateUserWithNoAccountNameThrowsError() {
-
-		LOGGER.info("running test updateUserWithNoAccountNameThrowsError");
-
-		UserDto maxmin = UserDto.newInstance(CredentialsDto.newInstance(null, "Franco", "Franchi"),
-				LocalDate.of(1940, 9, 11), DepartmentDto.newInstance(legalDepartment.getName()), null, null);
-
-		Throwable throwable = assertThrows(Throwable.class, () -> userService.updateUser(maxmin));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-
-	@Test
-	@DisplayName("03. should throw an exception")
-	@Order(3)
-	void updateUserWithNoFirstNameThrowsError() {
-
-		LOGGER.info("running test updateUserWithNoFirstNameThrowsError");
-
-		UserDto maxmin = UserDto.newInstance(CredentialsDto.newInstance("john123", null, "Franchi"),
-				LocalDate.of(1940, 9, 11), DepartmentDto.newInstance(legalDepartment.getName()), null, null);
-
-		Throwable throwable = assertThrows(Throwable.class, () -> userService.updateUser(maxmin));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-
-	@Test
-	@DisplayName("04. should throw an exception")
-	@Order(4)
-	void updateUserWithNoLastNameThrowsError() {
-
-		LOGGER.info("running test updateUserWithNoLastNameThrowsError");
-
-		UserDto maxmin = UserDto.newInstance(CredentialsDto.newInstance("john123", "Franco", null),
-				LocalDate.of(1940, 9, 11), DepartmentDto.newInstance(legalDepartment.getName()), null, null);
-
-		Throwable throwable = assertThrows(Throwable.class, () -> userService.updateUser(maxmin));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-
-	@Test
-	@DisplayName("05. should throw an exception")
-	@Order(5)
-	void updateUserWithNoBirthDateThrowsError() {
-
-		LOGGER.info("running test updateUserWithNoBirthDateThrowsError");
-
-		UserDto maxmin = UserDto.newInstance(CredentialsDto.newInstance("john123", "Franco", "Franchi"), null,
-				DepartmentDto.newInstance(legalDepartment.getName()), null, null);
-
-		Throwable throwable = assertThrows(Throwable.class, () -> userService.updateUser(maxmin));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-
-	@Test
-	@DisplayName("06. should throw an exception")
-	@Order(6)
-	void updateUserWithNoDepartmentThrowsError() {
-
-		LOGGER.info("running test updateUserWithNoDepartmentThrowsError");
-
-		UserDto maxmin = UserDto.newInstance(CredentialsDto.newInstance("john123", "Franco", "Franchi"), null, null,
-				null, null);
-
-		Throwable throwable = assertThrows(Throwable.class, () -> userService.updateUser(maxmin));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-
-	@Test
-	@DisplayName("07. should throw an exception")
-	@Order(7)
-	void updateUserWithNoDepartmentNameThrowsError() {
-
-		LOGGER.info("running test updateUserWithNoDepartmentNameThrowsError");
-
-		String departmentName = null;
-
-		UserDto maxmin = UserDto.newInstance(CredentialsDto.newInstance("john123", "Franco", "Franchi"), null,
-				DepartmentDto.newInstance(departmentName), null, null);
-
-		Throwable throwable = assertThrows(Throwable.class, () -> userService.updateUser(maxmin));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-
-	@Test
-	@Order(8)
-	@DisplayName("08. should throw an exception")
+	@DisplayName("01. should throw an exception")
 	void updateUserNotFoundThrowsError() {
 
 		LOGGER.info("running test updateUserNotFoundThrowsError");
@@ -179,8 +69,8 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 			throw new JdbcServiceTestException(ERROR_USER_ALREADY_CREATED);
 		});
 
-		UserDto maxmin = UserDto.newInstance(CredentialsDto.newInstance("maxmin99", "Franco", "Franchi"),
-				LocalDate.of(1940, 9, 11), DepartmentDto.newInstance(legalDepartment.getName()), null, null);
+		UserDto maxmin = UserDto.newInstance("maxmin99", "Franco", "Franchi", LocalDate.of(1940, 9, 11),
+				legalDepartment.getName());
 
 		Throwable throwable = assertThrows(Throwable.class, () -> userService.updateUser(maxmin));
 
@@ -188,8 +78,8 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 	}
 
 	@Test
-	@Order(9)
-	@DisplayName("09. should update the user")
+	@Order(2)
+	@DisplayName("02. should update the user")
 	void updateUser1() {
 
 		LOGGER.info("running test updateUserTest1");
@@ -216,8 +106,8 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		assertEquals(3, roles.size());
 
 		// prepare the user for the update
-		UserDto franco = UserDto.newInstance(CredentialsDto.newInstance("maxmin13", "Franco", "Franchi"),
-				LocalDate.of(1940, 9, 11), DepartmentDto.newInstance(legalDepartment.getName()), null, null);
+		UserDto franco = UserDto.newInstance("maxmin13", "Franco", "Franchi", LocalDate.of(1940, 9, 11),
+				legalDepartment.getName());
 
 		// run the test
 		userService.updateUser(franco);
@@ -230,7 +120,7 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 
 		jdbcUserTestUtil.verifyUser("maxmin13", "Franco", "Franchi", LocalDate.of(1940, 9, 11), user);
 
-		assertEquals(administratorRole.getId(), user.getDepartmentId());
+		assertEquals(legalDepartment.getId(), user.getDepartmentId());
 
 		addresses = jdbcQueryTestUtil.selectAddressesByUserId(userId);
 
@@ -242,8 +132,8 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 	}
 
 	@Test
-	@Order(10)
-	@DisplayName("10. should update an address and replace the other")
+	@Order(3)
+	@DisplayName("03. should update one address and replace the other")
 	void updateUser2() {
 
 		LOGGER.info("running test updateUser2");
@@ -267,8 +157,8 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		assertEquals(0, address1.getVersion());
 		assertEquals(address1.getStateId(), italyState.getId());
 
-		PojoAddress address2 = addresses.stream().filter(each -> each.getPostalCode().equals("A65TF12"))
-				.findFirst().orElseThrow(() -> new JdbcServiceTestException(ERROR_ADDRESS_NOT_FOUND));
+		PojoAddress address2 = addresses.stream().filter(each -> each.getPostalCode().equals("A65TF12")).findFirst()
+				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ADDRESS_NOT_FOUND));
 		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
 		assertEquals(0, address2.getVersion());
 		assertEquals(address2.getStateId(), irelandState.getId());
@@ -280,7 +170,7 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		// prepare the user for the update
 		// update an existing address
 		AddressDto addressDto1 = AddressDto.newInstance("Via borgo di sopra", "Torino", "County Piemonte",
-				address1.getPostalCode(), StateDto.newInstance(italyState.getName(), italyState.getCode()));
+				address1.getPostalCode(), StateDto.newInstance(irelandState.getName(), irelandState.getCode()));
 
 		// create a new address
 		jdbcQueryTestUtil.selectAddressByPostalCode("50033").ifPresent(address -> {
@@ -289,9 +179,8 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		AddressDto addressDto2 = AddressDto.newInstance("Via della resistenza", "Florence", "County Liguria", "50033",
 				StateDto.newInstance(italyState.getName(), italyState.getCode()));
 
-		UserDto franco = UserDto.newInstance(CredentialsDto.newInstance(maxmin.getAccountName(), "Franco", "Franchi"),
-				LocalDate.of(1940, 9, 11), DepartmentDto.newInstance(legalDepartment.getName()),
-				Set.of(addressDto1, addressDto2), null);
+		UserDto franco = UserDto.newInstance(maxmin.getAccountName(), "Franco", "Franchi", LocalDate.of(1940, 9, 11),
+				legalDepartment.getName(), Set.of(addressDto1, addressDto2), Set.of());
 
 		// run the test
 		userService.updateUser(franco);
@@ -313,14 +202,14 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sopra", "Torino", "County Piemonte", address3);
 		assertEquals(1, address3.getVersion());
-		assertEquals(address3.getStateId(), italyState.getId());
+		assertEquals(irelandState.getId(), address3.getStateId());
 
 		PojoAddress address4 = addresses.stream().filter(each -> each.getPostalCode().equals("50033")).findFirst()
 				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ADDRESS_NOT_FOUND));
 
 		jdbcUserTestUtil.verifyAddress("50033", "Via della resistenza", "Florence", "County Liguria", address4);
 		assertEquals(0, address4.getVersion());
-		assertEquals(address4.getStateId(), irelandState.getId());
+		assertEquals(italyState.getId(), address4.getStateId());
 
 		roles = jdbcQueryTestUtil.selectRolesByUserId(userId);
 
@@ -328,8 +217,8 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 	}
 
 	@Test
-	@Order(10)
-	@DisplayName("10. should delete two roles and leave the user with the role of administrator")
+	@Order(4)
+	@DisplayName("04. should delete two roles and leave the user with the role of administrator")
 	void updateUser3() {
 
 		LOGGER.info("running test updateUser3");
@@ -359,16 +248,15 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ROLE_NOT_FOUND_MSG));
 
 		// prepare the user for the update
-		UserDto franco = UserDto.newInstance(CredentialsDto.newInstance(maxmin.getAccountName(), "Franco", "Franchi"),
-				LocalDate.of(1940, 9, 11), DepartmentDto.newInstance(legalDepartment.getName()), null,
-				Set.of(RoleDto.newInstance(ADMINISTRATOR.getName())));
+		UserDto franco = UserDto.newInstance(maxmin.getAccountName(), "Franco", "Franchi", LocalDate.of(1940, 9, 11),
+				legalDepartment.getName(), null, Set.of(RoleDto.newInstance(ADMINISTRATOR.getName())));
 
 		// run the test
 		userService.updateUser(franco);
 
 		// check the user
 		PojoUser updatedUser = jdbcQueryTestUtil.selectUserByUserId(userId)
-				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
+				.orElseThrow(() -> new JdbcServiceTestException(ERROR_USER_NOT_FOUND_MSG));
 
 		assertEquals(maxmin.getVersion() + 1, updatedUser.getVersion());
 
@@ -382,15 +270,30 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 
 		roles.stream().filter(each -> each.getName().equals(ADMINISTRATOR.getName())).findFirst()
 				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ROLE_NOT_FOUND_MSG));
-	}	
-	
-	
-	
-	
-	
+	}
 
-//	@Test TODO RESTORE
-	@Order(1)
+	@Test
+	@Order(5)
+	@DisplayName("05. should throw an exception")
+	void insertExistingUserThrowsError() {
+
+		LOGGER.info("running test insertExistingUserThrowsError");
+
+		// find an existing user
+		jdbcQueryTestUtil.selectUserByAccountName("maxmin13")
+				.orElseThrow(() -> new JdbcServiceTestException(ERROR_USER_NOT_FOUND_MSG));
+
+		UserDto maxmin = UserDto.newInstance("maxmin13", "Franco", "Franchi", LocalDate.of(1940, 9, 11),
+				legalDepartment.getName());
+
+		Throwable throwable = assertThrows(Throwable.class, () -> userService.createUser(maxmin));
+
+		assertEquals(JdbcServiceException.class, throwable.getClass());
+	}
+
+	@Test
+	@Order(6)
+	@DisplayName("06. should create a new user")
 	void createUser() {
 
 		LOGGER.info("running test createUserTest");
@@ -431,9 +334,8 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		});
 
 		// prepare the new user
-		UserDto maxmin = UserDto.newInstance(CredentialsDto.newInstance("maxmin13", "Max", "Minardi"),
-				LocalDate.of(1977, 10, 16), DepartmentDto.newInstance(productionDepartment.getName()), addresses,
-				roles);
+		UserDto maxmin = UserDto.newInstance("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16),
+				productionDepartment.getName(), addresses, roles);
 
 		// running the test
 		userService.createUser(maxmin);
@@ -460,11 +362,9 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		jdbcUserTestUtil.verifyRole(userRole.getName(), userRoles.get(1));
 	}
 
-	// TODO existing user error
-
-//	@Test TODO RESTORE
-	@Order(2)
-	@DisplayName("An exception should roll back all the changes in transaction.")
+	@Test
+	@Order(7)
+	@DisplayName("07. An exception should roll back all the changes in transaction.")
 	void createUserWithError() {
 
 		LOGGER.info("running test createUserWithError");
@@ -506,9 +406,8 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		});
 
 		// prepare the new user
-		UserDto maxmin = UserDto.newInstance(CredentialsDto.newInstance("maxmin13", "Max", "Minardi"),
-				LocalDate.of(1977, 10, 16), DepartmentDto.newInstance(productionDepartment.getName()), addresses,
-				roles);
+		UserDto maxmin = UserDto.newInstance("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16),
+				productionDepartment.getName(), addresses, roles);
 
 		// running the test
 		Throwable throwable = assertThrows(Throwable.class, () -> userService.createUser(maxmin));
@@ -528,6 +427,5 @@ class UserServiceImplTest extends JdbcBaseTestDao {
 		List<PojoRole> userRoles = jdbcQueryTestUtil.selectRolesByUserAccountName("maxmin13");
 		assertEquals(0, userRoles.size());
 	}
-
 
 }

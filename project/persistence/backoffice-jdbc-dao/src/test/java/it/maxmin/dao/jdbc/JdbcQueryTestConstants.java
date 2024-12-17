@@ -50,6 +50,15 @@ public enum JdbcQueryTestConstants {
 			+ "WHERE PostalCode = :postalCode "
 			+ "ORDER BY Id";
 	
+	public static final String SELECT_ADDRESS_BY_USER_ID_AND_POSTAL_CODE = ""
+			+ "SELECT a.Id, a.Description, a.City, a.StateId, a.Region, a.PostalCode, a.Version "
+			+ "FROM Address a "
+			+ "INNER JOIN UserAddress ua ON a.Id = ua.AddressId "
+			+ "INNER JOIN User u ON ua.UserId = u.Id " 
+			+ "WHERE a.PostalCode = :postalCode "
+			+ "  AND u.Id = :userId "
+			+ "ORDER BY a.Id";
+	
 	public static final String SELECT_ALL_ADDRESSES = ""
 			+ "SELECT Id, Description, City, StateId, Region, PostalCode, Version "
 			+ "FROM Address "

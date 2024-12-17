@@ -11,11 +11,11 @@ public enum AddressQueryConstants {
 			+ "         r.Id AS RoleId, r.Name "
 			+ "FROM Address a "
 			+ "INNER JOIN State s ON a.StateId = s.Id " 
-			+ "LEFT JOIN UserAddress ua ON a.Id = ua.AddressId " 
-			+ "LEFT JOIN User u ON ua.UserId = u.Id "
-			+ "LEFT JOIN Department d ON u.DepartmentId = d.Id "
-			+ "LEFT JOIN UserRole ur ON u.Id = ur.UserId "
-			+ "LEFT JOIN Role r ON ur.RoleId = r.Id ";			
+			+ " LEFT OUTER JOIN UserAddress ua ON a.Id = ua.AddressId " 
+			+ " LEFT OUTER JOIN User u ON ua.UserId = u.Id "
+			+ " LEFT OUTER JOIN Department d ON u.DepartmentId = d.Id "
+			+ " LEFT OUTER JOIN UserRole ur ON u.Id = ur.UserId "
+			+ " LEFT OUTER JOIN Role r ON ur.RoleId = r.Id ";			
 
 	public static final String SELECT_ADDRESSES_BY_USER_ID = "" 
 			+ BASE_SELECT_ADDRESSES 			
@@ -26,14 +26,21 @@ public enum AddressQueryConstants {
 			+ BASE_SELECT_ADDRESSES 
 			+ "WHERE a.PostalCode = :postalCode "
 			+ "ORDER BY AddressId";	
+	
+	public static final String SELECT_ADDRESS_BY_USER_ID_AND_POSTAL_CODE = ""
+			+ BASE_SELECT_ADDRESSES 
+			+ "WHERE a.PostalCode = :postalCode "
+			+ "  AND u.Id = :userId "
+			+ "ORDER BY AddressId";	
 
 	public static final String UPDATE_ADDRESS = "" 
 			+ "UPDATE Address "
-			+ "SET Description=:description, City=:city, StateId=:stateId, Region=:region, PostalCode=:postalCode "
-			+ "WHERE Id=:addressId";
+			+ "   SET Description=:description, City=:city, StateId=:stateId, Region=:region, PostalCode=:postalCode, Version=(:version + 1) "
+			+ " WHERE Id=:addressId"
+			+ "   AND Version = :version";
 
 	public static final String INSERT_ADDRESS = "" 
 			+ "INSERT INTO Address "
-			+ "SET Description = :description, City = :city, StateId = :stateId, Region = :region, PostalCode = :postalCode";
+			+ "   SET Description = :description, City = :city, StateId = :stateId, Region = :region, PostalCode = :postalCode";
 
 }

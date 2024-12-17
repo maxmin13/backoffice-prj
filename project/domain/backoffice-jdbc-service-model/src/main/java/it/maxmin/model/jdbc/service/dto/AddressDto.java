@@ -17,12 +17,12 @@ public final class AddressDto implements Serializable {
 	private final StateDto state;
 
 	public static AddressDto newInstance(String description, String city, String region, String postalCode,
-			StateDto state) {
+			StateDto state) {		
 		return new AddressDto(description, city, region, postalCode, state);
 	}
 
 	public static AddressDto newInstance(Address address) {
-		return new AddressDto(address.getDescription(), address.getCity(), address.getRegion(), address.getPostalCode(),
+		return newInstance(address.getDescription(), address.getCity(), address.getRegion(), address.getPostalCode(),
 				StateDto.newInstance(address.getState()));
 	}
 

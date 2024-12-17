@@ -79,11 +79,11 @@ public class User implements Serializable {
 		this.lastName = lastName;
 		return this;
 	}
-	
+
 	public Long getVersion() {
 		return version;
 	}
-	
+
 	public void setVersion(Long version) {
 		this.version = version;
 	}
@@ -92,7 +92,7 @@ public class User implements Serializable {
 		this.version = version;
 		return this;
 	}
-	
+
 	public Department getDepartment() {
 		return department;
 	}
@@ -143,7 +143,8 @@ public class User implements Serializable {
 	public boolean addAddress(Address address) {
 		if (address == null || addresses.contains(address)) {
 			return false;
-		} else {
+		}
+		else {
 			addresses.add(address);
 			return true;
 		}
@@ -167,7 +168,8 @@ public class User implements Serializable {
 	public boolean addRole(Role role) {
 		if (role == null || roles.contains(role)) {
 			return false;
-		} else {
+		}
+		else {
 			roles.add(role);
 			return true;
 		}
@@ -202,8 +204,8 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", accountName=" + accountName + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", department=" + department + ", birthDate=" + birthDate + ", createdAt=" + createdAt
-				+ ", addresses=" + addresses + ", roles=" + roles + "]";
+				+ ", birthDate=" + birthDate + ", createdAt=" + createdAt + ", version=" + version + ", department="
+				+ department + ", addresses=" + addresses + ", roles=" + roles + "]";
 	}
 
 }

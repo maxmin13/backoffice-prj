@@ -21,9 +21,12 @@ public class InsertUserAddress extends SqlUpdate {
 		super.declareParameter(new SqlParameter("addressId", Types.INTEGER));
 	}
 
-	public void execute(Long userId, Long addressId) {
+	/**
+	 * @return the number of rows affected by the update
+	 */
+	public Integer execute(Long userId, Long addressId) {
 		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
 		notNull(addressId, ERROR_ADDRESS_ID_NOT_NULL_MSG);
-		updateByNamedParam(Map.of("userId", userId, "addressId", addressId));
+		return updateByNamedParam(Map.of("userId", userId, "addressId", addressId));
 	}
 }

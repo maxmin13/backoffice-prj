@@ -33,12 +33,10 @@ public class SelectAddressHelper {
 				Address address = map.computeIfAbsent(addressId,
 						id -> resultSetAddressBuilder.buildAddress(rs).orElse(null));
 				resultSetAddressBuilder.buildState(rs).ifPresent(requireNonNull(address)::withState);
-
 				String accountName = rs.getString("accountName");
 				if (accountName != null) {
-					address.getUser(accountName).ifPresentOrElse(u -> {
-						resultSetUserBuilder.buildRole(rs).ifPresent(requireNonNull(u)::addRole);
-					}, () -> {
+					address.getUser(accountName).ifPresentOrElse(u -> resultSetUserBuilder.buildRole(rs).ifPresent(requireNonNull(u)::addRole), 
+							() -> {
 						User user = resultSetUserBuilder.buildUser(rs).orElse(null);
 						resultSetUserBuilder.buildDepartment(rs).ifPresent(requireNonNull(user)::withDepartment);
 						resultSetUserBuilder.buildRole(rs).ifPresent(user::addRole);

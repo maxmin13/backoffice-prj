@@ -1,5 +1,6 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
 import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,6 +26,7 @@ import it.maxmin.dao.jdbc.exception.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddress;
 import it.maxmin.dao.jdbc.impl.operation.address.InsertAddresses;
 import it.maxmin.dao.jdbc.impl.operation.address.SelectAddressByPostalCode;
+import it.maxmin.dao.jdbc.impl.operation.address.SelectAddressByUserIdAndPostalCode;
 import it.maxmin.dao.jdbc.impl.operation.address.SelectAddressesByUserId;
 import it.maxmin.dao.jdbc.impl.operation.address.UpdateAddress;
 import it.maxmin.model.jdbc.dao.entity.Address;
@@ -51,6 +53,9 @@ class AddressDaoTest {
 
 	@Mock
 	private SelectAddressByPostalCode selectAddressByPostalCode;
+
+	@Mock
+	private SelectAddressByUserIdAndPostalCode selectAddressByUserIdAndPostalCode;
 
 	@InjectMocks
 	private AddressDaoImpl addressDao;
@@ -101,21 +106,21 @@ class AddressDaoTest {
 	}
 
 	@Test
-	void selectAddressesByPostalCodeWithNoIdThrowsException() {
+	void selectAddressByPostalCodeWithNoPostalCodeThrowsException() {
 
-		LOGGER.info("running test selectAddressesByPostalCodeWithNoIdThrowsException");
+		LOGGER.info("running test selectAddressByPostalCodeWithNoPostalCodeThrowsException");
 
-		Long postalCode = null;
+		String postalCode = null;
 
-		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.selectAddressesByUserId(postalCode));
+		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.selectAddressByPostalCode(postalCode));
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 
 	@Test
-	void selectAddressesByPostalCode() {
+	void selectAddressByPostalCode() {
 
-		LOGGER.info("running test selectAddressesByPostalCode");
+		LOGGER.info("running test selectAddressByPostalCode");
 
 		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
@@ -126,9 +131,59 @@ class AddressDaoTest {
 		// run the test
 
 		Address addressFound = addressDao.selectAddressByPostalCode("30033")
-				.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		verify(selectAddressByPostalCode, times(1)).execute("30033");
+
+		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "County Veneto", addressFound);
+		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), addressFound.getState());
+	}
+
+	@Test
+	void selectAddressByUserIdAndPostalCodeWithNoPostalCodeThrowsException() {
+
+		LOGGER.info("running test selectAddressByUserIdAndPostalCodeWithNoPostalCodeThrowsException");
+
+		Long userId = 1l;
+		String postalCode = null;
+
+		Throwable throwable = assertThrows(Throwable.class,
+				() -> addressDao.selectAddressByUserIdAndPostalCode(userId, postalCode));
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void selectAddressByUserIdAndPostalCodeWithNoUserIdThrowsException() {
+
+		LOGGER.info("running test selectAddressByUserIdAndPostalCodeWithNoUserIdThrowsException");
+
+		Long userId = null;
+		String postalCode = "30010";
+
+		Throwable throwable = assertThrows(Throwable.class,
+				() -> addressDao.selectAddressByUserIdAndPostalCode(userId, postalCode));
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void selectAddressByUserIdAndPostalCode() {
+
+		LOGGER.info("running test selectAddressByUserIdAndPostalCode");
+
+		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
+				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
+				.withRegion("County Veneto").withPostalCode("30033").withVersion(1l);
+
+		when(selectAddressByUserIdAndPostalCode.execute(1L, "30033")).thenReturn(Optional.of(address));
+
+		// run the test
+
+		Address addressFound = addressDao.selectAddressByUserIdAndPostalCode(1L, "30033")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
+
+		verify(selectAddressByUserIdAndPostalCode, times(1)).execute(1L, "30033");
 
 		jdbcUserTestUtil.verifyAddress("30033", "Via Nuova", "Venice", "County Veneto", addressFound);
 		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), addressFound.getState());

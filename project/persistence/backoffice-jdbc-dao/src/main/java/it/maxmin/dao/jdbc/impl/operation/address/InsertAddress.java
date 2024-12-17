@@ -46,7 +46,7 @@ public class InsertAddress extends SqlUpdate {
 		notNull(address.getState().getId(), ERROR_STATE_ID_NOT_NULL_MSG);
 
 		var keyHolder = new GeneratedKeyHolder();
-		updateByNamedParam(Map.of("description", address.getDescription(), "city",
+		Integer rows = updateByNamedParam(Map.of("description", address.getDescription(), "city",
 				address.getCity(), "stateId", address.getState().getId(), "region", address.getRegion(), "postalCode",
 				address.getPostalCode()), keyHolder);
 

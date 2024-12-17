@@ -29,14 +29,20 @@ public class InsertAddresses extends BatchSqlUpdate {
 		setBatchSize(BATCH_SIZE);
 	}
 
-	public void execute(List<Address> addresses) {
+	/**
+	 * @return the number of rows affected by the update
+	 */
+	public Integer execute(List<Address> addresses) {
 		notNull(addresses, ERROR_ADDRESSES_NOT_NULL_MSG);
 
+		Integer rows = 0;
 		for (Address address : addresses) {
-			updateByNamedParam(Map.of("description", address.getDescription(), "city", address.getCity(), "stateId",
-					address.getState().getId(), "region", address.getRegion(), "postalCode", address.getPostalCode()));
+			rows = rows + updateByNamedParam(Map.of("description", address.getDescription(), "city", address.getCity(),
+					"stateId", address.getState().getId(), "region", address.getRegion(), "postalCode",
+					address.getPostalCode()));
 		}
 
 		flush();
+		return rows;
 	}
 }

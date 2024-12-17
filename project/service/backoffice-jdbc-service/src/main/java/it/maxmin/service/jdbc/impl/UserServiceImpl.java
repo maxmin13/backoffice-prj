@@ -8,16 +8,15 @@ import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_LAST_NAME_NOT_NULL_MSG;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_STALE_DATA_MSG;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_USER_ALREADY_CREATED;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_USER_CREDENTIALS_NOT_NULL_MSG;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_USER_NOT_NULL_MSG;
-import static java.util.Objects.requireNonNull;
 import static org.springframework.util.Assert.notNull;
 
-import org.hibernate.service.spi.ServiceException;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +33,8 @@ import it.maxmin.model.jdbc.dao.entity.Department;
 import it.maxmin.model.jdbc.dao.entity.Role;
 import it.maxmin.model.jdbc.dao.entity.State;
 import it.maxmin.model.jdbc.dao.entity.User;
+import it.maxmin.model.jdbc.service.dto.AddressDto;
+import it.maxmin.model.jdbc.service.dto.RoleDto;
 import it.maxmin.model.jdbc.service.dto.UserDto;
 import it.maxmin.service.jdbc.api.UserService;
 import it.maxmin.service.jdbc.exception.JdbcServiceException;
@@ -74,11 +75,11 @@ public class UserServiceImpl implements UserService {
 
 		// check the user doesn't exist
 		userDao.selectByAccountName(userDto.getCredentials().getAccountName()).ifPresent(user -> {
-			throw new ServiceException(ERROR_USER_ALREADY_CREATED);
+			throw new JdbcServiceException(ERROR_USER_ALREADY_CREATED);
 		});
 
 		Department department = departmentDao.selectByDepartmentName(userDto.getDepartment().getName())
-				.orElseThrow(() -> new ServiceException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
+				.orElseThrow(() -> new JdbcServiceException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 
 		User user = User.newInstance().withAccountName(userDto.getCredentials().getAccountName())
 				.withFirstName(userDto.getCredentials().getFirstName())
@@ -86,28 +87,9 @@ public class UserServiceImpl implements UserService {
 				.withDepartment(Department.newInstance().withId(department.getId()));
 
 		User newUser = userDao.insert(user);
-		
-		// TODO TEST IF THE ADDRESS IS ALREADY ASSOCIATED
 
-		// if the address exists, associate it to the user, if the address is new, create it and associate it to the user.
-		userDto.getAddresses().forEach(address -> addressDao.selectAddressByPostalCode(address.getPostalCode())
-				.ifPresentOrElse(a -> userDao.associateAddress(requireNonNull(newUser).getId(), a.getId()), () -> {
-					State state = stateDao.selectByStateName(address.getState().getName())
-							.orElseThrow(() -> new ServiceException(ERROR_STATE_NOT_FOUND_MSG));
-					Address ad = Address.newInstance().withCity(address.getCity())
-							.withDescription(address.getDescription()).withPostalCode(address.getPostalCode())
-							.withRegion(address.getRegion()).withState(state);
-					Address newAddress = addressDao.insert(ad);
-					userDao.associateAddress(newUser.getId(), requireNonNull(newAddress).getId());
-				}));
-
-		// TODO TEST IF THE ROLE IS ALREADY ASSOCIATED
-		
-		userDto.getRoles().stream().forEach(role -> {
-			Role r = roleDao.selectByRoleName(role.getName())
-					.orElseThrow(() -> new ServiceException(ERROR_ROLE_NOT_FOUND_MSG));
-			userDao.associateRole(requireNonNull(newUser).getId(), r.getId());
-		});
+		handleAddresses(newUser.getId(), userDto.getAddresses());
+		handleRoles(newUser.getId(), userDto.getRoles());
 	}
 
 	@Override
@@ -126,10 +108,9 @@ public class UserServiceImpl implements UserService {
 		// check the user exists
 		User user = userDao.selectByAccountName(userDto.getCredentials().getAccountName())
 				.orElseThrow(() -> new JdbcServiceException(ERROR_USER_NOT_FOUND_MSG));
-
 		Department department = departmentDao.selectByDepartmentName(userDto.getDepartment().getName())
 				.orElseThrow(() -> new JdbcServiceException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
-		
+
 		Long userId = user.getId();
 
 		// prepare the user
@@ -137,16 +118,58 @@ public class UserServiceImpl implements UserService {
 				.withAccountName(userDto.getCredentials().getAccountName())
 				.withFirstName(userDto.getCredentials().getFirstName())
 				.withLastName(userDto.getCredentials().getLastName()).withBirthDate(userDto.getBirthDate())
-				.withDepartment(Department.newInstance().withId(department.getId()));
+				.withDepartment(department);
 
-		Integer updateCount = userDao.update(updatedUser);
+		Integer rows = userDao.update(updatedUser);
 
-		if (updateCount != 1) {
-			throw new ServiceException(ERROR_STALE_DATA_MSG);
-		}
+//		if (rows != 1) {
+//			throw new JdbcServiceException(ERROR_STALE_DATA_MSG);
+//		}
 
-		// TODO CONTINUE WITH DEPARTMENT, ADDRESSES, ROLES ......
+		handleAddresses(userId, userDto.getAddresses());
+		handleRoles(userId, userDto.getRoles());
+	}
 
+	// if the address exists, update it and associate it with the user
+	// if the address doesn't exist, create it and associate it with the user
+	void handleAddresses(Long userId, Set<AddressDto> addresses) {
+
+		userDao.removeAllAddresses(userId);
+
+		addresses.forEach(addressDto -> {
+
+			State state = stateDao.selectByStateName(addressDto.getState().getName())
+					.orElseThrow(() -> new JdbcServiceException(ERROR_STATE_NOT_FOUND_MSG));
+			Address address = Address.newInstance().withPostalCode(addressDto.getPostalCode())
+					.withRegion(addressDto.getRegion()).withState(state).withCity(addressDto.getCity())
+					.withDescription(addressDto.getDescription());
+
+			addressDao.selectAddressByPostalCode(address.getPostalCode()).ifPresentOrElse(a -> {
+				// existing address
+				address.withId(a.getId());
+				address.withVersion(a.getVersion());
+				Integer rows = addressDao.update(address);
+				// TODO
+//					if (rows != 1) {
+//						throw new JdbcServiceException(ERROR_STALE_DATA_MSG);
+//					}
+				userDao.associateAddress(userId, a.getId());
+			}, () -> {
+				// new address
+				address.withVersion(0l);
+				Address newAddress = addressDao.insert(address);
+				userDao.associateAddress(userId, newAddress.getId());
+			});
+		});
+	}
+
+	void handleRoles(Long userId, Set<RoleDto> roles) {
+		userDao.removeAllRoles(userId);
+		roles.stream().forEach(roleDto -> {
+			Role role = roleDao.selectByRoleName(roleDto.getName())
+					.orElseThrow(() -> new JdbcServiceException(ERROR_ROLE_NOT_FOUND_MSG));
+			userDao.associateRole(userId, role.getId());
+		});
 	}
 
 	void setRoleDao(RoleDao roleDao) {

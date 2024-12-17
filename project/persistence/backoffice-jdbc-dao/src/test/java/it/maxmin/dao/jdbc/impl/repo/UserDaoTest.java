@@ -34,7 +34,9 @@ import it.maxmin.dao.jdbc.JdbcUserTestUtil;
 import it.maxmin.dao.jdbc.exception.JdbcDaoTestException;
 import it.maxmin.dao.jdbc.impl.operation.role.SelectRoleByName;
 import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserAddress;
+import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserAddresses;
 import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserRole;
+import it.maxmin.dao.jdbc.impl.operation.user.DeleteUserRoles;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUser;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserAddress;
 import it.maxmin.dao.jdbc.impl.operation.user.InsertUserRole;
@@ -57,19 +59,18 @@ class UserDaoTest {
 
 	@Mock
 	private InsertUser insertUser;
-
 	@Mock
 	private InsertUserAddress insertUserAddress;
-
 	@Mock
 	private DeleteUserAddress deleteUserAddress;
-
+	@Mock
+	private DeleteUserAddresses deleteUserAddresses;
 	@Mock
 	private InsertUserRole insertUserRole;
-
 	@Mock
 	private DeleteUserRole deleteUserRole;
-
+	@Mock
+	private DeleteUserRoles deleteUserRoles;
 	@Mock
 	private SelectAllUsers selectAllUsers;
 
@@ -152,7 +153,7 @@ class UserDaoTest {
 		assertEquals(1, user1.getAddresses().size());
 
 		Address address1 = user1.getAddress("30010")
-				.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
 		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), address1.getState());
@@ -175,7 +176,7 @@ class UserDaoTest {
 		assertEquals(1, user2.getAddresses().size());
 
 		Address address2 = user2.getAddress("A65TF12")
-				.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
 		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address2.getState());
@@ -297,7 +298,7 @@ class UserDaoTest {
 		assertEquals(1, usersFound.get(0).getAddresses().size());
 
 		Address address1 = usersFound.get(0).getAddress("A65TF12")
-				.orElseThrow(() -> new JdbcDaoTestException("Error address not found"));
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address1);
 		jdbcUserTestUtil.verifyState(IRELAND.getName(), IRELAND.getCode(), address1.getState());
@@ -428,6 +429,30 @@ class UserDaoTest {
 	}
 
 	@Test
+	void removeAllAddressesWithNoUserIdThrowsException() {
+
+		LOGGER.info("running test removeAllAddressesWithNoUserIdThrowsException");
+
+		Long userId = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.removeAllAddresses(userId);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void removeAllAddresses() {
+
+		LOGGER.info("running test removeAllAddresses");
+
+		userDao.removeAllAddresses(1l);
+
+		verify(deleteUserAddresses, times(1)).execute(1l);
+	}
+
+	@Test
 	void associateRoleWithNoUserIdThrowsException() {
 
 		LOGGER.info("running test associateAddressWithNoUserIdThrowsException");
@@ -505,6 +530,30 @@ class UserDaoTest {
 		userDao.removeRole(1l, 2l);
 
 		verify(deleteUserRole, times(1)).execute(1l, 2l);
+	}
+	
+	@Test
+	void removeAllRolesWithNoUserIdThrowsException() {
+
+		LOGGER.info("running test removeAllRolesWithNoUserIdThrowsException");
+
+		Long userId = null;
+
+		Throwable throwable = assertThrows(Throwable.class, () -> {
+			userDao.removeAllRoles(userId);
+		});
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
+
+	@Test
+	void removeAllRoles() {
+
+		LOGGER.info("running test removeAllRoles");
+
+		userDao.removeAllRoles(1l);
+
+		verify(deleteUserRoles, times(1)).execute(1l);
 	}
 
 	@Test

@@ -1,5 +1,14 @@
 package it.maxmin.model.jdbc.service.dto;
 
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_BIRTH_DATE_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_DEPARTMENT_NAME_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_LAST_NAME_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_USER_NOT_NULL_MSG;
+import static org.springframework.util.Assert.notNull;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -21,28 +30,62 @@ public final class UserDto implements Serializable {
 	private final Set<AddressDto> addresses;
 	private final Set<RoleDto> roles;
 
-	public static UserDto newInstance(CredentialsDto credentials, LocalDate birthDate, DepartmentDto department,
-			Set<AddressDto> addresses, Set<RoleDto> roles) {
-		return new UserDto(credentials, birthDate, department, addresses, roles);
-	}
-
 	public static UserDto newInstance(User user) {
-		CredentialsDto credentials = CredentialsDto.newInstance(user.getAccountName(), user.getFirstName(),
-				user.getLastName());
-		DepartmentDto department = DepartmentDto.newInstance(user.getDepartment().getName());
-		return new UserDto(credentials, user.getBirthDate(), department,
-				user.getAddresses().stream().map(AddressDto::newInstance).collect(Collectors.toSet()),
-				user.getRoles().stream().map(RoleDto::newInstance).collect(Collectors.toSet()));
+		notNull(user, ERROR_USER_NOT_NULL_MSG);
+		notNull(user.getDepartment(), ERROR_DEPARTMENT_NOT_NULL_MSG);
+		String departmentName = null;
+		if (user.getDepartment() != null) {
+			departmentName = user.getDepartment().getName();
+		}
+		Set<AddressDto> addresses = null;
+		if (user.getAddresses() != null) {
+			addresses = user.getAddresses().stream().map(AddressDto::newInstance).collect(Collectors.toSet());
+		}
+		Set<RoleDto> roles = null;
+		if (user.getRoles() != null) {
+			roles = user.getRoles().stream().map(RoleDto::newInstance).collect(Collectors.toSet());
+		}
+		return newInstance(user.getAccountName(), user.getFirstName(), user.getLastName(), user.getBirthDate(),
+				departmentName, addresses, roles);
 	}
 
-	UserDto(CredentialsDto credentials, LocalDate birthDate, DepartmentDto department, Set<AddressDto> addresses,
-			Set<RoleDto> roles) {
+	public static UserDto newInstance(String accountName, String firstName, String lastName, LocalDate birthDate,
+			String departmentName, Set<AddressDto> addresses, Set<RoleDto> roles) {
+		return new UserDto(accountName, firstName, lastName, birthDate, departmentName, addresses, roles);
+	}
+
+	public static UserDto newInstance(String accountName, String firstName, String lastName, LocalDate birthDate,
+			String departmentName) {
+		return new UserDto(accountName, firstName, lastName, birthDate, departmentName, null, null);
+	}
+
+	UserDto(String accountName, String firstName, String lastName, LocalDate birthDate, String departmentName) {
+		this(accountName, firstName, lastName, birthDate, departmentName, null, null);
+	}
+
+	UserDto(String accountName, String firstName, String lastName, LocalDate birthDate, String departmentName,
+			Set<AddressDto> addresses, Set<RoleDto> roles) {
 		super();
-		this.credentials = credentials;
+		notNull(accountName, ERROR_ACCOUNT_NAME_NOT_NULL_MSG);
+		notNull(firstName, ERROR_FIRST_NAME_NOT_NULL_MSG);
+		notNull(lastName, ERROR_LAST_NAME_NOT_NULL_MSG);
+		notNull(birthDate, ERROR_BIRTH_DATE_NOT_NULL_MSG);
+		notNull(departmentName, ERROR_DEPARTMENT_NAME_NOT_NULL_MSG);
+		this.credentials = CredentialsDto.newInstance(accountName, firstName, lastName);
 		this.birthDate = birthDate;
-		this.department = department;
-		this.addresses = addresses;
-		this.roles = roles;
+		this.department = DepartmentDto.newInstance(departmentName);
+		if (addresses != null) {
+			this.addresses = addresses;
+		}
+		else {
+			this.addresses = new HashSet<>();
+		}
+		if (roles != null) {
+			this.roles = roles;
+		}
+		else {
+			this.roles = new HashSet<>();
+		}
 	}
 
 	public CredentialsDto getCredentials() {

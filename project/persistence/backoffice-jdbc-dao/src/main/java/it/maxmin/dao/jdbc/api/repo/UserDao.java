@@ -15,13 +15,17 @@ public interface UserDao {
 
 	User insert(User user);
 
-	void associateAddress(Long userId, Long addressId);
+	Integer associateAddress(Long userId, Long addressId);
 	
-	void removeAddress(Long userId, Long addressId);
+	Integer removeAddress(Long userId, Long addressId);
+	
+	Integer removeAllAddresses(Long userId);
 
-	void associateRole(Long userId, Long roleId);
+	Integer associateRole(Long userId, Long roleId);
 	
-	void removeRole(Long userId, Long roleId);
+	Integer removeRole(Long userId, Long roleId);
+	
+	Integer removeAllRoles(Long userId);
 
 	Integer update(User user);
 }

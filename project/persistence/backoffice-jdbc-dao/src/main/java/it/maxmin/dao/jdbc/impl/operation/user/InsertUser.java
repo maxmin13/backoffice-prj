@@ -48,7 +48,7 @@ public class InsertUser extends SqlUpdate {
 		}
 		
 		var keyHolder = new GeneratedKeyHolder();
-		updateByNamedParam(Map.of("accountName", user.getAccountName(), "firstName", user.getFirstName(), "lastName",
+		Integer rows = updateByNamedParam(Map.of("accountName", user.getAccountName(), "firstName", user.getFirstName(), "lastName",
 				user.getLastName(), "departmentId", user.getDepartment().getId(), "birtDate", user.getBirthDate()), keyHolder);
 
 		var userId = Objects.requireNonNull(keyHolder.getKey()).longValue();

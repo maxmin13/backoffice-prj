@@ -13,7 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import it.maxmin.model.jpa.dao.ModelTestException;
+import it.maxmin.model.jpa.dao.exception.JpaModelTestException;
 
 class UserTest {
 
@@ -169,7 +169,7 @@ class UserTest {
 		User user = User.newInstance();
 		user.getRoles().add(role);
 
-		Role role1 = user.getRole("Administrator").orElseThrow(() -> new ModelTestException("Error role not found"));
+		Role role1 = user.getRole("Administrator").orElseThrow(() -> new JpaModelTestException("Error role not found"));
 
 		assertEquals(1l, role1.getId());
 
@@ -197,7 +197,7 @@ class UserTest {
 		user.addAddress(address);
 
 		Address address1 = user.getAddress("30030")
-				.orElseThrow(() -> new ModelTestException("Error address not found"));
+				.orElseThrow(() -> new JpaModelTestException("Error address not found"));
 
 		assertEquals(1l, address1.getId());
 

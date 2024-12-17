@@ -21,9 +21,12 @@ public class InsertUserRole extends SqlUpdate {
 		super.declareParameter(new SqlParameter("roleId", Types.INTEGER));
 	}
 
-	public void execute(Long userId, Long roleId) {
+	/**
+	 * @return the number of rows affected by the update
+	 */
+	public Integer execute(Long userId, Long roleId) {
 		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
 		notNull(roleId, ERROR_ROLE_ID_NOT_NULL_MSG);
-		updateByNamedParam(Map.of("userId", userId, "roleId", roleId));
+		return updateByNamedParam(Map.of("userId", userId, "roleId", roleId));
 	}
 }

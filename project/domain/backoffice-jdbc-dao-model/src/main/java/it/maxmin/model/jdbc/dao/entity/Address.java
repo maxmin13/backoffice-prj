@@ -101,7 +101,7 @@ public class Address implements Serializable {
 		this.postalCode = postalCode;
 		return this;
 	}
-	
+
 	public Long getVersion() {
 		return version;
 	}
@@ -126,7 +126,8 @@ public class Address implements Serializable {
 	public boolean addUser(User user) {
 		if (user == null || users.contains(user)) {
 			return false;
-		} else {
+		}
+		else {
 			users.add(user);
 			return true;
 		}
@@ -160,7 +161,8 @@ public class Address implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Address [id=" + id + ", description=" + description + ", city=" + city + ", state=" + state
-				+ ", region=" + region + ", postalCode=" + postalCode + "]";
+		return "Address [id=" + id + ", description=" + description + ", city=" + city + ", region=" + region
+				+ ", postalCode=" + postalCode + ", version=" + version + ", state=" + state + ", users=" + users + "]";
 	}
+
 }
