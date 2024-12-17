@@ -222,7 +222,7 @@ class AddressDaoTest {
 
 		Address address = Address.newInstance().withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
-				.withRegion("County Veneto").withPostalCode("30033").withVersion(0l);
+				.withRegion("County Veneto").withPostalCode("30033");
 
 		when(insertAddress.execute(address)).thenReturn(address);
 
@@ -231,7 +231,7 @@ class AddressDaoTest {
 
 		verify(insertAddress, times(1)).execute(newAddress);
 
-		jdbcUserTestUtil.verifyAddressIgnoringIdField("30033", "Via Nuova", "Venice", "County Veneto", newAddress);
+		jdbcUserTestUtil.verifyAddress("30033", newAddress);
 		jdbcUserTestUtil.verifyState(ITALY.getName(), ITALY.getCode(), newAddress.getState());
 	}
 

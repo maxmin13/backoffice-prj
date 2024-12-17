@@ -19,18 +19,19 @@ import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 public class JdbcUserTestUtil {
 
 	public void verifyAddress(String postalCode, String description, String city, String region, Address actual) {
-		verifyAddressIgnoringIdField(postalCode, description, city, region, actual);
-		assertNotNull(actual.getId());
-	}
-
-	public void verifyAddressIgnoringIdField(String postalCode, String description, String city, String region,
-			Address actual) {
 		assertNotNull(actual);
+		assertNotNull(actual.getId());
 		assertEquals(postalCode, actual.getPostalCode());
 		assertEquals(description, actual.getDescription());
 		assertEquals(city, actual.getCity());
 		assertEquals(region, actual.getRegion());
 		assertNotNull(actual.getVersion());
+		assertNotNull(actual.getId());
+	}
+
+	public void verifyAddress(String postalCode, Address actual) {
+		assertNotNull(actual);
+		assertEquals(postalCode, actual.getPostalCode());
 	}
 
 	public void verifyAddress(String postalCode, String description, String city, String region, PojoAddress actual) {
@@ -64,7 +65,7 @@ public class JdbcUserTestUtil {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());
 	}
-	
+
 	public void verifyUser(String accountName, User actual) {
 		assertNotNull(actual.getId());
 		assertEquals(accountName, actual.getAccountName());
