@@ -1,5 +1,10 @@
 package it.maxmin.model.jdbc.service.dto;
 
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_CODE_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_NAME_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_NOT_NULL_MSG;
+import static org.springframework.util.Assert.notNull;
+
 import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -13,16 +18,19 @@ public final class StateDto implements Serializable {
 	private String name;
 	private String code;
 
+	public static StateDto newInstance(State state) {
+		notNull(state, ERROR_STATE_NOT_NULL_MSG);
+		return newInstance(state.getName(), state.getCode());
+	}
+
 	public static StateDto newInstance(String name, String code) {
 		return new StateDto(name, code);
 	}
 
-	public static StateDto newInstance(State state) {
-		return new StateDto(state.getName(), state.getCode());
-	}
-
 	StateDto(String name, String code) {
 		super();
+		notNull(name, ERROR_STATE_NAME_NOT_NULL_MSG);
+		notNull(code, ERROR_STATE_CODE_NOT_NULL_MSG);
 		this.name = name;
 		this.code = code;
 	}

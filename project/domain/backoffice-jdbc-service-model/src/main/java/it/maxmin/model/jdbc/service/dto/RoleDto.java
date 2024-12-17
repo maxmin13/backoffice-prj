@@ -1,5 +1,9 @@
 package it.maxmin.model.jdbc.service.dto;
 
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_ROLE_NAME_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_ROLE_NOT_NULL_MSG;
+import static org.springframework.util.Assert.notNull;
+
 import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,15 +16,17 @@ public final class RoleDto implements Serializable {
 
 	private String name;
 
+	public static RoleDto newInstance(Role role) {
+		notNull(role, ERROR_ROLE_NOT_NULL_MSG);
+		return newInstance(role.getName());
+	}
+
 	public static RoleDto newInstance(String name) {
 		return new RoleDto(name);
 	}
 
-	public static RoleDto newInstance(Role role) {
-		return new RoleDto(role.getName());
-	}
-
 	RoleDto(String name) {
+		notNull(name, ERROR_ROLE_NAME_NOT_NULL_MSG);
 		this.name = name;
 	}
 

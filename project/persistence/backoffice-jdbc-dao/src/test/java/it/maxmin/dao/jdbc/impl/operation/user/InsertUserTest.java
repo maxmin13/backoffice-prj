@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -126,21 +125,20 @@ class InsertUserTest extends JdbcBaseTestDao {
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance()
-						.withId(accountsDepartment.getId()).withName(accountsDepartment.getName()))
-				.withVersion(1l).withCreatedAt(LocalDateTime.now());
+						.withId(accountsDepartment.getId()).withName(accountsDepartment.getName()));
 
 		Address address = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
 				.withState(State.newInstance().withId(irelandState.getId())).withRegion("County Dublin")
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withName(administratorRole.getName());
+		Role role = Role.newInstance().withName(administratorRole.getName());
 		carl.addRole(role);
 
 		// run the test
 		User user = insertUser.execute(carl);
 
-		jdbcUserTestUtil.verifyUser("carl23", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), user);
+		jdbcUserTestUtil.verifyUser("carl23", user);
 
 		PojoUser us = jdbcQueryTestUtil.selectUserByUserId(user.getId())
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));

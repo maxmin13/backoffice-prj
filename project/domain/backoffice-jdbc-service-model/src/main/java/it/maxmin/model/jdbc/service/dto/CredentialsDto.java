@@ -1,5 +1,10 @@
 package it.maxmin.model.jdbc.service.dto;
 
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_LAST_NAME_NOT_NULL_MSG;
+import static org.springframework.util.Assert.notNull;
+
 import java.io.Serializable;
 
 public final class CredentialsDto implements Serializable {
@@ -16,6 +21,9 @@ public final class CredentialsDto implements Serializable {
 
 	CredentialsDto(String accountName, String firstName, String lastName) {
 		super();
+		notNull(accountName, ERROR_ACCOUNT_NAME_NOT_NULL_MSG);
+		notNull(firstName, ERROR_FIRST_NAME_NOT_NULL_MSG);
+		notNull(lastName, ERROR_LAST_NAME_NOT_NULL_MSG);
 		this.accountName = accountName;
 		this.firstName = firstName;
 		this.lastName = lastName;

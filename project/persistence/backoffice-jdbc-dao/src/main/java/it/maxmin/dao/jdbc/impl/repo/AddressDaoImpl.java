@@ -4,6 +4,7 @@ import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESSE
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_ID_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_ID_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_VERSION_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_POSTAL_CODE_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
@@ -105,7 +106,10 @@ public class AddressDaoImpl implements AddressDao {
 	 */
 	public Integer update(Address address) {
 		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
-		if (address.getId() == null) {
+		if (address.getVersion() == null) {
+			throw new IllegalArgumentException(ERROR_ADDRESS_VERSION_NOT_NULL_MSG);
+		}
+		else if (address.getId() == null) {
 			throw new IllegalArgumentException(ERROR_ADDRESS_ID_NOT_NULL_MSG);
 		}
 		else {

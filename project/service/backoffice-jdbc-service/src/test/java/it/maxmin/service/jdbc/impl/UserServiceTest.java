@@ -36,6 +36,7 @@ import it.maxmin.model.jdbc.dao.pojo.PojoRole;
 import it.maxmin.model.jdbc.dao.pojo.PojoState;
 import it.maxmin.model.jdbc.dao.pojo.PojoUser;
 import it.maxmin.model.jdbc.service.dto.AddressDto;
+import it.maxmin.model.jdbc.service.dto.DepartmentDto;
 import it.maxmin.model.jdbc.service.dto.RoleDto;
 import it.maxmin.model.jdbc.service.dto.StateDto;
 import it.maxmin.model.jdbc.service.dto.UserDto;
@@ -70,7 +71,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 		});
 
 		UserDto maxmin = UserDto.newInstance("maxmin99", "Franco", "Franchi", LocalDate.of(1940, 9, 11),
-				legalDepartment.getName());
+				DepartmentDto.newInstance(legalDepartment.getName()));
 
 		Throwable throwable = assertThrows(Throwable.class, () -> userService.updateUser(maxmin));
 
@@ -107,7 +108,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// prepare the user for the update
 		UserDto franco = UserDto.newInstance("maxmin13", "Franco", "Franchi", LocalDate.of(1940, 9, 11),
-				legalDepartment.getName());
+				DepartmentDto.newInstance(legalDepartment.getName()));
 
 		// run the test
 		userService.updateUser(franco);
@@ -180,7 +181,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 				StateDto.newInstance(italyState.getName(), italyState.getCode()));
 
 		UserDto franco = UserDto.newInstance(maxmin.getAccountName(), "Franco", "Franchi", LocalDate.of(1940, 9, 11),
-				legalDepartment.getName(), Set.of(addressDto1, addressDto2), Set.of());
+				DepartmentDto.newInstance(legalDepartment.getName()), Set.of(addressDto1, addressDto2), Set.of());
 
 		// run the test
 		userService.updateUser(franco);
@@ -249,7 +250,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// prepare the user for the update
 		UserDto franco = UserDto.newInstance(maxmin.getAccountName(), "Franco", "Franchi", LocalDate.of(1940, 9, 11),
-				legalDepartment.getName(), null, Set.of(RoleDto.newInstance(ADMINISTRATOR.getName())));
+				DepartmentDto.newInstance(legalDepartment.getName()), null, Set.of(RoleDto.newInstance(ADMINISTRATOR.getName())));
 
 		// run the test
 		userService.updateUser(franco);
@@ -284,7 +285,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 				.orElseThrow(() -> new JdbcServiceTestException(ERROR_USER_NOT_FOUND_MSG));
 
 		UserDto maxmin = UserDto.newInstance("maxmin13", "Franco", "Franchi", LocalDate.of(1940, 9, 11),
-				legalDepartment.getName());
+				DepartmentDto.newInstance(legalDepartment.getName()));
 
 		Throwable throwable = assertThrows(Throwable.class, () -> userService.createUser(maxmin));
 
@@ -335,7 +336,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// prepare the new user
 		UserDto maxmin = UserDto.newInstance("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16),
-				productionDepartment.getName(), addresses, roles);
+				DepartmentDto.newInstance(productionDepartment.getName()), addresses, roles);
 
 		// running the test
 		userService.createUser(maxmin);
@@ -407,7 +408,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// prepare the new user
 		UserDto maxmin = UserDto.newInstance("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16),
-				productionDepartment.getName(), addresses, roles);
+				DepartmentDto.newInstance(productionDepartment.getName()), addresses, roles);
 
 		// running the test
 		Throwable throwable = assertThrows(Throwable.class, () -> userService.createUser(maxmin));

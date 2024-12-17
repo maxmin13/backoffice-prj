@@ -1,5 +1,9 @@
 package it.maxmin.model.jdbc.service.dto;
 
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_DEPARTMENT_NAME_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
+import static org.springframework.util.Assert.notNull;
+
 import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,22 +16,24 @@ public final class DepartmentDto implements Serializable {
 
 	private String name;
 
+	public static DepartmentDto newInstance(Department department) {
+		notNull(department, ERROR_DEPARTMENT_NOT_NULL_MSG);
+		return newInstance(department.getName());
+	}
+
 	public static DepartmentDto newInstance(String name) {
 		return new DepartmentDto(name);
 	}
 
-	public static DepartmentDto newInstance(Department department) {
-		return new DepartmentDto(department.getName());
-	}
-
 	DepartmentDto(String name) {
+		notNull(name, ERROR_DEPARTMENT_NAME_NOT_NULL_MSG);
 		this.name = name;
 	}
 
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();

@@ -302,7 +302,7 @@ class AddressDaoTest {
 
 		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
-				.withRegion("County Veneto").withPostalCode("30033");
+				.withRegion("County Veneto").withPostalCode("30033").withVersion(2l);
 
 		// run the test
 		addressDao.update(address);

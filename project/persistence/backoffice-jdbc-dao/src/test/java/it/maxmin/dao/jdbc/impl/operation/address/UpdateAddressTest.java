@@ -85,6 +85,29 @@ class UpdateAddressTest extends JdbcBaseTestDao {
 
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
+	
+	@Test
+	void executeWithNoVersion() {
+
+		LOGGER.info("running test executeWithNoVersion");
+
+		// Find an existing address
+		PojoAddress address = jdbcQueryTestUtil.selectAddressByPostalCode("30010")
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
+
+		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address);
+		assertEquals(italyState.getId(), address.getStateId());
+
+		// Change the address
+		Address addressUpdated = Address.newInstance().withId(address.getId()).withDescription("Via Nuova")
+				.withCity("Venice").withState(State.newInstance().withId(italyState.getId())).withRegion("Veneto")
+				.withPostalCode("33311");
+
+		// run the test
+		Throwable throwable = assertThrows(Throwable.class, () -> updateAddress.execute(addressUpdated));
+
+		assertEquals(IllegalArgumentException.class, throwable.getClass());
+	}
 
 	@Test
 	void execute() {
@@ -101,7 +124,7 @@ class UpdateAddressTest extends JdbcBaseTestDao {
 		// Change the address
 		Address addressUpdated = Address.newInstance().withId(address.getId()).withDescription("Via Nuova")
 				.withCity("Venice").withState(State.newInstance().withId(italyState.getId())).withRegion("Veneto")
-				.withPostalCode("33311");
+				.withPostalCode("33311").withVersion(address.getVersion());
 
 		// run the test
 		updateAddress.execute(addressUpdated);
@@ -110,6 +133,7 @@ class UpdateAddressTest extends JdbcBaseTestDao {
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("33311", "Via Nuova", "Venice", "Veneto", updated);
+		assertEquals(address.getVersion() + 1, updated.getVersion());
 
 		PojoState state = jdbcQueryTestUtil.selectStateByAddressPostalCode("33311")
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_STATE_NOT_FOUND_MSG));

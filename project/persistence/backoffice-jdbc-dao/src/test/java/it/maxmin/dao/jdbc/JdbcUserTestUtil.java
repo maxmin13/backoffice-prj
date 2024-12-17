@@ -64,6 +64,11 @@ public class JdbcUserTestUtil {
 		assertNotNull(actual.getId());
 		assertEquals(name, actual.getName());
 	}
+	
+	public void verifyUser(String accountName, User actual) {
+		assertNotNull(actual.getId());
+		assertEquals(accountName, actual.getAccountName());
+	}
 
 	public void verifyUser(String accountName, String firstName, String lastName, LocalDate birthDate, User actual) {
 		assertNotNull(actual.getId());

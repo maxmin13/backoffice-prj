@@ -7,6 +7,7 @@ import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_ID_
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NULL_MSG;
 import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_NULL_MSG;
+import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_VERSION_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -180,7 +181,10 @@ public class UserDaoImpl implements UserDao {
 	 */
 	public Integer update(User user) {
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
-		if (user.getId() == null) {
+		if (user.getVersion() == null) {
+			throw new IllegalArgumentException(ERROR_USER_VERSION_NOT_NULL_MSG);
+		}
+		else if (user.getId() == null) {
 			throw new IllegalArgumentException(ERROR_USER_ID_NOT_NULL_MSG);
 		}
 		else {

@@ -95,9 +95,9 @@ class UserDaoTest {
 	}
 
 	@Test
-	void testselectAll() {
+	void selectAll() {
 
-		LOGGER.info("running test testselectAll");
+		LOGGER.info("running test selectAll");
 
 		Address rome = Address.newInstance().withId(4l).withPostalCode("30010").withDescription("Via borgo di sotto")
 				.withCity("Rome").withRegion("County Lazio")
@@ -531,7 +531,7 @@ class UserDaoTest {
 
 		verify(deleteUserRole, times(1)).execute(1l, 2l);
 	}
-	
+
 	@Test
 	void removeAllRolesWithNoUserIdThrowsException() {
 
@@ -592,7 +592,8 @@ class UserDaoTest {
 		LOGGER.info("running test update");
 
 		User carl = User.newInstance().withId(2l).withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance().withId(1l));
+				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance().withId(1l))
+				.withVersion(3l);
 
 		// run the test
 		userDao.update(carl);

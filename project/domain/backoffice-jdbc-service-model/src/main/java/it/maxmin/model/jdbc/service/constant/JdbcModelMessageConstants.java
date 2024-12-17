@@ -12,6 +12,7 @@ public enum JdbcModelMessageConstants {
 	public static final String ERROR_BIRTH_DATE_NOT_NULL_MSG = "The birth date must not be null";
 	public static final String ERROR_CITY_NOT_NULL_MSG = "The city must not be null";
 	public static final String ERROR_CREDENTIALS_NOT_FOUND_MSG = "Error credentials not found";
+	public static final String ERROR_CREDENTIALS_NOT_NULL_MSG = "The credentials must not be null";
 	public static final String ERROR_DEPARTMENT_NOT_FOUND_MSG = "Error department not found";
 	public static final String ERROR_DEPARTMENT_NOT_NULL_MSG = "The department must not be null";
 	public static final String ERROR_DEPARTMENT_ID_NOT_NULL_MSG = "The department ID must not be null";
