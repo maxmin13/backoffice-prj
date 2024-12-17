@@ -1,5 +1,15 @@
 package it.maxmin.model.jdbc.service.dto;
 
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_CITY_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_DESCRIPTION_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_POSTAL_CODE_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_REGION_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_CODE_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_NAME_NOT_NULL_MSG;
+import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_NOT_NULL_MSG;
+import static org.springframework.util.Assert.notNull;
+
 import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -16,18 +26,32 @@ public final class AddressDto implements Serializable {
 	private String postalCode;
 	private final StateDto state;
 
-	public static AddressDto newInstance(String description, String city, String region, String postalCode,
-			StateDto state) {		
-		return new AddressDto(description, city, region, postalCode, state);
-	}
-
 	public static AddressDto newInstance(Address address) {
+		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
+		notNull(address.getState(), ERROR_STATE_NOT_NULL_MSG);
 		return newInstance(address.getDescription(), address.getCity(), address.getRegion(), address.getPostalCode(),
 				StateDto.newInstance(address.getState()));
 	}
 
+	public static AddressDto newInstance(String description, String city, String region, String postalCode,
+			String stateName, String stateCode) {
+		return newInstance(description, city, region, postalCode, StateDto.newInstance(stateName, stateCode));
+	}
+
+	public static AddressDto newInstance(String description, String city, String region, String postalCode,
+			StateDto state) {
+		return new AddressDto(description, city, region, postalCode, state);
+	}
+
 	AddressDto(String description, String city, String region, String postalCode, StateDto state) {
 		super();
+		notNull(description, ERROR_DESCRIPTION_NOT_NULL_MSG);
+		notNull(city, ERROR_CITY_NOT_NULL_MSG);
+		notNull(region, ERROR_REGION_NOT_NULL_MSG);
+		notNull(postalCode, ERROR_POSTAL_CODE_NOT_NULL_MSG);
+		notNull(state, ERROR_STATE_NOT_NULL_MSG);
+		notNull(state.getName(), ERROR_STATE_NAME_NOT_NULL_MSG);
+		notNull(state.getCode(), ERROR_STATE_CODE_NOT_NULL_MSG);
 		this.description = description;
 		this.city = city;
 		this.region = region;

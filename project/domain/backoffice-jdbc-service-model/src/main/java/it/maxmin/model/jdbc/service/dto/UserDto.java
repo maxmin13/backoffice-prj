@@ -33,10 +33,6 @@ public final class UserDto implements Serializable {
 	public static UserDto newInstance(User user) {
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		notNull(user.getDepartment(), ERROR_DEPARTMENT_NOT_NULL_MSG);
-		String departmentName = null;
-		if (user.getDepartment() != null) {
-			departmentName = user.getDepartment().getName();
-		}
 		Set<AddressDto> addresses = null;
 		if (user.getAddresses() != null) {
 			addresses = user.getAddresses().stream().map(AddressDto::newInstance).collect(Collectors.toSet());
@@ -46,34 +42,35 @@ public final class UserDto implements Serializable {
 			roles = user.getRoles().stream().map(RoleDto::newInstance).collect(Collectors.toSet());
 		}
 		return newInstance(user.getAccountName(), user.getFirstName(), user.getLastName(), user.getBirthDate(),
-				departmentName, addresses, roles);
+				DepartmentDto.newInstance(user.getDepartment()), addresses, roles);
 	}
 
 	public static UserDto newInstance(String accountName, String firstName, String lastName, LocalDate birthDate,
-			String departmentName, Set<AddressDto> addresses, Set<RoleDto> roles) {
-		return new UserDto(accountName, firstName, lastName, birthDate, departmentName, addresses, roles);
+			DepartmentDto department) {
+		return new UserDto(accountName, firstName, lastName, birthDate, department, null, null);
 	}
-
+	
 	public static UserDto newInstance(String accountName, String firstName, String lastName, LocalDate birthDate,
-			String departmentName) {
-		return new UserDto(accountName, firstName, lastName, birthDate, departmentName, null, null);
+			DepartmentDto department, Set<AddressDto> addresses, Set<RoleDto> roles) {
+		return new UserDto(accountName, firstName, lastName, birthDate, department, addresses, roles);
 	}
 
-	UserDto(String accountName, String firstName, String lastName, LocalDate birthDate, String departmentName) {
-		this(accountName, firstName, lastName, birthDate, departmentName, null, null);
+	UserDto(String accountName, String firstName, String lastName, LocalDate birthDate, DepartmentDto department) {
+		this(accountName, firstName, lastName, birthDate, department, null, null);
 	}
 
-	UserDto(String accountName, String firstName, String lastName, LocalDate birthDate, String departmentName,
+	UserDto(String accountName, String firstName, String lastName, LocalDate birthDate, DepartmentDto department,
 			Set<AddressDto> addresses, Set<RoleDto> roles) {
 		super();
 		notNull(accountName, ERROR_ACCOUNT_NAME_NOT_NULL_MSG);
 		notNull(firstName, ERROR_FIRST_NAME_NOT_NULL_MSG);
 		notNull(lastName, ERROR_LAST_NAME_NOT_NULL_MSG);
 		notNull(birthDate, ERROR_BIRTH_DATE_NOT_NULL_MSG);
-		notNull(departmentName, ERROR_DEPARTMENT_NAME_NOT_NULL_MSG);
+		notNull(department, ERROR_DEPARTMENT_NOT_NULL_MSG);
+		notNull(department.getName(), ERROR_DEPARTMENT_NAME_NOT_NULL_MSG);
 		this.credentials = CredentialsDto.newInstance(accountName, firstName, lastName);
 		this.birthDate = birthDate;
-		this.department = DepartmentDto.newInstance(departmentName);
+		this.department = department;
 		if (addresses != null) {
 			this.addresses = addresses;
 		}

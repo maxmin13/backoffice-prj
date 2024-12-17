@@ -11,4 +11,10 @@ check all operations, add all notNull(), not only for id field
 
 DO Lock on updates
 
-remove optional -> extract 
+check model unit tests what is missing
+throw IllegalArgumentException in model constructors, 
+see UserDto
+
+
+
+*******************************************************************************************************************
