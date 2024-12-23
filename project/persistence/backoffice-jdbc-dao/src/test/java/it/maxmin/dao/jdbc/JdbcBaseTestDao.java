@@ -1,8 +1,8 @@
 package it.maxmin.dao.jdbc;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.constant.Department.ACCOUNTS;
 import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;

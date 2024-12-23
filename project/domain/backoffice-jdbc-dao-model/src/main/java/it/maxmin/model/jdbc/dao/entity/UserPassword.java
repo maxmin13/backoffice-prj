@@ -1,5 +1,13 @@
 package it.maxmin.model.jdbc.dao.entity;
 
+import static it.maxmin.common.constant.MessageConstants.ERROR_EFFECTIVE_DATE_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_END_DATE_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ID_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_VALUE_NOT_NULL_MSG;
+import static org.springframework.util.Assert.notNull;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -7,6 +15,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class UserPassword implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
 
 	private Long id;
@@ -24,10 +33,12 @@ public class UserPassword implements Serializable {
 	}
 
 	public void setId(Long id) {
+		notNull(id, ERROR_ID_NOT_NULL_MSG);
 		this.id = id;
 	}
 	
 	public UserPassword withId(Long id) {
+		notNull(id, ERROR_ID_NOT_NULL_MSG);
 		this.id = id;
 		return this;
 	}
@@ -37,10 +48,12 @@ public class UserPassword implements Serializable {
 	}
 
 	public void setUser(User user) {
+		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		this.user = user;
 	}
 	
 	public UserPassword withUser(User user) {
+		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		this.user = user;
 		return this;
 	}
@@ -50,10 +63,12 @@ public class UserPassword implements Serializable {
 	}
 
 	public void setValue(String value) {
+		notNull(value, ERROR_VALUE_NOT_NULL_MSG);
 		this.value = value;
 	}
 	
 	public UserPassword withValue(String value) {
+		notNull(value, ERROR_VALUE_NOT_NULL_MSG);
 		this.value = value;
 		return this;
 	}
@@ -63,10 +78,12 @@ public class UserPassword implements Serializable {
 	}
 
 	public void setEffDate(LocalDateTime effDate) {
+		notNull(effDate, ERROR_EFFECTIVE_DATE_NOT_NULL_MSG);
 		this.effDate = effDate;
 	}
 	
 	public UserPassword withEffDate(LocalDateTime effDate) {
+		notNull(effDate, ERROR_EFFECTIVE_DATE_NOT_NULL_MSG);
 		this.effDate = effDate;
 		return this;
 	}
@@ -76,10 +93,12 @@ public class UserPassword implements Serializable {
 	}
 
 	public void setEndDate(LocalDateTime endDate) {
+		notNull(endDate, ERROR_END_DATE_NOT_NULL_MSG);
 		this.endDate = endDate;
 	}
 	
 	public UserPassword withEndDate(LocalDateTime endDate) {
+		notNull(endDate, ERROR_END_DATE_NOT_NULL_MSG);
 		this.endDate = endDate;
 		return this;
 	}

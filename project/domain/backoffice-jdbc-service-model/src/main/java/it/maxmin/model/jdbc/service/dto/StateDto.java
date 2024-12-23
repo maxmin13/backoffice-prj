@@ -1,8 +1,8 @@
 package it.maxmin.model.jdbc.service.dto;
 
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_CODE_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_NAME_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_CODE_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_STATE_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.Serializable;
@@ -29,8 +29,8 @@ public final class StateDto implements Serializable {
 
 	StateDto(String name, String code) {
 		super();
-		notNull(name, ERROR_STATE_NAME_NOT_NULL_MSG);
-		notNull(code, ERROR_STATE_CODE_NOT_NULL_MSG);
+		notNull(name, ERROR_NAME_NOT_NULL_MSG);
+		notNull(code, ERROR_CODE_NOT_NULL_MSG);
 		this.name = name;
 		this.code = code;
 	}

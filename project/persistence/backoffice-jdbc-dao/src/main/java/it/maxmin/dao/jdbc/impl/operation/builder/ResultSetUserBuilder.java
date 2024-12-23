@@ -21,7 +21,7 @@ public class ResultSetUserBuilder {
 						.withFirstName(rs.getString("FirstName")).withLastName(rs.getString("LastName"))
 						.withBirthDate(rs.getDate("BirthDate").toLocalDate())
 						.withCreatedAt(LocalDateTime.of(rs.getDate("CreatedAt").toLocalDate(), LocalTime.of(0, 0)))
-						.withVersion(rs.getLong("Version"));
+						.withVersion(rs.getInt("Version"));
 			}
 			return Optional.ofNullable(user);
 		} catch (SQLException e) {

@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static org.springframework.util.Assert.notNull;
 

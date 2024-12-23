@@ -1,11 +1,11 @@
 package it.maxmin.dao.jpa;
 
+import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static it.maxmin.dao.jpa.constant.Department.ACCOUNTS;
 import static it.maxmin.dao.jpa.constant.Department.LEGAL;
 import static it.maxmin.dao.jpa.constant.Department.PRODUCTION;
-import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static it.maxmin.dao.jpa.constant.Role.ADMINISTRATOR;
 import static it.maxmin.dao.jpa.constant.Role.USER;
 import static it.maxmin.dao.jpa.constant.Role.WORKER;

@@ -1,18 +1,18 @@
 package it.maxmin.service.jdbc.impl;
 
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_BIRTHDAY_NOT_NULL_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_DEPARTMENT_NAME_NOT_NULL_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_LAST_NAME_NOT_NULL_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_USER_ALREADY_CREATED;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_USER_CREDENTIALS_NOT_NULL_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_USER_NOT_FOUND_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_USER_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_BIRTH_DATE_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_CREDENTIALS_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_LAST_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_STATE_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_ALREADY_CREATED;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.Set;
@@ -66,12 +66,12 @@ public class UserServiceImpl implements UserService {
 		LOGGER.info("Creating new user {}", userDto);
 
 		notNull(userDto, ERROR_USER_NOT_NULL_MSG);
-		notNull(userDto.getCredentials(), ERROR_USER_CREDENTIALS_NOT_NULL_MSG);
+		notNull(userDto.getCredentials(), ERROR_CREDENTIALS_NOT_NULL_MSG);
 		notNull(userDto.getCredentials().getAccountName(), ERROR_ACCOUNT_NAME_NOT_NULL_MSG);
 		notNull(userDto.getCredentials().getFirstName(), ERROR_FIRST_NAME_NOT_NULL_MSG);
 		notNull(userDto.getCredentials().getLastName(), ERROR_LAST_NAME_NOT_NULL_MSG);
-		notNull(userDto.getBirthDate(), ERROR_BIRTHDAY_NOT_NULL_MSG);
-		notNull(userDto.getDepartment().getName(), ERROR_DEPARTMENT_NAME_NOT_NULL_MSG);
+		notNull(userDto.getBirthDate(), ERROR_BIRTH_DATE_NOT_NULL_MSG);
+		notNull(userDto.getDepartment().getName(), ERROR_NAME_NOT_NULL_MSG);
 
 		// check the user doesn't exist
 		userDao.selectByAccountName(userDto.getCredentials().getAccountName()).ifPresent(user -> {
@@ -97,13 +97,13 @@ public class UserServiceImpl implements UserService {
 		LOGGER.info("Updating user {}", userDto);
 
 		notNull(userDto, ERROR_USER_NOT_NULL_MSG);
-		notNull(userDto.getCredentials(), ERROR_USER_CREDENTIALS_NOT_NULL_MSG);
+		notNull(userDto.getCredentials(), ERROR_CREDENTIALS_NOT_NULL_MSG);
 		notNull(userDto.getCredentials().getAccountName(), ERROR_ACCOUNT_NAME_NOT_NULL_MSG);
 		notNull(userDto.getCredentials().getFirstName(), ERROR_FIRST_NAME_NOT_NULL_MSG);
 		notNull(userDto.getCredentials().getLastName(), ERROR_LAST_NAME_NOT_NULL_MSG);
-		notNull(userDto.getBirthDate(), ERROR_BIRTHDAY_NOT_NULL_MSG);
+		notNull(userDto.getBirthDate(), ERROR_BIRTH_DATE_NOT_NULL_MSG);
 		notNull(userDto.getDepartment(), ERROR_DEPARTMENT_NOT_NULL_MSG);
-		notNull(userDto.getDepartment().getName(), ERROR_DEPARTMENT_NAME_NOT_NULL_MSG);
+		notNull(userDto.getDepartment().getName(), ERROR_NAME_NOT_NULL_MSG);
 
 		// check the user exists
 		User user = userDao.selectByAccountName(userDto.getCredentials().getAccountName())
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
 				userDao.associateAddress(userId, a.getId());
 			}, () -> {
 				// new address
-				address.withVersion(0l);
+				address.withVersion(0);
 				Address newAddress = addressDao.insert(address);
 				userDao.associateAddress(userId, newAddress.getId());
 			});

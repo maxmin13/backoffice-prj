@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_STATE_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_NAME_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.Optional;
@@ -27,7 +27,7 @@ public class StateDaoImpl implements StateDao {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<State> selectByStateName(String stateName) {
-		notNull(stateName, ERROR_STATE_NAME_NOT_NULL_MSG);
+		notNull(stateName, ERROR_NAME_NOT_NULL_MSG);
 		State state = this.selectStateByStateName.execute(stateName);
 		return state != null ? Optional.of(state) : Optional.empty();
 	}

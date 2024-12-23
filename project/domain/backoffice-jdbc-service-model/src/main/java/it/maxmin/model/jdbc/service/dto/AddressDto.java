@@ -1,13 +1,13 @@
 package it.maxmin.model.jdbc.service.dto;
 
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_CITY_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_DESCRIPTION_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_POSTAL_CODE_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_REGION_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_CODE_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_NAME_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_STATE_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_CITY_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_CODE_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_DESCRIPTION_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_POSTAL_CODE_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_REGION_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_STATE_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.Serializable;
@@ -50,8 +50,8 @@ public final class AddressDto implements Serializable {
 		notNull(region, ERROR_REGION_NOT_NULL_MSG);
 		notNull(postalCode, ERROR_POSTAL_CODE_NOT_NULL_MSG);
 		notNull(state, ERROR_STATE_NOT_NULL_MSG);
-		notNull(state.getName(), ERROR_STATE_NAME_NOT_NULL_MSG);
-		notNull(state.getCode(), ERROR_STATE_CODE_NOT_NULL_MSG);
+		notNull(state.getName(), ERROR_NAME_NOT_NULL_MSG);
+		notNull(state.getCode(), ERROR_CODE_NOT_NULL_MSG);
 		this.description = description;
 		this.city = city;
 		this.region = region;

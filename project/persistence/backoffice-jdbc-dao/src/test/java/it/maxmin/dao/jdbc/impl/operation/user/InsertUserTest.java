@@ -1,7 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -56,21 +56,6 @@ class InsertUserTest extends JdbcBaseTestDao {
 	}
 
 	@Test
-	void executeWithUserIdThrowsException() {
-
-		LOGGER.info("running test executeWithNoUserIdThrowsException");
-
-		User carl = User.newInstance().withId(1l).withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance()
-						.withId(accountsDepartment.getId()).withName(accountsDepartment.getName()));
-
-		// run the test
-		Throwable throwable = assertThrows(Throwable.class, () -> insertUser.execute(carl));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-
-	@Test
 	void executeWithNoDepartmentThrowsException() {
 
 		LOGGER.info("running test executeWithNoDepartmentThrowsException");
@@ -83,7 +68,7 @@ class InsertUserTest extends JdbcBaseTestDao {
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withName(administratorRole.getName());
+		Role role = Role.newInstance().withId(administratorRole.getId()).withName(administratorRole.getName());
 		carl.addRole(role);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> insertUser.execute(carl));
@@ -105,7 +90,7 @@ class InsertUserTest extends JdbcBaseTestDao {
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withName(administratorRole.getName());
+		Role role = Role.newInstance().withId(administratorRole.getId()).withName(administratorRole.getName());
 		carl.addRole(role);
 
 		Throwable throwable = assertThrows(Throwable.class, () -> insertUser.execute(carl));

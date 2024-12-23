@@ -1,8 +1,11 @@
 package it.maxmin.dao.jpa.impl.repo;
 
-import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
-import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_USER_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jpa.constant.JpaDaoMessageConstants.ERROR_USER_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESSES_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ID_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ROLES_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -57,12 +60,15 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public User create(User user) {	
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
+		notNull(user.getDepartment(), ERROR_DEPARTMENT_NOT_NULL_MSG);
+		notNull(user.getAddresses(), ERROR_ADDRESSES_NOT_NULL_MSG);
+		notNull(user.getRoles(), ERROR_ROLES_NOT_NULL_MSG);
 		if (user.getId() == null) {
 			LOGGER.info("Inserting new user ...");
 			em.persist(user);
 			LOGGER.info("User created with id: {}", user.getId());
 		} else {
-			throw new IllegalArgumentException(ERROR_USER_ID_NOT_NULL_MSG);
+			throw new IllegalArgumentException(ERROR_ID_NOT_NULL_MSG);
 		}
 		return user;
 	}
@@ -70,8 +76,11 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public User update(User user) {	
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
+		notNull(user.getDepartment(), ERROR_DEPARTMENT_NOT_NULL_MSG);
+		notNull(user.getAddresses(), ERROR_ADDRESSES_NOT_NULL_MSG);
+		notNull(user.getRoles(), ERROR_ROLES_NOT_NULL_MSG);
 		if (user.getId() == null) {
-			throw new IllegalArgumentException(ERROR_USER_ID_NOT_NULL_MSG);
+			throw new IllegalArgumentException(ERROR_ID_NOT_NULL_MSG);
 		} else {
 			LOGGER.info("Updating new user ...");
 			em.merge(user);

@@ -1,5 +1,12 @@
 package it.maxmin.model.jdbc.dao.entity;
 
+import static it.maxmin.common.constant.MessageConstants.ERROR_CREATED_AT_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ID_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_SUCCESS_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_NULL_MSG;
+import static org.springframework.util.Assert.notNull;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -7,10 +14,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class LoginAttempt implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 7632536256395423354L;
 
-	private long id;
-	private boolean success;
+	private Long id;
+	private Boolean success;
 	private LocalDateTime createdAt;
 	private User user;
 
@@ -18,15 +26,17 @@ public class LoginAttempt implements Serializable {
 		return new LoginAttempt();
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
+		notNull(id, ERROR_ID_NOT_NULL_MSG);
 		this.id = id;
 	}
 	
-	public LoginAttempt withId(long id) {
+	public LoginAttempt withId(Long id) {
+		notNull(id, ERROR_ID_NOT_NULL_MSG);
 		this.id = id;
 		return this;
 	}
@@ -36,23 +46,27 @@ public class LoginAttempt implements Serializable {
 	}
 
 	public void setUser(User user) {
+		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		this.user = user;
 	}
 
 	public LoginAttempt withUser(User user) {
+		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		this.user = user;
 		return this;
 	}
 
-	public boolean getSuccess() {
+	public Boolean getSuccess() {
 		return success;
 	}
 
-	public void setSuccess(boolean success) {
+	public void setSuccess(Boolean success) {
+		notNull(success, ERROR_SUCCESS_NOT_NULL_MSG);
 		this.success = success;
 	}
 
-	public LoginAttempt withSuccess(boolean success) {
+	public LoginAttempt withSuccess(Boolean success) {
+		notNull(success, ERROR_SUCCESS_NOT_NULL_MSG);
 		this.success = success;
 		return this;
 	}
@@ -62,10 +76,12 @@ public class LoginAttempt implements Serializable {
 	}
 
 	public void setCreatedAt(LocalDateTime createdAt) {
+		notNull(createdAt, ERROR_CREATED_AT_NOT_NULL_MSG);
 		this.createdAt = createdAt;
 	}
 
 	public LoginAttempt withCreatedAt(LocalDateTime createdAt) {
+		notNull(createdAt, ERROR_CREATED_AT_NOT_NULL_MSG);
 		this.createdAt = createdAt;
 		return this;
 	}

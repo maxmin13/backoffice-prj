@@ -1,7 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
 import static it.maxmin.dao.jdbc.impl.constant.Role.USER;
 import static it.maxmin.dao.jdbc.impl.constant.Role.WORKER;

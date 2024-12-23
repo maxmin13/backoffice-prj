@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.constant.State.IRELAND;
 import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -84,10 +84,10 @@ class AddressDaoTest {
 
 		Address address1 = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
-				.withRegion("County Veneto").withPostalCode("30033").withVersion(1l);
+				.withRegion("County Veneto").withPostalCode("30033").withVersion(1);
 		Address address2 = Address.newInstance().withId(3l).withDescription("Via Vecchia").withCity("Rome")
 				.withState(State.newInstance().withId(4l).withName(IRELAND.getName()).withCode(IRELAND.getCode()))
-				.withRegion("County Lazio").withPostalCode("20021").withVersion(1l);
+				.withRegion("County Lazio").withPostalCode("20021").withVersion(2);
 
 		when(selectAddressesByUserId.execute(1l)).thenReturn(List.of(address1, address2));
 
@@ -124,7 +124,7 @@ class AddressDaoTest {
 
 		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
-				.withRegion("County Veneto").withPostalCode("30033").withVersion(1l);
+				.withRegion("County Veneto").withPostalCode("30033").withVersion(1);
 
 		when(selectAddressByPostalCode.execute("30033")).thenReturn(Optional.of(address));
 
@@ -174,7 +174,7 @@ class AddressDaoTest {
 
 		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
-				.withRegion("County Veneto").withPostalCode("30033").withVersion(1l);
+				.withRegion("County Veneto").withPostalCode("30033").withVersion(1);
 
 		when(selectAddressByUserIdAndPostalCode.execute(1L, "30033")).thenReturn(Optional.of(address));
 
@@ -195,20 +195,6 @@ class AddressDaoTest {
 		LOGGER.info("running test insertWithNoAddressThrowsException");
 
 		Address address = null;
-
-		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.insert(address));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-
-	@Test
-	void insertWithAddressIdThrowsException() {
-
-		LOGGER.info("running test insertWithAddressIdThrowsException");
-
-		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
-				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
-				.withRegion("County Veneto").withPostalCode("30033");
 
 		Throwable throwable = assertThrows(Throwable.class, () -> addressDao.insert(address));
 
@@ -302,7 +288,7 @@ class AddressDaoTest {
 
 		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
 				.withState(State.newInstance().withId(2l).withName(ITALY.getName()).withCode(ITALY.getCode()))
-				.withRegion("County Veneto").withPostalCode("30033").withVersion(2l);
+				.withRegion("County Veneto").withPostalCode("30033").withVersion(2);
 
 		// run the test
 		addressDao.update(address);

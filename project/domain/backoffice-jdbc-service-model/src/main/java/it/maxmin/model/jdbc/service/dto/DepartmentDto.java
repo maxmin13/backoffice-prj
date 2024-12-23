@@ -1,7 +1,7 @@
 package it.maxmin.model.jdbc.service.dto;
 
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_DEPARTMENT_NAME_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_NAME_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.Serializable;
@@ -26,7 +26,7 @@ public final class DepartmentDto implements Serializable {
 	}
 
 	DepartmentDto(String name) {
-		notNull(name, ERROR_DEPARTMENT_NAME_NOT_NULL_MSG);
+		notNull(name, ERROR_NAME_NOT_NULL_MSG);
 		this.name = name;
 	}
 

@@ -2,4 +2,4 @@
 CREATE A NEW MAVEN MODULE:
 
 cd project/config
-mvn archetype:generate -DgroupId=com.maxmin.config  -DartifactId=backoffice-config
+mvn archetype:generate -DgroupId=it.maxmin.config  -DartifactId=backoffice-config

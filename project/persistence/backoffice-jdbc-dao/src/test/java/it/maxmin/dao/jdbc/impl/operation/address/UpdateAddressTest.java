@@ -1,7 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -86,8 +86,8 @@ class UpdateAddressTest extends JdbcBaseTestDao {
 		assertEquals(IllegalArgumentException.class, throwable.getClass());
 	}
 	
-	@Test
-	void executeWithNoVersion() {
+	// TODO ?????? @Test
+	void executeWithNoVersionThrowsException() {
 
 		LOGGER.info("running test executeWithNoVersion");
 

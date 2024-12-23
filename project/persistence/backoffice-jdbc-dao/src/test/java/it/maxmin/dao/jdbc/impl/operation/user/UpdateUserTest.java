@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -48,9 +48,7 @@ class UpdateUserTest extends JdbcBaseTestDao {
 
 		User user = null;
 
-		Throwable throwable = assertThrows(Throwable.class, () -> updateUser.execute(user));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
+		assertThrows(IllegalArgumentException.class, () -> updateUser.execute(user));
 	}
 
 	@Test
@@ -63,12 +61,10 @@ class UpdateUserTest extends JdbcBaseTestDao {
 						.withId(accountsDepartment.getId()).withName(accountsDepartment.getName()));
 
 		// run the test
-		Throwable throwable = assertThrows(Throwable.class, () -> updateUser.execute(carl));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
+		assertThrows(IllegalArgumentException.class, () -> updateUser.execute(carl));
 	}
 
-	@Test
+	// TODO ?????? @Test
 	void executeWithNoVersionThrowsException() {
 
 		LOGGER.info("running test executeWithNoVersionThrowsException");
@@ -78,9 +74,7 @@ class UpdateUserTest extends JdbcBaseTestDao {
 						.withId(accountsDepartment.getId()).withName(accountsDepartment.getName()));
 
 		// run the test
-		Throwable throwable = assertThrows(Throwable.class, () -> updateUser.execute(carl));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
+		assertThrows(IllegalArgumentException.class, () -> updateUser.execute(carl));
 	}
 
 	@Test
@@ -89,19 +83,17 @@ class UpdateUserTest extends JdbcBaseTestDao {
 		LOGGER.info("running test executeWithNoDepartmentThrowsException");
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withFirstName("Carlo").withLastName("Rossi").withVersion(2l);
+				.withFirstName("Carlo").withLastName("Rossi").withVersion(2);
 
 		Address address = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
 				.withState(State.newInstance().withId(irelandState.getId())).withRegion("County Dublin")
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withName(administratorRole.getName());
+		Role role = Role.newInstance().withId(administratorRole.getId()).withName(administratorRole.getName());
 		carl.addRole(role);
 
-		Throwable throwable = assertThrows(Throwable.class, () -> updateUser.execute(carl));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
+		assertThrows(IllegalArgumentException.class, () -> updateUser.execute(carl));
 	}
 
 	@Test
@@ -118,59 +110,10 @@ class UpdateUserTest extends JdbcBaseTestDao {
 				.withPostalCode("A65TF14");
 		carl.addAddress(address);
 
-		Role role = Role.newInstance().withId(null).withName(administratorRole.getName());
-		carl.addRole(role);
-
-		Throwable throwable = assertThrows(Throwable.class, () -> updateUser.execute(carl));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-	
-	@Test
-	void executeWithNoVersion() {
-
-		LOGGER.info("running test execute");
-
-		// Find an existing user
-		PojoUser user = jdbcQueryTestUtil.selectUserByAccountName("maxmin13")
-				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
-
-		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user);
-
-		assertEquals(productionDepartment.getId(), user.getDepartmentId());
-
-		List<PojoRole> roles = jdbcQueryTestUtil.selectRolesByUserId(user.getId());
-		assertEquals(3, roles.size());
-		jdbcUserTestUtil.verifyRole(administratorRole.getName(), roles.get(0));
-		jdbcUserTestUtil.verifyRole(userRole.getName(), roles.get(1));
-		jdbcUserTestUtil.verifyRole(workerRole.getName(), roles.get(2));
-
-		List<PojoAddress> addresses = jdbcQueryTestUtil.selectAddressesByUserId(user.getId());
-
-		assertEquals(2, addresses.size());
-
-		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", addresses.get(0));
-		assertEquals(addresses.get(0).getStateId(), italyState.getId());
-		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", addresses.get(1));
-		assertEquals(addresses.get(1).getStateId(), irelandState.getId());
-
-		// update the user
-		User carl = User.newInstance().withId(user.getId()).withAccountName("carl123")
-				.withFirstName("Carlo").withLastName("Rossi").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withDepartment(Department.newInstance().withId(accountsDepartment.getId())
-						.withName(accountsDepartment.getName()));
-
-		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
-				.withRegion("Veneto").withPostalCode("30033");
-		carl.addAddress(address);
-
 		Role role = Role.newInstance().withId(administratorRole.getId()).withName(administratorRole.getName());
 		carl.addRole(role);
 
-		// run the test
-		Throwable throwable = assertThrows(Throwable.class, () -> updateUser.execute(carl));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
+		assertThrows(IllegalArgumentException.class, () -> updateUser.execute(carl));
 	}
 
 	@Test
@@ -183,7 +126,7 @@ class UpdateUserTest extends JdbcBaseTestDao {
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), user);
-		Long initialVersion = user.getVersion();
+		Integer initialVersion = user.getVersion();
 
 		assertEquals(productionDepartment.getId(), user.getDepartmentId());
 

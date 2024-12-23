@@ -1,7 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ID_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.INSERT_USER_ROLE;
 import static org.springframework.util.Assert.notNull;
 
@@ -25,8 +24,8 @@ public class InsertUserRole extends SqlUpdate {
 	 * @return the number of rows affected by the update
 	 */
 	public Integer execute(Long userId, Long roleId) {
-		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
-		notNull(roleId, ERROR_ROLE_ID_NOT_NULL_MSG);
+		notNull(userId, ERROR_ID_NOT_NULL_MSG);
+		notNull(roleId, ERROR_ID_NOT_NULL_MSG);
 		return updateByNamedParam(Map.of("userId", userId, "roleId", roleId));
 	}
 }

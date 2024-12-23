@@ -1,5 +1,7 @@
 package it.maxmin.dao.jdbc;
 
+import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESSES_BY_USER_ACCOUNT_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESSES_BY_USER_ID;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_ADDRESS_BY_ID;
@@ -21,9 +23,6 @@ import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USERS_BY_ADDRESS_
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USERS_BY_ROLE_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_ACCOUNT_NAME;
 import static it.maxmin.dao.jdbc.JdbcQueryTestConstants.SELECT_USER_BY_USER_ID;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ADDRESS_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.IOException;
@@ -191,7 +190,7 @@ public class JdbcQueryTestUtil {
 	}
 
 	public void associateUserAddress(PojoUserAddress userAddress) {
-		notNull(userAddress, ERROR_USER_ADDRESS_NOT_NULL_MSG);
+		notNull(userAddress, ERROR_ADDRESS_NOT_NULL_MSG);
 
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		simpleJdbcInsert.usingGeneratedKeyColumns("Id");

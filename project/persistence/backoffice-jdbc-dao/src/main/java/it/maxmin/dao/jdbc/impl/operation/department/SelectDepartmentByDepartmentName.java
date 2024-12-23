@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.department;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_DEPARTMENT_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_NAME_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.SELECT_DEPARTMENT_BY_DEPARTMENT_NAME;
 import static org.springframework.util.Assert.notNull;
 
@@ -23,7 +23,7 @@ public class SelectDepartmentByDepartmentName {
 
 	public Department execute(String name) {
 
-		notNull(name, ERROR_DEPARTMENT_NAME_NOT_NULL_MSG);
+		notNull(name, ERROR_NAME_NOT_NULL_MSG);
 
 		SqlParameterSource param = new MapSqlParameterSource("name", name);
 

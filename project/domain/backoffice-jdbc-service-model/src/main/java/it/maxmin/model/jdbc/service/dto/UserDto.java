@@ -1,12 +1,12 @@
 package it.maxmin.model.jdbc.service.dto;
 
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_BIRTH_DATE_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_DEPARTMENT_NAME_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_LAST_NAME_NOT_NULL_MSG;
-import static it.maxmin.model.jdbc.service.constant.JdbcModelMessageConstants.ERROR_USER_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_BIRTH_DATE_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_LAST_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.Serializable;
@@ -67,7 +67,7 @@ public final class UserDto implements Serializable {
 		notNull(lastName, ERROR_LAST_NAME_NOT_NULL_MSG);
 		notNull(birthDate, ERROR_BIRTH_DATE_NOT_NULL_MSG);
 		notNull(department, ERROR_DEPARTMENT_NOT_NULL_MSG);
-		notNull(department.getName(), ERROR_DEPARTMENT_NAME_NOT_NULL_MSG);
+		notNull(department.getName(), ERROR_NAME_NOT_NULL_MSG);
 		this.credentials = CredentialsDto.newInstance(accountName, firstName, lastName);
 		this.birthDate = birthDate;
 		this.department = department;

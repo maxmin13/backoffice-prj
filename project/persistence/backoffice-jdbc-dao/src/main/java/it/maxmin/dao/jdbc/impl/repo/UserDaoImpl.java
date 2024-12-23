@@ -1,13 +1,11 @@
 package it.maxmin.dao.jdbc.impl.repo;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_VERSION_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ID_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_VERSION_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -49,7 +47,7 @@ public class UserDaoImpl implements UserDao {
 	private InsertUser insertUser;
 	private InsertUserAddress insertUserAddress;
 	private DeleteUserAddress deleteUserAddress;
-	private DeleteUserAddresses deleteUserAddresses; 
+	private DeleteUserAddresses deleteUserAddresses;
 	private InsertUserRole insertUserRole;
 	private DeleteUserRole deleteUserRole;
 	private DeleteUserRoles deleteUserRoles;
@@ -92,15 +90,14 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public User insert(User user) {
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
-		if (user.getId() == null) {
-			LOGGER.info("Inserting new user ...");
-			User newUser = insertUser.execute(user);
-			LOGGER.info("User created with id: {}", user.getId());
-			return newUser;
+		notNull(user.getDepartment(), ERROR_DEPARTMENT_NOT_NULL_MSG);
+		if (user.getDepartment().getId() == null) {
+			throw new IllegalArgumentException(ERROR_ID_NOT_NULL_MSG);
 		}
-		else {
-			throw new IllegalArgumentException(ERROR_USER_ID_NULL_MSG);
-		}
+		LOGGER.info("Inserting new user ...");
+		User newUser = insertUser.execute(user);
+		LOGGER.info("User created with id: {}", user.getId());
+		return newUser;
 	}
 
 	@Override
@@ -108,8 +105,8 @@ public class UserDaoImpl implements UserDao {
 	 * @return the number of rows affected by the update
 	 */
 	public Integer associateAddress(Long userId, Long addressId) {
-		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
-		notNull(addressId, ERROR_ADDRESS_ID_NOT_NULL_MSG);
+		notNull(userId, ERROR_ID_NOT_NULL_MSG);
+		notNull(addressId, ERROR_ID_NOT_NULL_MSG);
 		Integer rows = insertUserAddress.execute(userId, addressId);
 		LOGGER.info("User {} associated with address {}", userId, addressId);
 		return rows;
@@ -120,8 +117,8 @@ public class UserDaoImpl implements UserDao {
 	 * @return the number of rows affected by the update
 	 */
 	public Integer removeAddress(Long userId, Long addressId) {
-		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
-		notNull(addressId, ERROR_ADDRESS_ID_NOT_NULL_MSG);
+		notNull(userId, ERROR_ID_NOT_NULL_MSG);
+		notNull(addressId, ERROR_ID_NOT_NULL_MSG);
 		Integer rows = deleteUserAddress.execute(userId, addressId);
 		LOGGER.info("Address {} removed from user {}", addressId, userId);
 		return rows;
@@ -132,7 +129,7 @@ public class UserDaoImpl implements UserDao {
 	 * @return the number of rows affected by the update
 	 */
 	public Integer removeAllAddresses(Long userId) {
-		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
+		notNull(userId, ERROR_ID_NOT_NULL_MSG);
 		Integer rows = deleteUserAddresses.execute(userId);
 		LOGGER.info("Addresses removed from user {}", userId);
 		return rows;
@@ -143,8 +140,8 @@ public class UserDaoImpl implements UserDao {
 	 * @return the number of rows affected by the update
 	 */
 	public Integer associateRole(Long userId, Long roleId) {
-		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
-		notNull(roleId, ERROR_ROLE_ID_NOT_NULL_MSG);
+		notNull(userId, ERROR_ID_NOT_NULL_MSG);
+		notNull(roleId, ERROR_ID_NOT_NULL_MSG);
 		Integer rows = insertUserRole.execute(userId, roleId);
 		LOGGER.info("User {} associated with role {}", userId, roleId);
 		return rows;
@@ -155,25 +152,23 @@ public class UserDaoImpl implements UserDao {
 	 * @return the number of rows affected by the update
 	 */
 	public Integer removeRole(Long userId, Long roleId) {
-		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
-		notNull(roleId, ERROR_ROLE_ID_NOT_NULL_MSG);
+		notNull(userId, ERROR_ID_NOT_NULL_MSG);
+		notNull(roleId, ERROR_ID_NOT_NULL_MSG);
 		Integer rows = deleteUserRole.execute(userId, roleId);
 		LOGGER.info("Role {} removed from user {}", roleId, userId);
 		return rows;
 	}
-	
 
 	@Override
 	/**
 	 * @return the number of rows affected by the update
 	 */
 	public Integer removeAllRoles(Long userId) {
-		notNull(userId, ERROR_USER_ID_NOT_NULL_MSG);
+		notNull(userId, ERROR_ID_NOT_NULL_MSG);
 		Integer rows = deleteUserRoles.execute(userId);
 		LOGGER.info("Roles removed from user {}", userId);
 		return rows;
 	}
-
 
 	@Override
 	/**
@@ -182,10 +177,10 @@ public class UserDaoImpl implements UserDao {
 	public Integer update(User user) {
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
 		if (user.getVersion() == null) {
-			throw new IllegalArgumentException(ERROR_USER_VERSION_NOT_NULL_MSG);
+			throw new IllegalArgumentException(ERROR_VERSION_NOT_NULL_MSG);
 		}
 		else if (user.getId() == null) {
-			throw new IllegalArgumentException(ERROR_USER_ID_NOT_NULL_MSG);
+			throw new IllegalArgumentException(ERROR_ID_NOT_NULL_MSG);
 		}
 		else {
 			LOGGER.info("Updating new user ...");

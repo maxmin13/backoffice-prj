@@ -1,6 +1,6 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_POSTAL_CODE_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_POSTAL_CODE_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.address.AddressQueryConstants.SELECT_ADDRESS_BY_POSTAL_CODE;
 import static org.springframework.util.Assert.notNull;
 

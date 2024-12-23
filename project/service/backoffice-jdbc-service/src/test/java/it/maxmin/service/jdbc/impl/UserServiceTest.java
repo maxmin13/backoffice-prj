@@ -1,16 +1,16 @@
 package it.maxmin.service.jdbc.impl;
 
+import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESS_ALREADY_CREATED_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_STATE_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_ALREADY_CREATED;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_ROLLED_BACK_MSG;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
 import static it.maxmin.dao.jdbc.impl.constant.Role.USER;
 import static it.maxmin.dao.jdbc.impl.constant.Role.WORKER;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_ADDRESS_ALREADY_CREATED;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_ADDRESS_NOT_FOUND;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_USER_ALREADY_CREATED;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_USER_NOT_FOUND_MSG;
-import static it.maxmin.service.jdbc.constant.JdbcServiceMessageConstants.ERROR_USER_NOT_ROLLED_BACK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -93,7 +93,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 		jdbcUserTestUtil.verifyUser("maxmin13", "Max", "Minardi", LocalDate.of(1977, 10, 16), existingUser);
 
 		Long userId = existingUser.getId();
-		Long initialVersion = existingUser.getVersion();
+		Integer initialVersion = existingUser.getVersion();
 
 		assertEquals(0, initialVersion);
 		assertEquals(productionDepartment.getId(), existingUser.getDepartmentId());
@@ -153,13 +153,13 @@ class UserServiceTest extends JdbcBaseTestDao {
 		assertEquals(2, addresses.size());
 
 		PojoAddress address1 = addresses.stream().filter(each -> each.getPostalCode().equals("30010")).findFirst()
-				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ADDRESS_NOT_FOUND));
+				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
 		assertEquals(0, address1.getVersion());
 		assertEquals(address1.getStateId(), italyState.getId());
 
 		PojoAddress address2 = addresses.stream().filter(each -> each.getPostalCode().equals("A65TF12")).findFirst()
-				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ADDRESS_NOT_FOUND));
+				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 		jdbcUserTestUtil.verifyAddress("A65TF12", "Connolly street", "Dublin", "County Dublin", address2);
 		assertEquals(0, address2.getVersion());
 		assertEquals(address2.getStateId(), irelandState.getId());
@@ -175,7 +175,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// create a new address
 		jdbcQueryTestUtil.selectAddressByPostalCode("50033").ifPresent(address -> {
-			throw new JdbcServiceTestException(ERROR_ADDRESS_ALREADY_CREATED);
+			throw new JdbcServiceTestException(ERROR_ADDRESS_ALREADY_CREATED_MSG);
 		});
 		AddressDto addressDto2 = AddressDto.newInstance("Via della resistenza", "Florence", "County Liguria", "50033",
 				StateDto.newInstance(italyState.getName(), italyState.getCode()));
@@ -199,14 +199,14 @@ class UserServiceTest extends JdbcBaseTestDao {
 		assertEquals(0, addresses.stream().filter(each -> each.getPostalCode().equals("A65TF12")).count());
 
 		PojoAddress address3 = addresses.stream().filter(each -> each.getPostalCode().equals("30010")).findFirst()
-				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ADDRESS_NOT_FOUND));
+				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sopra", "Torino", "County Piemonte", address3);
 		assertEquals(1, address3.getVersion());
 		assertEquals(irelandState.getId(), address3.getStateId());
 
 		PojoAddress address4 = addresses.stream().filter(each -> each.getPostalCode().equals("50033")).findFirst()
-				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ADDRESS_NOT_FOUND));
+				.orElseThrow(() -> new JdbcServiceTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 
 		jdbcUserTestUtil.verifyAddress("50033", "Via della resistenza", "Florence", "County Liguria", address4);
 		assertEquals(0, address4.getVersion());
@@ -306,7 +306,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// find an existing address
 		PojoAddress address1 = jdbcQueryTestUtil.selectAddressByPostalCode("30010")
-				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND));
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
 
 		PojoState state1 = jdbcQueryTestUtil.selectStateByAddressId(address1.getId())
@@ -319,7 +319,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// prepare a new address
 		jdbcQueryTestUtil.selectAddressByPostalCode("50033").ifPresent(user -> {
-			throw new JdbcServiceTestException(ERROR_ADDRESS_ALREADY_CREATED);
+			throw new JdbcServiceTestException(ERROR_ADDRESS_ALREADY_CREATED_MSG);
 		});
 
 		AddressDto addressDto2 = AddressDto.newInstance("Via della resistenza", "Florence", "County Liguria", "50033",
@@ -331,7 +331,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// check the user doesn't exist
 		jdbcQueryTestUtil.selectUserByAccountName("maxmin13").ifPresent(user -> {
-			throw new JdbcServiceTestException(ERROR_ADDRESS_ALREADY_CREATED);
+			throw new JdbcServiceTestException(ERROR_ADDRESS_ALREADY_CREATED_MSG);
 		});
 
 		// prepare the new user
@@ -377,7 +377,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// find an existing address
 		PojoAddress address1 = jdbcQueryTestUtil.selectAddressByPostalCode("30010")
-				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND));
+				.orElseThrow(() -> new JdbcDaoTestException(ERROR_ADDRESS_NOT_FOUND_MSG));
 		jdbcUserTestUtil.verifyAddress("30010", "Via borgo di sotto", "Rome", "County Lazio", address1);
 
 		PojoState state1 = jdbcQueryTestUtil.selectStateByAddressId(address1.getId())
@@ -390,7 +390,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// prepare a new address
 		jdbcQueryTestUtil.selectAddressByPostalCode("50033").ifPresent(user -> {
-			throw new JdbcServiceTestException(ERROR_ADDRESS_ALREADY_CREATED);
+			throw new JdbcServiceTestException(ERROR_ADDRESS_ALREADY_CREATED_MSG);
 		});
 
 		AddressDto addressDto2 = AddressDto.newInstance("Via della resistenza", "Florence", "County Liguria", "50033",
@@ -403,7 +403,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// check the user doesn't exist
 		jdbcQueryTestUtil.selectUserByAccountName("maxmin13").ifPresent(user -> {
-			throw new JdbcServiceTestException(ERROR_ADDRESS_ALREADY_CREATED);
+			throw new JdbcServiceTestException(ERROR_ADDRESS_ALREADY_CREATED_MSG);
 		});
 
 		// prepare the new user
@@ -417,7 +417,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// check everything has been rolled back
 		jdbcQueryTestUtil.selectUserByAccountName("maxmin13").ifPresent(user -> {
-			throw new JdbcServiceTestException(ERROR_USER_NOT_ROLLED_BACK);
+			throw new JdbcServiceTestException(ERROR_USER_NOT_ROLLED_BACK_MSG);
 		});
 
 		// check the addresses

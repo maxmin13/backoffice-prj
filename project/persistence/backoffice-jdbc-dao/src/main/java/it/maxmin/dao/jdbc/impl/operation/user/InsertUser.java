@@ -1,9 +1,8 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_DEPARTMENT_ID_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_ID_NULL_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ID_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_NULL_MSG;
 import static it.maxmin.dao.jdbc.impl.operation.user.UserQueryConstants.INSERT_USER;
 import static org.springframework.util.Assert.notNull;
 
@@ -39,12 +38,9 @@ public class InsertUser extends SqlUpdate {
 
 	public User execute(User user) {
 		notNull(user, ERROR_USER_NOT_NULL_MSG);
-		if (user.getId() != null) {
-			throw new IllegalArgumentException(ERROR_USER_ID_NULL_MSG);
-		}
 		notNull(user.getDepartment(), ERROR_DEPARTMENT_NOT_NULL_MSG);
 		if (user.getDepartment().getId() == null) {
-			throw new IllegalArgumentException(ERROR_DEPARTMENT_ID_NOT_NULL_MSG);
+			throw new IllegalArgumentException(ERROR_ID_NOT_NULL_MSG);
 		}
 		
 		var keyHolder = new GeneratedKeyHolder();

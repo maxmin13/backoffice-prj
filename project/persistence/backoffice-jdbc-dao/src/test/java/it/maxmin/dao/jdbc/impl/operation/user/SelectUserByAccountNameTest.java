@@ -1,8 +1,8 @@
 package it.maxmin.dao.jdbc.impl.operation.user;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_USER_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_FOUND_MSG;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
 import static it.maxmin.dao.jdbc.impl.constant.State.ITALY;
@@ -72,12 +72,12 @@ class SelectUserByAccountNameTest {
 		Address rome = Address.newInstance().withId(4l).withPostalCode("30010").withDescription("Via borgo di sotto")
 				.withCity("Rome").withRegion("County Lazio")
 				.withState(State.newInstance().withId(5l).withName(ITALY.getName()).withCode(ITALY.getCode()))
-				.withVersion(1l);
+				.withVersion(1);
 		Department production = Department.newInstance().withId(3l).withName(PRODUCTION.getName());
 		Role administrator = Role.newInstance().withId(2l).withName(ADMINISTRATOR.getName());
 		User maxmin = User.newInstance().withId(1l).withAccountName("maxmin13").withFirstName("Max")
 				.withLastName("Minardi").withBirthDate(LocalDate.of(1977, 10, 16)).withDepartment(production)
-				.withVersion(1l).withCreatedAt(LocalDateTime.now());
+				.withVersion(2).withCreatedAt(LocalDateTime.now());
 		maxmin.addRole(administrator);
 		maxmin.addAddress(rome);
 

@@ -21,6 +21,11 @@
 
 		<!-- module dependencies -->
 		<dependency>
+			<groupId>it.maxmin.common</groupId>
+			<artifactId>backoffice-common</artifactId>
+		</dependency>
+		
+		<dependency>
 			<groupId>it.maxmin.domain</groupId>
 			<artifactId>backoffice-jdbc-dao-model</artifactId>
 		</dependency>

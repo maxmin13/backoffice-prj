@@ -1,7 +1,7 @@
 package it.maxmin.dao.jdbc.impl.operation.address;
 
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.constant.JdbcDaoMessageConstants.ERROR_STATE_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_STATE_NOT_FOUND_MSG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,19 +42,6 @@ class InsertAddressTest extends JdbcBaseTestDao {
 		LOGGER.info("running test executeWithNoAddressThrowsException");
 
 		Address address = null;
-
-		Throwable throwable = assertThrows(Throwable.class, () -> insertAddress.execute(address));
-
-		assertEquals(IllegalArgumentException.class, throwable.getClass());
-	}
-
-	@Test
-	void executeWithAddressIdThrowsException() {
-
-		LOGGER.info("running test executeWithAddressIdThrowsException");
-
-		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
-				.withState(State.newInstance().withId(italyState.getId())).withRegion("Veneto").withPostalCode("30033");
 
 		Throwable throwable = assertThrows(Throwable.class, () -> insertAddress.execute(address));
 
