@@ -1,11 +1,7 @@
 package it.maxmin.dao.jpa.impl.repo;
 
-import static it.maxmin.common.constant.MessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESSES_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_ID_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_ROLES_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_FIELD_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_FIELD_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -13,9 +9,11 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.maxmin.common.service.impl.MessageServiceImpl;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.model.jpa.dao.entity.User;
 import jakarta.persistence.EntityManager;
@@ -30,6 +28,12 @@ public class UserDaoImpl implements UserDao {
 
 	@PersistenceContext
 	private EntityManager em;
+	private MessageServiceImpl messageService;
+
+	@Autowired
+	public UserDaoImpl(MessageServiceImpl messageService) {
+		this.messageService = messageService;
+	}
 
 	@Transactional(readOnly = true)
 	@Override
@@ -40,53 +44,53 @@ public class UserDaoImpl implements UserDao {
 	@Transactional(readOnly = true)
 	@Override
 	public List<User> findAllWithAddressAndRole() {
-		return null; //TODO  use createNameQuery, verify eagerly loaded
+		return null; // TODO use createNameQuery, verify eagerly loaded
 
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public Optional<User> findByAccountName(String accountName) {
-		notNull(accountName, ERROR_ACCOUNT_NAME_NOT_NULL_MSG);
+		notNull(accountName, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "account name"));
 		try {
 			return Optional.of(em.createNamedQuery("User.findByAccountName", User.class)
-				.setParameter("accountName", accountName).getSingleResult());
+					.setParameter("accountName", accountName).getSingleResult());
 		}
-		catch(NoResultException e) {
+		catch (NoResultException e) {
 			return Optional.empty();
 		}
 	}
 
 	@Override
-	public User create(User user) {	
-		notNull(user, ERROR_USER_NOT_NULL_MSG);
-		notNull(user.getDepartment(), ERROR_DEPARTMENT_NOT_NULL_MSG);
-		notNull(user.getAddresses(), ERROR_ADDRESSES_NOT_NULL_MSG);
-		notNull(user.getRoles(), ERROR_ROLES_NOT_NULL_MSG);
+	public User create(User user) {
+		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
+		notNull(user.getDepartment(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "department"));
+		notNull(user.getAddresses(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "addresses"));
+		notNull(user.getRoles(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "roles"));
 		if (user.getId() == null) {
 			LOGGER.info("Inserting new user ...");
 			em.persist(user);
 			LOGGER.info("User created with id: {}", user.getId());
-		} else {
-			throw new IllegalArgumentException(ERROR_ID_NOT_NULL_MSG);
+		}
+		else {
+			throw new IllegalArgumentException(messageService.getMessage(ERROR_FIELD_NULL_MSG, "id"));
 		}
 		return user;
 	}
-	
+
 	@Override
-	public User update(User user) {	
-		notNull(user, ERROR_USER_NOT_NULL_MSG);
-		notNull(user.getDepartment(), ERROR_DEPARTMENT_NOT_NULL_MSG);
-		notNull(user.getAddresses(), ERROR_ADDRESSES_NOT_NULL_MSG);
-		notNull(user.getRoles(), ERROR_ROLES_NOT_NULL_MSG);
-		if (user.getId() == null) {
-			throw new IllegalArgumentException(ERROR_ID_NOT_NULL_MSG);
-		} else {
-			LOGGER.info("Updating new user ...");
-			em.merge(user);
-			LOGGER.info("User saved with id: {}", user.getId());
-		}
-		return user;
+	// @returns the managed persistent entity
+	public User update(User user) {
+		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
+		notNull(user.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));
+		notNull(user.getDepartment(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "department"));
+		notNull(user.getAddresses(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "addresses"));
+		notNull(user.getRoles(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "roles"));
+
+		LOGGER.info("Updating new user ...");
+		User u = em.merge(user);
+		LOGGER.info("User saved with id: {}", user.getId());
+		return u;
 	}
 
 }

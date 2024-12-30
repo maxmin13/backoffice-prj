@@ -56,17 +56,17 @@ public enum JpaQueryTestConstants {
 			+ "ORDER BY Id";
 	
 	public static final String SELECT_USER_BY_USER_ID = ""
-			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt, DepartmentId, Version "
+			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, DepartmentId, Version "
 			+ "FROM User "
 			+ "WHERE Id = :userId ";
 	
 	public static final String SELECT_USER_BY_ACCOUNT_NAME = ""
-			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, CreatedAt, DepartmentId, Version "
+			+ "SELECT Id, AccountName, FirstName, LastName, BirthDate, DepartmentId, Version "
 			+ "FROM User "
 			+ "WHERE AccountName = :accountName ";
 	
 	public static final String SELECT_USERS_BY_ADDRESS_ID = ""
-			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId, u.Version "
+			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.DepartmentId, u.Version "
 			+ "FROM User u "
 			+ "INNER JOIN UserAddress ua ON u.Id = ua.UserId "
 			+ "INNER JOIN Address a ON ua.AddressId = a.Id "
@@ -74,7 +74,7 @@ public enum JpaQueryTestConstants {
 			+ "ORDER BY u.Id";
 	
 	public static final String SELECT_USERS_BY_ADDRESS_POSTAL_CODE = ""
-			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId, u.Version "
+			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.DepartmentId, u.Version "
 			+ "FROM User u "
 			+ "INNER JOIN UserAddress ua ON u.Id = ua.UserId "
 			+ "INNER JOIN Address a ON ua.AddressId = a.Id "
@@ -82,7 +82,7 @@ public enum JpaQueryTestConstants {
 			+ "ORDER BY u.Id";
 	
 	public static final String SELECT_USERS_BY_ROLE_NAME = ""
-			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.CreatedAt, u.DepartmentId "
+			+ "SELECT u.Id, u.AccountName, u.FirstName, u.LastName, u.BirthDate, u.DepartmentId "
 			+ "FROM User u "
 			+ "INNER JOIN UserRole ur ON u.Id = ur.UserId "
 			+ "INNER JOIN Role r ON ur.RoleId = r.Id "

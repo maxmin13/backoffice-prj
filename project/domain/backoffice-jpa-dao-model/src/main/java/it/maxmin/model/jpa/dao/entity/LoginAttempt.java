@@ -1,16 +1,15 @@
 package it.maxmin.model.jpa.dao.entity;
 
-import static it.maxmin.common.constant.MessageConstants.ERROR_CREATED_AT_NOT_NULL_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_ID_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_LOGIN_AT_NOT_NULL_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_SUCCESS_NOT_NULL_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import javax.validation.constraints.NotNull;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
@@ -23,10 +22,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Version;
 
 @Entity
-@Table(name = "LoginAttempt")
+@Table(name = "LoginAttempt", uniqueConstraints = @UniqueConstraint(columnNames = { "UserId", "LoginAt" }))
 public class LoginAttempt implements Serializable {
 
 	@Serial
@@ -35,15 +35,9 @@ public class LoginAttempt implements Serializable {
 	@SuppressWarnings("deprecation")
 	@Id
 	@GeneratedValue(generator = "LoginAttemptSeq")
-	@GenericGenerator(
-      name = "LoginAttemptSeq",
-      strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-      parameters = {
-        @Parameter(name = "LoginAttemptSeq", value = "LoginAttemptSeq"),
-        @Parameter(name = "initial_value", value = "100"),
-        @Parameter(name = "increment_size", value = "1")
-        }
-    )
+	@GenericGenerator(name = "LoginAttemptSeq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
+			@Parameter(name = "LoginAttemptSeq", value = "LoginAttemptSeq"),
+			@Parameter(name = "initial_value", value = "100"), @Parameter(name = "increment_size", value = "1") })
 	@Column(name = "Id")
 	private Long id;
 
@@ -51,17 +45,14 @@ public class LoginAttempt implements Serializable {
 	@Column(name = "Version")
 	private Integer version;
 
-	@NotNull
-	@Column(name = "Success")
+	@Column(name = "Success", nullable = false)
 	private Boolean success;
 
-	@NotNull
-	@Column(name = "CreatedAt")
-	private LocalDateTime createdAt;
+	@Column(name = "LoginAt", nullable = false)
+	private Instant loginAt;
 
-	@NotNull
 	@OneToOne
-	@JoinColumn(name = "UserId", referencedColumnName = "id")
+	@JoinColumn(name = "UserId", referencedColumnName = "id", nullable = false)
 	private User user;
 
 	public static LoginAttempt newInstance() {
@@ -108,42 +99,47 @@ public class LoginAttempt implements Serializable {
 		return this;
 	}
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
+	public Instant getLoginAt() {
+		return loginAt;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		notNull(createdAt, ERROR_CREATED_AT_NOT_NULL_MSG);
-		this.createdAt = createdAt;
+	public void setLoginAt(Instant loginAt) {
+		notNull(loginAt, ERROR_LOGIN_AT_NOT_NULL_MSG);
+		this.loginAt = loginAt.truncatedTo(ChronoUnit.SECONDS);
 	}
 
-	public LoginAttempt withCreatedAt(LocalDateTime createdAt) {
-		notNull(createdAt, ERROR_CREATED_AT_NOT_NULL_MSG);
-		this.createdAt = createdAt;
+	public LoginAttempt withLoginAt(Instant loginAt) {
+		setLoginAt(loginAt);
 		return this;
 	}
 
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(user.getAccountName()).append(createdAt);
+		hcb.append(getUser().getAccountName()).append(getLoginAt());
 		return hcb.toHashCode();
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object other) {
+		if (this == other) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (other == null) {
 			return false;
 		}
-		LoginAttempt that = (LoginAttempt) obj;
-		return user.getAccountName().equals(that.user.getAccountName()) && createdAt.equals(that.createdAt);
+		if (!(other instanceof LoginAttempt)) {
+			return false;
+		}
+		LoginAttempt that = (LoginAttempt) other;
+		// loginAt is truncated to seconds precision because the field may be returned
+		// with different precision by Hibernate, see entity retrived in different
+		// persistent contexts.
+		return getUser().getAccountName().equals(that.getUser().getAccountName())
+				&& getLoginAt().equals(that.getLoginAt());
 	}
 
 	@Override
 	public String toString() {
-		return "LoginAttempt [user=" + user + ", success=" + success + ", createdAt=" + createdAt + "]";
+		return "LoginAttempt [user=" + user + ", success=" + success + ", loginAt=" + loginAt + "]";
 	}
 }

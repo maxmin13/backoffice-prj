@@ -50,7 +50,9 @@ class AddressSequenceGeneratorTest {
 	@AfterEach
 	public void clear() {
 		tx.commit();
-		em.close();
+		if (em.isOpen()) {
+			em.close();
+		}
 	}
 
 	@Test

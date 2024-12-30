@@ -2,6 +2,7 @@ package it.maxmin.model.jpa.dao.entity;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.AfterEach;
@@ -52,7 +53,9 @@ class UserPasswordSequenceGeneratorTest {
 	@AfterEach
 	public void clear() {
 		tx.commit();
-		em.close();
+		if (em.isOpen()) {
+			em.close();
+		}
 	}
 
 	@Test
@@ -69,7 +72,13 @@ class UserPasswordSequenceGeneratorTest {
 		em.persist(maxmin);
 		em.flush();
 
-		assertNotNull(maxmin.getId());
+		UserPassword userPassword = UserPassword.newInstance().withValue("secret").withUser(maxmin)
+				.withEffDate(Instant.now());
+
+		em.persist(userPassword);
+		em.flush();
+
+		assertNotNull(userPassword.getId());
 	}
 
 }

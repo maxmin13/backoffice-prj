@@ -9,8 +9,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Immutable;
 
@@ -21,10 +19,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Immutable
-@Table(name = "Department")
+@Table(name = "Department", uniqueConstraints = @UniqueConstraint(columnNames = "Name"))
 public class Department implements Serializable {
 
 	@Serial
@@ -34,8 +33,7 @@ public class Department implements Serializable {
 	@Column(name = "Id")
 	private Long id;
 
-	@NotNull
-	@Column(name = "Name")
+	@Column(name = "Name", nullable = false)
 	private String name;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = false)
@@ -48,7 +46,7 @@ public class Department implements Serializable {
 	public Long getId() {
 		return this.id;
 	}
-	
+
 	Department withId(Long id) {
 		this.id = id;
 		return this;
@@ -87,20 +85,23 @@ public class Department implements Serializable {
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(name);
+		hcb.append(this.getName());
 		return hcb.toHashCode();
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object other) {
+		if (this == other) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (other == null) {
 			return false;
 		}
-		Department that = (Department) obj;
-		return name.equals(that.name);
+		if (!(other instanceof Department)) {
+			return false;
+		}
+		Department that = (Department) other;
+		return this.getName().equals(that.getName());
 	}
 
 	@Override

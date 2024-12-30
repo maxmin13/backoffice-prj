@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -32,10 +31,11 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Version;
 
 @Entity
-@Table(name = "Address")
+@Table(name = "Address", uniqueConstraints = @UniqueConstraint(columnNames = "PostalCode"))
 @NamedQuery(name = "Address.findById", query = """
 		       select distinct a
 		            from Address a
@@ -51,9 +51,7 @@ public class Address implements Serializable {
 	@SuppressWarnings("deprecation")
 	@Id
 	@GeneratedValue(generator = "AddressSeq")
-	@GenericGenerator(name = "AddressSeq", 
-		strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", 
-		parameters = {
+	@GenericGenerator(name = "AddressSeq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
 			@Parameter(name = "AddressSeq", value = "AddressSeq"), @Parameter(name = "initial_value", value = "100"),
 			@Parameter(name = "increment_size", value = "1") })
 	@Column(name = "Id")
@@ -63,29 +61,24 @@ public class Address implements Serializable {
 	@Column(name = "Version")
 	private Integer version;
 
-	@NotNull
 	@Size(min = 2, max = 120, message = "description is required, maximum 60 characters.")
-	@Column(name = "Description")
+	@Column(name = "Description", nullable = false)
 	private String description;
 
-	@NotNull
 	@Size(min = 2, max = 100, message = "city is required, maximum 100 characters.")
-	@Column(name = "City")
+	@Column(name = "City", nullable = false)
 	private String city;
 
-	@NotNull
 	@Size(min = 2, max = 100, message = "region is required, maximum 100 characters.")
-	@Column(name = "Region")
+	@Column(name = "Region", nullable = false)
 	private String region;
 
-	@NotNull
 	@Size(min = 2, max = 16, message = "postalCode is required, maximum 16 characters.")
-	@Column(name = "PostalCode")
+	@Column(name = "PostalCode", nullable = false)
 	private String postalCode;
 
-	@NotNull
 	@OneToOne
-	@JoinColumn(name = "StateId", referencedColumnName = "Id")
+	@JoinColumn(name = "StateId", referencedColumnName = "Id", nullable = false)
 	private State state;
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -195,16 +188,6 @@ public class Address implements Serializable {
 		return this;
 	}
 
-	public boolean addUser(User user) {
-		if (user == null || users.contains(user)) {
-			return false;
-		}
-		else {
-			users.add(user);
-			return true;
-		}
-	}
-
 	public Optional<User> getUser(String accountName) {
 		if (accountName == null) {
 			return Optional.empty();
@@ -212,23 +195,44 @@ public class Address implements Serializable {
 		return users.stream().filter(each -> each.getAccountName().equals(accountName)).findFirst();
 	}
 
+	public boolean addUser(User user) {
+		if (user == null) {
+			return false;
+		}
+		else {
+			return users.add(user);
+		}
+	}
+
+	public boolean removeUser(User user) {
+		if (user == null) {
+			return false;
+		}
+		else {
+			return users.remove(user);
+		}
+	}
+
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(postalCode);
+		hcb.append(this.getPostalCode());
 		return hcb.toHashCode();
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object other) {
+		if (this == other) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (other == null) {
 			return false;
 		}
-		Address that = (Address) obj;
-		return postalCode.equals(that.postalCode);
+		if (!(other instanceof Address)) {
+			return false;
+		}
+		Address that = (Address) other;
+		return this.getPostalCode().equals(that.getPostalCode());
 	}
 
 	@Override

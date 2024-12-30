@@ -56,11 +56,6 @@ public class JpaDaoSpringContextTestCfg {
 	}
 
 	@Bean
-	public JpaQueryTestUtil jdbcQueryTestUtil(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
-		return new JpaQueryTestUtil(jdbcTemplate, dataSource);
-	}
-
-	@Bean
 	public JpaDataSourceTestUtil dataSourceTestUtil() {
 		return new JpaDataSourceTestUtil();
 	}
@@ -70,9 +65,4 @@ public class JpaDaoSpringContextTestCfg {
 		return new NamedParameterJdbcTemplate(dataSource);
 	}
 	
-	@Bean
-	public JpaUserTestUtil jdbcUserTestUtil() {
-		return new JpaUserTestUtil();
-	}
-
 }

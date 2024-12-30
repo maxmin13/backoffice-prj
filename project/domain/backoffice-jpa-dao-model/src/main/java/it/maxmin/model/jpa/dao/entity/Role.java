@@ -22,10 +22,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Immutable
-@Table(name = "Role")
+@Table(name = "Role", uniqueConstraints = @UniqueConstraint(columnNames = "Name"))
 public class Role implements Serializable {
 
 	@Serial
@@ -36,12 +37,13 @@ public class Role implements Serializable {
 	private Long id;
 
 	@NotNull
-	@Column(name = "Name")
+	@Column(name = "Name", nullable = false)
 	private String name;
-	private Set<User> users = new HashSet<>();
-
+	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "Role", joinColumns = @JoinColumn(name = "RoleId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
+	private Set<User> users = new HashSet<>();
+
 	public static Role newInstance() {
 		return new Role();
 	}
@@ -88,20 +90,23 @@ public class Role implements Serializable {
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(name);
+		hcb.append(this.getName());
 		return hcb.toHashCode();
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object other) {
+		if (this == other) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (other == null) {
 			return false;
 		}
-		Role that = (Role) obj;
-		return name.equals(that.name);
+		if (!(other instanceof Role)) {
+			return false;
+		}
+		Role that = (Role) other;
+		return this.getName().equals(that.getName());
 	}
 
 	@Override

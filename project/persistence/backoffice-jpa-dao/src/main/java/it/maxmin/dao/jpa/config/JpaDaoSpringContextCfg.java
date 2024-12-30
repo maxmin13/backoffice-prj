@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @Import({ JndiDataSourceCfg.class, TransactionCfg.class })
-@ComponentScan(basePackages = { "it.maxmin.dao.jpa.impl.repo" })
+@ComponentScan(basePackages = { "it.maxmin.dao.jpa.impl.repo", "it.maxmin.common.service.impl" })
 @EnableTransactionManagement
 public class JpaDaoSpringContextCfg {
 

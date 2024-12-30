@@ -2,6 +2,7 @@ package it.maxmin.model.jpa.dao.entity;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.AfterEach;
@@ -52,7 +53,9 @@ class LoginAttemptSequenceGeneratorTest {
 	@AfterEach
 	public void clear() {
 		tx.commit();
-		em.close();
+		if (em.isOpen()) {
+			em.close();
+		}
 	}
 
 	@Test
@@ -68,7 +71,8 @@ class LoginAttemptSequenceGeneratorTest {
 		em.persist(maxmin);
 		em.flush();
 
-		LoginAttempt loginAttempt = LoginAttempt.newInstance().withUser(maxmin).withSuccess(true);
+		LoginAttempt loginAttempt = LoginAttempt.newInstance().withUser(maxmin).withSuccess(true)
+				.withLoginAt(Instant.now());
 
 		em.persist(loginAttempt);
 		em.flush();

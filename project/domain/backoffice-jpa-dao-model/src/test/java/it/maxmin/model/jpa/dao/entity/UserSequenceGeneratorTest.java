@@ -52,7 +52,9 @@ class UserSequenceGeneratorTest {
 	@AfterEach
 	public void clear() {
 		tx.commit();
-		em.close();
+		if (em.isOpen()) {
+			em.close();
+		}
 	}
 
 	@Test
@@ -68,13 +70,8 @@ class UserSequenceGeneratorTest {
 
 		em.persist(maxmin);
 		em.flush();
-		
-		UserPassword userPassword = UserPassword.newInstance().withValue("secret").withUser(maxmin);
-		
-		em.persist(userPassword);
-		em.flush();
 
-		assertNotNull(userPassword.getId());
+		assertNotNull(maxmin.getId());
 	}
 
 }

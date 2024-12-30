@@ -3,7 +3,6 @@ package it.maxmin.model.jpa.dao.entity;
 import static it.maxmin.common.constant.MessageConstants.ERROR_ACCOUNT_NAME_NOT_NULL_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESSES_NOT_NULL_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_BIRTH_DATE_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_CREATED_AT_NOT_NULL_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_NULL_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_FIRST_NAME_NOT_NULL_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_LAST_NAME_NOT_NULL_MSG;
@@ -13,12 +12,10 @@ import static org.springframework.util.Assert.notNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -37,10 +34,11 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Version;
 
 @Entity
-@Table(name = "User")
+@Table(name = "User", uniqueConstraints = @UniqueConstraint(columnNames = "AccountName"))
 @NamedQuery(name = "User.findByAccountName", query = """
 		          select distinct u
 		               from User u
@@ -57,9 +55,7 @@ public class User implements Serializable {
 	@SuppressWarnings("deprecation")
 	@Id
 	@GeneratedValue(generator = "UserSeq")
-	@GenericGenerator(name = "UserSeq",
-		strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", 
-		parameters = {
+	@GenericGenerator(name = "UserSeq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
 			@Parameter(name = "UserSeq", value = "UserSeq"), @Parameter(name = "initial_value", value = "100"),
 			@Parameter(name = "increment_size", value = "1") })
 	@Column(name = "Id")
@@ -69,32 +65,23 @@ public class User implements Serializable {
 	@Column(name = "Version")
 	private Integer version;
 
-	@NotNull
 	@Size(min = 2, max = 60, message = "accountName is required, maximum 60 characters.")
-	@Column(name = "AccountName")
+	@Column(name = "AccountName", nullable = false)
 	private String accountName;
 
-	@NotNull
 	@Size(min = 2, max = 60, message = "firstName is required, maximum 60 characters.")
-	@Column(name = "FirstName")
+	@Column(name = "FirstName", nullable = false)
 	private String firstName;
 
-	@NotNull
 	@Size(min = 2, max = 60, message = "lastName is required, maximum 60 characters.")
-	@Column(name = "LastName")
+	@Column(name = "LastName", nullable = false)
 	private String lastName;
 
-	@NotNull
-	@Column(name = "BirthDate")
+	@Column(name = "BirthDate", nullable = false)
 	private LocalDate birthDate;
 
-	@NotNull
-	@Column(name = "CreatedAt")
-	private LocalDateTime createdAt;
-
-	@NotNull
 	@ManyToOne
-	@JoinColumn(name = "DepartmentId")
+	@JoinColumn(name = "DepartmentId", nullable = false)
 	private Department department;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -178,20 +165,6 @@ public class User implements Serializable {
 		return this;
 	}
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public User withCreatedAt(LocalDateTime createdAt) {
-		notNull(createdAt, ERROR_CREATED_AT_NOT_NULL_MSG);
-		this.createdAt = createdAt;
-		return this;
-	}
-
 	public Department getDepartment() {
 		return department;
 	}
@@ -216,31 +189,29 @@ public class User implements Serializable {
 		this.addresses = addresses;
 	}
 
-	public boolean addAddress(Address address) {
-		if (address == null || addresses.contains(address)) {
-			return false;
-		}
-		else {
-			addresses.add(address);
-			return true;
-		}
-	}
-
-	public boolean removeAddress(Address address) {
-		if (address == null || !addresses.contains(address)) {
-			return false;
-		}
-		else {
-			addresses.remove(address);
-			return true;
-		}
-	}
-
 	public Optional<Address> getAddress(String postalCode) {
 		if (postalCode == null) {
 			return Optional.empty();
 		}
 		return addresses.stream().filter(each -> each.getPostalCode().equals(postalCode)).findFirst();
+	}
+
+	public boolean addAddress(Address address) {
+		if (address == null) {
+			return false;
+		}
+		else {
+			return addresses.add(address);
+		}
+	}
+
+	public boolean removeAddress(Address address) {
+		if (address == null) {
+			return false;
+		}
+		else {
+			return addresses.remove(address);
+		}
 	}
 
 	public Set<Role> getRoles() {
@@ -252,26 +223,6 @@ public class User implements Serializable {
 		this.roles = roles;
 	}
 
-	public boolean addRole(Role role) {
-		if (role == null || roles.contains(role)) {
-			return false;
-		}
-		else {
-			roles.add(role);
-			return true;
-		}
-	}
-
-	public boolean removeRole(Role role) {
-		if (role == null || !roles.contains(role)) {
-			return false;
-		}
-		else {
-			roles.remove(role);
-			return true;
-		}
-	}
-
 	public Optional<Role> getRole(String name) {
 		if (name == null) {
 			return Optional.empty();
@@ -279,29 +230,50 @@ public class User implements Serializable {
 		return roles.stream().filter(each -> each.getName().equals(name)).findFirst();
 	}
 
+	public boolean addRole(Role role) {
+		if (role == null) {
+			return false;
+		}
+		else {
+			return roles.add(role);
+		}
+	}
+
+	public boolean removeRole(Role role) {
+		if (role == null) {
+			return false;
+		}
+		else {
+			return roles.remove(role);
+		}
+	}
+
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(accountName);
+		hcb.append(this.getAccountName());
 		return hcb.toHashCode();
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object other) {
+		if (this == other) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (other == null) {
 			return false;
 		}
-		User that = (User) obj;
-		return accountName.equals(that.accountName);
+		if (!(other instanceof User)) {
+			return false;
+		}
+		User that = (User) other;
+		return this.getAccountName().equals(that.getAccountName());
 	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", accountName=" + accountName + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", department=" + department + ", birthDate=" + birthDate + ", createdAt=" + createdAt
+				+ ", department=" + department + ", birthDate=" + birthDate 
 				+ ", addresses=" + addresses + ", roles=" + roles + "]";
 	}
 

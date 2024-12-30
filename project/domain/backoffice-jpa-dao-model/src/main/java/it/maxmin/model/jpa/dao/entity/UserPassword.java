@@ -8,9 +8,8 @@ import static org.springframework.util.Assert.notNull;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import javax.validation.constraints.NotNull;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
@@ -23,10 +22,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Version;
 
 @Entity
-@Table(name = "UserPassword")
+@Table(name = "UserPassword", uniqueConstraints = @UniqueConstraint(columnNames = { "UserId", "EffDate" }))
 public class UserPassword implements Serializable {
 
 	@Serial
@@ -35,15 +35,9 @@ public class UserPassword implements Serializable {
 	@SuppressWarnings("deprecation")
 	@Id
 	@GeneratedValue(generator = "UserPasswordSeq")
-	@GenericGenerator(
-      name = "UserPasswordSeq",
-      strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-      parameters = {
-        @Parameter(name = "UserPasswordSeq", value = "UserPasswordSeq"),
-        @Parameter(name = "initial_value", value = "100"),
-        @Parameter(name = "increment_size", value = "1")
-        }
-    )
+	@GenericGenerator(name = "UserPasswordSeq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
+			@Parameter(name = "UserPasswordSeq", value = "UserPasswordSeq"),
+			@Parameter(name = "initial_value", value = "100"), @Parameter(name = "increment_size", value = "1") })
 	@Column(name = "Id")
 	private Long id;
 
@@ -51,20 +45,17 @@ public class UserPassword implements Serializable {
 	@Column(name = "Version")
 	private Integer version;
 
-	@NotNull
-	@Column(name = "Value")
+	@Column(name = "Value", nullable = false)
 	private String value;
 
-	@NotNull
-	@Column(name = "EffDate")
-	private LocalDateTime effDate;
+	@Column(name = "EffDate", nullable = false)
+	private Instant effDate;
 
 	@Column(name = "EndDate")
-	private LocalDateTime endDate;
+	private Instant endDate;
 
-	@NotNull
 	@OneToOne
-	@JoinColumn(name = "UserId")
+	@JoinColumn(name = "UserId", nullable = false)
 	private User user;
 
 	public static UserPassword newInstance() {
@@ -74,7 +65,7 @@ public class UserPassword implements Serializable {
 	public Long getId() {
 		return id;
 	}
-	
+
 	UserPassword withId(Long id) {
 		this.id = id;
 		return this;
@@ -95,33 +86,31 @@ public class UserPassword implements Serializable {
 		return this;
 	}
 
-	public LocalDateTime getEffDate() {
+	public Instant getEffDate() {
 		return effDate;
 	}
 
-	public void setEffDate(LocalDateTime effDate) {
+	public void setEffDate(Instant effDate) {
 		notNull(effDate, ERROR_EFFECTIVE_DATE_NOT_NULL_MSG);
-		this.effDate = effDate;
+		this.effDate = effDate.truncatedTo(ChronoUnit.SECONDS);
 	}
 
-	public UserPassword withEffDate(LocalDateTime effDate) {
-		notNull(effDate, ERROR_EFFECTIVE_DATE_NOT_NULL_MSG);
-		this.effDate = effDate;
+	public UserPassword withEffDate(Instant effDate) {
+		setEffDate(effDate);
 		return this;
 	}
 
-	public LocalDateTime getEndDate() {
+	public Instant getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDateTime endDate) {
+	public void setEndDate(Instant endDate) {
 		notNull(endDate, ERROR_END_DATE_NOT_NULL_MSG);
-		this.endDate = endDate;
+		this.endDate = endDate.truncatedTo(ChronoUnit.SECONDS);
 	}
 
-	public UserPassword withEndDate(LocalDateTime endDate) {
-		notNull(endDate, ERROR_END_DATE_NOT_NULL_MSG);
-		this.endDate = endDate;
+	public UserPassword withEndDate(Instant endDate) {
+		setEndDate(endDate);
 		return this;
 	}
 
@@ -142,19 +131,26 @@ public class UserPassword implements Serializable {
 
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(user.getAccountName()).append(effDate);
+		hcb.append(this.getUser().getAccountName()).append(this.getEffDate());
 		return hcb.toHashCode();
 	}
 
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object other) {
+		if (this == other) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (other == null) {
 			return false;
 		}
-		UserPassword that = (UserPassword) obj;
-		return user.getAccountName().equals(that.user.getAccountName()) && effDate.equals(that.effDate);
+		if (!(other instanceof UserPassword)) {
+			return false;
+		}
+		UserPassword that = (UserPassword) other;
+		// effDate is truncated to seconds precision because the field may be returned
+		// with different precision by Hibernate, see entity retrived in different
+		// persistent contexts.
+		return this.getUser().getAccountName().equals(that.getUser().getAccountName())
+				&& this.getEffDate().equals(that.getEffDate());
 	}
 
 	public String toString() {

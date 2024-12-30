@@ -16,10 +16,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Immutable
-@Table(name = "State")
+@Table(name = "State", uniqueConstraints = @UniqueConstraint(columnNames = "Name"))
 public class State implements Serializable {
 
 	@Serial
@@ -30,11 +31,11 @@ public class State implements Serializable {
 	private Long id;
 
 	@NotNull
-	@Column(name = "Name")
+	@Column(name = "Name", nullable = false)
 	private String name;
 
 	@NotNull
-	@Column(name = "Code")
+	@Column(name = "Code", nullable = false)
 	private String code;
 
 	public static State newInstance() {
@@ -83,20 +84,23 @@ public class State implements Serializable {
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
-		hcb.append(code);
+		hcb.append(this.getCode());
 		return hcb.toHashCode();
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object other) {
+		if (this == other) {
 			return true;
 		}
-		if (obj == null || getClass() != obj.getClass()) {
+		if (other == null) {
 			return false;
 		}
-		State that = (State) obj;
-		return code.equals(that.code);
+		if (!(other instanceof State)) {
+			return false;
+		}
+		State that = (State) other;
+		return this.getName().equals(that.getName());
 	}
 
 	@Override

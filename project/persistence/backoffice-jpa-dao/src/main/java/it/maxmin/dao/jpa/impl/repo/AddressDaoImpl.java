@@ -1,13 +1,10 @@
 package it.maxmin.dao.jpa.impl.repo;
 
-import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESSES_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESS_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_ID_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_STATE_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_FIELD_NOT_NULL_MSG;
+import static it.maxmin.common.constant.MessageConstants.ERROR_FIELD_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +16,11 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.maxmin.common.service.impl.MessageServiceImpl;
 import it.maxmin.dao.jpa.api.repo.AddressDao;
 import it.maxmin.model.jpa.dao.entity.Address;
 import it.maxmin.model.jpa.dao.entity.Department;
@@ -39,9 +38,9 @@ public class AddressDaoImpl implements AddressDao {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoImpl.class);
 	private static final String SELECT_ALL = ""
 			+ "SELECT DISTINCT a.Id AS AddressId, a.PostalCode AS PostalCode, a.Description AS Description, a.City AS City, a.Region AS Region, "
-			+ "          u.Id AS UserId, u.AccountName AS AccountName, u.FirstName AS FirstName, u.LastName AS LastName, u.BirthDate AS BirthDate, u.CreatedAt AS CreatedAt, "
+			+ "          u.Id AS UserId, u.AccountName AS AccountName, u.FirstName AS FirstName, u.LastName AS LastName, u.BirthDate AS BirthDate, "
 			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName, "
-			+ "          d.Id as DepartmentId, d.Name AS DepartmentName " 
+			+ "          d.Id as DepartmentId, d.Name AS DepartmentName "
 			+ "      FROM Address a "
 			+ "      LEFT JOIN UserAddress ua ON a.Id = ua.AddressId " 
 			+ "      LEFT JOIN User u ON ua.UserId = u.Id "
@@ -50,11 +49,17 @@ public class AddressDaoImpl implements AddressDao {
 
 	@PersistenceContext
 	private EntityManager em;
+	private MessageServiceImpl messageService;
+
+	@Autowired
+	public AddressDaoImpl(MessageServiceImpl messageService) {
+		this.messageService = messageService;
+	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Address> findById(long addressId) {
-		notNull(addressId, ERROR_ID_NOT_NULL_MSG);
+		notNull(addressId, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address id"));
 		try {
 			return Optional.of(em.createNamedQuery("Address.findById", Address.class).setParameter("id", addressId)
 					.getSingleResult());
@@ -82,8 +87,8 @@ public class AddressDaoImpl implements AddressDao {
 			var region = tuple.get("Region", String.class);
 
 			// returns the address if already in the map
-			Address address = map.computeIfAbsent(addressId, id -> Address.newInstance()
-					.withPostalCode(postalCode).withDescription(description).withCity(city).withRegion(region));
+			Address address = map.computeIfAbsent(addressId, id -> Address.newInstance().withPostalCode(postalCode)
+					.withDescription(description).withCity(city).withRegion(region));
 
 			var stateCode = tuple.get("StateCode", String.class);
 			var stateName = tuple.get("stateName", String.class);
@@ -99,13 +104,11 @@ public class AddressDaoImpl implements AddressDao {
 				var firstName = tuple.get("FirstName", String.class);
 				var lastName = tuple.get("LastName", String.class);
 				var birthDate = tuple.get("BirthDate", Date.class);
-				var createdAt = tuple.get("CreatedAt", Timestamp.class);
 				var departmentName = tuple.get("DepartmentName", String.class);
 				var department = Department.newInstance().withName(departmentName);
 
-				user = User.newInstance().withAccountName(accountName)
-						.withFirstName(firstName).withLastName(lastName).withBirthDate(birthDate.toLocalDate())
-						.withCreatedAt(createdAt.toLocalDateTime()).withDepartment(department);
+				user = User.newInstance().withAccountName(accountName).withFirstName(firstName).withLastName(lastName)
+						.withBirthDate(birthDate.toLocalDate()).withDepartment(department);
 
 				// add the user if not in the list
 				Objects.requireNonNull(address).addUser(user);
@@ -117,38 +120,35 @@ public class AddressDaoImpl implements AddressDao {
 
 	@Override
 	public Address create(Address address) {
-		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
-		notNull(address.getState(), ERROR_STATE_NOT_NULL_MSG);
-		notNull(address.getState().getId(), ERROR_ID_NOT_NULL_MSG);
+		notNull(address, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address"));
+		notNull(address.getState(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "state"));
 		if (address.getId() == null) {
 			LOGGER.info("Inserting new address ...");
 			em.persist(address);
 			LOGGER.info("User created with id: {}", address.getId());
 		}
 		else {
-			throw new IllegalArgumentException(ERROR_ID_NOT_NULL_MSG);
+			throw new IllegalArgumentException(messageService.getMessage(ERROR_FIELD_NULL_MSG, "id"));
 		}
 		return address;
 	}
 
 	@Override
+	// @returns the managed persistent entity
 	public Address update(Address address) {
-		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
-		notNull(address.getState(), ERROR_STATE_NOT_NULL_MSG);
-		if (address.getId() == null) {
-			throw new IllegalArgumentException(ERROR_ID_NOT_NULL_MSG);
-		}
-		else {
-			LOGGER.info("Updating new address ...");
-			em.merge(address);
-			LOGGER.info("Address saved with id: {}", address.getId());
-		}
-		return address;
+		notNull(address, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address"));
+		notNull(address.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));
+		notNull(address.getState(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "state"));
+
+		LOGGER.info("Updating new address ...");
+		Address a = em.merge(address);
+		LOGGER.info("Address saved with id: {}", address.getId());
+		return a;
 	}
 
 	@Override
 	public void saveList(List<Address> addresses) {
-		notNull(addresses, ERROR_ADDRESSES_NOT_NULL_MSG);
+		notNull(addresses, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "addresses"));
 		// TODO IMPLEMENT BATCH INSERT
 		// this.insertAddresses.execute(addresses);
 		LOGGER.info("New addresses inserted");
