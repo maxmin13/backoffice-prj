@@ -134,7 +134,7 @@ public class AddressDaoImpl implements AddressDao {
 	}
 
 	@Override
-	// @returns the managed persistent entity
+	// @returns the managed persistent entity. Discard the entity passed to the method as an argument.
 	public Address update(Address address) {
 		notNull(address, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address"));
 		notNull(address.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));

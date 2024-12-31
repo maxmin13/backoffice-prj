@@ -79,7 +79,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	// @returns the managed persistent entity
+	// @returns the managed persistent entity. Discard the entity passed to the method as an argument.
 	public User update(User user) {
 		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
 		notNull(user.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));
