@@ -25,7 +25,7 @@
 			<groupId>it.maxmin.common</groupId>
 			<artifactId>backoffice-common</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>it.maxmin.domain</groupId>
 			<artifactId>backoffice-jdbc-dao-model</artifactId>
@@ -117,7 +117,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>simple-jndi</groupId>
+			<groupId>com.github.h-thurow</groupId>
 			<artifactId>simple-jndi</artifactId>
 			<scope>test</scope>
 		</dependency>

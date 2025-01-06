@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import it.maxmin.dao.jpa.JpaDaoSpringContextTestCfg;
+import it.maxmin.dao.jpa.JpaDaoSpringContextUnitTestCfg;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 
-@SpringJUnitConfig(classes = { JpaDaoSpringContextTestCfg.class })
+@SpringJUnitConfig(classes = { JpaDaoSpringContextUnitTestCfg.class })
 class UserDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoTest.class);

@@ -9,7 +9,8 @@ import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 
 /**
  * Assume Datasource is configured as a resource in an application such as
- * Apache Tomcat {@code
+ * Apache Tomcat, see https://tomcat.apache.org/tomcat-9.0-doc/jdbc-pool.html
+ *  {@code
     <Resource name="jdbc/musicdb"
     auth="Container"
     type="javax.sql.DataSource"

@@ -19,7 +19,7 @@ import jakarta.persistence.EntityManagerFactory;
  * Verifies that by loading {@link JpaDaoSpringContextCfg}, in the Spring context there is
  * a EntityManagerFactory.
  */
-class JdbcDataSpringContextCfgTest {
+class JdbcDaoSpringContextCfgTest {
 
 	@Test
 	void testEntityManagerFactory() throws IllegalStateException {

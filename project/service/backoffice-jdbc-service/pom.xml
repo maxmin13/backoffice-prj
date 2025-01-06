@@ -126,7 +126,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>simple-jndi</groupId>
+			<groupId>com.github.h-thurow</groupId>
 			<artifactId>simple-jndi</artifactId>
 			<scope>test</scope>
 		</dependency>

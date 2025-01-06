@@ -25,7 +25,7 @@
 			<groupId>it.maxmin.common</groupId>
 			<artifactId>backoffice-common</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>it.maxmin.domain</groupId>
 			<artifactId>backoffice-jpa-dao-model</artifactId>
@@ -80,7 +80,7 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -90,6 +90,30 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit-platform-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-spring</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -124,7 +148,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>simple-jndi</groupId>
+			<groupId>com.github.h-thurow</groupId>
 			<artifactId>simple-jndi</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -140,6 +164,7 @@
 			<artifactId>jsr305</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 
 	</dependencies>
 

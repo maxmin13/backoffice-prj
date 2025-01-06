@@ -53,11 +53,11 @@ click Open, click Finish, next, addAll, Finish.
 # create the container image:
 
 ----------------------------------------------------
-mkdir /home/vagrant/workspace/mariadb  
-cd /home/vagrant/workspace/mariadb
+mkdir /opt/mariadb  
+cd /opt/mariadb
 mkdir scripts
 cp /home/vagrant/workspace/backoffice-prj/provision/playbooks/files/database/migration/* scripts/
-rm script/*.down.sql
+rm scripts/*.down.sql
 
 {  
  printf '%s\n' 'FROM mariadb:11.1.2' 
@@ -122,8 +122,8 @@ docker rmi -f $(docker images -aq)
 Access the container terminal:
 
 ----------------------------------------------------
-docker exec -it local-mariadb bash
 
+docker exec -it local-mariadb bash
 mariadb -u root -prootpwd -h 172.17.0.2 backofficedb
 mariadb -u dbadmin -pdbadminpwd -h 172.17.0.2 backofficedb
 
@@ -139,7 +139,7 @@ exit
 ----------------------------------------------------
 docker pull phpmyadmin 
 docker images
-docker run --name myphpadmin -d --link local-mariadb:backofficedb -p 8000:80 phpmyadmin
+docker run --name myphpadmin -d -e PMA_HOST=172.17.0.2 -e PMA_PORT=3306 --link local-mariadb:backofficedb -p 8000:80 phpmyadmin
 ----------------------------------------------------
 
 access the phpMyAdmin using the URL:

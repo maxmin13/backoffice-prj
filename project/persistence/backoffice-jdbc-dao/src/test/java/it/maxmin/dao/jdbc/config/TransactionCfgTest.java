@@ -38,7 +38,7 @@ class TransactionCfgTest {
 		@Bean
 		public DataSource dataSource() throws NamingException {
 			JndiTemplate jndiTemplate = new JndiTemplate();
-			return (DataSource) jndiTemplate.lookup("testds.ds");
+			return (DataSource) jndiTemplate.lookup("datasources.h2");
 		}
 
 	}

@@ -42,7 +42,7 @@ public enum MessageConstants {
 	public static final String ERROR_VALUE_NOT_NULL_MSG = "The value must not be null";
 	public static final String ERROR_VERSION_NOT_NULL_MSG = "The version must not be null";
 
-	public static final String ERROR_FIELD_NULL_MSG = "The {} must be null";
-	public static final String ERROR_FIELD_NOT_NULL_MSG = "The {} must not be null";
-	public static final String ERROR_FIELD_NOT_EMPTY_MSG = "The {} must not be empty";
+	public static final String ERROR_FIELD_NULL_MSG = "The {0} must be null";
+	public static final String ERROR_FIELD_NOT_NULL_MSG = "The {0} must not be null";
+	public static final String ERROR_FIELD_NOT_EMPTY_MSG = "The {0} must not be empty";
 }

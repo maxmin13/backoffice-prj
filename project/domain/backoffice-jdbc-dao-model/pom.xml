@@ -18,13 +18,13 @@
 	<artifactId>backoffice-jdbc-dao-model</artifactId>
 
 	<dependencies>
-	
+
 		<!-- backoffice modules -->
 		<dependency>
 			<groupId>it.maxmin.common</groupId>
 			<artifactId>backoffice-common</artifactId>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -51,7 +51,7 @@
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-core</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -98,18 +98,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>simple-jndi</groupId>
-			<artifactId>simple-jndi</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
 
