@@ -1,5 +1,5 @@
-Feature: Is it Friday yet?
-  Everybody wants to know when it's Friday
+Feature: Search user
+  Search for a user in the database
 
   Scenario: Sunday isn't Friday
     Given today is Sunday

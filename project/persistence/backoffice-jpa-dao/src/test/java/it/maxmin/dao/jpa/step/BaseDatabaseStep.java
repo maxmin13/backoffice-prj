@@ -9,6 +9,6 @@ import it.maxmin.dao.jpa.config.JpaDaoSpringContextCfg;
 @CucumberContextConfiguration
 @ContextConfiguration(classes = {JpaDaoSpringContextCfg.class})
 @TestPropertySource("classpath:jndi/jndi-integration.properties") 
-public class BaseStep {
+public class BaseDatabaseStep {
 
 }

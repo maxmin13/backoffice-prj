@@ -7,7 +7,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 
-public class FindUserStep extends BaseStep {
+public class FindUserStep extends BaseDatabaseStep {
 
 	@Autowired
 	UserDao dao;
