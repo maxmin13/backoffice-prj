@@ -17,6 +17,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -24,6 +25,11 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @Immutable
 @Table(name = "Department", uniqueConstraints = @UniqueConstraint(columnNames = "Name"))
+@NamedQuery(name = "Department.findByDepartmentName", query = """
+select distinct d
+     from Department d
+     where d.name = :departmentName
+""")
 public class Department implements Serializable {
 
 	@Serial

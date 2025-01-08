@@ -45,4 +45,5 @@ public enum MessageConstants {
 	public static final String ERROR_FIELD_NULL_MSG = "The {0} must be null";
 	public static final String ERROR_FIELD_NOT_NULL_MSG = "The {0} must not be null";
 	public static final String ERROR_FIELD_NOT_EMPTY_MSG = "The {0} must not be empty";
+	public static final String ERROR_OBJECT_NOT_FOUND_MSG = "Error {0} not found";
 }

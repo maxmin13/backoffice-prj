@@ -88,7 +88,7 @@ public class User implements Serializable {
 	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "AddressId"))
 	private Set<Address> addresses = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinTable(name = "UserRole", joinColumns = @JoinColumn(name = "UserId"), inverseJoinColumns = @JoinColumn(name = "RoleId"))
 	private Set<Role> roles = new HashSet<>();
 
@@ -273,8 +273,8 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", accountName=" + accountName + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", department=" + department + ", birthDate=" + birthDate 
-				+ ", addresses=" + addresses + ", roles=" + roles + "]";
+				+ ", department=" + department + ", birthDate=" + birthDate + ", addresses=" + addresses + ", roles="
+				+ roles + "]";
 	}
 
 }

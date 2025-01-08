@@ -79,7 +79,8 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	// @returns the managed persistent entity. Discard the entity passed to the method as an argument.
+	// @returns the managed persistent entity. The entity passed to the method as an
+	// argument must be discarded.
 	public User update(User user) {
 		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
 		notNull(user.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));
@@ -91,6 +92,18 @@ public class UserDaoImpl implements UserDao {
 		User u = em.merge(user);
 		LOGGER.info("User saved with id: {}", user.getId());
 		return u;
+	}
+
+	@Override
+	public void delete(User user) {
+		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
+		notNull(user.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));
+		LOGGER.info("Removing user ...");
+		em.createQuery("delete from User where id = :id")
+		  .setParameter("id", user.getId())
+		  .executeUpdate();
+
+		LOGGER.info("User removed");
 	}
 
 }
