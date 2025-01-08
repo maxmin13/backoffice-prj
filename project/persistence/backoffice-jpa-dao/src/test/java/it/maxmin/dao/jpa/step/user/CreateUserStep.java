@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.step;
+package it.maxmin.dao.jpa.step.user;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
 import static it.maxmin.dao.jpa.step.Context.USER;
@@ -14,6 +14,8 @@ import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.DepartmentDao;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
+import it.maxmin.dao.jpa.step.BaseDatabaseStep;
+import it.maxmin.dao.jpa.step.TestContext;
 import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.User;
 

@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.step;
+package it.maxmin.dao.jpa.step.user;
 
 import static it.maxmin.dao.jpa.step.Context.FOUND;
 import static it.maxmin.dao.jpa.step.Context.USER;
@@ -12,6 +12,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import it.maxmin.dao.jpa.api.repo.UserDao;
+import it.maxmin.dao.jpa.step.BaseDatabaseStep;
+import it.maxmin.dao.jpa.step.TestContext;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class FindUserStep extends BaseDatabaseStep {
