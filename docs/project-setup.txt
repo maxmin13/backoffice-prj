@@ -2,7 +2,7 @@
 Configure a local development environment with Eclipse to develop the Java backoffice web application.
 
 ###################################################################
-# clone the project from github
+# Clone the project from github
 ###################################################################
 
 git clone git@github.com:maxmin13/backoffice-prj.git
@@ -12,7 +12,7 @@ mvn -DskipTests test-compile jar:test-jar install
 mvn clean install
 
 ###################################################################
-# configure the project in eclipse
+# Configure the project in eclipse
 ###################################################################
 
 In Eclipse for Enterprise Java developers:
@@ -30,8 +30,6 @@ if a project doesn't see test classes of another project:
 righ click on the project
 select Projects
 check that the project configured under Classpath has: Without test code: No
-
-
 
 ###################################################################
 # Install Tomcat webserver Eclipse plugin:
@@ -60,7 +58,7 @@ cp /home/vagrant/workspace/backoffice-prj/provision/playbooks/files/database/mig
 rm scripts/*.down.sql
 
 {  
- printf '%s\n' 'FROM mariadb:11.1.2' 
+ printf '%s\n' 'FROM mariadb:latest' 
  printf '%s\n' 'COPY scripts /docker-entrypoint-initdb.d/' 
  
  printf '%s\n' 'ARG DB_ROOT_PASSWORD'
@@ -139,14 +137,57 @@ exit
 ----------------------------------------------------
 docker pull phpmyadmin 
 docker images
-docker run --name myphpadmin -d -e PMA_HOST=172.17.0.2 -e PMA_PORT=3306 --link local-mariadb:backofficedb -p 8000:80 phpmyadmin
+docker run --name myphpadmin -d -e PMA_HOST=172.17.0.2 -e PMA_PORT=3306 --link local-mariadb:backofficedb -p 8080:80 phpmyadmin
 ----------------------------------------------------
 
 access the phpMyAdmin using the URL:
 
-http://localhost:8000/
+http://localhost:8080/
 root
 rootpwd
+
+###################################################################
+# Run Mariadb database and phpMyAdmin with Docker Compose:
+###################################################################
+
+----------------------------------------------------
+mkdir /opt/integration
+## copy the above Mariadb Dockerfile
+## copy Mariadb scripts directory
+
+{
+ printf '%s\n' 'services:'
+ printf '%s\n' '  mariadb:'
+ printf '%s\n' '    build: .'
+ printf '%s\n' '    restart: always'
+ printf '%s\n' '    environment:'
+ printf '%s\n' '      MYSQL_ROOT_PASSWORD: rootpwd'
+ printf '%s\n' '      MYSQL_DATABASE: backofficedb'
+ printf '%s\n' '      MYSQL_USER: dbadmin'
+ printf '%s\n' '      MYSQL_PASSWORD: dbadmin'
+ printf '%s\n' '    ports:'
+ printf '%s\n' '      - "3306:3306"'
+ printf '%s\n' '    volumes:'
+ printf '%s\n' '      - ./data:/var/lib/mysql'
+ printf '%s\n' '  phpmyadmin:'
+ printf '%s\n' '    image: phpmyadmin/phpmyadmin'
+ printf '%s\n' '    restart: always'
+ printf '%s\n' '    environment:'
+ printf '%s\n' '      PMA_HOST: mariadb'
+ printf '%s\n' '      PMA_USER: root'
+ printf '%s\n' '      PMA_PASSWORD: rootpwd'
+ printf '%s\n' '    ports:'
+ printf '%s\n' '      - "8080:80"'
+ printf '%s\n' '    depends_on:'
+ printf '%s\n' '      - mariadb'
+} >> docker-compose.yml
+
+docker compose up
+----------------------------------------------------
+
+access phpMyAdmin at the url:
+
+http://localhost:8080
 
 ###################################################################
 # Run the backoffice web application locally:
