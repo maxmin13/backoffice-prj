@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa;
+package it.maxmin.dao.jpa.step.user;
 
 import static io.cucumber.core.options.Constants.GLUE_PROPERTY_NAME;
 
@@ -11,6 +11,6 @@ import org.junit.platform.suite.api.Suite;
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "it.maxmin.dao.jpa.step")
-public class IntegrationTestRunner {
+public class UserITRunner {
 
 }

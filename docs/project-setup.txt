@@ -45,131 +45,48 @@ click next, click on Add.. link, click Browse button, select root folder of the 
 click Open, click Finish, next, addAll, Finish.
 
 ###################################################################
-# Run MariaDB in a Docker container:
-###################################################################
-
-# create the container image:
-
-----------------------------------------------------
-mkdir /opt/mariadb  
-cd /opt/mariadb
-mkdir scripts
-cp /home/vagrant/workspace/backoffice-prj/provision/playbooks/files/database/migration/* scripts/
-rm scripts/*.down.sql
-
-{  
- printf '%s\n' 'FROM mariadb:latest' 
- printf '%s\n' 'COPY scripts /docker-entrypoint-initdb.d/' 
- 
- printf '%s\n' 'ARG DB_ROOT_PASSWORD'
- printf '%s\n' 'ARG DB_USER'  
- printf '%s\n' 'ARG DB_PASSWORD'
- printf '%s\n' 'ARG DB_DATABASE'
- 
- printf '%s\n' 'ENV MARIADB_ROOT_PASSWORD=$DB_ROOT_PASSWORD'
- printf '%s\n' 'ENV MARIADB_USER=$DB_USER'
- printf '%s\n' 'ENV MARIADB_PASSWORD=$DB_PASSWORD'
- printf '%s\n' 'ENV MARIADB_DATABASE=$DB_DATABASE'
- printf '%s\n' 'ENV PORT 3306'  
- printf '%s\n' 'EXPOSE 3306'      
-} >> Dockerfile  
-
-docker build --build-arg DB_ROOT_PASSWORD=rootpwd \
-             --build-arg DB_USER=dbadmin \
-             --build-arg DB_PASSWORD=dbadminpwd \
-             --build-arg DB_DATABASE=backofficedb \
-                -t backoffice-mariadb:1.4 . 
-----------------------------------------------------
-
-# start the container:
-
-----------------------------------------------------
-docker run --name local-mariadb -d -p 3306:3306 backoffice-mariadb:1.4
-----------------------------------------------------
-
-# check the container logs:
-
-----------------------------------------------------
-docker logs --follow local-mariadb
-----------------------------------------------------
-
-# list all containers and images:
-
-----------------------------------------------------
-docker ps -a
-docker image ls
-----------------------------------------------------
-
-# get the container IP address:
-
-----------------------------------------------------
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' local-mariadb 
-----------------------------------------------------
-
-# remove all the containers and images
-
-----------------------------------------------------
-docker rm -v -f $(docker ps -qa)
-docker rmi -f $(docker images -aq)
-----------------------------------------------------
-
-###################################################################
-# Connect to the database from bash console:
-###################################################################
-
-Access the container terminal:
-
-----------------------------------------------------
-
-docker exec -it local-mariadb bash
-mariadb -u root -prootpwd -h 172.17.0.2 backofficedb
-mariadb -u dbadmin -pdbadminpwd -h 172.17.0.2 backofficedb
-
-select * from User;
-
-exit
-----------------------------------------------------
-
-###################################################################
-# Connect to the database with phpMyAdmin client:
-###################################################################
-
-----------------------------------------------------
-docker pull phpmyadmin 
-docker images
-docker run --name myphpadmin -d -e PMA_HOST=172.17.0.2 -e PMA_PORT=3306 --link local-mariadb:backofficedb -p 8080:80 phpmyadmin
-----------------------------------------------------
-
-access the phpMyAdmin using the URL:
-
-http://localhost:8080/
-root
-rootpwd
-
-###################################################################
 # Run Mariadb database and phpMyAdmin with Docker Compose:
 ###################################################################
 
 ----------------------------------------------------
 mkdir /opt/integration
-## copy the above Mariadb Dockerfile
+
 ## copy Mariadb scripts directory
+
+{
+ printf '%s\n' 'FROM mariadb:latest'
+ printf '%s\n' 'COPY scripts /docker-entrypoint-initdb.d/'
+ printf '%s\n' 'ARG DB'
+ printf '%s\n' 'ARG DB_HOST'
+ printf '%s\n' 'ARG DB_PORT'
+ printf '%s\n' 'ARG DB_ROOT_PASSWORD'
+ printf '%s\n' 'ARG DB_USER'
+ printf '%s\n' 'ARG DB_USER_PASSWORD'
+ printf '%s\n' ''
+ printf '%s\n' 'ENV MARIADB_DATABASE=$DB'
+ printf '%s\n' 'ENV MARIADB_ROOT_PASSWORD=$DB_ROOT_PASSWORD'
+ printf '%s\n' 'ENV MARIADB_USER=$DB_USER'
+ printf '%s\n' 'ENV MARIADB_PASSWORD=$DB_USER_PASSWORD'
+ printf '%s\n' ''
+ printf '%s\n' 'EXPOSE $DB_PORT'
+ printf '%s\n' ''
+} >> Dockerfile  
 
 {
  printf '%s\n' 'services:'
  printf '%s\n' '  mariadb:'
- printf '%s\n' '    build: .'
+ printf '%s\n' '    container_name: local-mariadb' 
  printf '%s\n' '    restart: always'
- printf '%s\n' '    environment:'
- printf '%s\n' '      MYSQL_ROOT_PASSWORD: rootpwd'
- printf '%s\n' '      MYSQL_DATABASE: backofficedb'
- printf '%s\n' '      MYSQL_USER: dbadmin'
- printf '%s\n' '      MYSQL_PASSWORD: dbadmin'
- printf '%s\n' '    ports:'
- printf '%s\n' '      - "3306:3306"'
- printf '%s\n' '    volumes:'
- printf '%s\n' '      - ./data:/var/lib/mysql'
+ printf '%s\n' '    build:'
+ printf '%s\n' '      context: .'
+ printf '%s\n' '      args:'
+ printf '%s\n' '        DB: backofficedb'
+ printf '%s\n' '        DB_PORT: 3306'
+ printf '%s\n' '        DB_ROOT_PASSWORD: rootpwd'
+ printf '%s\n' '        DB_USER: admin'
+ printf '%s\n' '        DB_USER_PASSWORD: adminpwd'
  printf '%s\n' '  phpmyadmin:'
+ printf '%s\n' '    container_name: local-phpmyadmin' 
  printf '%s\n' '    image: phpmyadmin/phpmyadmin'
  printf '%s\n' '    restart: always'
  printf '%s\n' '    environment:'
@@ -180,14 +97,59 @@ mkdir /opt/integration
  printf '%s\n' '      - "8080:80"'
  printf '%s\n' '    depends_on:'
  printf '%s\n' '      - mariadb'
+ printf '%s\n' ''
 } >> docker-compose.yml
 
 docker compose up
 ----------------------------------------------------
 
-access phpMyAdmin at the url:
+List all containers and images:
 
-http://localhost:8080
+----------------------------------------------------
+docker ps -a
+docker image ls
+----------------------------------------------------
+
+Check the Mariadb container logs:
+
+----------------------------------------------------
+docker logs --follow local-mariadb
+----------------------------------------------------
+
+Get the Mariadb container IP address:
+
+----------------------------------------------------
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' local-mariadb 
+----------------------------------------------------
+
+when running the integration tests,
+set this IP address in the file: 
+datasources.properties
+ex: mariadb.url=jdbc:mariadb://172.18.0.2:3306/backofficedb
+
+Access the phpMyAdmin using the URL:
+
+http://localhost:8080/
+
+Connect to the database from bash console:
+
+----------------------------------------------------
+# replace the right IP address
+docker exec -it local-mariadb bash
+mariadb -u root -prootpwd -h 172.17.0.2 backofficedb
+mariadb -u admin -padminpwd -h 172.17.0.2 backofficedb
+
+select * from User;
+
+exit
+----------------------------------------------------
+
+Remove all the containers and images
+
+----------------------------------------------------
+docker rm -v -f $(docker ps -qa)
+docker rmi -f $(docker images -aq)
+----------------------------------------------------
 
 ###################################################################
 # Run the backoffice web application locally:
