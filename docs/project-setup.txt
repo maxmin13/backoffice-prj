@@ -51,7 +51,7 @@ click Open, click Finish, next, addAll, Finish.
 ----------------------------------------------------
 mkdir /opt/integration
 
-## copy Mariadb scripts directory
+## copy Mariadb database scripts directory
 
 {
  printf '%s\n' 'FROM mariadb:latest'

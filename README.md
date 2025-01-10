@@ -6,9 +6,10 @@ The web application runs on Tomacat HTTP server backed by MariaDB database.</br>
 ## Local work machine requirements: ##
 
 - Fedora 40
-- Java 23
+- Java 21
 - Python 3.12.7
-- Ansible 2.16.12
+- Ansible 9.11.0
+- Docker 27.4.1
 
 ## Configure the AWS credentials and default region in your work machine: ##
 

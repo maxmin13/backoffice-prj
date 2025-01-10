@@ -187,19 +187,78 @@
 		</profile>
 	</profiles>
 
-<!-- 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<includes>
-                        <include>**/*IntegrationTestRunner.java</include>
-                    </includes>
+						<include>**/*ITRunner.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<executions>
+				    <execution>
+				       <id>start</id>
+				       <phase>pre-integration-test</phase>
+				       <goals>
+				         <goal>build</goal>
+				         <goal>start</goal>
+				       </goals>
+				    </execution>
+				    <execution>
+				       <id>stop</id>
+				       <phase>post-integration-test</phase>
+				       <goals>
+				         <goal>stop</goal>
+				      </goals>
+				    </execution>
+			  	</executions>
+				<configuration>
+					<verbose>true</verbose>
+					<images>
+						<image>
+							<name>mariadb-integration</name>
+							<alias>mariadb-integration</alias>
+							<run>
+	                            <wait> 
+						          <!-- <log>mariadbd: ready for connections.</log> -->
+						          <time>20000</time>
+						        </wait>
+                        	</run>
+							<build>
+								<assembly>
+									<descriptorRef>artifact</descriptorRef>
+								</assembly>
+								<dockerFile>Dockerfile</dockerFile>
+								<tags>
+									<tag>latest</tag>
+								</tags>
+							</build>
+						</image>
+					</images>
+					<buildArgs>
+						<DB>backofficedb</DB>
+						<DB_PORT>3306</DB_PORT>
+						<DB_ROOT_PASSWORD>rootpwd</DB_ROOT_PASSWORD>
+						<DB_USER>admin</DB_USER>
+						<DB_USER_PASSWORD>adminpwd</DB_USER_PASSWORD>
+					</buildArgs>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
--->
+
 </project>
