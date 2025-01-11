@@ -176,7 +176,7 @@
 			<build>
 				<resources>
 					<resource>
-						<directory>${basedir}/src/main/resources</directory>
+						<directory>${project.basedir}/src/main/resources</directory>
 						<excludes>
 							<!-- no properties files in the jar -->
 							<exclude>**/*.properties</exclude>
@@ -228,6 +228,7 @@
 			  	</executions>
 				<configuration>
 					<verbose>true</verbose>
+    				<removeAll>true</removeAll>
 					<images>
 						<image>
 							<name>mariadb-integration</name>
@@ -235,13 +236,11 @@
 							<run>
 	                            <wait> 
 						          <!-- <log>mariadbd: ready for connections.</log> -->
-						          <time>20000</time>
+						          <time>30000</time>
 						        </wait>
                         	</run>
 							<build>
-								<assembly>
-									<descriptorRef>artifact</descriptorRef>
-								</assembly>
+								<contextDir>${project.basedir}/src/test/resources/database</contextDir>
 								<dockerFile>Dockerfile</dockerFile>
 								<tags>
 									<tag>latest</tag>

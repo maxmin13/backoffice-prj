@@ -1,5 +1,5 @@
 FROM mariadb:latest
-COPY scripts /docker-entrypoint-initdb.d/
+COPY up /docker-entrypoint-initdb.d/
 ARG DB
 ARG DB_PORT
 ARG DB_ROOT_PASSWORD

@@ -37,9 +37,9 @@ class UserDaoTest {
 
 	@Test
 	@Order(2)
-//	@Sql(scripts = { "classpath:database/2_userrole.down.sql", "classpath:database/2_useraddress.down.sql",
-//			"classpath:database/2_user.down.sql",
-//			"classpath:database/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+//	@Sql(scripts = { "classpath:database/down/2_userrole.down.sql", "classpath:database/down/2_useraddress.down.sql",
+//	"classpath:database/down/2_user.down.sql",
+//	"classpath:database/down/2_address.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	@DisplayName("02. verify eagerly loaded properties")
 	void testFindAll1() {
 
