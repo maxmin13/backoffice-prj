@@ -205,19 +205,28 @@
 						<include>**/*ITRunner.java</include>
 					</includes>
 				</configuration>
-			</plugin>
-				                <!--
+			</plugin>			                
 			<plugin>
 	            <groupId>com.dkanejs.maven.plugins</groupId>
 	            <artifactId>docker-compose-maven-plugin</artifactId>
 	            <executions>
 					<execution>
 	                    <id>up</id>
-	                    <phase>pre-integration-test</phase>
+	                    <phase>package</phase>
 	                    <goals>
 	                        <goal>up</goal>
 	                    </goals>
 	                    <configuration>
+	                        <envVars>
+	                            <subnet>172.20.0.0/16</subnet>
+						        <ipAddress>172.20.128.2</ipAddress>
+						        <containerName>local-mariadb</containerName>
+						        <db>backofficedb</db>
+						        <dbPort>3306</dbPort>
+						        <dbRootPassword>rootpwd</dbRootPassword>
+						        <dbUser>admin</dbUser>
+						        <dbUserPasword>adminpwd</dbUserPasword>
+						    </envVars>
 	                        <composeFile>${project.basedir}/src/test/resources/database/docker-compose.yml</composeFile>
 	                        <detachedMode>true</detachedMode>
 	                    </configuration>
@@ -229,13 +238,49 @@
 	                        <goal>down</goal>
 	                    </goals>
 	                    <configuration>
+	                        <envVars>
+	                            <subnet>172.20.0.0/16</subnet>
+						        <ipAddress>172.20.128.2</ipAddress>
+						        <containerName>local-mariadb</containerName>
+						        <db>backofficedb</db>
+						        <dbPort>3306</dbPort>
+						        <dbRootPassword>rootpwd</dbRootPassword>
+						        <dbUser>admin</dbUser>
+						        <dbUserPasword>adminpwd</dbUserPasword>
+						    </envVars>
 	                        <composeFile>${project.basedir}/src/test/resources/database/docker-compose.yml</composeFile>
 	                        <removeVolumes>true</removeVolumes>
 	                    </configuration>
-	                </execution>  
+	                </execution> 
 	            </executions>
-	        </plugin>
-	         -->	  
+	        </plugin>       
+			<plugin>
+			    <!-- stops the execution of the integration tests until Mariadb is ready -->
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-antrun-plugin</artifactId>
+			    <executions>
+			        <execution>
+			            <id>pre-integration-test</id>
+						<phase>pre-integration-test</phase>
+			            <goals>
+			                <goal>run</goal>
+			            </goals>
+			            <configuration>
+			                <target>
+			                    <exec executable="/bin/bash">
+			                        <arg value="waitDBready.sh" />
+			                        <arg value="database_mariadb" />
+			                        <arg value="172.20.128.2" />
+			                        <arg value="backofficedb" />
+			                        <arg value="admin" />
+			                        <arg value="adminpwd" />
+			                    </exec>
+			                </target>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>	              
+	         	  <!--
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
@@ -286,6 +331,7 @@
 					</buildArgs>
 				</configuration>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 
