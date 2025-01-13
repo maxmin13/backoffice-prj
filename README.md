@@ -6,8 +6,10 @@ The web application runs on Tomacat HTTP server backed by MariaDB database.</br>
 ## Local work machine requirements: ##
 
 - Fedora 40
+- Maven 3.9.5
 - Java 21
 - Python 3.12.7
+- docker-compose (Python library) 1.29.2
 - Ansible 9.11.0
 - Docker 27.4.1
 
