@@ -1,10 +1,12 @@
 FROM mariadb:latest
-COPY up /docker-entrypoint-initdb.d/
+
 ARG DB
 ARG DB_PORT
 ARG DB_ROOT_PASSWORD
 ARG DB_USER
 ARG DB_USER_PASSWORD
+
+COPY up /docker-entrypoint-initdb.d/
 
 ENV MARIADB_DATABASE=$DB
 ENV MARIADB_ROOT_PASSWORD=$DB_ROOT_PASSWORD

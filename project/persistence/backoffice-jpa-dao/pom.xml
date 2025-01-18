@@ -17,6 +17,18 @@
 	<groupId>it.maxmin.persistence</groupId>
 	<artifactId>backoffice-jpa-dao</artifactId>
 	<name>backoffice-jpa-dao</name>
+	
+	<properties>
+	    <docker.mariadb.image.name>database_mariadb</docker.mariadb.image.name>	
+	    <docker.mariadb.container.name>local-mariadb</docker.mariadb.container.name>	
+		<docker.mariadb.subnet>172.20.0.0/16</docker.mariadb.subnet>
+		<docker.mariadb.ip.address>172.20.128.2</docker.mariadb.ip.address>
+		<docker.mariadb.database.name>backofficedb</docker.mariadb.database.name>
+		<docker.mariadb.database.port>3306</docker.mariadb.database.port>
+		<docker.mariadb.database.root.password>rootpwd</docker.mariadb.database.root.password>
+		<docker.mariadb.database.admin.user>admin</docker.mariadb.database.admin.user>
+		<docker.mariadb.database.admin.password>adminpwd</docker.mariadb.database.admin.password>
+	</properties>
 
 	<dependencies>
 
@@ -218,14 +230,14 @@
 	                    </goals>
 	                    <configuration>
 	                        <envVars>
-	                            <subnet>172.20.0.0/16</subnet>
-						        <ipAddress>172.20.128.2</ipAddress>
-						        <containerName>local-mariadb</containerName>
-						        <db>backofficedb</db>
-						        <dbPort>3306</dbPort>
-						        <dbRootPassword>rootpwd</dbRootPassword>
-						        <dbUser>admin</dbUser>
-						        <dbUserPasword>adminpwd</dbUserPasword>
+	                            <subnet>${docker.mariadb.subnet}</subnet>
+						        <ipAddress>${docker.mariadb.ip.address}</ipAddress>
+						        <containerName>${docker.mariadb.container.name}</containerName>
+						        <db>${docker.mariadb.database.name}</db>
+						        <dbPort>${docker.mariadb.database.port}</dbPort>
+						        <dbRootPassword>${docker.mariadb.database.root.password}</dbRootPassword>
+						        <dbUser>${docker.mariadb.database.admin.user}</dbUser>
+						        <dbUserPasword>${docker.mariadb.database.admin.password}</dbUserPasword>
 						    </envVars>
 	                        <composeFile>${project.basedir}/src/test/resources/database/docker-compose.yml</composeFile>
 	                        <detachedMode>true</detachedMode>
@@ -239,14 +251,14 @@
 	                    </goals>
 	                    <configuration>
 	                        <envVars>
-	                            <subnet>172.20.0.0/16</subnet>
-						        <ipAddress>172.20.128.2</ipAddress>
-						        <containerName>local-mariadb</containerName>
-						        <db>backofficedb</db>
-						        <dbPort>3306</dbPort>
-						        <dbRootPassword>rootpwd</dbRootPassword>
-						        <dbUser>admin</dbUser>
-						        <dbUserPasword>adminpwd</dbUserPasword>
+	                            <subnet>${docker.mariadb.subnet}</subnet>
+						        <ipAddress>${docker.mariadb.ip.address}</ipAddress>
+						        <containerName>${docker.mariadb.container.name}</containerName>
+						        <db>${docker.mariadb.database.name}</db>
+						        <dbPort>${docker.mariadb.database.port}</dbPort>
+						        <dbRootPassword>${docker.mariadb.database.root.password}</dbRootPassword>
+						        <dbUser>${docker.mariadb.database.admin.user}</dbUser>
+						        <dbUserPasword>${docker.mariadb.database.admin.password}</dbUserPasword>
 						    </envVars>
 	                        <composeFile>${project.basedir}/src/test/resources/database/docker-compose.yml</composeFile>
 	                        <removeVolumes>true</removeVolumes>
@@ -269,11 +281,11 @@
 			                <target>
 			                    <exec executable="/bin/bash">
 			                        <arg value="waitDBready.sh" />
-			                        <arg value="database_mariadb" />
-			                        <arg value="172.20.128.2" />
-			                        <arg value="backofficedb" />
-			                        <arg value="admin" />
-			                        <arg value="adminpwd" />
+			                        <arg value="${docker.mariadb.image.name}" />
+			                        <arg value="${docker.mariadb.ip.address}" />
+			                        <arg value="${docker.mariadb.database.name}" />
+			                        <arg value="${docker.mariadb.database.admin.user}" />
+			                        <arg value="${docker.mariadb.database.admin.password}" />
 			                    </exec>
 			                </target>
 			            </configuration>
