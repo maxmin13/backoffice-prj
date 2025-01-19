@@ -280,7 +280,7 @@
 			            <configuration>
 			                <target>
 			                    <exec executable="/bin/bash">
-			                        <arg value="waitDBready.sh" />
+			                        <arg value="src/test/resources/waitDBready.sh" />
 			                        <arg value="${docker.mariadb.image.name}" />
 			                        <arg value="${docker.mariadb.ip.address}" />
 			                        <arg value="${docker.mariadb.database.name}" />
