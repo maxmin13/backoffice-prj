@@ -1,0 +1,6 @@
+
+[mariadb]
+## transaction-isolation = READ-UNCOMMITED
+## transaction-isolation = READ-COMMITED
+transaction-isolation = REPEATABLE-READ
+## transaction-isolation = SERIALIZABLE

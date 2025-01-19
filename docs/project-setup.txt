@@ -72,11 +72,24 @@ mkdir /opt/integration
  printf '%s\n' ''
 } >> Dockerfile  
 
+mkdir /opt/integration/config
+
+{
+ printf '%s\n' '[mariadb]'
+ printf '%s\n' '### transaction-isolation = READ-UNCOMMITTED'
+ printf '%s\n' '### transaction-isolation = READ-COMMITTED'
+ printf '%s\n' 'transaction-isolation = REPEATABLE-READ'
+ printf '%s\n' '### transaction-isolation = SERIALIZABLE'
+ printf '%s\n' ''  
+} >> mariadb.cnf   
+
 {
  printf '%s\n' 'services:'
  printf '%s\n' '  mariadb:'
  printf '%s\n' '    container_name: local-mariadb' 
  printf '%s\n' '    restart: always'
+ printf '%s\n' '    volumes:' 
+ printf '%s\n' '    - ./config/:/etc/mysql/mariadb.conf.d/' 
  printf '%s\n' '    build:'
  printf '%s\n' '      context: .'
  printf '%s\n' '      args:'
