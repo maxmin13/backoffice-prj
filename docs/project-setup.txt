@@ -76,7 +76,7 @@ mkdir /opt/integration/config
 
 {
  printf '%s\n' '[mariadb]'
- printf '%s\n' '### transaction-isolation = READ-UNCOMMITTED'
+ printf '%s\n' '### transaction-isolation = READ_UNCOMMITED'
  printf '%s\n' '### transaction-isolation = READ-COMMITTED'
  printf '%s\n' 'transaction-isolation = REPEATABLE-READ'
  printf '%s\n' '### transaction-isolation = SERIALIZABLE'

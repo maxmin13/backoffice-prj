@@ -1,5 +1,4 @@
 package it.maxmin.dao.jpa.step;
-
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import org.springframework.test.context.ContextConfiguration;
