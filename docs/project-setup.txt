@@ -135,11 +135,6 @@ Get the Mariadb container IP address:
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' local-mariadb 
 ----------------------------------------------------
 
-when running the integration tests,
-set this IP address in the file: 
-datasources.properties
-ex: mariadb.url=jdbc:mariadb://172.18.0.2:3306/backofficedb
-
 Access the phpMyAdmin using the URL:
 
 http://localhost:8080/
@@ -227,7 +222,6 @@ run:
 chmod +x make.sh
 ./make.sh
 
-
 ###################################################################
 # Log in the remote AWS instance:
 ###################################################################
@@ -255,7 +249,7 @@ chmod +x delete.sh
 ./delete.sh
 
 ###################################################################
-# Unit tests:
+# Unit tests and integration tests:
 ###################################################################
 
 // in Fedora 40 it was necessary to install:
@@ -265,4 +259,12 @@ sudo dnf install libxcrypt-compat
 cd project
 
 mvn clean install
+
+// run all integration tests
+mvn clean install -Pintegration-tests
+
+// run single feature file
+mvn clean install -Pintegration-tests -Dcucumber.filter.tags='@find_user_feature'
+mvn clean install -Pintegration-tests -Dcucumber.filter.tags='@create_user_feature'
+
 

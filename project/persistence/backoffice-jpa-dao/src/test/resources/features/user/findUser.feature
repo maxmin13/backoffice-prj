@@ -1,3 +1,4 @@
+@find_user_feature
 Feature: Search for a user in the database
   Connect to the database and search for user
 

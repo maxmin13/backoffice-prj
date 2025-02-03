@@ -3,3 +3,9 @@ CREATE A NEW MAVEN MODULE:
 
 cd project/config
 mvn archetype:generate -DgroupId=it.maxmin.config  -DartifactId=backoffice-config
+
+
+
+PRINT MAVEN LIFECICLE OF CURRENT POM
+
+mvn fr.jcgay.maven.plugins:buildplan-maven-plugin:list -Pintegration-tests

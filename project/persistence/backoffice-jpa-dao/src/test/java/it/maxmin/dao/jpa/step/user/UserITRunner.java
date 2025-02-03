@@ -9,7 +9,7 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("features")
+@SelectClasspathResource("features/user")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "it.maxmin.dao.jpa.step")
 @ConfigurationParameter(key = "cucumber.execution.parallel.enabled", value = "true")
 @ConfigurationParameter(key = "cucumber.execution.parallel.config.strategy", value = "fixed")

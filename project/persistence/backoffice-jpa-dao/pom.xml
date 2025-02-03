@@ -17,10 +17,10 @@
 	<groupId>it.maxmin.persistence</groupId>
 	<artifactId>backoffice-jpa-dao</artifactId>
 	<name>backoffice-jpa-dao</name>
-	
+
 	<properties>
-	    <docker.mariadb.image.name>database_mariadb</docker.mariadb.image.name>	
-	    <docker.mariadb.container.name>local-mariadb</docker.mariadb.container.name>	
+		<docker.mariadb.image.name>database_mariadb</docker.mariadb.image.name>
+		<docker.mariadb.container.name>local-mariadb</docker.mariadb.container.name>
 		<docker.mariadb.subnet>172.20.0.0/16</docker.mariadb.subnet>
 		<docker.mariadb.ip.address>172.20.128.2</docker.mariadb.ip.address>
 		<docker.mariadb.database.name>backofficedb</docker.mariadb.database.name>
@@ -197,154 +197,180 @@
 				</resources>
 			</build>
 		</profile>
+		<profile>
+			<id>integration-tests</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<trimStackTrace>false</trimStackTrace>
+						</configuration>
+						<executions>
+							<execution>
+								<id>integration-tests</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>test</goal>
+								</goals>
+								<configuration>
+									<includes>
+										<include>**/*ITRunner.java</include>
+									</includes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>com.dkanejs.maven.plugins</groupId>
+						<artifactId>docker-compose-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>up</id>
+								<phase>package</phase>
+								<goals>
+									<goal>up</goal>
+								</goals>
+								<configuration>
+									<envVars>
+										<subnet>${docker.mariadb.subnet}</subnet>
+										<ipAddress>${docker.mariadb.ip.address}</ipAddress>
+										<containerName>
+											${docker.mariadb.container.name}</containerName>
+										<db>${docker.mariadb.database.name}</db>
+										<dbPort>${docker.mariadb.database.port}</dbPort>
+										<dbRootPassword>
+											${docker.mariadb.database.root.password}</dbRootPassword>
+										<dbUser>
+											${docker.mariadb.database.admin.user}</dbUser>
+										<dbUserPasword>
+											${docker.mariadb.database.admin.password}</dbUserPasword>
+									</envVars>
+									<composeFile>
+										${project.basedir}/src/test/resources/database/docker-compose.yml</composeFile>
+									<detachedMode>true</detachedMode>
+								</configuration>
+							</execution>
+							<execution>
+								<id>down</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>down</goal>
+								</goals>
+								<configuration>
+									<envVars>
+										<subnet>${docker.mariadb.subnet}</subnet>
+										<ipAddress>${docker.mariadb.ip.address}</ipAddress>
+										<containerName>
+											${docker.mariadb.container.name}</containerName>
+										<db>${docker.mariadb.database.name}</db>
+										<dbPort>${docker.mariadb.database.port}</dbPort>
+										<dbRootPassword>
+											${docker.mariadb.database.root.password}</dbRootPassword>
+										<dbUser>
+											${docker.mariadb.database.admin.user}</dbUser>
+										<dbUserPasword>
+											${docker.mariadb.database.admin.password}</dbUserPasword>
+									</envVars>
+									<composeFile>
+										${project.basedir}/src/test/resources/database/docker-compose.yml</composeFile>
+									<removeVolumes>true</removeVolumes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<!-- stops the execution of the integration tests until
+						Mariadb is ready -->
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>pre-integration-test</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<exec executable="/bin/bash">
+											<arg
+												value="src/test/resources/waitDBready.sh" />
+											<arg
+												value="${docker.mariadb.image.name}" />
+											<arg
+												value="${docker.mariadb.ip.address}" />
+											<arg
+												value="${docker.mariadb.database.name}" />
+											<arg
+												value="${docker.mariadb.database.admin.user}" />
+											<arg
+												value="${docker.mariadb.database.admin.password}" />
+										</exec>
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<includes>
-						<include>**/*ITRunner.java</include>
-					</includes>
-				</configuration>
-			</plugin>			                
-			<plugin>
-	            <groupId>com.dkanejs.maven.plugins</groupId>
-	            <artifactId>docker-compose-maven-plugin</artifactId>
-	            <executions>
-					<execution>
-	                    <id>up</id>
-	                    <phase>package</phase>
-	                    <goals>
-	                        <goal>up</goal>
-	                    </goals>
-	                    <configuration>
-	                        <envVars>
-	                            <subnet>${docker.mariadb.subnet}</subnet>
-						        <ipAddress>${docker.mariadb.ip.address}</ipAddress>
-						        <containerName>${docker.mariadb.container.name}</containerName>
-						        <db>${docker.mariadb.database.name}</db>
-						        <dbPort>${docker.mariadb.database.port}</dbPort>
-						        <dbRootPassword>${docker.mariadb.database.root.password}</dbRootPassword>
-						        <dbUser>${docker.mariadb.database.admin.user}</dbUser>
-						        <dbUserPasword>${docker.mariadb.database.admin.password}</dbUserPasword>
-						    </envVars>
-	                        <composeFile>${project.basedir}/src/test/resources/database/docker-compose.yml</composeFile>
-	                        <detachedMode>true</detachedMode>
-	                    </configuration>
-	                </execution>
-	                <execution>
-	                    <id>down</id>
-	                    <phase>post-integration-test</phase>
-	                    <goals>
-	                        <goal>down</goal>
-	                    </goals>
-	                    <configuration>
-	                        <envVars>
-	                            <subnet>${docker.mariadb.subnet}</subnet>
-						        <ipAddress>${docker.mariadb.ip.address}</ipAddress>
-						        <containerName>${docker.mariadb.container.name}</containerName>
-						        <db>${docker.mariadb.database.name}</db>
-						        <dbPort>${docker.mariadb.database.port}</dbPort>
-						        <dbRootPassword>${docker.mariadb.database.root.password}</dbRootPassword>
-						        <dbUser>${docker.mariadb.database.admin.user}</dbUser>
-						        <dbUserPasword>${docker.mariadb.database.admin.password}</dbUserPasword>
-						    </envVars>
-	                        <composeFile>${project.basedir}/src/test/resources/database/docker-compose.yml</composeFile>
-	                        <removeVolumes>true</removeVolumes>
-	                    </configuration>
-	                </execution> 
-	            </executions>
-	        </plugin>       
-			<plugin>
-			    <!-- stops the execution of the integration tests until Mariadb is ready -->
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-antrun-plugin</artifactId>
-			    <executions>
-			        <execution>
-			            <id>pre-integration-test</id>
-						<phase>pre-integration-test</phase>
-			            <goals>
-			                <goal>run</goal>
-			            </goals>
-			            <configuration>
-			                <target>
-			                    <exec executable="/bin/bash">
-			                        <arg value="src/test/resources/waitDBready.sh" />
-			                        <arg value="${docker.mariadb.image.name}" />
-			                        <arg value="${docker.mariadb.ip.address}" />
-			                        <arg value="${docker.mariadb.database.name}" />
-			                        <arg value="${docker.mariadb.database.admin.user}" />
-			                        <arg value="${docker.mariadb.database.admin.password}" />
-			                    </exec>
-			                </target>
-			            </configuration>
-			        </execution>
-			    </executions>
-			</plugin>	              
-	         	  <!--
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<executions>
-				    <execution>
-				       <id>start</id>
-				       <phase>pre-integration-test</phase>
-				       <goals>
-				         <goal>build</goal>
-				         <goal>start</goal>
-				       </goals>
-				    </execution>
-				   <execution>
-				       <id>stop</id>
-				       <phase>post-integration-test</phase>
-				       <goals>
-				         <goal>stop</goal>
-				      </goals>
-				    </execution>
-			  	</executions>
-				<configuration>
-					<verbose>true</verbose>
-    				<removeAll>true</removeAll>
-					<images>
-						<image>
-							<name>mariadb-integration</name>
-							<alias>mariadb-integration</alias>
-							<run>
-	                            <wait> 
-						          <time>30000</time>
-						        </wait>
-                        	</run>
-							<build>
-								<contextDir>${project.basedir}/src/test/resources/database</contextDir>
-								<dockerFile>Dockerfile</dockerFile>
-								<tags>
-									<tag>latest</tag>
-								</tags>
-							</build>
-						</image>
-					</images>
-					<buildArgs>
-						<DB>backofficedb</DB>
-						<DB_PORT>3306</DB_PORT>
-						<DB_ROOT_PASSWORD>rootpwd</DB_ROOT_PASSWORD>
-						<DB_USER>admin</DB_USER>
-						<DB_USER_PASSWORD>adminpwd</DB_USER_PASSWORD>
-					</buildArgs>
-				</configuration>
-			</plugin>
-			-->
-		</plugins>
-	</build>
-
+	<!--
+		<plugin>
+			<groupId>io.fabric8</groupId>
+			<artifactId>docker-maven-plugin</artifactId>
+			<executions>
+			    <execution>
+			       <id>start</id>
+			       <phase>pre-integration-test</phase>
+			       <goals>
+			         <goal>build</goal>
+			         <goal>start</goal>
+			       </goals>
+			    </execution>
+			   <execution>
+			       <id>stop</id>
+			       <phase>post-integration-test</phase>
+			       <goals>
+			         <goal>stop</goal>
+			      </goals>
+			    </execution>
+		  	</executions>
+			<configuration>
+				<verbose>true</verbose>
+				<removeAll>true</removeAll>
+				<images>
+					<image>
+						<name>mariadb-integration</name>
+						<alias>mariadb-integration</alias>
+						<run>
+	                        <wait> 
+					          <time>30000</time>
+					        </wait>
+	                	</run>
+						<build>
+							<contextDir>${project.basedir}/src/test/resources/database</contextDir>
+							<dockerFile>Dockerfile</dockerFile>
+							<tags>
+								<tag>latest</tag>
+							</tags>
+						</build>
+					</image>
+				</images>
+				<buildArgs>
+					<DB>backofficedb</DB>
+					<DB_PORT>3306</DB_PORT>
+					<DB_ROOT_PASSWORD>rootpwd</DB_ROOT_PASSWORD>
+					<DB_USER>admin</DB_USER>
+					<DB_USER_PASSWORD>adminpwd</DB_USER_PASSWORD>
+				</buildArgs>
+			</configuration>
+		</plugin>
+	-->
 </project>

@@ -1,3 +1,4 @@
+@create_user_feature
 Feature: Create a new user in the database
   Connect to the database and create a new user
 
