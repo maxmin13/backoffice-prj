@@ -12,7 +12,7 @@ public interface AddressDao {
 	
 	Set<Address> findAll();
 
-	Address create(Address address);
+	void create(Address address);
 	
 	Address update(Address address);
 

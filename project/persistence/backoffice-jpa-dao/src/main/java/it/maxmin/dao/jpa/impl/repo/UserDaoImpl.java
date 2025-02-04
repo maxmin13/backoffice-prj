@@ -62,7 +62,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public User create(User user) {
+	public void create(User user) {
 		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
 		notNull(user.getDepartment(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "department"));
 		notNull(user.getAddresses(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "addresses"));
@@ -75,7 +75,6 @@ public class UserDaoImpl implements UserDao {
 		else {
 			throw new IllegalArgumentException(messageService.getMessage(ERROR_FIELD_NULL_MSG, "id"));
 		}
-		return user;
 	}
 
 	@Override
@@ -99,11 +98,11 @@ public class UserDaoImpl implements UserDao {
 		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
 		notNull(user.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));
 		LOGGER.info("Removing user ...");
-		em.createQuery("delete from User where id = :id")
-		  .setParameter("id", user.getId())
+		int rows = em.createQuery("delete from User where id = :userId")
+		  .setParameter("userId", user.getId())
 		  .executeUpdate();
 
-		LOGGER.info("User removed");
+		LOGGER.info("Removed {} users", rows);
 	}
 
 }

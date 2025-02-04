@@ -4,5 +4,10 @@ Feature: Search for a user in the database
 
   Scenario: serch a user by account name
     Given I search for 'maxmin13' user in the database
-    When I check whether it's there
-    Then I should be told "Nope"   
+    When I check whether the user it's there
+    Then I should be told "Nope"  
+    
+  Scenario: serch the same user by account name
+    Given I search for 'maxmin13' user in the database
+    When I check whether the user it's there
+    Then I should be told "Nope"      

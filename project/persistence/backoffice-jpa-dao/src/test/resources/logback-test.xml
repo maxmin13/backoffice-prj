@@ -11,14 +11,19 @@
             <pattern> %-5level: %class{0} - %msg%n</pattern>
         </encoder>
     </appender>
-
-	<!-- 
-    <logger name="it.maxmin.plain.dao.impl" level="debug"/>
-    <logger name="org.springframework" level="off"/>
-     -->
+    
+    <appender name="integration" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern> %-5level: INTEGRATION - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <logger name="it.maxmin.dao.jpa.step" level="debug">
+    	<appender-ref ref="integration" />
+    </logger>
      
 	<!-- <root level="trace"> -->
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="console" />
     </root>
 </configuration>

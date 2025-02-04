@@ -119,7 +119,7 @@ public class AddressDaoImpl implements AddressDao {
 	}
 
 	@Override
-	public Address create(Address address) {
+	public void create(Address address) {
 		notNull(address, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address"));
 		notNull(address.getState(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "state"));
 		if (address.getId() == null) {
@@ -130,7 +130,6 @@ public class AddressDaoImpl implements AddressDao {
 		else {
 			throw new IllegalArgumentException(messageService.getMessage(ERROR_FIELD_NULL_MSG, "id"));
 		}
-		return address;
 	}
 
 	@Override

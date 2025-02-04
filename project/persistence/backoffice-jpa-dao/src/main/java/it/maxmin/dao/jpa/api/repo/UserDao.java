@@ -13,7 +13,7 @@ public interface UserDao {
 
 	Optional<User> findByAccountName(String accountName);
 
-	User create(User user);
+	void create(User user);
 
 	User update(User user);
 	
