@@ -4,11 +4,14 @@ import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
@@ -39,12 +42,20 @@ public class CreateUserStep extends BaseDatabaseStep {
 		this.messageService = messageService;
 	}
 
-	@Given("I want to create the following user {string} with first name {string} and last name {string}, born the day {int} of the month {int} in the year {int}")
-	public void build_user(String accountName, String firstName, String lastName, int day, int month, int year) {
+	@Given("I want to create the following user")
+	public void build_user(DataTable dataTable) {
 		LOGGER.debug(MessageFormat.format("{0}: building user step ...", stepContext.getId()));
+		
+		List<List<String>> data = dataTable.asLists();
+		String accountName = data.get(0).get(0);
+		String firstName = data.get(0).get(1);
+		String lastName = data.get(0).get(2);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMMM dd");
+		LocalDate birthDate = LocalDate.parse(data.get(0).get(3), formatter);
+		
 		Department department = departmentDao.selectByDepartmentName("Legal").orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "department")));
-		User user = User.newInstance().withAccountName(accountName).withBirthDate(LocalDate.of(year, month, day))
+		User user = User.newInstance().withAccountName(accountName).withBirthDate(birthDate)
 				.withFirstName(firstName).withLastName(lastName).withDepartment(department);
 		stepContext.addProperty("user", user);
 	}
@@ -65,6 +76,5 @@ public class CreateUserStep extends BaseDatabaseStep {
 	@After
 	public void clear() {
 		stepContext.getProperty("user").ifPresent(user -> userDao.delete((User) user));
-		stepContext.removeProperty("user");
 	}
 }

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
@@ -24,7 +23,7 @@ import it.maxmin.dao.jpa.step.StepContext;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class FindUserStep extends BaseDatabaseStep {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FindUserStep.class);
 
 	private UserDao userDao;
@@ -41,7 +40,7 @@ public class FindUserStep extends BaseDatabaseStep {
 	public void search_user(String accountName) {
 		LOGGER.debug(MessageFormat.format("{0}: searching user step ...", stepContext.getId()));
 		Optional<User> user = userDao.findByAccountName(accountName);
-		user.ifPresent(u -> stepContext.addProperty("user", u));
+		user.ifPresentOrElse(u -> stepContext.addProperty("user", u), () -> stepContext.removeProperty("user"));
 	}
 
 	@When("I check whether the user it's there")
@@ -57,6 +56,7 @@ public class FindUserStep extends BaseDatabaseStep {
 		stepContext.getProperty("found").orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "found")));
 		assertEquals(expected, stepContext.getProperty("found").get());
+		stepContext.removeProperty("found");
 	}
 
 	@Before
@@ -64,8 +64,4 @@ public class FindUserStep extends BaseDatabaseStep {
 		stepContext = new StepContext(scenario.getName());
 	}
 
-	@After
-	public void clear() {
-		stepContext.removeProperty("found");
-	}
 }
