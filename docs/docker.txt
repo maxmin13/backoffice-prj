@@ -9,3 +9,12 @@ docker build -t backoffice-mariadb:1.4 .
 docker run --name local-mariadb -d -p 3307:3306 backoffice-mariadb:1.4
 
 docker restart local-mariadb
+
+docker rm -v -f $(docker ps -qa)
+docker rmi -f $(docker images -aq)
+
+docker ps -a
+docker image ls
+
+docker logs --follow local-mariadb
+

@@ -44,6 +44,33 @@ select Tomcat v10.1 Server,
 click next, click on Add.. link, click Browse button, select root folder of the previously installed Tomcat server, 
 click Open, click Finish, next, addAll, Finish.
 
+
+###################################################################
+# Run unit tests and integration tests with Maven:
+###################################################################
+
+// in Fedora 40 it was necessary to install:
+sudo dnf install ncurses-compat-libs
+sudo dnf install libxcrypt-compat
+
+// make sure that the IP address in datasources.properties is the same as the one configured in pom.xml, see: docker.mariadb.ip.address
+mariadb.url=jdbc:mariadb://172.20.128.2:3306/backofficedb 
+
+cd project
+
+mvn clean install
+
+// run all integration tests
+mvn clean install -Pintegration-tests
+
+// run single feature file at the time
+mvn clean install -Pintegration-tests -Dcucumber.filter.tags='@find_user_feature'
+mvn clean install -Pintegration-tests -Dcucumber.filter.tags='@create_user_feature'
+
+###################################################################
+# Manually run unit tests and integration test:
+###################################################################
+
 ###################################################################
 # Run Mariadb database and phpMyAdmin with Docker Compose:
 ###################################################################
@@ -116,25 +143,6 @@ mkdir /opt/integration/config
 docker compose up
 ----------------------------------------------------
 
-List all containers and images:
-
-----------------------------------------------------
-docker ps -a
-docker image ls
-----------------------------------------------------
-
-Check the Mariadb container logs:
-
-----------------------------------------------------
-docker logs --follow local-mariadb
-----------------------------------------------------
-
-Get the Mariadb container IP address:
-
-----------------------------------------------------
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' local-mariadb 
-----------------------------------------------------
-
 Access the phpMyAdmin using the URL:
 
 http://localhost:8080/
@@ -152,12 +160,25 @@ select * from User;
 exit
 ----------------------------------------------------
 
-Remove all the containers and images
+Get the Mariadb container IP address:
 
 ----------------------------------------------------
-docker rm -v -f $(docker ps -qa)
-docker rmi -f $(docker images -aq)
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' local-mariadb 
 ----------------------------------------------------
+
+// make sure that the IP address in datasources.properties is the same as the one configured in pom.xml, see: docker.mariadb.ip.address
+mariadb.url=jdbc:mariadb://172.18.0.2:3306/backofficedb
+
+Run the integration tests corresponding to a IT test runner, for ex: UserITRunner.java
+
+tdx on UserITRunner.java,
+run as Junit test
+
+clear the env:
+
+----------------------------------------------------------
+docker compose down
+----------------------------------------------------------
 
 ###################################################################
 # Run the backoffice web application locally:
@@ -248,23 +269,5 @@ chmod +x delete.sh
 
 ./delete.sh
 
-###################################################################
-# Unit tests and integration tests:
-###################################################################
-
-// in Fedora 40 it was necessary to install:
-sudo dnf install ncurses-compat-libs
-sudo dnf install libxcrypt-compat
-
-cd project
-
-mvn clean install
-
-// run all integration tests
-mvn clean install -Pintegration-tests
-
-// run single feature file
-mvn clean install -Pintegration-tests -Dcucumber.filter.tags='@find_user_feature'
-mvn clean install -Pintegration-tests -Dcucumber.filter.tags='@create_user_feature'
 
 
