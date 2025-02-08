@@ -83,7 +83,7 @@ class InsertUserTest extends JdbcBaseTestDao {
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi")
-				.withDepartment(Department.newInstance().withName(accountsDepartment.getName()));
+				.withDepartment(Department.newInstance().withName(accountingDepartment.getName()));
 
 		Address address = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
 				.withState(State.newInstance().withId(irelandState.getId())).withRegion("County Dublin")
@@ -110,7 +110,7 @@ class InsertUserTest extends JdbcBaseTestDao {
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance()
-						.withId(accountsDepartment.getId()).withName(accountsDepartment.getName()));
+						.withId(accountingDepartment.getId()).withName(accountingDepartment.getName()));
 
 		Address address = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
 				.withState(State.newInstance().withId(irelandState.getId())).withRegion("County Dublin")
@@ -134,7 +134,7 @@ class InsertUserTest extends JdbcBaseTestDao {
 		PojoDepartment department = jdbcQueryTestUtil.selectDepartmentById(us.getDepartmentId())
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 
-		jdbcUserTestUtil.verifyDepartment(accountsDepartment.getName(), department);
+		jdbcUserTestUtil.verifyDepartment(accountingDepartment.getName(), department);
 
 		List<PojoAddress> addresses = jdbcQueryTestUtil.selectAddressesByUserId(us.getId());
 

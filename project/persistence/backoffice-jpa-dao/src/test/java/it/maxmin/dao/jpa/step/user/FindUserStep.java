@@ -38,21 +38,21 @@ public class FindUserStep extends BaseDatabaseStep {
 
 	@Given("I search for {string} user in the database")
 	public void search_user(String accountName) {
-		LOGGER.debug(MessageFormat.format("{0}: searching user step ...", stepContext.getId()));
+		LOGGER.debug(MessageFormat.format("{0}: searching user step ...", stepContext.getScenarioId()));
 		Optional<User> user = userDao.findByAccountName(accountName);
 		user.ifPresentOrElse(u -> stepContext.addProperty("user", u), () -> stepContext.removeProperty("user"));
 	}
 
 	@When("I check whether the user it's there")
 	public void check_user_is_there() {
-		LOGGER.debug(MessageFormat.format("{0}: check user step ...", stepContext.getId()));
+		LOGGER.debug(MessageFormat.format("{0}: check user step ...", stepContext.getScenarioId()));
 		stepContext.getProperty("user").ifPresentOrElse(u -> stepContext.addProperty("found", "Yes"),
 				() -> stepContext.addProperty("found", "Nope"));
 	}
 
 	@Then("I should be told {string}")
 	public void i_should_be_told(String expected) {
-		LOGGER.debug(MessageFormat.format("{0}: I should be told {1} step ...", stepContext.getId(), expected));
+		LOGGER.debug(MessageFormat.format("{0}: I should be told {1} step ...", stepContext.getScenarioId(), expected));
 		stepContext.getProperty("found").orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "found")));
 		assertEquals(expected, stepContext.getProperty("found").get());
@@ -61,7 +61,7 @@ public class FindUserStep extends BaseDatabaseStep {
 
 	@Before
 	public void init(Scenario scenario) {
-		stepContext = new StepContext(scenario.getName());
+		stepContext = new StepContext(scenario);
 	}
 
 }

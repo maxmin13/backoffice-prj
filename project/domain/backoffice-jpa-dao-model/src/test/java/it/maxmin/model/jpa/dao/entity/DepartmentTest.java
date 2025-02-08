@@ -55,7 +55,7 @@ class DepartmentTest {
 		tx1.begin();
 
 		Query query = em1.createQuery("SELECT d FROM Department d WHERE d.name=:name");
-		query.setParameter("name", "Accounts");
+		query.setParameter("name", "Accounting");
 		Department department = (Department) query.getSingleResult();
 		Long departmentId = department.getId();
 

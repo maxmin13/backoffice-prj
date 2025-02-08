@@ -3,7 +3,7 @@ package it.maxmin.dao.jdbc;
 import static it.maxmin.common.constant.MessageConstants.ERROR_DEPARTMENT_NOT_FOUND_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_STATE_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.impl.constant.Department.ACCOUNTS;
+import static it.maxmin.dao.jdbc.impl.constant.Department.ACCOUNTING;
 import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
@@ -35,7 +35,7 @@ public abstract class JdbcBaseTestDao {
 	protected JdbcQueryTestUtil jdbcQueryTestUtil;
 	protected JdbcUserTestUtil jdbcUserTestUtil;
 	protected PojoDepartment legalDepartment;
-	protected PojoDepartment accountsDepartment;
+	protected PojoDepartment accountingDepartment;
 	protected PojoDepartment productionDepartment;
 	protected PojoState italyState;
 	protected PojoState irelandState;
@@ -54,7 +54,7 @@ public abstract class JdbcBaseTestDao {
 
 		this.legalDepartment = jdbcQueryTestUtil.selectDepartmentByName(LEGAL.getName())
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
-		this.accountsDepartment = jdbcQueryTestUtil.selectDepartmentByName(ACCOUNTS.getName())
+		this.accountingDepartment = jdbcQueryTestUtil.selectDepartmentByName(ACCOUNTING.getName())
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));
 		this.productionDepartment = jdbcQueryTestUtil.selectDepartmentByName(PRODUCTION.getName())
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_DEPARTMENT_NOT_FOUND_MSG));

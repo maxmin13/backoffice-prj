@@ -2,7 +2,7 @@ package it.maxmin.dao.jdbc.impl.constant;
 
 public enum Department {
 
-	ACCOUNTS("Accounts"), LEGAL("Legal"), PRODUCTION("Production");
+	ACCOUNTING("Accounting"), LEGAL("Legal"), PRODUCTION("Production");
 
 	private String name;
 

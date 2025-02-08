@@ -58,7 +58,7 @@ class UpdateUserTest extends JdbcBaseTestDao {
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance()
-						.withId(accountsDepartment.getId()).withName(accountsDepartment.getName()));
+						.withId(accountingDepartment.getId()).withName(accountingDepartment.getName()));
 
 		// run the test
 		assertThrows(IllegalArgumentException.class, () -> updateUser.execute(carl));
@@ -71,7 +71,7 @@ class UpdateUserTest extends JdbcBaseTestDao {
 
 		User carl = User.newInstance().withId(3l).withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi").withDepartment(Department.newInstance()
-						.withId(accountsDepartment.getId()).withName(accountsDepartment.getName()));
+						.withId(accountingDepartment.getId()).withName(accountingDepartment.getName()));
 
 		// run the test
 		assertThrows(IllegalArgumentException.class, () -> updateUser.execute(carl));
@@ -103,7 +103,7 @@ class UpdateUserTest extends JdbcBaseTestDao {
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi")
-				.withDepartment(Department.newInstance().withName(accountsDepartment.getName()));
+				.withDepartment(Department.newInstance().withName(accountingDepartment.getName()));
 
 		Address address = Address.newInstance().withDescription("Via Vecchia").withCity("Dublin")
 				.withState(State.newInstance().withId(irelandState.getId())).withRegion("County Dublin")
@@ -148,8 +148,8 @@ class UpdateUserTest extends JdbcBaseTestDao {
 		// update the user
 		User carl = User.newInstance().withId(user.getId()).withVersion(user.getVersion()).withAccountName("carl123")
 				.withFirstName("Carlo").withLastName("Rossi").withBirthDate(LocalDate.of(1982, 9, 1))
-				.withDepartment(Department.newInstance().withId(accountsDepartment.getId())
-						.withName(accountsDepartment.getName()));
+				.withDepartment(Department.newInstance().withId(accountingDepartment.getId())
+						.withName(accountingDepartment.getName()));
 
 		Address address = Address.newInstance().withId(1l).withDescription("Via Nuova").withCity("Venice")
 				.withRegion("Veneto").withPostalCode("30033");
@@ -166,7 +166,7 @@ class UpdateUserTest extends JdbcBaseTestDao {
 		jdbcUserTestUtil.verifyUser("carl123", "Carlo", "Rossi", LocalDate.of(1982, 9, 1), updated);
 		assertEquals((initialVersion + 1), updated.getVersion());
 
-		assertEquals(accountsDepartment.getId(), updated.getDepartmentId());
+		assertEquals(accountingDepartment.getId(), updated.getDepartmentId());
 
 		roles = jdbcQueryTestUtil.selectRolesByUserId(user.getId());
 		assertEquals(3, roles.size());

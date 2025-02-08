@@ -3,7 +3,7 @@ package it.maxmin.dao.jdbc.impl.repo;
 import static it.maxmin.common.constant.MessageConstants.ERROR_ADDRESS_NOT_FOUND_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_ROLE_NOT_FOUND_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_USER_NOT_FOUND_MSG;
-import static it.maxmin.dao.jdbc.impl.constant.Department.ACCOUNTS;
+import static it.maxmin.dao.jdbc.impl.constant.Department.ACCOUNTING;
 import static it.maxmin.dao.jdbc.impl.constant.Department.LEGAL;
 import static it.maxmin.dao.jdbc.impl.constant.Department.PRODUCTION;
 import static it.maxmin.dao.jdbc.impl.constant.Role.ADMINISTRATOR;
@@ -561,7 +561,7 @@ class UserDaoTest {
 
 		User user = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))
 				.withFirstName("Carlo").withLastName("Rossi")
-				.withDepartment(Department.newInstance().withId(1l).withName(ACCOUNTS.getName()));
+				.withDepartment(Department.newInstance().withId(1l).withName(ACCOUNTING.getName()));
 
 		Throwable throwable = assertThrows(Throwable.class, () -> {
 			userDao.update(user);

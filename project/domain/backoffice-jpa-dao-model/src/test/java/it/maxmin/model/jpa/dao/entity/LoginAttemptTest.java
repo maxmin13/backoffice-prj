@@ -61,7 +61,7 @@ class LoginAttemptTest {
 
 		// prepare the test
 		Query query = em1.createQuery("SELECT d FROM Department d WHERE d.name=:name");
-		query.setParameter("name", "Accounts");
+		query.setParameter("name", "Accounting");
 		Department department = (Department) query.getSingleResult();
 
 		User user = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))

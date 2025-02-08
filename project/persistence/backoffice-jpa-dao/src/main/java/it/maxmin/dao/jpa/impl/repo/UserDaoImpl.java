@@ -98,7 +98,7 @@ public class UserDaoImpl implements UserDao {
 		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
 		notNull(user.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));
 		LOGGER.info("Removing user ...");
-		int rows = em.createQuery("delete from User where id = :userId")
+		int rows = em.createQuery("DELETE FROM User WHERE id = :userId")
 		  .setParameter("userId", user.getId())
 		  .executeUpdate();
 

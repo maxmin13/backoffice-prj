@@ -4,16 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import io.cucumber.java.Scenario;
+
 /**
  * For each scenario, Cucumber create a new instance of each step class.
  * */
 public class StepContext {
 
-	private String id;
+	private Scenario scenario;
 	private Map<String, Object> properties;
 
-	public StepContext(String id) {
-		this.id = id;
+	public StepContext(Scenario scenario) {
+		this.scenario = scenario;
 		properties = new HashMap<>();
 	}
 
@@ -33,7 +35,11 @@ public class StepContext {
 		return properties.containsKey(key);
 	}
 
-	public String getId() {
-		return id;
+	public String getScenarioId() {
+		return scenario.getId();
+	}
+	
+	public String getScenarioName() {
+		return scenario.getName();
 	}
 }

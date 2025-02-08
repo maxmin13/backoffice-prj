@@ -36,10 +36,16 @@ public class JpaDaoSpringContextCfg {
 	private Properties jpaProperties() {
 		Properties jpaProperties = new Properties();
 		jpaProperties.put(HBM2DDL_AUTO, "none");
-		jpaProperties.put(FORMAT_SQL, false);
-		jpaProperties.put(USE_SQL_COMMENTS, false);
-		jpaProperties.put(HIGHLIGHT_SQL, false);
-		jpaProperties.put(SHOW_SQL, false);
+		jpaProperties.put(FORMAT_SQL, true);
+		jpaProperties.put(USE_SQL_COMMENTS, true);
+		jpaProperties.put(HIGHLIGHT_SQL, true);
+		jpaProperties.put(SHOW_SQL, true);
+		// Hibenate compliance to JPA spec
+		jpaProperties.put("hibernate.jpa.compliance.proxy", true);
+		jpaProperties.put("hibernate.jpa.compliance.closed", true);
+		jpaProperties.put("hibernate.jpa.compliance.query", true);
+		jpaProperties.put("hibernate.jpa.compliance.transaction", true);
+		
 		return jpaProperties;
 	}
 
