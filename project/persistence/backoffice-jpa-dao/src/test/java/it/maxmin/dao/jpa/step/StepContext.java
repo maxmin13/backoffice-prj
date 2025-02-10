@@ -36,7 +36,8 @@ public class StepContext {
 	}
 
 	public String getScenarioId() {
-		return scenario.getId();
+		String id = scenario.getId();
+		return id.substring(id.lastIndexOf("-") + 1).toUpperCase();
 	}
 	
 	public String getScenarioName() {

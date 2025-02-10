@@ -68,17 +68,13 @@ mvn clean install -Pintegration-tests -Dcucumber.filter.tags='@find_user_feature
 mvn clean install -Pintegration-tests -Dcucumber.filter.tags='@create_user_feature'
 
 ###################################################################
-# Manually run unit tests and integration test:
-###################################################################
-
-###################################################################
 # Run Mariadb database and phpMyAdmin with Docker Compose:
 ###################################################################
 
 ----------------------------------------------------
 mkdir /opt/integration
 
-## copy Mariadb database scripts directory
+## copy Mariadb database scripts/ directory
 
 {
  printf '%s\n' 'FROM mariadb:latest'
@@ -94,12 +90,18 @@ mkdir /opt/integration
  printf '%s\n' 'ENV MARIADB_ROOT_PASSWORD=$DB_ROOT_PASSWORD'
  printf '%s\n' 'ENV MARIADB_USER=$DB_USER'
  printf '%s\n' 'ENV MARIADB_PASSWORD=$DB_USER_PASSWORD'
- printf '%s\n' ''
+ printf '%s\n' '' 
+ printf '%s\n' 'RUN mkdir -p /var/log/mariadb'
+ printf '%s\n' 'RUN chown mysql:mysql /var/log/mariadb' 
+ printf '%s\n' '' 
  printf '%s\n' 'EXPOSE $DB_PORT'
  printf '%s\n' ''
 } >> Dockerfile  
 
+mkdir /opt/integration/logs
 mkdir /opt/integration/config
+
+cd /opt/integration/config
 
 {
  printf '%s\n' '[mariadb]'
@@ -108,7 +110,18 @@ mkdir /opt/integration/config
  printf '%s\n' 'transaction-isolation = REPEATABLE-READ'
  printf '%s\n' '### transaction-isolation = SERIALIZABLE'
  printf '%s\n' ''  
-} >> mariadb.cnf   
+ printf '%s\n' 'log_error=/var/log/mariadb/mariadb.log'
+ printf '%s\n' 'log_warnings=9'
+ printf '%s\n' 'slow_query_log=1'
+ printf '%s\n' 'log_output=FILE'
+ printf '%s\n' 'slow_query_log_file=/var/log/mariadb/mariadb_slow.log'
+ printf '%s\n' 'long_query_time=2'
+ printf '%s\n' 'log_queries_not_using_indexes=ON'
+ printf '%s\n' 'log_slow_verbosity='full''
+
+} >> mariadb.cnf  
+
+cd /opt/integration
 
 {
  printf '%s\n' 'services:'
@@ -117,6 +130,7 @@ mkdir /opt/integration/config
  printf '%s\n' '    restart: always'
  printf '%s\n' '    volumes:' 
  printf '%s\n' '    - ./config/:/etc/mysql/mariadb.conf.d/' 
+ printf '%s\n' '    - ./logs/:/var/log/mariadb/'  
  printf '%s\n' '    build:'
  printf '%s\n' '      context: .'
  printf '%s\n' '      args:'
@@ -152,6 +166,7 @@ Connect to the database from bash console:
 ----------------------------------------------------
 # replace the right IP address
 docker exec -it local-mariadb bash
+
 mariadb -u root -prootpwd -h 172.17.0.2 backofficedb
 mariadb -u admin -padminpwd -h 172.17.0.2 backofficedb
 
@@ -179,6 +194,25 @@ clear the env:
 ----------------------------------------------------------
 docker compose down
 ----------------------------------------------------------
+
+###################################################################
+# Manually run unit tests and integration test:
+###################################################################
+
+start a local database (see above Docker configuration):
+
+----------------------------------------------------------
+cd /opt/integration
+docker compose up
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' local-mariadb 
+----------------------------------------------------------
+
+edit backoffice-jpa-dao/src/test/resources/simple-jndi/datasources.properties
+
+set 'mariadb.url' to the value of the local-mariadb container IP address, for ex:
+mariadb.url=jdbc:mariadb://172.18.0.2:3306/backofficedb
+
+in Eclipse, right-click on class: UserITRunner.java, Run As, Unit Test
 
 ###################################################################
 # Run the backoffice web application locally:

@@ -7,6 +7,7 @@ services:
         ipv4_address: ${ipAddress}
     volumes:
       - ./config/:/etc/mysql/mariadb.conf.d/
+      - ./logs/:/var/log/mariadb/
     build:
       context: .
       args:

@@ -35,23 +35,20 @@ public class TransactionManagerStep {
 		DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
 		definition.setIsolationLevel(TransactionDefinition.ISOLATION_REPEATABLE_READ);
 		definition.setTimeout(300);
-		definition.setName("transaction - " + stepContext.getScenarioName());
+		definition.setName(stepContext.getScenarioName());
 		status = transactionManager.getTransaction(definition);
-		LOGGER.debug(MessageFormat.format("{0}: starting a database transaction, transaction {1}", stepContext.getScenarioId(),
-				status.getTransactionName()));
+		LOGGER.debug(MessageFormat.format("{0}: starting a database transaction ...", stepContext.getScenarioId()));
 	}
 
 	@Then("I commit the database transaction")
 	public void commit_database_transaction() {
-		LOGGER.debug(MessageFormat.format("{0}: committing the database transaction {1}", stepContext.getScenarioId(),
-				status.getTransactionName()));
+		LOGGER.debug(MessageFormat.format("{0}: committing the database transaction ...", stepContext.getScenarioId()));
 		transactionManager.commit(status);
 	}
 
 	@Given("I rollback the database transaction")
 	public void rollback_database_transaction() {
-		LOGGER.debug(MessageFormat.format("{0}: rollbacking the database transaction {1}", stepContext.getScenarioId(),
-				status.getTransactionName()));
+		LOGGER.debug(MessageFormat.format("{0}: rollbacking the database transaction ...", stepContext.getScenarioId()));
 		transactionManager.rollback(status);
 	}
 
