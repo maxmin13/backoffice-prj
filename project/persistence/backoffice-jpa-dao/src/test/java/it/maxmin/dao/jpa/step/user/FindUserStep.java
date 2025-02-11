@@ -4,12 +4,16 @@ import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
@@ -53,10 +57,29 @@ public class FindUserStep extends BaseDatabaseStep {
 	@Then("I should be told {string}")
 	public void i_should_be_told(String expected) {
 		LOGGER.debug(MessageFormat.format("{0}: I should be told {1} step ...", stepContext.getScenarioId(), expected));
-		stepContext.getProperty("found").orElseThrow(
+		String found = (String) stepContext.getProperty("found").orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "found")));
-		assertEquals(expected, stepContext.getProperty("found").get());
-		stepContext.removeProperty("found");
+		assertEquals(expected, found);
+	}
+
+	@Then("the user should be")
+	public void the_user_should_be(DataTable dataTable) {
+		List<List<String>> data = dataTable.asLists();
+		String accountName = data.get(0).get(0);
+		String firstName = data.get(0).get(1);
+		String lastName = data.get(0).get(2);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMMM dd");
+		LocalDate birthDate = LocalDate.parse(data.get(0).get(3), formatter);
+		String departmentName = data.get(0).get(4);
+		
+		User user = (User) stepContext.getProperty("user").orElseThrow(
+				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
+		
+		assertEquals(accountName, user.getAccountName());
+		assertEquals(firstName, user.getFirstName());
+		assertEquals(lastName, user.getLastName());
+		assertEquals(birthDate, user.getBirthDate());
+		assertEquals(departmentName, user.getDepartment().getName());
 	}
 
 	@Before

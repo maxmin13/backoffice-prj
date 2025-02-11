@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
@@ -27,7 +26,7 @@ import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class CreateUserStep extends BaseDatabaseStep {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(CreateUserStep.class);
 
 	private UserDao userDao;
@@ -52,20 +51,20 @@ public class CreateUserStep extends BaseDatabaseStep {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMMM dd");
 		LocalDate birthDate = LocalDate.parse(data.get(0).get(3), formatter);
 		String departmentName = data.get(0).get(4);
-		
 		Department department = departmentDao.selectByDepartmentName(departmentName).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "department")));
-		User user = User.newInstance().withAccountName(accountName).withBirthDate(birthDate)
-				.withFirstName(firstName).withLastName(lastName).withDepartment(department);
+		User user = User.newInstance().withAccountName(accountName).withBirthDate(birthDate).withFirstName(firstName)
+				.withLastName(lastName).withDepartment(department);
 		stepContext.addProperty("user", user);
 	}
 
 	@When("I create it")
 	public void create_user() {
 		LOGGER.debug(MessageFormat.format("{0}: creating user step ...", stepContext.getScenarioId()));
-		stepContext.getProperty("user").orElseThrow(
+		User user = (User) stepContext.getProperty("user").orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
-		userDao.create((User) stepContext.getProperty("user").get());
+		userDao.create(user);
+		LOGGER.debug(MessageFormat.format("{0}: {1}", stepContext.getScenarioId(), user));
 	}
 
 	@Before
@@ -73,8 +72,4 @@ public class CreateUserStep extends BaseDatabaseStep {
 		stepContext = new StepContext(scenario);
 	}
 
-	@After
-	public void clear() {
-		stepContext.getProperty("user").ifPresent(user -> userDao.delete((User) user));
-	}
 }
