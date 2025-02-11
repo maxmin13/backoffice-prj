@@ -22,11 +22,10 @@ import io.cucumber.java.en.When;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.step.BaseDatabaseStep;
 import it.maxmin.dao.jpa.step.StepContext;
 import it.maxmin.model.jpa.dao.entity.User;
 
-public class FindUserStep extends BaseDatabaseStep {
+public class FindUserStep { 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FindUserStep.class);
 
@@ -62,7 +61,7 @@ public class FindUserStep extends BaseDatabaseStep {
 		assertEquals(expected, found);
 	}
 
-	@Then("the user should be")
+	@Then("the user found should be")
 	public void the_user_should_be(DataTable dataTable) {
 		List<List<String>> data = dataTable.asLists();
 		String accountName = data.get(0).get(0);

@@ -1,20 +1,20 @@
 @create_user_feature
-Feature: create a new user in the database
-  Connect to the database and create a new user
+Feature: create a new user with two concurrent processes
+  Connect to the database and create a new user with two scenario that run in parallel
 
   Scenario: create a user 'maxmin' 
     Given I start a database transaction
     Given I want to create the following user
       | maxmin13 | Max1 | Min1 | 1999 September 23 | Legal |
     Then I create it
-    Then I wait a little
+    And I wait a little
     Then I commit the database transaction
     Then I search for 'maxmin13' user in the database
     When I check whether the user it's there
     Then I should be told 'Yes'
-    But the user should be
+    But the user found should be
       | maxmin13 | Max2 | Min2 | 2001 August 12 | Accounting |
-    And a 'duplicate key' error should have been thrown
+    And a 'data integrity violation' error should have been raised
     
   Scenario: create another user 'maxmin'
     Given I start a database transaction
@@ -25,7 +25,7 @@ Feature: create a new user in the database
     Then I search for 'maxmin13' user in the database
     When I check whether the user it's there
     Then I should be told 'Yes'    
-    Then the user should be
+    And the user found should be
       | maxmin13 | Max2 | Min2 | 2001 August 12 | Accounting |
     
        
