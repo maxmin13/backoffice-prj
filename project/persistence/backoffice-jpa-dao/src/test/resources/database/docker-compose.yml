@@ -7,7 +7,7 @@ services:
         ipv4_address: ${ipAddress}
     volumes:
       - ./config/:/etc/mysql/mariadb.conf.d/
-      - ./logs/:/var/log/mariadb/
+      -  /opt/jpa/log:/var/lib/mysql/log
     build:
       context: .
       args:
@@ -15,7 +15,7 @@ services:
         DB_PORT: ${dbPort}
         DB_ROOT_PASSWORD: ${dbRootPassword}
         DB_USER: ${dbUser}
-        DB_USER_PASSWORD: ${dbUserPasword}
+        DB_USER_PASSWORD: ${dbUserPassword}
 
 networks:
   static-network:

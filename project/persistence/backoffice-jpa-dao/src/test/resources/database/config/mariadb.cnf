@@ -5,11 +5,12 @@
 transaction-isolation = REPEATABLE-READ
 ## transaction-isolation = SERIALIZABLE
 
-log_error=/var/log/mariadb/mariadb.log
+general_log=1
+log_error=/var/lib/mysql/log/mariadb.log
 log_warnings=9
 slow_query_log=1
 log_output=FILE
-slow_query_log_file=/var/log/mariadb/mariadb_slow.log
+slow_query_log_file=/var/lib/mysql/log/mariadb_slow.log
 long_query_time=2
 log_queries_not_using_indexes=ON
 log_slow_verbosity=full

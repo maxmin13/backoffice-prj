@@ -12,8 +12,5 @@ ENV MARIADB_USER=$DB_USER
 ENV MARIADB_PASSWORD=$DB_USER_PASSWORD
 
 COPY up /docker-entrypoint-initdb.d/
-RUN mkdir -p /var/log/mariadb
-RUN chown mysql:mysql /var/log/mariadb
-RUN chmod 755 /var/log/mariadb
 
 EXPOSE $DB_PORT

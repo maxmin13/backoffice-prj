@@ -91,9 +91,6 @@ mkdir /opt/integration
  printf '%s\n' 'ENV MARIADB_USER=$DB_USER'
  printf '%s\n' 'ENV MARIADB_PASSWORD=$DB_USER_PASSWORD'
  printf '%s\n' '' 
- printf '%s\n' 'RUN mkdir -p /var/log/mariadb'
- printf '%s\n' 'RUN chown mysql:mysql /var/log/mariadb' 
- printf '%s\n' '' 
  printf '%s\n' 'EXPOSE $DB_PORT'
  printf '%s\n' ''
 } >> Dockerfile  
@@ -130,7 +127,7 @@ cd /opt/integration
  printf '%s\n' '    restart: always'
  printf '%s\n' '    volumes:' 
  printf '%s\n' '    - ./config/:/etc/mysql/mariadb.conf.d/' 
- printf '%s\n' '    - ./logs/:/var/log/mariadb/'  
+ printf '%s\n' '    - ./logs/:/var/lib/mysql/'  
  printf '%s\n' '    build:'
  printf '%s\n' '      context: .'
  printf '%s\n' '      args:'

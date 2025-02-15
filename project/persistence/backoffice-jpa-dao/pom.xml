@@ -256,8 +256,8 @@
 											${docker.mariadb.database.root.password}</dbRootPassword>
 										<dbUser>
 											${docker.mariadb.database.admin.user}</dbUser>
-										<dbUserPasword>
-											${docker.mariadb.database.admin.password}</dbUserPasword>
+										<dbUserPassword>
+											${docker.mariadb.database.admin.password}</dbUserPassword>
 									</envVars>
 									<composeFile>
 										${project.basedir}/src/test/resources/database/docker-compose.yml</composeFile>
@@ -282,8 +282,8 @@
 											${docker.mariadb.database.root.password}</dbRootPassword>
 										<dbUser>
 											${docker.mariadb.database.admin.user}</dbUser>
-										<dbUserPasword>
-											${docker.mariadb.database.admin.password}</dbUserPasword>
+										<dbUserPassword>
+											${docker.mariadb.database.admin.password}</dbUserPassword>
 									</envVars>
 									<composeFile>
 										${project.basedir}/src/test/resources/database/docker-compose.yml</composeFile>
