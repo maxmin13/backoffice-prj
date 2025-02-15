@@ -1,6 +1,6 @@
 @create_user_feature
-Feature: create a new user with two concurrent processes
-  Connect to the database and create a new user with two scenario that run in parallel
+Feature: create the same user in two concurrent processes
+  Connect to the database and create the same user in two parallel scenarios
 
   Scenario: create a user 'maxmin' 
     Given I start a database transaction
