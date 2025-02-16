@@ -1,4 +1,4 @@
-@create_user_feature
+@transaction_isolation_feature
 Feature: create the same user in two concurrent processes
   Connect to the database and create the same user in two parallel scenarios
 

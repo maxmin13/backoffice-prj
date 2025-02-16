@@ -6,7 +6,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import io.cucumber.java.en.When;
 
-public class UtilityStep {
+public class WaitStep {
 
 	@When("I wait a little")
 	public void wait_a_little() {
