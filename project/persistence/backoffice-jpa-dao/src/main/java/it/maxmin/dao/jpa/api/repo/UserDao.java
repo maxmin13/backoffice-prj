@@ -12,6 +12,8 @@ public interface UserDao {
 	List<User> findAllWithAddressAndRole();
 
 	Optional<User> findByAccountName(String accountName);
+	
+	Optional<User> findByFirstName(String firstName);
 
 	void create(User user);
 

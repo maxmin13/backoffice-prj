@@ -1,15 +1,30 @@
-@find_user_feature
+@user
 Feature: Search for a user in the database
   Connect to the database and search for user
 
-	@Ignore
-  Scenario: serch a user twice by account name in the same transaction
-    Given I start a database transaction
-    Given I search for 'maxmin13' user in the database
+  Scenario: serch and find a user by account name
+    Given I search for 'maxmin14' user account name in the database
     When I check whether the user it's there
     Then I should be told "Nope"  
-    Given I search for 'maxmin13' user in the database
+    Given I want to create the following user
+      | maxmin14 | Max1 | Min1 | 1999 September 23 | Legal |
+    Then I create it   
+    And I wait a little
+    And I search for 'Max1' user first name in the database
     When I check whether the user it's there
-    Then I should be told "Nope" 
-    Then I commit the database transaction
-   
+    Then I should be told 'Yes'  
+    
+  Scenario: serch and not find a user by account name
+    Given I search for 'maxmin14' user account name in the database
+    When I check whether the user it's there
+    Then I should be told "Nope"  
+    Given I want to create the following user
+      | maxmin14 | Max2 | Min2 | 1999 September 23 | Legal |
+    But I wait a little
+    And I create it   
+    And a create 'data integrity violation' error should have been raised
+    And I search for 'Max2' user first name in the database
+    When I check whether the user it's there
+    Then I should be told 'Nope' 
+ 
+          

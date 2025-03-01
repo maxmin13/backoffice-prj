@@ -47,6 +47,14 @@ import jakarta.persistence.Version;
 		               left join fetch u.roles
 		               where u.accountName = :accountName
 		""")
+@NamedQuery(name = "User.findByFirstName", query = """
+select distinct u
+     from User u
+     left join fetch u.department
+     left join fetch u.addresses
+     left join fetch u.roles
+     where u.firstName = :firstName
+""")
 public class User implements Serializable {
 
 	@Serial

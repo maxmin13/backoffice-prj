@@ -60,6 +60,19 @@ public class UserDaoImpl implements UserDao {
 			return Optional.empty();
 		}
 	}
+	
+	@Transactional(readOnly = true)
+	@Override
+	public Optional<User> findByFirstName(String firstName) {
+		notNull(firstName, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "first name"));
+		try {
+			return Optional.of(em.createNamedQuery("User.findByFirstName", User.class)
+					.setParameter("firstName", firstName).getSingleResult());
+		}
+		catch (NoResultException e) {
+			return Optional.empty();
+		}
+	}
 
 	@Override
 	public void create(User user) {

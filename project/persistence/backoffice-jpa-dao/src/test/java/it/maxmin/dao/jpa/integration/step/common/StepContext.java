@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.step;
+package it.maxmin.dao.jpa.integration.step.common;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,16 +14,19 @@ public class StepContext {
 	private Scenario scenario;
 	private Map<String, Object> properties;
 
-	public StepContext(Scenario scenario) {
-		this.scenario = scenario;
+	public StepContext() {
 		properties = new HashMap<>();
+	}
+	
+	public void init(Scenario scenario) {
+		this.scenario = scenario;
 	}
 
 	public void addProperty(String key, Object value) {
 		properties.put(key, value);
 	}
 
-	public Optional<Object> getProperty(String key) {
+	public Optional<Object> get(String key) {
 		return Optional.ofNullable(properties.get(key));
 	}
 
