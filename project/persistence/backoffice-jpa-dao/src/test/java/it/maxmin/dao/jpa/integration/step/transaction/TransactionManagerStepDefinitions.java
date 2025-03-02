@@ -108,7 +108,7 @@ public class TransactionManagerStepDefinitions extends BaseStepDefinitions {
 		}
 	}
 
-	@Then("a database {string} error should have been raised")
+	@Then("a transaction {string} error should have been raised")
 	public void a_error_should_have_been_thrown(String description) {
 		log("checking error ...");
 		Exception ex = (Exception) getFromScenarioContext("exception")

@@ -1,4 +1,4 @@
-@transaction
+@user
 Feature: create the same user in two concurrent processes
   Connect to the database and create the same user in two parallel scenarios
 
@@ -14,11 +14,11 @@ Feature: create the same user in two concurrent processes
     Then I create it
     And I wait a little
     Then I commit the database transaction
-    And I search for 'Max1' user first name in the database
+    And a transaction 'data integrity violation' error should have been raised
+    Then I search for 'Max1' user first name in the database
     When I check whether the user it's there
     Then I should be told 'Nope'
-    And a database 'data integrity violation' error should have been raised
-  
+    
   Scenario: create another user 'maxmin13'
     Given I create a database transaction
     And the transaction isolation level is the default

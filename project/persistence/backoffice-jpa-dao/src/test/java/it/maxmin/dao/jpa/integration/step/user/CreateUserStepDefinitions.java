@@ -75,9 +75,7 @@ public class CreateUserStepDefinitions extends BaseStepDefinitions {
 		log("checking error ...");
 		Exception ex = (Exception) getFromScenarioContext("exception")
 				.orElseThrow(() -> new JpaDaoTestException(getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "exception")));
-
 		StepError stepError = getStepError(description);
-
 		assertEquals(stepError.getExceptionClass(), ex.getClass());
 	}
 
