@@ -7,17 +7,19 @@ import it.maxmin.model.jpa.dao.entity.User;
 
 public interface UserDao {
 
-	List<User> findAll();
-	
-	List<User> findAllWithAddressAndRole();
+	Optional<User> find(Long id);
 
 	Optional<User> findByAccountName(String accountName);
-	
+
 	Optional<User> findByFirstName(String firstName);
+
+	List<User> findAll();
+
+	List<User> findAllWithAddressAndRole();
 
 	void create(User user);
 
 	User update(User user);
-	
+
 	void delete(User user);
 }

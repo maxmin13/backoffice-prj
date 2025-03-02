@@ -4,10 +4,6 @@ import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_
 import static it.maxmin.dao.jpa.integration.step.common.TransactionIsolationLevel.REPEATABLE_READ_ISO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.text.MessageFormat;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -27,8 +23,6 @@ import it.maxmin.dao.jpa.integration.step.common.TransactionIsolationLevel;
 
 public class TransactionManagerStepDefinitions extends BaseStepDefinitions {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TransactionManagerStepDefinitions.class);
-
 	public TransactionManagerStepDefinitions(PlatformTransactionManager transactionManager,
 			MessageService messageService, StepUtil stepUtil) {
 		super(transactionManager, stepUtil, messageService);
@@ -38,112 +32,101 @@ public class TransactionManagerStepDefinitions extends BaseStepDefinitions {
 	public void create_database_transaction() {
 		DefaultTransactionDefinition txDefinition = new DefaultTransactionDefinition();
 		txDefinition.setTimeout(300);
-		txDefinition.setName(getStepContext().getScenarioName());
+		txDefinition.setName(getScenarioName());
 
-		getStepContext().addProperty("tx-definition", txDefinition);
-		LOGGER.debug(
-				MessageFormat.format("SCE({0}): creating a database transaction", getStepContext().getScenarioId()));
+		addToScenarioContext("tx-definition", txDefinition);
+		log("creating a database transaction ...");
 	}
 
 	@And("the transaction isolation level is the default")
 	public void set_repeatable_read_transaction_isolation_level() {
 
-		TransactionIsolationLevel transactionIsolationLevel = getStepUtil()
-				.getTransactionIsolationLevel(REPEATABLE_READ_ISO.getDescription())
-				.orElseThrow(() -> new JpaDaoTestException(
-						getMessageService().getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction level")));
+		TransactionIsolationLevel transactionIsolationLevel = getTransactionIsolationLevel(
+				REPEATABLE_READ_ISO.getDescription());
 
-		DefaultTransactionDefinition txDefinition = (DefaultTransactionDefinition) getStepContext()
-				.get("tx-definition").orElseThrow(() -> new JpaDaoTestException(
-						getMessageService().getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction definition")));
+		DefaultTransactionDefinition txDefinition = (DefaultTransactionDefinition) getFromScenarioContext(
+				"tx-definition")
+				.orElseThrow(() -> new JpaDaoTestException(
+						getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction definition")));
 
 		txDefinition.setIsolationLevel(transactionIsolationLevel.getLevel());
-		LOGGER.debug(MessageFormat.format("SCE({0}): setting transaction isolation level to {1}",
-				getStepContext().getScenarioId(), transactionIsolationLevel.getDescription()));
+		log("setting transaction isolation level to {0}", transactionIsolationLevel.getDescription());
 	}
 
 	@Given("I set the transaction isolation to {string}")
 	public void set_transaction_isolation_level(String level) {
 
-		TransactionIsolationLevel transactionIsolationLevel = getStepUtil().getTransactionIsolationLevel(level)
-				.orElseThrow(() -> new JpaDaoTestException(
-						getMessageService().getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction level")));
+		TransactionIsolationLevel transactionIsolationLevel = getTransactionIsolationLevel(level);
 
-		DefaultTransactionDefinition txDefinition = (DefaultTransactionDefinition) getStepContext()
-				.get("tx-definition").orElseThrow(() -> new JpaDaoTestException(
-						getMessageService().getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction definition")));
+		DefaultTransactionDefinition txDefinition = (DefaultTransactionDefinition) getFromScenarioContext(
+				"tx-definition")
+				.orElseThrow(() -> new JpaDaoTestException(
+						getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction definition")));
 
 		txDefinition.setIsolationLevel(transactionIsolationLevel.getLevel());
-		LOGGER.debug(MessageFormat.format("SCE({0}): setting transaction isolation level to {1}",
-				getStepContext().getScenarioId(), transactionIsolationLevel.getDescription()));
+		log("setting transaction isolation level to {0}", transactionIsolationLevel.getDescription());
 	}
 
 	@Given("I start the database transaction")
 	public void start_database_transaction() {
-		DefaultTransactionDefinition txDefinition = (DefaultTransactionDefinition) getStepContext()
-				.get("tx-definition").orElseThrow(() -> new JpaDaoTestException(
-						getMessageService().getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction definition")));
+		DefaultTransactionDefinition txDefinition = (DefaultTransactionDefinition) getFromScenarioContext(
+				"tx-definition")
+				.orElseThrow(() -> new JpaDaoTestException(
+						getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction definition")));
 		TransactionStatus txStatus = getTransactionManager().getTransaction(txDefinition);
-		getStepContext().addProperty("tx-status", txStatus);
-		LOGGER.debug(
-				MessageFormat.format("SCE({0}): starting database transaction ...", getStepContext().getScenarioId()));
+		addToScenarioContext("tx-status", txStatus);
+		log("starting database transaction ...");
 	}
 
 	@Then("I commit the database transaction")
 	public void commit_database_transaction() {
-		LOGGER.debug(MessageFormat.format("scenario({0}): committing the database transaction ...",
-				getStepContext().getScenarioId()));
+		log("committing the database transaction ...");
 		try {
-			TransactionStatus txStatus = (TransactionStatus) getStepContext().get("tx-status")
-					.orElseThrow(() -> new JpaDaoTestException(
-							getMessageService().getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction status")));
+			TransactionStatus txStatus = (TransactionStatus) getFromScenarioContext("tx-status").orElseThrow(
+					() -> new JpaDaoTestException(getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction status")));
 			getTransactionManager().commit(txStatus);
-			LOGGER.debug(MessageFormat.format("SCE({0}): transaction committed", getStepContext().getScenarioId()));
+			log("transaction committed");
 		}
 		catch (Exception e) {
-			LOGGER.debug(MessageFormat.format("SCE({0})", e));
-			getStepContext().addProperty("exception", e);
+			log("{0}", e);
+			addToScenarioContext("exception", e);
 		}
 	}
 
 	@Given("I rollback the database transaction")
 	public void rollback_database_transaction() {
-		LOGGER.debug(MessageFormat.format("SCE({0}): rolling back the database transaction ...",
-				getStepContext().getScenarioId()));
+		log("rolling back the database transaction ...");
 		try {
-			TransactionStatus txStatus = (TransactionStatus) getStepContext().get("tx-status")
-					.orElseThrow(() -> new JpaDaoTestException(
-							getMessageService().getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction status")));
+			TransactionStatus txStatus = (TransactionStatus) getFromScenarioContext("tx-status").orElseThrow(
+					() -> new JpaDaoTestException(getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction status")));
 			getTransactionManager().rollback(txStatus);
-			LOGGER.debug(MessageFormat.format("SCE({0}): transaction rolled back", getStepContext().getScenarioId()));
+			log("transaction rolled back");
 		}
 		catch (Exception e) {
-			LOGGER.debug(MessageFormat.format("SCE({0})", e));
-			getStepContext().addProperty("exception", e);
+			log("{0}", e);
+			addToScenarioContext("exception", e);
 		}
 	}
 
 	@Then("a database {string} error should have been raised")
 	public void a_error_should_have_been_thrown(String description) {
-		LOGGER.debug(MessageFormat.format("SCE({0}): checking error ...", getStepContext().getScenarioId()));
-		Exception ex = (Exception) getStepContext().get("exception").orElseThrow(
-				() -> new JpaDaoTestException(getMessageService().getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "exception")));
+		log("checking error ...");
+		Exception ex = (Exception) getFromScenarioContext("exception")
+				.orElseThrow(() -> new JpaDaoTestException(getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "exception")));
 
-		StepError stepError = getStepUtil().getStepError(description).orElseThrow(
-				() -> new JpaDaoTestException(getMessageService().getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "step error")));
+		StepError stepError = getStepError(description);
 
 		assertEquals(stepError.getExceptionClass(), ex.getClass());
 	}
 
 	@Before
 	public void initStep(Scenario scenario) {
-		getStepContext().init(scenario);
-		LOGGER.debug(MessageFormat.format("SCE({0}): creating step context ...", getStepContext().getScenarioId()));
+		init(scenario);
 	}
 
 	@After
 	public void cleanStep() {
-		LOGGER.debug(MessageFormat.format("SCE({0}): cleaning step context ...", getStepContext().getScenarioId()));
+		log("cleaning step context ...");
 	}
 
 }

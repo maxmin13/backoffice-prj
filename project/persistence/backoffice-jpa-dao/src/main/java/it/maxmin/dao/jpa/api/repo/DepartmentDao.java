@@ -5,6 +5,8 @@ import java.util.Optional;
 import it.maxmin.model.jpa.dao.entity.Department;
 
 public interface DepartmentDao {
+	
+	Optional<Department> find(Long id);
 
-	Optional<Department> selectByDepartmentName(String departmentName);
+	Optional<Department> findByDepartmentName(String departmentName);
 }

@@ -8,7 +8,7 @@ import it.maxmin.model.jpa.dao.entity.Address;
 
 public interface AddressDao {
 	
-	Optional<Address> findById(long addressId);
+	Optional<Address> find(Long id);
 	
 	Set<Address> findAll();
 

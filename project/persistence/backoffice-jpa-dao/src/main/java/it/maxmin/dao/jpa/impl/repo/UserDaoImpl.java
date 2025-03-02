@@ -34,6 +34,11 @@ public class UserDaoImpl implements UserDao {
 	public UserDaoImpl(MessageServiceImpl messageService) {
 		this.messageService = messageService;
 	}
+	
+	@Override
+	public Optional<User> find(Long id) {
+		return Optional.ofNullable(em.find(User.class, id));
+	}
 
 	@Transactional(readOnly = true)
 	@Override

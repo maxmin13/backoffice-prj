@@ -28,10 +28,15 @@ public class DepartmentDaoImpl implements DepartmentDao {
 	public DepartmentDaoImpl(MessageServiceImpl messageService) {
 		this.messageService = messageService;
 	}
+	
+	@Override
+	public Optional<Department> find(Long id) {
+		return Optional.ofNullable(em.find(Department.class, id));
+	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Department> selectByDepartmentName(String departmentName) {
+	public Optional<Department> findByDepartmentName(String departmentName) {
 		notNull(departmentName, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "department name"));
 		try {
 			return Optional.of(em.createNamedQuery("Department.findByDepartmentName", Department.class)

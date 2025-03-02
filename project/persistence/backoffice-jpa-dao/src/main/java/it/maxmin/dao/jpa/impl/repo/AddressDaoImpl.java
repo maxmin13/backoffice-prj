@@ -58,10 +58,10 @@ public class AddressDaoImpl implements AddressDao {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Address> findById(long addressId) {
-		notNull(addressId, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address id"));
+	public Optional<Address> find(Long id) {
+		notNull(id, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address id"));
 		try {
-			return Optional.of(em.createNamedQuery("Address.findById", Address.class).setParameter("id", addressId)
+			return Optional.of(em.createNamedQuery("Address.findById", Address.class).setParameter("id", id)
 					.getSingleResult());
 		}
 		catch (NoResultException e) {
