@@ -126,7 +126,7 @@ public class TransactionManagerStepDefinitions extends BaseStepDefinitions {
 
 	@After
 	public void cleanStep() {
-		log("cleaning step context ...");
+		//
 	}
 
 }

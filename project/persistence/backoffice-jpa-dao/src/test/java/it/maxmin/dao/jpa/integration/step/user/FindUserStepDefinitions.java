@@ -61,7 +61,7 @@ public class FindUserStepDefinitions extends BaseStepDefinitions {
 		String found = (String) getFromScenarioContext("found")
 				.orElseThrow(() -> new JpaDaoTestException(getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "found")));
 		assertEquals(expected, found);
-		log("user found {0} ...", expected);
+		log("I have been told {0} ...", expected);
 	}
 
 	@Then("the user found should be")
@@ -83,7 +83,7 @@ public class FindUserStepDefinitions extends BaseStepDefinitions {
 		assertEquals(lastName, user.getLastName());
 		assertEquals(birthDate, user.getBirthDate());
 		assertEquals(departmentName, user.getDepartment().getName());
-		log("{0}", user);
+		log("the user is fine");
 	}
 
 	@Before
@@ -93,7 +93,7 @@ public class FindUserStepDefinitions extends BaseStepDefinitions {
 
 	@After
 	public void cleanStep() {
-		log("cleaning step context ...");
+		log("cleaning test context ...");
 		getFromScenarioContext("user").ifPresent(u -> {
 			User user = (User) u;
 			if (user.getId() != null) {

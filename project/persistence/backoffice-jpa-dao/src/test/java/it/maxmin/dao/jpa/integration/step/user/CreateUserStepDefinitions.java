@@ -40,7 +40,7 @@ public class CreateUserStepDefinitions extends BaseStepDefinitions {
 
 	@Given("I want to create the following user")
 	public void build_user(DataTable dataTable) {
-		log("I want to create a user user ...");
+		log("I want to create a user ...");
 		List<List<String>> data = dataTable.asLists();
 		String accountName = data.get(0).get(0);
 		String firstName = data.get(0).get(1);
@@ -52,12 +52,13 @@ public class CreateUserStepDefinitions extends BaseStepDefinitions {
 				.orElseThrow(() -> new JpaDaoTestException(getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "department")));
 		User user = User.newInstance().withAccountName(accountName).withBirthDate(birthDate).withFirstName(firstName)
 				.withLastName(lastName).withDepartment(department);
+		log("{0}", user);
 		addToScenarioContext("user", user);
 	}
 
 	@When("I create it")
 	public void create_user() {
-		log("inserting user in database step ...");
+		log("inserting user in database ...");
 		User user = (User) getFromScenarioContext("user")
 				.orElseThrow(() -> new JpaDaoTestException(getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 		try {
@@ -86,7 +87,7 @@ public class CreateUserStepDefinitions extends BaseStepDefinitions {
 
 	@After
 	public void cleanStep() {
-		log("cleaning step context ...");
+		log("cleaning test context ...");
 		getFromScenarioContext("user").ifPresent(u -> {
 			User user = (User) u;
 			if (user.getId() != null) {
