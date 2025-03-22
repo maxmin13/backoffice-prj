@@ -34,7 +34,7 @@ public class UserDaoImpl implements UserDao {
 	public UserDaoImpl(MessageServiceImpl messageService) {
 		this.messageService = messageService;
 	}
-	
+
 	@Override
 	public Optional<User> find(Long id) {
 		return Optional.ofNullable(em.find(User.class, id));
@@ -65,18 +65,13 @@ public class UserDaoImpl implements UserDao {
 			return Optional.empty();
 		}
 	}
-	
+
 	@Transactional(readOnly = true)
 	@Override
-	public Optional<User> findByFirstName(String firstName) {
+	public List<User> findByFirstName(String firstName) {
 		notNull(firstName, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "first name"));
-		try {
-			return Optional.of(em.createNamedQuery("User.findByFirstName", User.class)
-					.setParameter("firstName", firstName).getSingleResult());
-		}
-		catch (NoResultException e) {
-			return Optional.empty();
-		}
+		return em.createNamedQuery("User.findByFirstName", User.class).setParameter("firstName", firstName)
+				.getResultList();
 	}
 
 	@Override
@@ -112,14 +107,11 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public void delete(User user) {
-		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
-		notNull(user.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));
+	public void deleteByAccountName(String accountName) {
+		notNull(accountName, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "accountName"));
 		LOGGER.info("Removing user ...");
-		int rows = em.createQuery("DELETE FROM User WHERE id = :userId")
-		  .setParameter("userId", user.getId())
-		  .executeUpdate();
-
+		int rows = em.createQuery("DELETE FROM User WHERE accountName = :accountName")
+				.setParameter("accountName", accountName).executeUpdate();
 		LOGGER.info("Removed {} users", rows);
 	}
 

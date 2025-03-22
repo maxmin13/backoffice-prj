@@ -11,7 +11,7 @@ public interface UserDao {
 
 	Optional<User> findByAccountName(String accountName);
 
-	Optional<User> findByFirstName(String firstName);
+	List<User> findByFirstName(String firstName);
 
 	List<User> findAll();
 
@@ -21,5 +21,5 @@ public interface UserDao {
 
 	User update(User user);
 
-	void delete(User user);
+	void deleteByAccountName(String accountName);
 }

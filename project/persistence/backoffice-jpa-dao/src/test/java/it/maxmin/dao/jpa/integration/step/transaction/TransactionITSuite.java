@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.integration.step.user;
+package it.maxmin.dao.jpa.integration.step.transaction;
 
 import static io.cucumber.core.options.Constants.FILTER_TAGS_PROPERTY_NAME;
 import static io.cucumber.core.options.Constants.GLUE_PROPERTY_NAME;
@@ -10,14 +10,13 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("features/user")
+@SelectClasspathResource("features/transaction")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "it.maxmin.dao.jpa.integration.step")
-@ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "not @Ignore")
-@ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "@user")
-@ConfigurationParameter(key = "cucumber.execution.parallel.enabled", value = "true")
+@ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "@transaction and not @ignore")
+@ConfigurationParameter(key = "cucumber.execution.parallel.enabled", value = "false")
 @ConfigurationParameter(key = "cucumber.execution.parallel.config.strategy", value = "fixed")
-@ConfigurationParameter(key = "cucumber.execution.parallel.config.fixed.max-pool-size", value = "3")
-@ConfigurationParameter(key = "cucumber.execution.parallel.config.fixed.parallelism", value = "2")
-public class UserITRunner {
+@ConfigurationParameter(key = "cucumber.execution.parallel.config.fixed.max-pool-size", value = "4")
+@ConfigurationParameter(key = "cucumber.execution.parallel.config.fixed.parallelism", value = "4")
+public class TransactionITSuite {
 
 }

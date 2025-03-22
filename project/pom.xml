@@ -27,7 +27,7 @@
 
 	<properties>
 		<env>dev</env>
-		
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
@@ -343,20 +343,20 @@
 					<version>3.5.2</version>
 				</plugin>
 				<plugin>
-		            <groupId>com.dkanejs.maven.plugins</groupId>
-		            <artifactId>docker-compose-maven-plugin</artifactId>
-		            <version>4.0.0</version>
-		        </plugin>
-		     	<plugin>
+					<groupId>com.dkanejs.maven.plugins</groupId>
+					<artifactId>docker-compose-maven-plugin</artifactId>
+					<version>4.0.0</version>
+				</plugin>
+				<plugin>
 					<groupId>io.fabric8</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.45.1</version>
 				</plugin>
-		        <plugin>
-			        <groupId>org.codehaus.mojo</groupId>
-			        <artifactId>exec-maven-plugin</artifactId>
-			        <version>3.5.0</version>
-		        </plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>3.5.0</version>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-install-plugin</artifactId>
