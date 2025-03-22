@@ -11,11 +11,11 @@ import it.maxmin.dao.jpa.integration.step.common.ScenarioContext;
 import it.maxmin.dao.jpa.integration.step.common.StepUtil;
 import it.maxmin.model.jpa.dao.entity.User;
 
-public class CleanScenarioHooks extends AbstractStepDefinitions {
+public class CleanUserScenarioHooks extends AbstractStepDefinitions {
 
 	private UserDao userDao;
 
-	public CleanScenarioHooks(PlatformTransactionManager transactionManager, StepUtil stepUtil,
+	public CleanUserScenarioHooks(PlatformTransactionManager transactionManager, StepUtil stepUtil,
 			MessageService messageService, ScenarioContext scenarioContext, UserDao userDao) {
 		super(transactionManager, stepUtil, messageService, scenarioContext);
 		this.userDao = userDao;

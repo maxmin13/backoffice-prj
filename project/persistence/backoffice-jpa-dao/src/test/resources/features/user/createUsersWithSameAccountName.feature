@@ -1,5 +1,5 @@
 @user
-Feature: create the same user
+Feature: create the same user twice
   Connect to the database and create the same user twice
 
   @deleteUsers
