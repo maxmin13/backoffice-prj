@@ -30,7 +30,8 @@ Feature: create the same user twice
     And I commit the database transaction
     And I verify if the 'commit' was successful
     Then I should be told 'nope' 
-    
+    And I check if a 'data integrity violation' error have been raised
+    Then I should be told 'yes' 
     
     
     

@@ -1,4 +1,5 @@
 package it.maxmin.dao.jpa.integration.step.common;
+
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
 import static it.maxmin.dao.jpa.integration.step.common.StepConstants.EXCEPTION;
 import static it.maxmin.dao.jpa.integration.step.common.StepConstants.NOPE;
@@ -25,10 +26,10 @@ public class CommonStepDefinitions extends AbstractStepDefinitions {
 	@Then("I check if a {string} error have been raised")
 	public void check_if_specific_error_have_been_raised(String description) {
 		assertNotNull(description);
-		log("checking {0} error", description);
+		log("checking if a {0} error has been raised", description);
 		StepError stepError = getStepError(description);
 		Class<?> expected = stepError.getExceptionClass();
-		getFromScenarioContext(EXCEPTION).filter(expected::equals).ifPresentOrElse(ex -> {
+		getFromScenarioContext(EXCEPTION).filter(ob -> ob.getClass().equals(expected)).ifPresentOrElse(ex -> {
 			addToScenarioContext(SHOULD_BE_TOLD, YES);
 			log("a {0} error has been raised", description);
 		}, () -> {
@@ -45,7 +46,7 @@ public class CommonStepDefinitions extends AbstractStepDefinitions {
 			errors.asLists().get(0).stream().map(errorDescription -> getStepError(errorDescription).getExceptionClass())
 					.filter(trownEx.getClass()::equals).findAny().ifPresentOrElse(ex -> {
 						addToScenarioContext(SHOULD_BE_TOLD, YES);
-						log("a {0} error has been raised", ex.getClass().getName());
+						log("a {0} error has been raised", ex.getName());
 					}, () -> {
 						addToScenarioContext(SHOULD_BE_TOLD, NOPE);
 						log("none of the described errors has been raised");
@@ -68,7 +69,7 @@ public class CommonStepDefinitions extends AbstractStepDefinitions {
 			log("action {0} was successfull", action);
 		});
 	}
-	
+
 	@Then("I should be told {string}")
 	public void i_should_be_told(String expected) {
 		assertNotNull(expected);
