@@ -7,9 +7,9 @@ import org.springframework.transaction.TransactionStatus;
 import io.cucumber.java.After;
 import io.cucumber.java.Scenario;
 import it.maxmin.dao.jpa.api.repo.UserDao;
-import it.maxmin.dao.jpa.integration.step.common.ScenarioContext;
 import it.maxmin.dao.jpa.integration.step.common.util.LogUtil;
 import it.maxmin.dao.jpa.integration.step.common.util.TransactionUtil;
+import it.maxmin.dao.jpa.integration.step.context.ScenarioContext;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class CleanUserScenarioHooks {

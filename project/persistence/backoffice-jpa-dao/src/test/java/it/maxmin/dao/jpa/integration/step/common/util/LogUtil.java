@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import it.maxmin.dao.jpa.integration.step.common.ScenarioContext;
+import it.maxmin.dao.jpa.integration.step.context.ScenarioContext;
 
 public class LogUtil {
 	

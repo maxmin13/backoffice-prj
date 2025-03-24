@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.integration.step.common;
+package it.maxmin.dao.jpa.integration.step.context;
 
 import java.util.Collection;
 import java.util.HashMap;

@@ -18,6 +18,7 @@ import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.integration.step.common.util.LogUtil;
 import it.maxmin.dao.jpa.integration.step.common.util.StepErrorUtil;
 import it.maxmin.dao.jpa.integration.step.constant.StepError;
+import it.maxmin.dao.jpa.integration.step.context.ScenarioContext;
 
 public class CommonStepDefinitions {
 
