@@ -1,21 +1,25 @@
 package it.maxmin.dao.jpa.integration.step.common;
 
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
-import it.maxmin.common.service.api.MessageService;
+import it.maxmin.dao.jpa.integration.step.common.util.LogUtil;
 
-public class CommonScenarioHooks extends AbstractStepDefinitions {
-	
-	public CommonScenarioHooks(PlatformTransactionManager transactionManager, StepUtil stepUtil,
-			MessageService messageService, ScenarioContext scenarioContext) {
-		super(transactionManager, stepUtil, messageService, scenarioContext);
+public class CommonScenarioHooks {
+
+	private ScenarioContext scenarioContext;
+	private LogUtil logUtil;
+
+	@Autowired
+	public CommonScenarioHooks(ScenarioContext scenarioContext, LogUtil logUtil) {
+		this.scenarioContext = scenarioContext;
+		this.logUtil = logUtil;
 	}
 
 	@Before
 	public void initScenario(Scenario scenario) {
-		init(scenario);
-		log("scenario {0} initialized", getScenarioName());
+		scenarioContext.init(scenario);
+		logUtil.log("scenario {0} initialized", scenarioContext.getScenarioName());
 	}
 }

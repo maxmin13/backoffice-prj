@@ -1,14 +1,14 @@
 package it.maxmin.dao.jpa.integration.step.user;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.integration.step.common.StepConstants.EXCEPTION;
-import static it.maxmin.dao.jpa.integration.step.common.StepConstants.USER;
+import static it.maxmin.dao.jpa.integration.step.constant.StepConstants.EXCEPTION;
+import static it.maxmin.dao.jpa.integration.step.constant.StepConstants.USER;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
@@ -17,20 +17,25 @@ import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.DepartmentDao;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.integration.step.common.AbstractStepDefinitions;
 import it.maxmin.dao.jpa.integration.step.common.ScenarioContext;
-import it.maxmin.dao.jpa.integration.step.common.StepUtil;
+import it.maxmin.dao.jpa.integration.step.common.util.LogUtil;
 import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.User;
 
-public class CreateUserStepDefinitions extends AbstractStepDefinitions {
+public class CreateUserStepDefinitions {
 
+	private LogUtil logUtil;
+	private ScenarioContext scenarioContext;
+	private MessageService messageService;
 	private UserDao userDao;
 	private DepartmentDao departmentDao;
 
-	public CreateUserStepDefinitions(PlatformTransactionManager transactionManager, MessageService messageService,
-			StepUtil stepUtil, ScenarioContext scenarioContext, UserDao userDao, DepartmentDao departmentDao) {
-		super(transactionManager, stepUtil, messageService, scenarioContext);
+	@Autowired
+	public CreateUserStepDefinitions(ScenarioContext scenarioContext, MessageService messageService, LogUtil logUtil,
+			UserDao userDao, DepartmentDao departmentDao) {
+		this.logUtil = logUtil;
+		this.scenarioContext = scenarioContext;
+		this.messageService = messageService;
 		this.userDao = userDao;
 		this.departmentDao = departmentDao;
 	}
@@ -44,27 +49,27 @@ public class CreateUserStepDefinitions extends AbstractStepDefinitions {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMMM dd");
 		LocalDate birthDate = LocalDate.parse(data.get(0).get(3), formatter);
 		String departmentName = data.get(0).get(4);
-		Department department = departmentDao.findByDepartmentName(departmentName)
-				.orElseThrow(() -> new JpaDaoTestException(getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "department")));
+		Department department = departmentDao.findByDepartmentName(departmentName).orElseThrow(
+				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "department")));
 		User user = User.newInstance().withAccountName(accountName).withBirthDate(birthDate).withFirstName(firstName)
 				.withLastName(lastName).withDepartment(department);
-		log("I want to create a user");
-		log("{0}", user);
-		addToScenarioContext(USER, user);
+		logUtil.log("I want to create a user");
+		logUtil.log("{0}", user);
+		scenarioContext.add(USER, user);
 	}
 
 	@When("I create it")
 	public void create_user() {
-		log("inserting user in database");
-		User user = (User) getFromScenarioContext(USER)
-				.orElseThrow(() -> new JpaDaoTestException(getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
+		logUtil.log("inserting user in database");
+		User user = (User) scenarioContext.get(USER).orElseThrow(
+				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 		try {
 			userDao.create(user);
-			log("created user {0}", user);
+			logUtil.log("created user {0}", user);
 		}
 		catch (Exception e) {
-			log("{0}", e);
-			addToScenarioContext(EXCEPTION, e);
+			logUtil.log("{0}", e);
+			scenarioContext.add(EXCEPTION, e);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.integration.step.common;
+package it.maxmin.dao.jpa.integration.step.constant;
 
 import static org.springframework.transaction.TransactionDefinition.ISOLATION_READ_COMMITTED;
 import static org.springframework.transaction.TransactionDefinition.ISOLATION_READ_UNCOMMITTED;

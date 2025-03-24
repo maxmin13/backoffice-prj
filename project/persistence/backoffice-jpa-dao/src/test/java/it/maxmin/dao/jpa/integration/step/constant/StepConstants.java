@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.integration.step.common;
+package it.maxmin.dao.jpa.integration.step.constant;
 
 public enum StepConstants {
 	;

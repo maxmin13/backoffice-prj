@@ -1,43 +1,50 @@
 package it.maxmin.dao.jpa.integration.step.user;
 
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Scenario;
-import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.UserDao;
-import it.maxmin.dao.jpa.integration.step.common.AbstractStepDefinitions;
 import it.maxmin.dao.jpa.integration.step.common.ScenarioContext;
-import it.maxmin.dao.jpa.integration.step.common.StepUtil;
+import it.maxmin.dao.jpa.integration.step.common.util.LogUtil;
+import it.maxmin.dao.jpa.integration.step.common.util.TransactionUtil;
 import it.maxmin.model.jpa.dao.entity.User;
 
-public class CleanUserScenarioHooks extends AbstractStepDefinitions {
+public class CleanUserScenarioHooks {
 
+	private ScenarioContext scenarioContext;
+	private TransactionUtil transactionUtil;
+	private LogUtil logUtil;
 	private UserDao userDao;
 
-	public CleanUserScenarioHooks(PlatformTransactionManager transactionManager, StepUtil stepUtil,
-			MessageService messageService, ScenarioContext scenarioContext, UserDao userDao) {
-		super(transactionManager, stepUtil, messageService, scenarioContext);
+	@Autowired
+	public CleanUserScenarioHooks(ScenarioContext scenarioContext, UserDao userDao, TransactionUtil transactionUtil,
+			LogUtil logUtil) {
+		this.scenarioContext = scenarioContext;
 		this.userDao = userDao;
+		this.transactionUtil = transactionUtil;
+		this.logUtil = logUtil;
 	}
 
 	@After("@deleteUsers")
 	public void cleanScenarioContext(Scenario scenario) {
-		log("clean hook after scenario {0}", scenario.getId());
-		log("getting scenario {0} context", getScenarioName());
-		getSavedObjects().stream().forEach(o -> {
-			if (o instanceof User) {
-				User user = (User) o;
-				startTx();
+		logUtil.log("getting scenario {0} context", scenarioContext.getScenarioName());
+		scenarioContext.getSavedObjects().stream().forEach(obj -> {
+			if (obj instanceof User) {
+				User user = (User) obj;
+				TransactionDefinition transactionDefinition = transactionUtil.createTx(scenarioContext.getScenarioName());
+				TransactionStatus transaction = transactionUtil.startTx(transactionDefinition);
 				userDao.findByAccountName(user.getAccountName()).ifPresentOrElse(u -> {
-					log("deleting user {0}", u.getAccountName());
+					logUtil.log("deleting user {0}", u.getAccountName());
 					userDao.deleteByAccountName(u.getAccountName());
-					commitTx();
-					log("user {0} deleted", u.getAccountName());
-				}, () -> rollbackTx());
+					transactionUtil.commitTx(transaction);
+					logUtil.log("user {0} deleted", u.getAccountName());
+				}, () -> transactionUtil.rollbackTx(transaction));
 			}
 		});
-		log("scenario {0} context cleaned", getScenarioName());
+		logUtil.log("scenario {0} context cleaned", scenarioContext.getScenarioName());
 	}
 
 }
