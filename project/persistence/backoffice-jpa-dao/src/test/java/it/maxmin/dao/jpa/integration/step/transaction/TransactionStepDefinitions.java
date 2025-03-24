@@ -17,10 +17,10 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.integration.step.common.util.LogUtil;
-import it.maxmin.dao.jpa.integration.step.common.util.TransactionUtil;
 import it.maxmin.dao.jpa.integration.step.constant.TransactionIsolationLevel;
 import it.maxmin.dao.jpa.integration.step.context.ScenarioContext;
+import it.maxmin.dao.jpa.integration.step.util.LogUtil;
+import it.maxmin.dao.jpa.integration.step.util.TransactionUtil;
 
 public class TransactionStepDefinitions {
 

@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import it.maxmin.dao.jpa.config.JpaDaoSpringContextCfg;
-import it.maxmin.dao.jpa.integration.step.common.util.LogUtil;
-import it.maxmin.dao.jpa.integration.step.common.util.StepErrorUtil;
-import it.maxmin.dao.jpa.integration.step.common.util.TransactionUtil;
 import it.maxmin.dao.jpa.integration.step.context.ScenarioContext;
+import it.maxmin.dao.jpa.integration.step.util.LogUtil;
+import it.maxmin.dao.jpa.integration.step.util.StepErrorUtil;
+import it.maxmin.dao.jpa.integration.step.util.TransactionUtil;
 
 @Import(JpaDaoSpringContextCfg.class)
 public class JpaDaoSpringContextIntegrationTestCfg {

@@ -17,8 +17,8 @@ import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.DepartmentDao;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.integration.step.common.util.LogUtil;
 import it.maxmin.dao.jpa.integration.step.context.ScenarioContext;
+import it.maxmin.dao.jpa.integration.step.util.LogUtil;
 import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.User;
 

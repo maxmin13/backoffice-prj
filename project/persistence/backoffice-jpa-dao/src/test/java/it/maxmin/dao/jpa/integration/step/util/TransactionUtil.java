@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.integration.step.common.util;
+package it.maxmin.dao.jpa.integration.step.util;
 
 import static it.maxmin.dao.jpa.integration.step.constant.TransactionIsolationLevel.REPEATABLE_READ_ISO;
 
