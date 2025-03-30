@@ -5,24 +5,39 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.config.JpaDaoSpringContextCfg;
+import it.maxmin.dao.jpa.integration.step.common.LogUtil;
+import it.maxmin.dao.jpa.integration.step.common.StepActionManager;
+import it.maxmin.dao.jpa.integration.step.common.StepErrorHelper;
 import it.maxmin.dao.jpa.integration.step.context.ScenarioContext;
-import it.maxmin.dao.jpa.integration.step.util.LogUtil;
-import it.maxmin.dao.jpa.integration.step.util.StepErrorUtil;
-import it.maxmin.dao.jpa.integration.step.util.TransactionUtil;
+import it.maxmin.dao.jpa.integration.step.transaction.StepTransactionHelper;
+import it.maxmin.dao.jpa.integration.step.transaction.StepTransactionManager;
 
-@Import(JpaDaoSpringContextCfg.class)
+@Import({ JpaDaoSpringContextCfg.class, ScenarioContext.class })
 public class JpaDaoSpringContextIntegrationTestCfg {
 
 	@DependsOn("logUtil")
-	@Bean
-	public TransactionUtil transactionUtil(PlatformTransactionManager platformTransactionManager, LogUtil logUtil) {
-		return new TransactionUtil(platformTransactionManager, logUtil);
+	@Bean("stepTransactionManager")
+	public StepTransactionManager stepTransactionManager(PlatformTransactionManager platformTransactionManager,
+			ScenarioContext scenarioContext, MessageService messageService, LogUtil logUtil) {
+		return new StepTransactionManager(scenarioContext, platformTransactionManager, messageService, logUtil);
 	}
 
-	@Bean
-	public StepErrorUtil stepErrorUtil() {
-		return new StepErrorUtil();
+	@DependsOn("logUtil")
+	@Bean("stepActionManager")
+	public StepActionManager stepActionManager(ScenarioContext scenarioContext, MessageService messageService) {
+		return new StepActionManager(scenarioContext, messageService);
+	}
+
+	@Bean("stepTransactionHelper")
+	public StepTransactionHelper stepTransactionHelper() {
+		return new StepTransactionHelper();
+	}
+
+	@Bean("stepErrorHelper")
+	public StepErrorHelper stepErrorHelper() {
+		return new StepErrorHelper();
 	}
 
 	@Bean("logUtil")

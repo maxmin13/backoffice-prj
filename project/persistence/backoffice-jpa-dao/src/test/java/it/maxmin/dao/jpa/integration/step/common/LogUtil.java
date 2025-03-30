@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.integration.step.util;
+package it.maxmin.dao.jpa.integration.step.common;
 
 import java.text.MessageFormat;
 

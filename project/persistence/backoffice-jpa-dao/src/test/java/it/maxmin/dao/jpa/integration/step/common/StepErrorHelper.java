@@ -1,10 +1,10 @@
-package it.maxmin.dao.jpa.integration.step.util;
+package it.maxmin.dao.jpa.integration.step.common;
 
 import java.util.Optional;
 
 import it.maxmin.dao.jpa.integration.step.constant.StepError;
 
-public class StepErrorUtil {
+public class StepErrorHelper {
 
 	public Optional<StepError> getStepError(String description) {
 		StepError stepError = null;

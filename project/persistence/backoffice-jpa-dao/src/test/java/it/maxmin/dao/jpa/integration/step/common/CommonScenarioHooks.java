@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import it.maxmin.dao.jpa.integration.step.context.ScenarioContext;
-import it.maxmin.dao.jpa.integration.step.util.LogUtil;
 
 public class CommonScenarioHooks {
 

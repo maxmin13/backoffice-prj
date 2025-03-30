@@ -5,7 +5,7 @@ import static org.springframework.transaction.TransactionDefinition.ISOLATION_RE
 import static org.springframework.transaction.TransactionDefinition.ISOLATION_REPEATABLE_READ;
 import static org.springframework.transaction.TransactionDefinition.ISOLATION_SERIALIZABLE;
 
-public enum TransactionIsolationLevel {
+public enum TransactionIsolation {
 
 	READ_UNCOMMITED_ISO("read uncommitted", ISOLATION_READ_UNCOMMITTED),
 	READ_COMMITTED_ISO("read committed", ISOLATION_READ_COMMITTED),
@@ -13,18 +13,18 @@ public enum TransactionIsolationLevel {
 	SERIALIZABLE("serializable", ISOLATION_SERIALIZABLE);
 
 	private String description;
-	private int level;
+	private int isolation;
 
-	private TransactionIsolationLevel(String description, int level) {
+	private TransactionIsolation(String description, int isolation) {
 		this.description = description;
-		this.level = level;
+		this.isolation = isolation;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public int getLevel() {
-		return level;
+	public int getIsolation() {
+		return isolation;
 	}
 }

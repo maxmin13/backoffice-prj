@@ -17,24 +17,24 @@ import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.DepartmentDao;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.integration.step.context.ScenarioContext;
-import it.maxmin.dao.jpa.integration.step.util.LogUtil;
+import it.maxmin.dao.jpa.integration.step.common.LogUtil;
+import it.maxmin.dao.jpa.integration.step.common.StepActionManager;
 import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class CreateUserStepDefinitions {
 
 	private LogUtil logUtil;
-	private ScenarioContext scenarioContext;
+	private StepActionManager stepActionManager;
 	private MessageService messageService;
 	private UserDao userDao;
 	private DepartmentDao departmentDao;
 
 	@Autowired
-	public CreateUserStepDefinitions(ScenarioContext scenarioContext, MessageService messageService, LogUtil logUtil,
+	public CreateUserStepDefinitions(StepActionManager stepActionManager, MessageService messageService, LogUtil logUtil,
 			UserDao userDao, DepartmentDao departmentDao) {
 		this.logUtil = logUtil;
-		this.scenarioContext = scenarioContext;
+		this.stepActionManager = stepActionManager;
 		this.messageService = messageService;
 		this.userDao = userDao;
 		this.departmentDao = departmentDao;
@@ -55,13 +55,13 @@ public class CreateUserStepDefinitions {
 				.withLastName(lastName).withDepartment(department);
 		logUtil.log("I want to create a user");
 		logUtil.log("{0}", user);
-		scenarioContext.add(USER, user);
+		stepActionManager.setItem(USER, user);
 	}
 
 	@When("I create it")
 	public void create_user() {
 		logUtil.log("inserting user in database");
-		User user = (User) scenarioContext.get(USER).orElseThrow(
+		User user = (User) stepActionManager.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 		try {
 			userDao.create(user);
@@ -69,7 +69,7 @@ public class CreateUserStepDefinitions {
 		}
 		catch (Exception e) {
 			logUtil.log("{0}", e);
-			scenarioContext.add(EXCEPTION, e);
+			stepActionManager.setItem(EXCEPTION, e);
 		}
 	}
 

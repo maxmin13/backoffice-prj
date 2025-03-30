@@ -1,9 +1,9 @@
 package it.maxmin.dao.jpa.integration.step.context;
 
-import java.util.Collection;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -18,38 +18,30 @@ import io.cucumber.java.Scenario;
 public class ScenarioContext {
 
 	private Scenario scenario;
-	private Map<String, Object> scenarioObjects;
+	private Map<String, Object> scenarioItems;
+	private Map<String, Transaction> scenarioTransactions;
 
 	public ScenarioContext() {
-		scenarioObjects = new HashMap<>();
+		scenarioItems = new HashMap<>();
+		scenarioTransactions = new HashMap<>();
 	}
 
 	public void init(Scenario scenario) {
+		assertNotNull(scenario);
 		this.scenario = scenario;
-	}
-
-	public void add(String key, Object value) {
-		scenarioObjects.put(key, value);
-	}
-
-	public Optional<Object> get(String key) {
-		return Optional.ofNullable(scenarioObjects.get(key));
-	}
-
-	public void remove(String key) {
-		scenarioObjects.remove(key);
-	}
-
-	public Boolean contains(String key) {
-		return scenarioObjects.containsKey(key);
-	}
-
-	public Collection<Object> getSavedObjects() {
-		return scenarioObjects.values();
 	}
 
 	public String getScenarioName() {
 		String id = scenario.getId();
 		return id.substring(id.lastIndexOf("-") + 1).toUpperCase();
 	}
+
+	public Map<String, Transaction> getTrasactions() {
+		return scenarioTransactions;
+	}
+
+	public Map<String, Object> getItems() {
+		return scenarioItems;
+	}
+
 }
