@@ -43,10 +43,10 @@ public class CommonStepDefinitions {
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "step error")));
 		Class<?> expected = stepError.getExceptionClass();
 		stepActionManager.getItem(EXCEPTION).filter(ob -> ob.getClass().equals(expected)).ifPresentOrElse(ex -> {
-			stepActionManager.theResponseIs(YES);
+			stepActionManager.saveResponse(YES);
 			logUtil.log("a {0} error has been raised", description);
 		}, () -> {
-			stepActionManager.theResponseIs(NOPE);
+			stepActionManager.saveResponse(NOPE);
 			logUtil.log("no {0} error has been raised", description);
 		});
 	}
@@ -62,14 +62,14 @@ public class CommonStepDefinitions {
 								messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "step error")));
 				return stepError.getClass();
 			}).filter(trownEx.getClass()::equals).findAny().ifPresentOrElse(ex -> {
-				stepActionManager.theResponseIs(YES);
+				stepActionManager.saveResponse(YES);
 				logUtil.log("a {0} error has been raised", ex.getName());
 			}, () -> {
-				stepActionManager.theResponseIs(NOPE);
+				stepActionManager.saveResponse(NOPE);
 				logUtil.log("none of the described errors has been raised");
 			});
 		}, () -> {
-			stepActionManager.theResponseIs(NOPE);
+			stepActionManager.saveResponse(NOPE);
 			logUtil.log("no error has been raised");
 		});
 	}
@@ -78,10 +78,10 @@ public class CommonStepDefinitions {
 	public void check_success(String action) {
 		logUtil.log("checking {0} success", action);
 		stepActionManager.getItem(EXCEPTION).ifPresentOrElse(u -> {
-			stepActionManager.theResponseIs(NOPE);
+			stepActionManager.saveResponse(NOPE);
 			logUtil.log("action {0} wasn''t successfull", action);
 		}, () -> {
-			stepActionManager.theResponseIs(YES);
+			stepActionManager.saveResponse(YES);
 			logUtil.log("action {0} was successfull", action);
 		});
 	}

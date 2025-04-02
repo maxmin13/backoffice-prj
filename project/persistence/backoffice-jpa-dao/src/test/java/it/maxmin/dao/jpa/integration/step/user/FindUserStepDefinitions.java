@@ -40,31 +40,29 @@ public class FindUserStepDefinitions {
 	@Given("I search for {string} user account name in the database")
 	public void search_user_by_account_name(String accountName) {
 		assertNotNull(accountName);
-		logUtil.log("searching user by account name {0}", accountName);
 		userDao.findByAccountName(accountName).ifPresentOrElse(u -> {
 			stepActionManager.setItem(USER, u);
 			logUtil.log("user {0} found by account name", accountName);
 		}, () -> {
 			logUtil.log("user {0} not found by account name", accountName);
+			stepActionManager.removeItem(USER);
 		});
 	}
-
+	
 	@When("I check if the user {string} is there")
 	public void check_if_user_is_there(String userName) {
 		assertNotNull(userName);
-		logUtil.log("cheking if {0} is there", userName);
 		stepActionManager.getItem(USER).ifPresentOrElse(u -> {
-			stepActionManager.theResponseIs(YES);
+			stepActionManager.saveResponse(YES);
 			logUtil.log("user {0} found", userName);
 		}, () -> {
-			stepActionManager.theResponseIs(NOPE);
+			stepActionManager.saveResponse(NOPE);
 			logUtil.log("user {0} not found", userName);
 		});
 	}
 
 	@Then("the user should be")
 	public void the_user_should_be(DataTable user) {
-		logUtil.log("checking the user properties");
 		assertNotNull(user);
 		List<List<String>> data = user.asLists();
 		String accountName = data.get(0).get(0);

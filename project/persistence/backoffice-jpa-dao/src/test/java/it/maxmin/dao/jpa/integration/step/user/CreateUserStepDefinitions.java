@@ -60,12 +60,11 @@ public class CreateUserStepDefinitions {
 
 	@When("I create it")
 	public void create_user() {
-		logUtil.log("inserting user in database");
 		User user = (User) stepActionManager.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 		try {
 			userDao.create(user);
-			logUtil.log("created user {0}", user);
+			logUtil.log("inserted new user {0} in the database", user);
 		}
 		catch (Exception e) {
 			logUtil.log("{0}", e);

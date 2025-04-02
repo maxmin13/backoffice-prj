@@ -31,27 +31,29 @@ public class StepActionManager {
 		scenarioContext.getItems().put(key, value);
 	}
 
-	// TODO get or remove from contest ??????
 	public Optional<Object> getItem(String key) {
 		assertNotNull(key);
-		return Optional.ofNullable(scenarioContext.getItems().get(key));
+		Optional<Object> value = Optional.ofNullable(scenarioContext.getItems().get(key));
+		scenarioContext.getItems().get(key);
+		return value;
 	}
 	
-	// TODO get or remove from contest ??????
-	public <T extends Object> List<T> getItemsOfType(Class<T> itemClass) {
-		assertNotNull(itemClass);
-		return scenarioContext.getItems().values().stream().filter(item -> itemClass.isAssignableFrom(item.getClass()))
-				.map(itemClass::cast).toList();
+	public void removeItem(String key) {
+		assertNotNull(key);
+		scenarioContext.getItems().remove(key);
 	}
 
-	
-	// TODO another name ?????
-	public void theResponseIs(String response) {
+	public <T extends Object> List<T> getItemsOfType(Class<T> itemClass) {
+		assertNotNull(itemClass);
+		return scenarioContext.getItems().values().stream()
+				.filter(item -> itemClass.isAssignableFrom(item.getClass())).map(itemClass::cast).toList();
+	}
+
+	public void saveResponse(String response) {
 		assertNotNull(response);
 		setItem(RESPONSE, response);
 	}
 
-	// TODO get or remove from contest ??????
 	public void verifyResponse(String expected) {
 		assertNotNull(expected);
 		String response = (String) getItem(RESPONSE).orElseThrow(

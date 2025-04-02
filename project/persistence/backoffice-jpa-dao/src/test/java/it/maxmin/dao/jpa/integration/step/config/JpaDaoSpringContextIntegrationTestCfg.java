@@ -24,7 +24,6 @@ public class JpaDaoSpringContextIntegrationTestCfg {
 		return new StepTransactionManager(scenarioContext, platformTransactionManager, messageService, logUtil);
 	}
 
-	@DependsOn("logUtil")
 	@Bean("stepActionManager")
 	public StepActionManager stepActionManager(ScenarioContext scenarioContext, MessageService messageService) {
 		return new StepActionManager(scenarioContext, messageService);

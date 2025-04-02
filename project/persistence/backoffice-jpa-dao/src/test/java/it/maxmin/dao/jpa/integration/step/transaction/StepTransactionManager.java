@@ -20,7 +20,7 @@ import it.maxmin.dao.jpa.integration.step.context.Transaction;
 
 public class StepTransactionManager {
 
-	private static long id = 0;
+	private static long identifer = 0;
 	private ScenarioContext scenarioContext;
 	private PlatformTransactionManager platformTransactionManager;
 	private MessageService messageService;
@@ -40,26 +40,24 @@ public class StepTransactionManager {
 		transactionDefinition.setTimeout(300);
 		transactionDefinition.setIsolationLevel(REPEATABLE_READ_ISO.getIsolation());
 		transactionDefinition.setPropagationBehavior(REQUIRED_PROPAGATION.getPropagation());
-		String identifier = createID();
-		transactionDefinition.setName(identifier);
+		String id = createID();
+		transactionDefinition.setName(id);
 		Transaction transaction = Transaction.newInstance().withTransactionDefinition(transactionDefinition);
-		scenarioContext.getTrasactions().put(identifier, transaction);
-		return identifier;
+		scenarioContext.getTrasactions().put(id, transaction);
+		logUtil.log("created transaction {0} with propagation {1} and isolation {2}", id,
+				REQUIRED_PROPAGATION.getDescription(), REPEATABLE_READ_ISO.getDescription());
+		return id;
 	}
 
 	public String createTx(TransactionPropagation transactionPropagation, TransactionIsolation transactionIsolation) {
 		assertNotNull(transactionPropagation);
 		assertNotNull(transactionIsolation);
-		String identifier = createTx();
-		Transaction transaction = scenarioContext.getTrasactions().get(identifier);
-		if (transaction == null) {
-			throw new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction"));
-		}
-		DefaultTransactionDefinition defaultTransactionDefinition = (DefaultTransactionDefinition) transaction
-				.getTransactionDefinition();
-		defaultTransactionDefinition.setIsolationLevel(transactionPropagation.getPropagation());
-		defaultTransactionDefinition.setIsolationLevel(transactionIsolation.getIsolation());
-		return identifier;
+		String id = createTx();
+		setTransactionPropagation(id, transactionPropagation);
+		setTransactionIsolation(id, transactionIsolation);
+		logUtil.log("created transaction {0} with propagation {1} and isolation {2}", id,
+				transactionPropagation.getDescription(), transactionIsolation.getDescription());
+		return id;
 	}
 
 	public void setTransactionPropagation(String id, TransactionPropagation transactionPropagation) {
@@ -72,6 +70,7 @@ public class StepTransactionManager {
 		DefaultTransactionDefinition defaultTransactionDefinition = (DefaultTransactionDefinition) transaction
 				.getTransactionDefinition();
 		defaultTransactionDefinition.setPropagationBehavior(transactionPropagation.getPropagation());
+		logUtil.log("transaction {0} set propagation {1}", id, transactionPropagation.getDescription());
 	}
 
 	public void setTransactionIsolation(String id, TransactionIsolation transactionIsolation) {
@@ -84,6 +83,7 @@ public class StepTransactionManager {
 		DefaultTransactionDefinition defaultTransactionDefinition = (DefaultTransactionDefinition) transaction
 				.getTransactionDefinition();
 		defaultTransactionDefinition.setIsolationLevel(transactionIsolation.getIsolation());
+		logUtil.log("transaction {0} set isolation {1}", id, transactionIsolation.getDescription());
 	}
 
 	public void startTx(String id) {
@@ -95,9 +95,9 @@ public class StepTransactionManager {
 		TransactionStatus transactionStatus = platformTransactionManager
 				.getTransaction(transaction.getTransactionDefinition());
 		transaction.withTransactionStatus(transactionStatus);
+		logUtil.log("transaction {0} started", id);
 	}
 
-	// TODO get or remove from contest ??????
 	public void commitTx(String id) {
 		assertNotNull(id);
 		Transaction transaction = scenarioContext.getTrasactions().get(id);
@@ -105,10 +105,10 @@ public class StepTransactionManager {
 			throw new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction"));
 		}
 		platformTransactionManager.commit(transaction.getTransactionStatus());
-		logUtil.log("transaction committed");
+		scenarioContext.getTrasactions().remove(id);
+		logUtil.log("transaction {0} committed", id);
 	}
 
-	// TODO get or remove from contest ??????
 	public void rollbackTx(String id) {
 		assertNotNull(id);
 		Transaction transaction = scenarioContext.getTrasactions().get(id);
@@ -116,10 +116,11 @@ public class StepTransactionManager {
 			throw new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction"));
 		}
 		platformTransactionManager.rollback(transaction.getTransactionStatus());
-		logUtil.log("transaction rolled back");
+		scenarioContext.getTrasactions().remove(id);
+		logUtil.log("transaction {0} rolled back", id);
 	}
 
 	private static synchronized String createID() {
-		return String.valueOf(id++);
+		return String.valueOf(identifer++);
 	}
 }

@@ -2,6 +2,7 @@ package it.maxmin.dao.jpa.impl.repo;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_FIELD_NOT_NULL_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_FIELD_NULL_MSG;
+import static jakarta.persistence.FlushModeType.COMMIT;
 import static org.springframework.util.Assert.notNull;
 
 import java.util.List;
@@ -59,7 +60,7 @@ public class UserDaoImpl implements UserDao {
 		notNull(accountName, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "account name"));
 		try {
 			return Optional.of(em.createNamedQuery("User.findByAccountName", User.class)
-					.setParameter("accountName", accountName).getSingleResult());
+					.setFlushMode(COMMIT).setParameter("accountName", accountName).getSingleResult());
 		}
 		catch (NoResultException e) {
 			return Optional.empty();

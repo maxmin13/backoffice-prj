@@ -36,54 +36,43 @@ public class TransactionStepDefinitions {
 
 	@Given("I create a default database transaction")
 	public void create_a_database_transaction() {
-		logUtil.log("creating a database transaction");
 		String id = stepTransactionManager.createTx();
 		stepActionManager.setItem(TRANSACTION, id);
 	}
 
 	@Given("I set the transaction isolation to {string}")
 	public void set_transaction_isolation(String isolation) {
-		logUtil.log("setting transaction isolation to {0}", isolation);
 		TransactionIsolation transactionIsolation = stepTransactionHelper.getTransactionIsolation(isolation)
 				.orElseThrow(() -> new JpaDaoTestException(
 						messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction isolation")));
 		String id = (String) stepActionManager.getItem(TRANSACTION).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
-		logUtil.log("found transaction {0}", id);
 		stepTransactionManager.setTransactionIsolation(id, transactionIsolation);
 	}
 
 	@Given("I set the transaction propagation to {string}")
 	public void set_transaction_propagation(String propagation) {
-		logUtil.log("setting transaction propagation to {0}", propagation);
 		TransactionPropagation transactionPropagation = stepTransactionHelper.getTransactionPropagation(propagation)
 				.orElseThrow(() -> new JpaDaoTestException(
 						messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction propagation")));
 		String id = (String) stepActionManager.getItem(TRANSACTION).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
-		logUtil.log("found transaction {0}", id);
 		stepTransactionManager.setTransactionPropagation(id, transactionPropagation);
 	}
 
 	@Given("I start the database transaction")
 	public void start_database_transaction() {
-		logUtil.log("starting the database transaction");
 		String id = (String) stepActionManager.getItem(TRANSACTION).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
-		logUtil.log("found transaction {0}", id);
 		stepTransactionManager.startTx(id);
-		logUtil.log("database transaction started");
 	}
 
 	@Then("I commit the database transaction")
 	public void commit_database_transaction() {
-		logUtil.log("committing the database transaction");
 		try {
 			String id = (String) stepActionManager.getItem(TRANSACTION).orElseThrow(() -> new JpaDaoTestException(
 					messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
-			logUtil.log("found transaction {0}", id);
 			stepTransactionManager.commitTx(id);
-			logUtil.log("transaction committed");
 		}
 		catch (Exception e) {
 			logUtil.log("{0}", e);
@@ -93,13 +82,10 @@ public class TransactionStepDefinitions {
 
 	@Given("I rollback the database transaction")
 	public void rollback_database_transaction() {
-		logUtil.log("rolling back the database transaction");
 		try {
 			String id = (String) stepActionManager.getItem(TRANSACTION).orElseThrow(() -> new JpaDaoTestException(
 					messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
-			logUtil.log("found transaction {0}", id);
 			stepTransactionManager.rollbackTx(id);
-			logUtil.log("transaction rolled back");
 		}
 		catch (Exception e) {
 			logUtil.log("{0}", e);
