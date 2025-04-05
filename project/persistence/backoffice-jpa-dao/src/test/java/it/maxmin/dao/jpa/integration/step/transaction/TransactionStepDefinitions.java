@@ -2,18 +2,20 @@ package it.maxmin.dao.jpa.integration.step.transaction;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
 import static it.maxmin.dao.jpa.integration.step.constant.StepConstants.EXCEPTION;
-import static it.maxmin.dao.jpa.integration.step.constant.StepConstants.TRANSACTION;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.integration.step.common.LogUtil;
 import it.maxmin.dao.jpa.integration.step.common.StepActionManager;
-import it.maxmin.dao.jpa.integration.step.constant.TransactionIsolation;
-import it.maxmin.dao.jpa.integration.step.constant.TransactionPropagation;
+import it.maxmin.dao.jpa.transaction.TransactionIsolation;
+import it.maxmin.dao.jpa.transaction.TransactionPropagation;
 
 public class TransactionStepDefinitions {
 
@@ -34,43 +36,42 @@ public class TransactionStepDefinitions {
 		this.logUtil = logUtil;
 	}
 
-	@Given("I create a default database transaction")
-	public void create_a_database_transaction() {
+	@Given("I create a default database transaction {string}")
+	public void create_a_database_transaction(String txName) {
 		String id = stepTransactionManager.createTx();
-		stepActionManager.setItem(TRANSACTION, id);
+		stepActionManager.setItem(txName, id);
 	}
 
-	@Given("I set the transaction isolation to {string}")
-	public void set_transaction_isolation(String isolation) {
-		TransactionIsolation transactionIsolation = stepTransactionHelper.getTransactionIsolation(isolation)
+	@Given("I create a database transaction")
+	public void create_a_database_transaction(DataTable transaction) {
+
+		List<List<String>> data = transaction.asLists();
+		String txName = data.get(0).get(0);
+		String txIsolation = data.get(0).get(1);
+		String txPropagation = data.get(0).get(2);
+
+		TransactionIsolation transactionIsolation = stepTransactionHelper.getTransactionIsolation(txIsolation)
 				.orElseThrow(() -> new JpaDaoTestException(
 						messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction isolation")));
-		String id = (String) stepActionManager.getItem(TRANSACTION).orElseThrow(
-				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
-		stepTransactionManager.setTransactionIsolation(id, transactionIsolation);
-	}
-
-	@Given("I set the transaction propagation to {string}")
-	public void set_transaction_propagation(String propagation) {
-		TransactionPropagation transactionPropagation = stepTransactionHelper.getTransactionPropagation(propagation)
+		TransactionPropagation transactionPropagation = stepTransactionHelper.getTransactionPropagation(txPropagation)
 				.orElseThrow(() -> new JpaDaoTestException(
 						messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction propagation")));
-		String id = (String) stepActionManager.getItem(TRANSACTION).orElseThrow(
-				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
-		stepTransactionManager.setTransactionPropagation(id, transactionPropagation);
+
+		String id = stepTransactionManager.createTx(transactionPropagation, transactionIsolation);
+		stepActionManager.setItem(txName, id);
 	}
 
-	@Given("I start the database transaction")
-	public void start_database_transaction() {
-		String id = (String) stepActionManager.getItem(TRANSACTION).orElseThrow(
+	@Given("I start the transaction {string}")
+	public void start_database_transaction(String txName) {
+		String id = (String) stepActionManager.getItem(txName).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
 		stepTransactionManager.startTx(id);
 	}
 
-	@Then("I commit the database transaction")
-	public void commit_database_transaction() {
+	@Then("I commit the transaction {string}")
+	public void commit_database_transaction(String txName) {
 		try {
-			String id = (String) stepActionManager.getItem(TRANSACTION).orElseThrow(() -> new JpaDaoTestException(
+			String id = (String) stepActionManager.getItem(txName).orElseThrow(() -> new JpaDaoTestException(
 					messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
 			stepTransactionManager.commitTx(id);
 		}
@@ -80,10 +81,10 @@ public class TransactionStepDefinitions {
 		}
 	}
 
-	@Given("I rollback the database transaction")
-	public void rollback_database_transaction() {
+	@Given("I rollback the transaction {string}")
+	public void rollback_database_transaction(String txName) {
 		try {
-			String id = (String) stepActionManager.getItem(TRANSACTION).orElseThrow(() -> new JpaDaoTestException(
+			String id = (String) stepActionManager.getItem(txName).orElseThrow(() -> new JpaDaoTestException(
 					messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
 			stepTransactionManager.rollbackTx(id);
 		}

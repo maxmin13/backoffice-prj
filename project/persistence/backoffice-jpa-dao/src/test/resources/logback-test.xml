@@ -21,9 +21,15 @@
     <logger name="it.maxmin.dao.jpa.integration.step" level="debug" additivity="false">
     	<appender-ref ref="integration" />
     </logger>
+    
+    <!-- 
+    <logger name="org.hibernate" level="trace" additivity="false">
+    	<appender-ref ref="console" />
+    </logger>
+     -->
      
 	<!-- <root level="trace"> -->
-    <root level="debug">
+    <root level="trace">
         <appender-ref ref="console" />
     </root>
 </configuration>

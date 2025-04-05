@@ -5,14 +5,10 @@ import static it.maxmin.common.constant.MessageConstants.ERROR_DESCRIPTION_NOT_N
 import static it.maxmin.common.constant.MessageConstants.ERROR_POSTAL_CODE_NOT_NULL_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_REGION_NOT_NULL_MSG;
 import static it.maxmin.common.constant.MessageConstants.ERROR_STATE_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_USERS_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 import javax.validation.constraints.Size;
 
@@ -22,12 +18,9 @@ import org.hibernate.annotations.Parameter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -39,7 +32,6 @@ import jakarta.persistence.Version;
 @NamedQuery(name = "Address.findById", query = """
 		       select distinct a
 		            from Address a
-		            left join fetch a.users
 		            inner join fetch a.state
 		            where a.id = :id
 		""")
@@ -81,9 +73,9 @@ public class Address implements Serializable {
 	@JoinColumn(name = "StateId", referencedColumnName = "Id", nullable = false)
 	private State state;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "AddressId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
-	private Set<User> users = new HashSet<>();
+//	@ManyToMany(fetch = FetchType.LAZY)
+//	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "AddressId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
+//	private Set<User> users = new HashSet<>();
 
 	public static Address newInstance() {
 		return new Address();
@@ -173,45 +165,45 @@ public class Address implements Serializable {
 		return this;
 	}
 
-	public Set<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(Set<User> users) {
-		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-		this.users = users;
-	}
-
-	public Address withUsers(Set<User> users) {
-		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-		this.users = users;
-		return this;
-	}
-
-	public Optional<User> getUser(String accountName) {
-		if (accountName == null) {
-			return Optional.empty();
-		}
-		return users.stream().filter(each -> each.getAccountName().equals(accountName)).findFirst();
-	}
-
-	public boolean addUser(User user) {
-		if (user == null) {
-			return false;
-		}
-		else {
-			return users.add(user);
-		}
-	}
-
-	public boolean removeUser(User user) {
-		if (user == null) {
-			return false;
-		}
-		else {
-			return users.remove(user);
-		}
-	}
+//	public Set<User> getUsers() {
+//		return users;
+//	}
+//
+//	public void setUsers(Set<User> users) {
+//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
+//		this.users = users;
+//	}
+//
+//	public Address withUsers(Set<User> users) {
+//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
+//		this.users = users;
+//		return this;
+//	}
+//
+//	public Optional<User> getUser(String accountName) {
+//		if (accountName == null) {
+//			return Optional.empty();
+//		}
+//		return users.stream().filter(each -> each.getAccountName().equals(accountName)).findFirst();
+//	}
+//
+//	public boolean addUser(User user) {
+//		if (user == null) {
+//			return false;
+//		}
+//		else {
+//			return users.add(user);
+//		}
+//	}
+//
+//	public boolean removeUser(User user) {
+//		if (user == null) {
+//			return false;
+//		}
+//		else {
+//			return users.remove(user);
+//		}
+//	}
 
 	@Override
 	public int hashCode() {
@@ -237,7 +229,9 @@ public class Address implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Address [id=" + id + ", description=" + description + ", city=" + city + ", state=" + state
-				+ ", region=" + region + ", postalCode=" + postalCode + "]";
+		return "Address [id=" + id + ", version=" + version + ", description=" + description + ", city=" + city
+				+ ", region=" + region + ", postalCode=" + postalCode + ", state=" + state + "]";
 	}
+
+
 }

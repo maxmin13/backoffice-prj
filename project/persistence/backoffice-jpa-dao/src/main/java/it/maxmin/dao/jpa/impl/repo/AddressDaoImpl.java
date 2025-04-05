@@ -4,7 +4,6 @@ import static it.maxmin.common.constant.MessageConstants.ERROR_FIELD_NOT_NULL_MS
 import static it.maxmin.common.constant.MessageConstants.ERROR_FIELD_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import it.maxmin.common.service.impl.MessageServiceImpl;
 import it.maxmin.dao.jpa.api.repo.AddressDao;
 import it.maxmin.model.jpa.dao.entity.Address;
-import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.State;
-import it.maxmin.model.jpa.dao.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
@@ -36,15 +33,21 @@ import jakarta.persistence.Tuple;
 public class AddressDaoImpl implements AddressDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoImpl.class);
+//	private static final String SELECT_ALL = ""
+//			+ "SELECT DISTINCT a.Id AS AddressId, a.PostalCode AS PostalCode, a.Description AS Description, a.City AS City, a.Region AS Region, "
+//			+ "          u.Id AS UserId, u.AccountName AS AccountName, u.FirstName AS FirstName, u.LastName AS LastName, u.BirthDate AS BirthDate, "
+//			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName, "
+//			+ "          d.Id as DepartmentId, d.Name AS DepartmentName "
+//			+ "      FROM Address a "
+//			+ "      LEFT JOIN UserAddress ua ON a.Id = ua.AddressId " 
+//			+ "      LEFT JOIN User u ON ua.UserId = u.Id "
+//			+ "      LEFT JOIN Department d ON u.DepartmentId = d.Id "
+//			+ "      INNER JOIN State s ON a.StateId = s.Id ";
+	
 	private static final String SELECT_ALL = ""
 			+ "SELECT DISTINCT a.Id AS AddressId, a.PostalCode AS PostalCode, a.Description AS Description, a.City AS City, a.Region AS Region, "
-			+ "          u.Id AS UserId, u.AccountName AS AccountName, u.FirstName AS FirstName, u.LastName AS LastName, u.BirthDate AS BirthDate, "
-			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName, "
-			+ "          d.Id as DepartmentId, d.Name AS DepartmentName "
+			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName "
 			+ "      FROM Address a "
-			+ "      LEFT JOIN UserAddress ua ON a.Id = ua.AddressId " 
-			+ "      LEFT JOIN User u ON ua.UserId = u.Id "
-			+ "      LEFT JOIN Department d ON u.DepartmentId = d.Id "
 			+ "      INNER JOIN State s ON a.StateId = s.Id ";
 
 	@PersistenceContext
@@ -96,23 +99,23 @@ public class AddressDaoImpl implements AddressDao {
 
 			Objects.requireNonNull(address).withState(state);
 
-			User user = null;
-			var userId = tuple.get("UserId", Integer.class);
+//			User user = null;
+//			var userId = tuple.get("UserId", Integer.class);
 
-			if (userId != null) {
-				var accountName = tuple.get("AccountName", String.class);
-				var firstName = tuple.get("FirstName", String.class);
-				var lastName = tuple.get("LastName", String.class);
-				var birthDate = tuple.get("BirthDate", Date.class);
-				var departmentName = tuple.get("DepartmentName", String.class);
-				var department = Department.newInstance().withName(departmentName);
-
-				user = User.newInstance().withAccountName(accountName).withFirstName(firstName).withLastName(lastName)
-						.withBirthDate(birthDate.toLocalDate()).withDepartment(department);
-
-				// add the user if not in the list
-				Objects.requireNonNull(address).addUser(user);
-			}
+//			if (userId != null) {
+//				var accountName = tuple.get("AccountName", String.class);
+//				var firstName = tuple.get("FirstName", String.class);
+//				var lastName = tuple.get("LastName", String.class);
+//				var birthDate = tuple.get("BirthDate", Date.class);
+//				var departmentName = tuple.get("DepartmentName", String.class);
+//				var department = Department.newInstance().withName(departmentName);
+//
+//				user = User.newInstance().withAccountName(accountName).withFirstName(firstName).withLastName(lastName)
+//						.withBirthDate(birthDate.toLocalDate()).withDepartment(department);
+//
+//				// add the user if not in the list
+//				Objects.requireNonNull(address).addUser(user);
+//			}
 
 			return address;
 		}).collect(Collectors.toSet());

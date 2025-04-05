@@ -2,8 +2,8 @@ package it.maxmin.dao.jpa.integration.step.transaction;
 
 import java.util.Optional;
 
-import it.maxmin.dao.jpa.integration.step.constant.TransactionIsolation;
-import it.maxmin.dao.jpa.integration.step.constant.TransactionPropagation;
+import it.maxmin.dao.jpa.transaction.TransactionIsolation;
+import it.maxmin.dao.jpa.transaction.TransactionPropagation;
 
 public class StepTransactionHelper {
 

@@ -17,8 +17,8 @@ public class TransactionCfg {
 		this.entityManagerFactory = entityManagerFactory;
 	}
 
-	@Bean("transactionManager")
-	public PlatformTransactionManager transactionManager() {
+	@Bean("platformTransactionManager")
+	public PlatformTransactionManager platformTransactionManager() {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
 		return transactionManager;

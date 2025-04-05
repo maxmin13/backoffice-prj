@@ -45,7 +45,6 @@ public class JpaDaoSpringContextCfg {
 		jpaProperties.put("hibernate.jpa.compliance.closed", true);
 		jpaProperties.put("hibernate.jpa.compliance.query", true);
 		jpaProperties.put("hibernate.jpa.compliance.transaction", true);
-		
 		return jpaProperties;
 	}
 

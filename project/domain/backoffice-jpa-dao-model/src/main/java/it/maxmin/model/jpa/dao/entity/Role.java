@@ -1,13 +1,10 @@
 package it.maxmin.model.jpa.dao.entity;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_NAME_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_USERS_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -16,11 +13,7 @@ import org.hibernate.annotations.Immutable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -40,9 +33,9 @@ public class Role implements Serializable {
 	@Column(name = "Name", nullable = false)
 	private String name;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "Role", joinColumns = @JoinColumn(name = "RoleId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
-	private Set<User> users = new HashSet<>();
+//	@ManyToMany(fetch = FetchType.LAZY)
+//	@JoinTable(name = "Role", joinColumns = @JoinColumn(name = "RoleId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
+//	private Set<User> users = new HashSet<>();
 
 	public static Role newInstance() {
 		return new Role();
@@ -72,20 +65,20 @@ public class Role implements Serializable {
 		return this;
 	}
 
-	public Set<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(Set<User> users) {
-		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-		this.users = users;
-	}
-
-	public Role withUsers(Set<User> users) {
-		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-		this.users = users;
-		return this;
-	}
+//	public Set<User> getUsers() {
+//		return users;
+//	}
+//
+//	public void setUsers(Set<User> users) {
+//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
+//		this.users = users;
+//	}
+//
+//	public Role withUsers(Set<User> users) {
+//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
+//		this.users = users;
+//		return this;
+//	}
 
 	@Override
 	public int hashCode() {

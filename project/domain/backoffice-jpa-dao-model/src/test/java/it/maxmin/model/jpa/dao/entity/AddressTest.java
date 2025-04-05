@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +24,6 @@ import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import it.maxmin.model.jpa.dao.JpaModelSpringContextTestCfg;
-import it.maxmin.model.jpa.dao.exception.JpaModelTestException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -155,75 +153,75 @@ class AddressTest {
 		assertEquals(2, addresses.size());
 	}
 	
-	@Test
-	void addNullUser() {
-
-		Address address = Address.newInstance();
-
-		assertEquals(false, address.addUser(null));
-		assertEquals(0, address.getUsers().size());
-	}
-
-	@ParameterizedTest
-	@CsvSource({ "maxmin13, maxmin13" })
-	void addSameUser(String accountName1, String accountName2) {
-
-		User user1 = User.newInstance().withId(1l).withAccountName(accountName1);
-		User user2 = User.newInstance().withId(1l).withAccountName(accountName2);
-
-		Address address = Address.newInstance();
-
-		assertEquals(true, address.addUser(user1));
-		assertEquals(false, address.addUser(user2));
-		assertEquals(1, address.getUsers().size());
-	}
-
-	@ParameterizedTest
-	@CsvSource({ "maxmin13, artur23" })
-	void addDifferentUsers(String accountName1, String accountName2) {
-
-		User user1 = User.newInstance().withId(1l).withAccountName(accountName1);
-		User user2 = User.newInstance().withId(1l).withAccountName(accountName2);
-
-		Address address = Address.newInstance();
-
-		assertEquals(true, address.addUser(user1));
-		assertEquals(true, address.addUser(user2));
-		assertEquals(2, address.getUsers().size());
-	}
-
-	@Test
-	void removeNullUser() {
-
-		Address address = Address.newInstance();
-
-		assertEquals(false, address.removeUser(null));
-	}
-
-	@Test
-	void getNullUser() {
-
-		Address address = Address.newInstance();
-
-		Optional<User> user = address.getUser(null);
-
-		assertEquals(true, user.isEmpty());
-	}
-
-	@ParameterizedTest
-	@CsvSource({ "maxmin13" })
-	void getUser(String accountName) {
-
-		User user = User.newInstance().withId(1l).withAccountName(accountName);
-
-		Address address = Address.newInstance();
-		address.getUsers().add(user);
-
-		User user1 = address.getUser(accountName).orElseThrow(() -> new JpaModelTestException("Error user not found"));
-
-		assertEquals(1l, user1.getId());
-
-		assertEquals(true, address.getUser("artur23").isEmpty());
-	}
+//	@Test
+//	void addNullUser() {
+//
+//		Address address = Address.newInstance();
+//
+//		assertEquals(false, address.addUser(null));
+//		assertEquals(0, address.getUsers().size());
+//	}
+//
+//	@ParameterizedTest
+//	@CsvSource({ "maxmin13, maxmin13" })
+//	void addSameUser(String accountName1, String accountName2) {
+//
+//		User user1 = User.newInstance().withId(1l).withAccountName(accountName1);
+//		User user2 = User.newInstance().withId(1l).withAccountName(accountName2);
+//
+//		Address address = Address.newInstance();
+//
+//		assertEquals(true, address.addUser(user1));
+//		assertEquals(false, address.addUser(user2));
+//		assertEquals(1, address.getUsers().size());
+//	}
+//
+//	@ParameterizedTest
+//	@CsvSource({ "maxmin13, artur23" })
+//	void addDifferentUsers(String accountName1, String accountName2) {
+//
+//		User user1 = User.newInstance().withId(1l).withAccountName(accountName1);
+//		User user2 = User.newInstance().withId(1l).withAccountName(accountName2);
+//
+//		Address address = Address.newInstance();
+//
+//		assertEquals(true, address.addUser(user1));
+//		assertEquals(true, address.addUser(user2));
+//		assertEquals(2, address.getUsers().size());
+//	}
+//
+//	@Test
+//	void removeNullUser() {
+//
+//		Address address = Address.newInstance();
+//
+//		assertEquals(false, address.removeUser(null));
+//	}
+//
+//	@Test
+//	void getNullUser() {
+//
+//		Address address = Address.newInstance();
+//
+//		Optional<User> user = address.getUser(null);
+//
+//		assertEquals(true, user.isEmpty());
+//	}
+//
+//	@ParameterizedTest
+//	@CsvSource({ "maxmin13" })
+//	void getUser(String accountName) {
+//
+//		User user = User.newInstance().withId(1l).withAccountName(accountName);
+//
+//		Address address = Address.newInstance();
+//		address.getUsers().add(user);
+//
+//		User user1 = address.getUser(accountName).orElseThrow(() -> new JpaModelTestException("Error user not found"));
+//
+//		assertEquals(1l, user1.getId());
+//
+//		assertEquals(true, address.getUser("artur23").isEmpty());
+//	}
 
 }

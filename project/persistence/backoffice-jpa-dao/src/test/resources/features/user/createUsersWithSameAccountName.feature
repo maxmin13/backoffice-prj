@@ -11,7 +11,7 @@ Feature: create the same user twice
     Then I should be told 'nope'          
     Given I want to create the following user
       | maxmin13 | Max1 | Min1 | 1999 September 23 | Legal |
-    Then I create it
+    Then I create the user
     And I commit the database transaction
     When I verify if the 'commit' action was successful
     Then I should be told 'yes' 

@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.integration.step.constant;
+package it.maxmin.dao.jpa.transaction;
 
 import static org.springframework.transaction.TransactionDefinition.ISOLATION_READ_COMMITTED;
 import static org.springframework.transaction.TransactionDefinition.ISOLATION_READ_UNCOMMITTED;
@@ -13,18 +13,18 @@ public enum TransactionIsolation {
 	SERIALIZABLE("serializable", ISOLATION_SERIALIZABLE);
 
 	private String description;
-	private int isolation;
+	private int level;
 
-	private TransactionIsolation(String description, int isolation) {
+	private TransactionIsolation(String description, int level) {
 		this.description = description;
-		this.isolation = isolation;
+		this.level = level;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public int getIsolation() {
-		return isolation;
+	public int getLevel() {
+		return level;
 	}
 }

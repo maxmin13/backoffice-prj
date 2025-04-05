@@ -1,12 +1,10 @@
-package it.maxmin.dao.jpa.integration.step.user;
+package it.maxmin.dao.jpa.integration.step.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Scenario;
 import it.maxmin.dao.jpa.api.repo.UserDao;
-import it.maxmin.dao.jpa.integration.step.common.LogUtil;
-import it.maxmin.dao.jpa.integration.step.common.StepActionManager;
 import it.maxmin.dao.jpa.integration.step.transaction.StepTransactionManager;
 import it.maxmin.model.jpa.dao.entity.User;
 
@@ -29,14 +27,13 @@ public class CleanUserScenarioHooks {
 	@After("@deleteUsers")
 	public void cleanScenarioContext(Scenario scenario) {
 		stepActionManager.getItemsOfType(User.class).stream().forEach(user -> {
-			String id = stepTransactionManager.createTx();
-			stepTransactionManager.startTx(id);
-			userDao.findByAccountName(user.getAccountName()).ifPresentOrElse(u -> {
-				logUtil.log("deleting user {0}", u.getAccountName());
-				userDao.deleteByAccountName(u.getAccountName());
-				stepTransactionManager.commitTx(id);
-				logUtil.log("user {0} deleted", u.getAccountName());
-			}, () -> stepTransactionManager.rollbackTx(id));
+			String name = stepTransactionManager.createTx();
+			stepTransactionManager.startTx(name);
+			userDao.find(user.getId()).ifPresentOrElse(u -> {
+				userDao.delete(u);
+				stepTransactionManager.commitTx(name);
+				logUtil.log("Deleted user {0} ", u);
+			}, () -> stepTransactionManager.rollbackTx(name));
 		});
 	}
 

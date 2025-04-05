@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.integration.step.constant;
+package it.maxmin.dao.jpa.transaction;
 
 import static org.springframework.transaction.TransactionDefinition.PROPAGATION_MANDATORY;
 import static org.springframework.transaction.TransactionDefinition.PROPAGATION_NESTED;
@@ -19,18 +19,18 @@ public enum TransactionPropagation {
 	NESTED_PROPAGATION("nested", PROPAGATION_NESTED);
 
 	private String description;
-	private Integer propagation;
+	private int level;
 
-	private TransactionPropagation(String description, Integer propagation) {
+	private TransactionPropagation(String description, int level) {
 		this.description = description;
-		this.propagation = propagation;
+		this.level = level;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public Integer getPropagation() {
-		return propagation;
+	public int getLevel() {
+		return level;
 	}
 }

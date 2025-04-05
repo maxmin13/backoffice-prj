@@ -37,6 +37,20 @@ public class FindUserStepDefinitions {
 		this.userDao = userDao;
 	}
 
+	@Given("I search for the user by id in the database")
+	public void search_user_by_id() {
+		User user = (User) stepActionManager.getItem(USER).orElseThrow(
+				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
+		Long id = user.getId();
+		userDao.find(id).ifPresentOrElse(u -> {
+			stepActionManager.setItem(USER, u);
+			logUtil.log("user {0} found by id", id);
+		}, () -> {
+			logUtil.log("user {0} not found by id", id);
+			stepActionManager.removeItem(USER);
+		});
+	}
+
 	@Given("I search for {string} user account name in the database")
 	public void search_user_by_account_name(String accountName) {
 		assertNotNull(accountName);
@@ -48,16 +62,15 @@ public class FindUserStepDefinitions {
 			stepActionManager.removeItem(USER);
 		});
 	}
-	
+
 	@When("I check if the user {string} is there")
 	public void check_if_user_is_there(String userName) {
 		assertNotNull(userName);
-		stepActionManager.getItem(USER).ifPresentOrElse(u -> {
-			stepActionManager.saveResponse(YES);
-			logUtil.log("user {0} found", userName);
-		}, () -> {
-			stepActionManager.saveResponse(NOPE);
-			logUtil.log("user {0} not found", userName);
+		stepActionManager.saveResponse(NOPE);
+		stepActionManager.getItem(USER).ifPresent(u -> {
+			if (userName.equals(((User) u).getAccountName())) {
+				stepActionManager.saveResponse(YES);
+			}
 		});
 	}
 
@@ -74,7 +87,7 @@ public class FindUserStepDefinitions {
 
 		User u = (User) stepActionManager.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
-		
+
 		assertEquals(accountName, u.getAccountName());
 		assertEquals(firstName, u.getFirstName());
 		assertEquals(lastName, u.getLastName());

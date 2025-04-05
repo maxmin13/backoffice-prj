@@ -57,8 +57,37 @@ public class CreateUserStepDefinitions {
 		logUtil.log("{0}", user);
 		stepActionManager.setItem(USER, user);
 	}
+	
+	@When("I update the user")
+	public void update_user(DataTable dataTable) {		
+		List<List<String>> data = dataTable.asLists();
+		String accountName = data.get(0).get(0);
+		String firstName = data.get(0).get(1);
+		String lastName = data.get(0).get(2);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMMM dd");
+		LocalDate birthDate = LocalDate.parse(data.get(0).get(3), formatter);
+		
+		User user = (User) stepActionManager.getItem(USER).orElseThrow(
+				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
+		
+		user.setAccountName(accountName);
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		user.setBirthDate(birthDate);
 
-	@When("I create it")
+		try {
+			User updated = userDao.update(user);
+			// replace the managed entity
+			stepActionManager.setItem(USER, updated);
+			logUtil.log("updated user {0} in the database", updated);
+		}
+		catch (Exception e) {
+			logUtil.log("{0}", e);
+			stepActionManager.setItem(EXCEPTION, e);
+		}
+	}
+
+	@When("I create the user")
 	public void create_user() {
 		User user = (User) stepActionManager.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));

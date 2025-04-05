@@ -21,5 +21,5 @@ public interface UserDao {
 
 	User update(User user);
 
-	void deleteByAccountName(String accountName);
+	void delete(User user);
 }

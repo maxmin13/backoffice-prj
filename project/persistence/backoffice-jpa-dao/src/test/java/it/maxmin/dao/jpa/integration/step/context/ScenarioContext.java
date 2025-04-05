@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 
 import io.cucumber.java.Scenario;
+import it.maxmin.dao.jpa.transaction.Transaction;
 
 /**
  * {@link ScenarioContext} has the scope of a scenario. Cucumber creates a new

@@ -108,12 +108,10 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public void deleteByAccountName(String accountName) {
-		notNull(accountName, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "accountName"));
-		LOGGER.info("Removing user ...");
-		int rows = em.createQuery("DELETE FROM User WHERE accountName = :accountName")
-				.setParameter("accountName", accountName).executeUpdate();
-		LOGGER.info("Removed {} users", rows);
+	public void delete(User user) {
+		LOGGER.info("Removing user {}", user);
+		em.remove(user);
+		LOGGER.info("User removed");
 	}
 
 }

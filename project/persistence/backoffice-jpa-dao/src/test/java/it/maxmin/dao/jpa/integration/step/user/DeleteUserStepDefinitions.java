@@ -32,7 +32,7 @@ public class DeleteUserStepDefinitions {
 		logUtil.log("deleting user from database ...");
 		User user = (User) stepActionManager.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, USER)));
-		userDao.deleteByAccountName(user.getAccountName());
+		userDao.delete(user);
 	}
 
 }

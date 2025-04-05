@@ -280,9 +280,9 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", accountName=" + accountName + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", department=" + department + ", birthDate=" + birthDate + ", addresses=" + addresses + ", roles="
-				+ roles + "]";
+		return "User [id=" + id + ", version=" + version + ", accountName=" + accountName + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", birthDate=" + birthDate + ", department=" + department + ", addresses="
+				+ addresses + ", roles=" + roles + "]";
 	}
 
 }

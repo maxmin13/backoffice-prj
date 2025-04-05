@@ -1,24 +1,18 @@
 package it.maxmin.model.jpa.dao.entity;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_NAME_NOT_NULL_MSG;
-import static it.maxmin.common.constant.MessageConstants.ERROR_USERS_NOT_NULL_MSG;
 import static org.springframework.util.Assert.notNull;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Immutable;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -42,8 +36,8 @@ public class Department implements Serializable {
 	@Column(name = "Name", nullable = false)
 	private String name;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = false)
-	private Set<User> users = new HashSet<>();
+//	@OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = false)
+//	private Set<User> users = new HashSet<>();
 
 	public static Department newInstance() {
 		return new Department();
@@ -73,20 +67,20 @@ public class Department implements Serializable {
 		return this;
 	}
 
-	public Set<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(Set<User> users) {
-		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-		this.users = users;
-	}
-
-	public Department withUsers(Set<User> users) {
-		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-		this.users = users;
-		return this;
-	}
+//	public Set<User> getUsers() {
+//		return users;
+//	}
+//
+//	public void setUsers(Set<User> users) {
+//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
+//		this.users = users;
+//	}
+//
+//	public Department withUsers(Set<User> users) {
+//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
+//		this.users = users;
+//		return this;
+//	}
 
 	@Override
 	public int hashCode() {

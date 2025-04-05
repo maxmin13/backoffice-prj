@@ -13,15 +13,21 @@ import it.maxmin.dao.jpa.integration.step.common.StepErrorHelper;
 import it.maxmin.dao.jpa.integration.step.context.ScenarioContext;
 import it.maxmin.dao.jpa.integration.step.transaction.StepTransactionHelper;
 import it.maxmin.dao.jpa.integration.step.transaction.StepTransactionManager;
+import it.maxmin.dao.jpa.transaction.TransactionManager;
 
 @Import({ JpaDaoSpringContextCfg.class, ScenarioContext.class })
 public class JpaDaoSpringContextIntegrationTestCfg {
 
 	@DependsOn("logUtil")
 	@Bean("stepTransactionManager")
-	public StepTransactionManager stepTransactionManager(PlatformTransactionManager platformTransactionManager,
+	public StepTransactionManager stepTransactionManager(TransactionManager transactionManager,
 			ScenarioContext scenarioContext, MessageService messageService, LogUtil logUtil) {
-		return new StepTransactionManager(scenarioContext, platformTransactionManager, messageService, logUtil);
+		return new StepTransactionManager(transactionManager, scenarioContext, messageService, logUtil);
+	}
+	
+	@Bean("transactionManager")
+	public TransactionManager transactionManager(PlatformTransactionManager platformTransactionManager, LogUtil logUtil) {
+		return new TransactionManager(platformTransactionManager, logUtil);
 	}
 
 	@Bean("stepActionManager")
