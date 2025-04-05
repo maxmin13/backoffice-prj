@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 
-import it.maxmin.dao.jpa.integration.step.common.LogUtil;
+import it.maxmin.dao.jpa.it.step.common.LogUtil;
 
 public class TransactionManager {
 
