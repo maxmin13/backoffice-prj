@@ -73,10 +73,6 @@ public class Address implements Serializable {
 	@JoinColumn(name = "StateId", referencedColumnName = "Id", nullable = false)
 	private State state;
 
-//	@ManyToMany(fetch = FetchType.LAZY)
-//	@JoinTable(name = "UserAddress", joinColumns = @JoinColumn(name = "AddressId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
-//	private Set<User> users = new HashSet<>();
-
 	public static Address newInstance() {
 		return new Address();
 	}
@@ -165,46 +161,6 @@ public class Address implements Serializable {
 		return this;
 	}
 
-//	public Set<User> getUsers() {
-//		return users;
-//	}
-//
-//	public void setUsers(Set<User> users) {
-//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-//		this.users = users;
-//	}
-//
-//	public Address withUsers(Set<User> users) {
-//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-//		this.users = users;
-//		return this;
-//	}
-//
-//	public Optional<User> getUser(String accountName) {
-//		if (accountName == null) {
-//			return Optional.empty();
-//		}
-//		return users.stream().filter(each -> each.getAccountName().equals(accountName)).findFirst();
-//	}
-//
-//	public boolean addUser(User user) {
-//		if (user == null) {
-//			return false;
-//		}
-//		else {
-//			return users.add(user);
-//		}
-//	}
-//
-//	public boolean removeUser(User user) {
-//		if (user == null) {
-//			return false;
-//		}
-//		else {
-//			return users.remove(user);
-//		}
-//	}
-
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder();
@@ -232,6 +188,5 @@ public class Address implements Serializable {
 		return "Address [id=" + id + ", version=" + version + ", description=" + description + ", city=" + city
 				+ ", region=" + region + ", postalCode=" + postalCode + ", state=" + state + "]";
 	}
-
 
 }

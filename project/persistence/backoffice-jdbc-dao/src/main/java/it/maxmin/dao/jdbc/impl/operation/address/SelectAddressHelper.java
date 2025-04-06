@@ -28,7 +28,7 @@ public class SelectAddressHelper {
 		this.resultSetAddressBuilder = resultSetAddressBuilder;
 	}
 
-	ResultSetExtractor<List<Address>> getResultSetExtractor() {
+	public ResultSetExtractor<List<Address>> getResultSetExtractor() {
 		return (ResultSetExtractor<List<Address>>) rs -> {
 			Map<Long, Address> map = new HashMap<>();
 			while (rs.next()) {

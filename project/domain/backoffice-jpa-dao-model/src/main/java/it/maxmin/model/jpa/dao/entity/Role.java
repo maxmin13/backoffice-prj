@@ -33,10 +33,6 @@ public class Role implements Serializable {
 	@Column(name = "Name", nullable = false)
 	private String name;
 	
-//	@ManyToMany(fetch = FetchType.LAZY)
-//	@JoinTable(name = "Role", joinColumns = @JoinColumn(name = "RoleId"), inverseJoinColumns = @JoinColumn(name = "UserId"))
-//	private Set<User> users = new HashSet<>();
-
 	public static Role newInstance() {
 		return new Role();
 	}
@@ -64,21 +60,6 @@ public class Role implements Serializable {
 		this.name = name;
 		return this;
 	}
-
-//	public Set<User> getUsers() {
-//		return users;
-//	}
-//
-//	public void setUsers(Set<User> users) {
-//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-//		this.users = users;
-//	}
-//
-//	public Role withUsers(Set<User> users) {
-//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-//		this.users = users;
-//		return this;
-//	}
 
 	@Override
 	public int hashCode() {

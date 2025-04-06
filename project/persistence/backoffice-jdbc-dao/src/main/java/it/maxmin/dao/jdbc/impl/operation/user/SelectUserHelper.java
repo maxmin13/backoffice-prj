@@ -24,7 +24,7 @@ import it.maxmin.model.jdbc.dao.entity.User;public class SelectUserHelper {
 		this.resultSetAddressBuilder = resultSetAddressBuilder;
 	}
 
-	ResultSetExtractor<List<User>> getResultSetExtractor() {
+	public ResultSetExtractor<List<User>> getResultSetExtractor() {
 		return (ResultSetExtractor<List<User>>) rs -> {
 			Map<Long, User> map = new HashMap<>();
 			while (rs.next()) {

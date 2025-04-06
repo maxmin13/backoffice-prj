@@ -36,9 +36,6 @@ public class Department implements Serializable {
 	@Column(name = "Name", nullable = false)
 	private String name;
 
-//	@OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = false)
-//	private Set<User> users = new HashSet<>();
-
 	public static Department newInstance() {
 		return new Department();
 	}
@@ -66,21 +63,6 @@ public class Department implements Serializable {
 		this.name = name;
 		return this;
 	}
-
-//	public Set<User> getUsers() {
-//		return users;
-//	}
-//
-//	public void setUsers(Set<User> users) {
-//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-//		this.users = users;
-//	}
-//
-//	public Department withUsers(Set<User> users) {
-//		notNull(users, ERROR_USERS_NOT_NULL_MSG);
-//		this.users = users;
-//		return this;
-//	}
 
 	@Override
 	public int hashCode() {

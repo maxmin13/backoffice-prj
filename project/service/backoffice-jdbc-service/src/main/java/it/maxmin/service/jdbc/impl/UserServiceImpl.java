@@ -120,11 +120,7 @@ public class UserServiceImpl implements UserService {
 				.withLastName(userDto.getCredentials().getLastName()).withBirthDate(userDto.getBirthDate())
 				.withDepartment(department);
 
-		Integer rows = userDao.update(updatedUser);
-
-//		if (rows != 1) {
-//			throw new JdbcServiceException(ERROR_STALE_DATA_MSG);
-//		}
+		userDao.update(updatedUser);
 
 		handleAddresses(userId, userDto.getAddresses());
 		handleRoles(userId, userDto.getRoles());
@@ -148,11 +144,7 @@ public class UserServiceImpl implements UserService {
 				// existing address
 				address.withId(a.getId());
 				address.withVersion(a.getVersion());
-				Integer rows = addressDao.update(address);
-				// TODO
-//					if (rows != 1) {
-//						throw new JdbcServiceException(ERROR_STALE_DATA_MSG);
-//					}
+				addressDao.update(address);
 				userDao.associateAddress(userId, a.getId());
 			}, () -> {
 				// new address
