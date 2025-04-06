@@ -13,7 +13,7 @@ import io.cucumber.java.en.Then;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.step.common.LogUtil;
-import it.maxmin.dao.jpa.it.step.common.StepActionManager;
+import it.maxmin.dao.jpa.it.step.context.ScenarioActionContext;
 import it.maxmin.dao.jpa.transaction.TransactionIsolation;
 import it.maxmin.dao.jpa.transaction.TransactionPropagation;
 
@@ -21,16 +21,16 @@ public class TransactionStepDefinitions {
 
 	private StepTransactionManager stepTransactionManager;
 	private StepTransactionHelper stepTransactionHelper;
-	private StepActionManager stepActionManager;
+	private ScenarioActionContext scenarioActionContext;
 	private MessageService messageService;
 	private LogUtil logUtil;
 
 	@Autowired
-	public TransactionStepDefinitions(StepActionManager stepActionManager,
+	public TransactionStepDefinitions(ScenarioActionContext scenarioActionContext,
 			StepTransactionManager stepTransactionManager, StepTransactionHelper stepTransactionHelper,
 			MessageService messageService, LogUtil logUtil) {
+		this.scenarioActionContext = scenarioActionContext;
 		this.stepTransactionManager = stepTransactionManager;
-		this.stepActionManager = stepActionManager;
 		this.stepTransactionHelper = stepTransactionHelper;
 		this.messageService = messageService;
 		this.logUtil = logUtil;
@@ -39,7 +39,7 @@ public class TransactionStepDefinitions {
 	@Given("I create a default transaction {string}")
 	public void create_a_database_transaction(String txName) {
 		String id = stepTransactionManager.createTx();
-		stepActionManager.setItem(txName, id);
+		scenarioActionContext.setItem(txName, id);
 	}
 
 	@Given("I create a database transaction")
@@ -58,39 +58,39 @@ public class TransactionStepDefinitions {
 						messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction propagation")));
 
 		String id = stepTransactionManager.createTx(transactionPropagation, transactionIsolation);
-		stepActionManager.setItem(txName, id);
+		scenarioActionContext.setItem(txName, id);
 	}
 
 	@Given("I start the transaction {string}")
 	public void start_database_transaction(String txName) {
-		String id = (String) stepActionManager.getItem(txName).orElseThrow(
+		String id = (String) scenarioActionContext.getItem(txName).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
 		stepTransactionManager.startTx(id);
 	}
 
 	@Then("I commit the transaction {string}")
 	public void commit_database_transaction(String txName) {
+		String id = (String) scenarioActionContext.getItem(txName).orElseThrow(
+				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
 		try {
-			String id = (String) stepActionManager.getItem(txName).orElseThrow(() -> new JpaDaoTestException(
-					messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
 			stepTransactionManager.commitTx(id);
 		}
 		catch (Exception e) {
 			logUtil.log("{0}", e);
-			stepActionManager.setItem(EXCEPTION, e);
+			scenarioActionContext.setItem(EXCEPTION, e.getCause());
 		}
 	}
 
 	@Given("I rollback the transaction {string}")
 	public void rollback_database_transaction(String txName) {
+		String id = (String) scenarioActionContext.getItem(txName).orElseThrow(
+				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
 		try {
-			String id = (String) stepActionManager.getItem(txName).orElseThrow(() -> new JpaDaoTestException(
-					messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
 			stepTransactionManager.rollbackTx(id);
 		}
 		catch (Exception e) {
 			logUtil.log("{0}", e);
-			stepActionManager.setItem(EXCEPTION, e);
+			scenarioActionContext.setItem(EXCEPTION, e.getCause());
 		}
 	}
 

@@ -4,10 +4,12 @@ import static it.maxmin.dao.jpa.transaction.TransactionIsolation.REPEATABLE_READ
 import static it.maxmin.dao.jpa.transaction.TransactionPropagation.REQUIRED_PROPAGATION;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.hibernate.TransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 
+import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.step.common.LogUtil;
 
 public class TransactionManager {
@@ -44,22 +46,37 @@ public class TransactionManager {
 
 	public void startTx(Transaction transaction) {
 		assertNotNull(transaction);
-		TransactionStatus transactionStatus = platformTransactionManager
-				.getTransaction(transaction.getTransactionDefinition());
-		transaction.withTransactionStatus(transactionStatus);
-		logUtil.log("transaction {0} started", transaction.getId());
+		try {
+			TransactionStatus transactionStatus = platformTransactionManager
+					.getTransaction(transaction.getTransactionDefinition());
+			transaction.withTransactionStatus(transactionStatus);
+			logUtil.log("transaction {0} started", transaction.getId());
+		}
+		catch (TransactionException e) {
+			throw new JpaDaoTestException("start transaction error", e);
+		}
 	}
 
 	public void commitTx(Transaction transaction) {
 		assertNotNull(transaction);
-		platformTransactionManager.commit(transaction.getTransactionStatus());
-		logUtil.log("transaction {0} committed", transaction.getId());
+		try {
+			platformTransactionManager.commit(transaction.getTransactionStatus());
+			logUtil.log("transaction {0} committed", transaction.getId());
+		}
+		catch (Exception e) {
+			throw new JpaDaoTestException("commit transaction error", e);
+		}
 	}
 
 	public void rollbackTx(Transaction transaction) {
 		assertNotNull(transaction);
-		platformTransactionManager.rollback(transaction.getTransactionStatus());
-		logUtil.log("transaction {0} rolled-back", transaction.getId());
+		try {
+			platformTransactionManager.rollback(transaction.getTransactionStatus());
+			logUtil.log("transaction {0} rolled-back", transaction.getId());
+		}
+		catch (Exception e) {
+			throw new JpaDaoTestException("rollback transaction error", e);
+		}
 	}
 
 	private static synchronized String createID() {

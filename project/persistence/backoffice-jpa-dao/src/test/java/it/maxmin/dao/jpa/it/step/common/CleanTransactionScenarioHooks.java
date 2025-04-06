@@ -16,7 +16,6 @@ public class CleanTransactionScenarioHooks {
 		this.stepTransactionManager = stepTransactionManager;
 	}
 
-	// runs as first hook
 	@After(order = 1000)
 	public void cleanScenarioContext(Scenario scenario) {
 		if (stepTransactionManager.getPendingTransaction().size() > 0) {

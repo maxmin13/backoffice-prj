@@ -9,17 +9,14 @@ import it.maxmin.dao.jpa.it.step.context.ScenarioContext;
 public class CommonScenarioHooks {
 
 	private ScenarioContext scenarioContext;
-	private LogUtil logUtil;
 
 	@Autowired
-	public CommonScenarioHooks(ScenarioContext scenarioContext, LogUtil logUtil) {
+	public CommonScenarioHooks(ScenarioContext scenarioContext) {
 		this.scenarioContext = scenarioContext;
-		this.logUtil = logUtil;
 	}
 
 	@Before
 	public void initScenario(Scenario scenario) {
-		scenarioContext.init(scenario);
-		logUtil.log("scenario {0} initialized", scenarioContext.getScenarioName());
+		scenarioContext.set(scenario);
 	}
 }
