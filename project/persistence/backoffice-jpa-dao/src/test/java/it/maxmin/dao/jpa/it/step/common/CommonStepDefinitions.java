@@ -5,9 +5,6 @@ import static it.maxmin.dao.jpa.it.step.constant.StepConstants.EXCEPTION;
 import static it.maxmin.dao.jpa.it.step.constant.StepConstants.NOPE;
 import static it.maxmin.dao.jpa.it.step.constant.StepConstants.RESPONSE;
 import static it.maxmin.dao.jpa.it.step.constant.StepConstants.YES;
-import static java.util.concurrent.CompletableFuture.delayedExecutor;
-import static java.util.concurrent.CompletableFuture.runAsync;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -16,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.step.constant.StepError;
@@ -79,7 +75,7 @@ public class CommonStepDefinitions {
 	}
 
 	@Then("I verify if the {string} action was successful")
-	public void check_success(String action) {
+	public void check_action_success(String action) {
 		logUtil.log("checking {0} success", action);
 		scenarioActionContext.getItem(EXCEPTION).ifPresentOrElse(u -> {
 			scenarioActionContext.setItem(RESPONSE, NOPE);
@@ -100,9 +96,4 @@ public class CommonStepDefinitions {
 		logUtil.log("I have been told {0}", expected);
 	}
 
-	@When("I wait a little")
-	public void wait_a_little() {
-		runAsync(() -> {
-		}, delayedExecutor(2000, MILLISECONDS)).join();
-	}
 }

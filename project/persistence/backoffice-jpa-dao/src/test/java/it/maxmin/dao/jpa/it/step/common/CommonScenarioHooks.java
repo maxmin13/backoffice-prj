@@ -16,7 +16,7 @@ public class CommonScenarioHooks {
 	}
 
 	@Before
-	public void initScenario(Scenario scenario) {
+	public void initScenarioContext(Scenario scenario) {
 		scenarioContext.set(scenario);
 	}
 }
