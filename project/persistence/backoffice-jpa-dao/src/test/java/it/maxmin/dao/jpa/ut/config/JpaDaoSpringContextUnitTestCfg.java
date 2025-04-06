@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa;
+package it.maxmin.dao.jpa.ut.config;
 
 import java.sql.Driver;
 
@@ -13,6 +13,7 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
+import it.maxmin.dao.jpa.common.JpaDataSourceTestUtil;
 import it.maxmin.dao.jpa.config.JndiDataSourceCfg;
 import it.maxmin.dao.jpa.config.JpaDaoSpringContextCfg;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;

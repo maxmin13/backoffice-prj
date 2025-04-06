@@ -17,7 +17,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jndi.JndiTemplate;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -38,7 +37,7 @@ class TransactionCfgTest {
 	void testSpringJdbcTemplate() {
 
 		var springCtx = new AnnotationConfigApplicationContext(EntityManagerFactoryCfg.class, TransactionCfg.class);
-		var txManager = springCtx.getBean("transactionManager", JpaTransactionManager.class);
+		var txManager = springCtx.getBean("platformTransactionManager", PlatformTransactionManager.class);
 
 		assertNotNull(txManager);
 

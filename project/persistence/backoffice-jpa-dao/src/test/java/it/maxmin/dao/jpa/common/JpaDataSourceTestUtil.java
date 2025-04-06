@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa;
+package it.maxmin.dao.jpa.common;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import it.maxmin.dao.jpa.it.step.context.ScenarioContext;
 
-public class LogUtil {
+public class LogScenarioUtil {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(LogUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LogScenarioUtil.class);
 	
 	private ScenarioContext scenarioContext;
 	
 	@Autowired
-	public LogUtil(ScenarioContext scenarioContext) {
+	public LogScenarioUtil(ScenarioContext scenarioContext) {
 		this.scenarioContext = scenarioContext;
 	}
 
@@ -23,5 +23,11 @@ public class LogUtil {
 		StringBuffer bf = new StringBuffer();
 		bf.append("SCE(").append(scenarioContext.getScenarioName()).append("): ").append(message);
 		LOGGER.debug(MessageFormat.format(bf.toString(), params));
+	}
+	
+	public void error(String message, Object... params) {
+		StringBuffer bf = new StringBuffer();
+		bf.append("SCE(").append(scenarioContext.getScenarioName()).append("): ").append(message);
+		LOGGER.error(MessageFormat.format(bf.toString(), params));
 	}
 }

@@ -18,8 +18,8 @@ public class TransactionCfg {
 		this.dataSource = dataSource;
 	}
 
-	@Bean
-	public PlatformTransactionManager transactionManager() {
+	@Bean("platformTransactionManager")
+	public PlatformTransactionManager platformTransactionManager() {
 		return new DataSourceTransactionManager(dataSource);
 	}
 }

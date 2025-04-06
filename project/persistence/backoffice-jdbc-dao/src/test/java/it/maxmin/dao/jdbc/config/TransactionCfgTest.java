@@ -25,7 +25,7 @@ class TransactionCfgTest {
 	void testSpringJdbcTemplate() {
 
 		var springCtx = new AnnotationConfigApplicationContext(DataSourceCfg.class, TransactionCfg.class);
-		var txManager = springCtx.getBean("transactionManager", PlatformTransactionManager.class);
+		var txManager = springCtx.getBean("platformTransactionManager", PlatformTransactionManager.class);
 
 		assertNotNull(txManager);
 

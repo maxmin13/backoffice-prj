@@ -10,25 +10,25 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.step.common.LogUtil;
+import it.maxmin.dao.jpa.it.step.common.LogScenarioUtil;
 
 public class TransactionManager {
 
 	private static long identifer = 0;
 	private PlatformTransactionManager platformTransactionManager;
-	private LogUtil logUtil;
+	private LogScenarioUtil logScenarioUtil;
 
 	@Autowired
-	public TransactionManager(PlatformTransactionManager platformTransactionManager, LogUtil logUtil) {
+	public TransactionManager(PlatformTransactionManager platformTransactionManager, LogScenarioUtil logScenarioUtil) {
 		this.platformTransactionManager = platformTransactionManager;
-		this.logUtil = logUtil;
+		this.logScenarioUtil = logScenarioUtil;
 	}
 
 	public Transaction createTx() {
 		String id = createID();
 		Transaction transaction = Transaction.newInstance().withId(id).withTimeout(300)
 				.withIsolationLevel(REPEATABLE_READ_ISO).withPropagationBehaviour(REQUIRED_PROPAGATION);
-		logUtil.log("created transaction {0} with propagation {1} and isolation {2}", id,
+		logScenarioUtil.log("created transaction {0} with propagation {1} and isolation {2}", id,
 				REQUIRED_PROPAGATION.getDescription(), REPEATABLE_READ_ISO.getDescription());
 		return transaction;
 	}
@@ -39,7 +39,7 @@ public class TransactionManager {
 		assertNotNull(transactionIsolation);
 		Transaction transaction = createTx();
 		transaction.withPropagationBehaviour(transactionPropagation).withIsolationLevel(transactionIsolation);
-		logUtil.log("set transaction {0} propagation {1} and isolation {2}", transaction.getId(),
+		logScenarioUtil.log("set transaction {0} propagation {1} and isolation {2}", transaction.getId(),
 				transactionPropagation.getDescription(), transactionIsolation.getDescription());
 		return transaction;
 	}
@@ -50,7 +50,7 @@ public class TransactionManager {
 			TransactionStatus transactionStatus = platformTransactionManager
 					.getTransaction(transaction.getTransactionDefinition());
 			transaction.withTransactionStatus(transactionStatus);
-			logUtil.log("transaction {0} started", transaction.getId());
+			logScenarioUtil.log("transaction {0} started", transaction.getId());
 		}
 		catch (TransactionException e) {
 			throw new JpaDaoTestException("start transaction error", e);
@@ -61,7 +61,7 @@ public class TransactionManager {
 		assertNotNull(transaction);
 		try {
 			platformTransactionManager.commit(transaction.getTransactionStatus());
-			logUtil.log("transaction {0} committed", transaction.getId());
+			logScenarioUtil.log("transaction {0} committed", transaction.getId());
 		}
 		catch (Exception e) {
 			throw new JpaDaoTestException("commit transaction error", e);
@@ -72,7 +72,7 @@ public class TransactionManager {
 		assertNotNull(transaction);
 		try {
 			platformTransactionManager.rollback(transaction.getTransactionStatus());
-			logUtil.log("transaction {0} rolled-back", transaction.getId());
+			logScenarioUtil.log("transaction {0} rolled-back", transaction.getId());
 		}
 		catch (Exception e) {
 			throw new JpaDaoTestException("rollback transaction error", e);

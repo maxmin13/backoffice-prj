@@ -13,19 +13,19 @@ public class CleanUserScenarioHooks {
 
 	private StepTransactionManager stepTransactionManager;
 	private ScenarioActionContext scenarioActionContext;
-	private LogUtil logUtil;
+	private LogScenarioUtil logScenarioUtil;
 	private UserDao userDao;
 
 	@Autowired
 	public CleanUserScenarioHooks(StepTransactionManager stepTransactionManager,
-			ScenarioActionContext scenarioActionContext, LogUtil logUtil, UserDao userDao) {
+			ScenarioActionContext scenarioActionContext, LogScenarioUtil logScenarioUtil, UserDao userDao) {
 		this.stepTransactionManager = stepTransactionManager;
 		this.scenarioActionContext = scenarioActionContext;
-		this.logUtil = logUtil;
+		this.logScenarioUtil = logScenarioUtil;
 		this.userDao = userDao;
 	}
 
-	@After("@deleteUsers")
+	@After(order = 1, value = "@deleteUsers")
 	public void cleanScenarioContext(Scenario scenario) {
 		scenarioActionContext.getItemsOfType(User.class).stream().forEach(user -> {
 			String name = stepTransactionManager.createTx();
@@ -33,7 +33,7 @@ public class CleanUserScenarioHooks {
 			userDao.findByAccountName(user.getAccountName()).ifPresentOrElse(u -> {
 				userDao.delete(u);
 				stepTransactionManager.commitTx(name);
-				logUtil.log("Deleted user {0} ", u);
+				logScenarioUtil.log("Deleted user {0} ", u);
 			}, () -> stepTransactionManager.rollbackTx(name));
 		});
 	}

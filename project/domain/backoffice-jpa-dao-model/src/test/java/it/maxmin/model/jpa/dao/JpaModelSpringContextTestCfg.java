@@ -57,12 +57,12 @@ public class JpaModelSpringContextTestCfg {
 		return factory;
 	}
 	
-	@Bean
 	@DependsOn("dataSource")
-	public PlatformTransactionManager transactionManager() {
-		JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
-		return transactionManager;
+	@Bean("platformTransactionManager")
+	public PlatformTransactionManager platformTransactionManager() {
+		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
+		jpaTransactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
+		return jpaTransactionManager;
 	}
 
 	@Bean

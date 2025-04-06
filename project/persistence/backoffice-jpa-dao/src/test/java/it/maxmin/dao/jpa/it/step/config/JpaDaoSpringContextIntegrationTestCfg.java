@@ -7,7 +7,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.config.JpaDaoSpringContextCfg;
-import it.maxmin.dao.jpa.it.step.common.LogUtil;
+import it.maxmin.dao.jpa.it.step.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.step.common.StepErrorHelper;
 import it.maxmin.dao.jpa.it.step.context.ScenarioActionContext;
 import it.maxmin.dao.jpa.it.step.context.ScenarioContext;
@@ -22,15 +22,15 @@ public class JpaDaoSpringContextIntegrationTestCfg {
 
 	@Bean("transactionManager")
 	public TransactionManager transactionManager(PlatformTransactionManager platformTransactionManager,
-			LogUtil logUtil) {
-		return new TransactionManager(platformTransactionManager, logUtil);
+			LogScenarioUtil logScenarioUtil) {
+		return new TransactionManager(platformTransactionManager, logScenarioUtil);
 	}
 
-	@DependsOn("logUtil")
+	@DependsOn("logScenarioUtil")
 	@Bean("stepTransactionManager")
 	public StepTransactionManager stepTransactionManager(TransactionManager transactionManager,
-			ScenarioTransactionContext scenarioTransactionContext, MessageService messageService, LogUtil logUtil) {
-		return new StepTransactionManager(transactionManager, scenarioTransactionContext, messageService, logUtil);
+			ScenarioTransactionContext scenarioTransactionContext, MessageService messageService, LogScenarioUtil logScenarioUtil) {
+		return new StepTransactionManager(transactionManager, scenarioTransactionContext, messageService, logScenarioUtil);
 	}
 
 	@Bean("stepTransactionHelper")
@@ -43,9 +43,9 @@ public class JpaDaoSpringContextIntegrationTestCfg {
 		return new StepErrorHelper();
 	}
 
-	@Bean("logUtil")
-	public LogUtil logUtil(ScenarioContext scenarioContext) {
-		return new LogUtil(scenarioContext);
+	@Bean("logScenarioUtil")
+	public LogScenarioUtil logScenarioUtil(ScenarioContext scenarioContext) {
+		return new LogScenarioUtil(scenarioContext);
 	}
 
 }

@@ -17,14 +17,14 @@ import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.DepartmentDao;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.step.common.LogUtil;
+import it.maxmin.dao.jpa.it.step.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.step.context.ScenarioActionContext;
 import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class CreateUserStepDefinitions {
 
-	private LogUtil logUtil;
+	private LogScenarioUtil logScenarioUtil;
 	private ScenarioActionContext scenarioActionContext;
 	private MessageService messageService;
 	private UserDao userDao;
@@ -32,8 +32,8 @@ public class CreateUserStepDefinitions {
 
 	@Autowired
 	public CreateUserStepDefinitions(ScenarioActionContext scenarioActionContext, MessageService messageService,
-			LogUtil logUtil, UserDao userDao, DepartmentDao departmentDao) {
-		this.logUtil = logUtil;
+			LogScenarioUtil logScenarioUtil, UserDao userDao, DepartmentDao departmentDao) {
+		this.logScenarioUtil = logScenarioUtil;
 		this.scenarioActionContext = scenarioActionContext;
 		this.messageService = messageService;
 		this.userDao = userDao;
@@ -53,8 +53,8 @@ public class CreateUserStepDefinitions {
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "department")));
 		User user = User.newInstance().withAccountName(accountName).withBirthDate(birthDate).withFirstName(firstName)
 				.withLastName(lastName).withDepartment(department);
-		logUtil.log("I want to create a user");
-		logUtil.log("{0}", user);
+		logScenarioUtil.log("I want to create a user");
+		logScenarioUtil.log("{0}", user);
 		scenarioActionContext.setItem(USER, user);
 	}
 
@@ -79,10 +79,10 @@ public class CreateUserStepDefinitions {
 			User updated = userDao.update(user);
 			// replace the managed entity
 			scenarioActionContext.setItem(USER, updated);
-			logUtil.log("updated user {0} in the database", updated);
+			logScenarioUtil.log("updated user {0} in the database", updated);
 		}
 		catch (Exception e) {
-			logUtil.log("{0}", e);
+			logScenarioUtil.log("{0}", e);
 			scenarioActionContext.setItem(EXCEPTION, e);
 		}
 	}
@@ -93,10 +93,10 @@ public class CreateUserStepDefinitions {
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 		try {
 			userDao.create(user);
-			logUtil.log("inserted new user {0} in the database", user);
+			logScenarioUtil.log("inserted new user {0} in the database", user);
 		}
 		catch (Exception e) {
-			logUtil.log("{0}", e);
+			logScenarioUtil.log("{0}", e);
 			scenarioActionContext.setItem(EXCEPTION, e);
 		}
 	}

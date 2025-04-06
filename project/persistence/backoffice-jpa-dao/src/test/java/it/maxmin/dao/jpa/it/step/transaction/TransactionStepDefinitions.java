@@ -12,7 +12,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.step.common.LogUtil;
+import it.maxmin.dao.jpa.it.step.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.step.context.ScenarioActionContext;
 import it.maxmin.dao.jpa.transaction.TransactionIsolation;
 import it.maxmin.dao.jpa.transaction.TransactionPropagation;
@@ -23,17 +23,17 @@ public class TransactionStepDefinitions {
 	private StepTransactionHelper stepTransactionHelper;
 	private ScenarioActionContext scenarioActionContext;
 	private MessageService messageService;
-	private LogUtil logUtil;
+	private LogScenarioUtil logScenarioUtil;
 
 	@Autowired
 	public TransactionStepDefinitions(ScenarioActionContext scenarioActionContext,
 			StepTransactionManager stepTransactionManager, StepTransactionHelper stepTransactionHelper,
-			MessageService messageService, LogUtil logUtil) {
+			MessageService messageService, LogScenarioUtil logScenarioUtil) {
 		this.scenarioActionContext = scenarioActionContext;
 		this.stepTransactionManager = stepTransactionManager;
 		this.stepTransactionHelper = stepTransactionHelper;
 		this.messageService = messageService;
-		this.logUtil = logUtil;
+		this.logScenarioUtil = logScenarioUtil;
 	}
 
 	@Given("I create a default transaction {string}")
@@ -76,7 +76,7 @@ public class TransactionStepDefinitions {
 			stepTransactionManager.commitTx(id);
 		}
 		catch (Exception e) {
-			logUtil.log("{0}", e);
+			logScenarioUtil.log("{0}", e);
 			scenarioActionContext.setItem(EXCEPTION, e.getCause());
 		}
 	}
@@ -89,7 +89,7 @@ public class TransactionStepDefinitions {
 			stepTransactionManager.rollbackTx(id);
 		}
 		catch (Exception e) {
-			logUtil.log("{0}", e);
+			logScenarioUtil.log("{0}", e);
 			scenarioActionContext.setItem(EXCEPTION, e.getCause());
 		}
 	}

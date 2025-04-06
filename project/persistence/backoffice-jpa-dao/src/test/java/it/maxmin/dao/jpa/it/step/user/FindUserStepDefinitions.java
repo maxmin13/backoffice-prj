@@ -19,21 +19,21 @@ import io.cucumber.java.en.When;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.step.common.LogUtil;
+import it.maxmin.dao.jpa.it.step.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.step.context.ScenarioActionContext;
 import it.maxmin.model.jpa.dao.entity.User;
 public class FindUserStepDefinitions {
 
 	private MessageService messageService;
 	private ScenarioActionContext scenarioActionContext;
-	private LogUtil logUtil;
+	private LogScenarioUtil logScenarioUtil;
 	private UserDao userDao;
 
-	public FindUserStepDefinitions(ScenarioActionContext scenarioActionContext, MessageService messageService, LogUtil logUtil,
+	public FindUserStepDefinitions(ScenarioActionContext scenarioActionContext, MessageService messageService, LogScenarioUtil logScenarioUtil,
 			UserDao userDao) {
 		this.messageService = messageService;
 		this.scenarioActionContext = scenarioActionContext;
-		this.logUtil = logUtil;
+		this.logScenarioUtil = logScenarioUtil;
 		this.userDao = userDao;
 	}
 
@@ -44,9 +44,9 @@ public class FindUserStepDefinitions {
 		Long id = user.getId();
 		userDao.find(id).ifPresentOrElse(u -> {
 			scenarioActionContext.setItem(USER, u);
-			logUtil.log("user {0} found by id", id);
+			logScenarioUtil.log("user {0} found by id", id);
 		}, () -> {
-			logUtil.log("user {0} not found by id", id);
+			logScenarioUtil.log("user {0} not found by id", id);
 			scenarioActionContext.removeItem(USER);
 		});
 	}
@@ -56,9 +56,9 @@ public class FindUserStepDefinitions {
 		assertNotNull(accountName);
 		userDao.findByAccountName(accountName).ifPresentOrElse(u -> {
 			scenarioActionContext.setItem(USER, u);
-			logUtil.log("user {0} found by account name", accountName);
+			logScenarioUtil.log("user {0} found by account name", accountName);
 		}, () -> {
-			logUtil.log("user {0} not found by account name", accountName);
+			logScenarioUtil.log("user {0} not found by account name", accountName);
 			scenarioActionContext.removeItem(USER);
 		});
 	}
@@ -94,7 +94,7 @@ public class FindUserStepDefinitions {
 		assertEquals(birthDate, u.getBirthDate());
 		assertEquals(departmentName, u.getDepartment().getName());
 
-		logUtil.log("the user is as expected");
+		logScenarioUtil.log("the user is as expected");
 	}
 
 }

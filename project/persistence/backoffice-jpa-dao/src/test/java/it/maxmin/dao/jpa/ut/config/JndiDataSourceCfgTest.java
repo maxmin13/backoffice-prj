@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import it.maxmin.dao.jpa.JpaDataSourceTestUtil;
+import it.maxmin.dao.jpa.common.JpaDataSourceTestUtil;
 import it.maxmin.dao.jpa.config.JndiDataSourceCfg;
 
 /**
