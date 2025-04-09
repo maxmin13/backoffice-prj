@@ -60,7 +60,6 @@
 		<org.craftercms.mariaDB4j.version>3.1.0.3</org.craftercms.mariaDB4j.version>
 		<com.h2database.version>2.1.214</com.h2database.version>
 		<com.google.code.findbugs.version>3.0.2</com.google.code.findbugs.version>
-
 	</properties>
 
 	<profiles>
@@ -308,7 +307,6 @@
 				<version>${com.h2database.version}</version>
 			</dependency>
 
-
 		</dependencies>
 	</dependencyManagement>
 
@@ -389,7 +387,11 @@
 						</execution>
 					</executions>
 				</plugin>
-
+	            <plugin>
+	                <groupId>org.sonarsource.scanner.maven</groupId>
+	                <artifactId>sonar-maven-plugin</artifactId>
+	                <version>5.1.0.4751</version>
+	            </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

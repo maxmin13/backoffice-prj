@@ -15,8 +15,6 @@ public interface UserDao {
 
 	List<User> findAll();
 
-	List<User> findAllWithAddressAndRole();
-
 	void create(User user);
 
 	User update(User user);

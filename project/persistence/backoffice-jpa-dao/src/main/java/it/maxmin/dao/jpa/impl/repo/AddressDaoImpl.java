@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -33,21 +31,10 @@ import jakarta.persistence.Tuple;
 public class AddressDaoImpl implements AddressDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoImpl.class);
-//	private static final String SELECT_ALL = ""
-//			+ "SELECT DISTINCT a.Id AS AddressId, a.PostalCode AS PostalCode, a.Description AS Description, a.City AS City, a.Region AS Region, "
-//			+ "          u.Id AS UserId, u.AccountName AS AccountName, u.FirstName AS FirstName, u.LastName AS LastName, u.BirthDate AS BirthDate, "
-//			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName, "
-//			+ "          d.Id as DepartmentId, d.Name AS DepartmentName "
-//			+ "      FROM Address a "
-//			+ "      LEFT JOIN UserAddress ua ON a.Id = ua.AddressId " 
-//			+ "      LEFT JOIN User u ON ua.UserId = u.Id "
-//			+ "      LEFT JOIN Department d ON u.DepartmentId = d.Id "
-//			+ "      INNER JOIN State s ON a.StateId = s.Id ";
-	
+
 	private static final String SELECT_ALL = ""
 			+ "SELECT DISTINCT a.Id AS AddressId, a.PostalCode AS PostalCode, a.Description AS Description, a.City AS City, a.Region AS Region, "
-			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName "
-			+ "      FROM Address a "
+			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName " + "      FROM Address a "
 			+ "      INNER JOIN State s ON a.StateId = s.Id ";
 
 	@PersistenceContext
@@ -64,8 +51,8 @@ public class AddressDaoImpl implements AddressDao {
 	public Optional<Address> find(Long id) {
 		notNull(id, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address id"));
 		try {
-			return Optional.of(em.createNamedQuery("Address.findById", Address.class).setParameter("id", id)
-					.getSingleResult());
+			return Optional.of(
+					em.createNamedQuery("Address.findById", Address.class).setParameter("id", id).getSingleResult());
 		}
 		catch (NoResultException e) {
 			return Optional.empty();
@@ -75,7 +62,7 @@ public class AddressDaoImpl implements AddressDao {
 	@Override
 	// @returns a list of transient objects.
 	@Transactional(readOnly = true)
-	public Set<Address> findAll() {
+	public List<Address> findAll() {
 
 		@SuppressWarnings("unchecked")
 		Stream<Tuple> result = em.createNativeQuery(SELECT_ALL, Tuple.class).getResultList().stream();
@@ -99,26 +86,8 @@ public class AddressDaoImpl implements AddressDao {
 
 			Objects.requireNonNull(address).withState(state);
 
-//			User user = null;
-//			var userId = tuple.get("UserId", Integer.class);
-
-//			if (userId != null) {
-//				var accountName = tuple.get("AccountName", String.class);
-//				var firstName = tuple.get("FirstName", String.class);
-//				var lastName = tuple.get("LastName", String.class);
-//				var birthDate = tuple.get("BirthDate", Date.class);
-//				var departmentName = tuple.get("DepartmentName", String.class);
-//				var department = Department.newInstance().withName(departmentName);
-//
-//				user = User.newInstance().withAccountName(accountName).withFirstName(firstName).withLastName(lastName)
-//						.withBirthDate(birthDate.toLocalDate()).withDepartment(department);
-//
-//				// add the user if not in the list
-//				Objects.requireNonNull(address).addUser(user);
-//			}
-
 			return address;
-		}).collect(Collectors.toSet());
+		}).toList();
 	}
 
 	@Override
@@ -136,8 +105,10 @@ public class AddressDaoImpl implements AddressDao {
 	}
 
 	@Override
-	// @returns the managed persistent entity. The entity passed to the method as an
-	// argument must be discarded.
+	/**
+	 * @returns the managed persistent entity. The entity passed to the method as an
+	 *          argument must be discarded.
+	 */
 	public Address update(Address address) {
 		notNull(address, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address"));
 		notNull(address.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));
@@ -147,14 +118,6 @@ public class AddressDaoImpl implements AddressDao {
 		Address a = em.merge(address);
 		LOGGER.info("Address saved with id: {}", address.getId());
 		return a;
-	}
-
-	@Override
-	public void saveList(List<Address> addresses) {
-		notNull(addresses, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "addresses"));
-		// TODO IMPLEMENT BATCH INSERT
-		// this.insertAddresses.execute(addresses);
-		LOGGER.info("New addresses inserted");
 	}
 
 }

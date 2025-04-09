@@ -49,18 +49,11 @@ public class UserDaoImpl implements UserDao {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<User> findAllWithAddressAndRole() {
-		return null; // TODO use createNameQuery, verify eagerly loaded
-
-	}
-
-	@Transactional(readOnly = true)
-	@Override
 	public Optional<User> findByAccountName(String accountName) {
 		notNull(accountName, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "account name"));
 		try {
-			return Optional.of(em.createNamedQuery("User.findByAccountName", User.class)
-					.setFlushMode(COMMIT).setParameter("accountName", accountName).getSingleResult());
+			return Optional.of(em.createNamedQuery("User.findByAccountName", User.class).setFlushMode(COMMIT)
+					.setParameter("accountName", accountName).getSingleResult());
 		}
 		catch (NoResultException e) {
 			return Optional.empty();
@@ -92,8 +85,10 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	// @returns the managed persistent entity. The entity passed to the method as an
-	// argument must be discarded.
+	/**
+	 * @returns the managed persistent entity. The entity passed to the method as an
+	 *          argument must be discarded.
+	 */
 	public User update(User user) {
 		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
 		notNull(user.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));

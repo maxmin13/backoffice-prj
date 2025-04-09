@@ -31,7 +31,7 @@ class JdbcDaoSpringContextCfgTest {
 		assertEquals("none", properties.get(HBM2DDL_AUTO));
 		assertEquals(true, properties.get("hibernate.jpa.compliance.proxy"));
 		assertEquals(true, properties.get("hibernate.jpa.compliance.closed"));
-		assertEquals(true, properties.get("hibernate.jpa.compliance.query"));
+		assertEquals(false, properties.get("hibernate.jpa.compliance.query"));
 		assertEquals(true, properties.get("hibernate.jpa.compliance.transaction"));
 		
 		springCtx.close();
