@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import it.maxmin.common.service.api.MessageService;
-import it.maxmin.dao.jpa.config.JpaDaoSpringContextCfg;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.common.StepErrorHelper;
 import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
