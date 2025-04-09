@@ -46,6 +46,68 @@ click Open, click Finish, next, addAll, Finish.
 
 
 ###################################################################
+# Running the Sonarqube in a Docker container:
+###################################################################
+
+----------------------------------------------------
+mkdir /opt/sonarqube
+cd /opt/sonarqube
+
+{
+ printf '%s\n' 'services:'
+ printf '%s\n' '   sonarqube:'
+ printf '%s\n' '    image: sonarqube:latest'
+ printf '%s\n' '     ports:'
+ printf '%s\n' '       - "9000:9000"'
+ printf '%s\n' '     restart: always'
+ printf '%s\n' '     environment:'
+ printf '%s\n' '       SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true'
+ printf '%s\n' ''
+} >> docker-compose.yml
+
+docker compose up/down
+----------------------------------------------------
+
+configure the Sonar plugin in your project:
+
+<plugin>
+	<groupId>org.sonarsource.scanner.maven</groupId>
+	<artifactId>sonar-maven-plugin</artifactId>
+	<version>5.1.0.4751</version>
+</plugin>
+
+localhost:9000
+admin
+admin
+
+got to http://localhost:9000/account and
+generate an global access token
+
+got to http://localhost:9000/projects/create and create a local project
+
+run analisys:
+
+--------------------------------------------------------------------------------------------------------
+
+cd /home/vagrant/projects/backoffice-prj/project/persistence/backoffice-jpa-dao
+
+mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=backoffice-jpa-dao \
+  -Dsonar.projectName='backoffice-jpa-dao' \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.token=sqa_ea4146598b53732d4482cecf51d4ac2407455cd5
+  
+cd /home/vagrant/projects/backoffice-prj/project/persistence/backoffice-jdbc-dao
+
+mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=backoffice-jdbc-dao \
+  -Dsonar.projectName='backoffice-jdbc-dao' \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.token=sqa_ea4146598b53732d4482cecf51d4ac2407455cd5
+
+--------------------------------------------------------------------------------------------------------
+
+###################################################################
 # Run unit tests and integration tests with Maven:
 ###################################################################
 
@@ -209,7 +271,7 @@ edit backoffice-jpa-dao/src/test/resources/simple-jndi/datasources.properties
 set 'mariadb.url' to the value of the local-mariadb container IP address, for ex:
 mariadb.url=jdbc:mariadb://172.18.0.2:3306/backofficedb
 
-in Eclipse, right-click on class: UserITRunner.java, Run As, Unit Test
+in Eclipse, right-click on class: UserITSuite.java, Run As, Unit Test
 
 ###################################################################
 # Run the backoffice web application locally:

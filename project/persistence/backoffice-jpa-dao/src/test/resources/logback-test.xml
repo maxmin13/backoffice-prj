@@ -18,7 +18,7 @@
         </encoder>
     </appender>
     
-    <logger name="it.maxmin.dao.jpa.integration.step" level="debug" additivity="false">
+    <logger name="it.maxmin.dao.jpa.it" level="debug" additivity="false">
     	<appender-ref ref="integration" />
     </logger>
     
