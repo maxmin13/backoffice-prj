@@ -1,10 +1,10 @@
-package it.maxmin.dao.jpa.it.step.user;
+package it.maxmin.dao.jpa.it.user;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.it.step.constant.StepConstants.NOPE;
-import static it.maxmin.dao.jpa.it.step.constant.StepConstants.RESPONSE;
-import static it.maxmin.dao.jpa.it.step.constant.StepConstants.USER;
-import static it.maxmin.dao.jpa.it.step.constant.StepConstants.YES;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.NOPE;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.RESPONSE;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.USER;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.YES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -19,8 +19,8 @@ import io.cucumber.java.en.When;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.step.common.LogScenarioUtil;
-import it.maxmin.dao.jpa.it.step.context.ScenarioActionContext;
+import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
+import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
 import it.maxmin.model.jpa.dao.entity.User;
 public class FindUserStepDefinitions {
 

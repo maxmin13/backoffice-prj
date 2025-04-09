@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.it.step.constant;
+package it.maxmin.dao.jpa.it.constant;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 

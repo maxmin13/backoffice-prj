@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.it.step.config;
+package it.maxmin.dao.jpa.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
@@ -7,13 +7,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.config.JpaDaoSpringContextCfg;
-import it.maxmin.dao.jpa.it.step.common.LogScenarioUtil;
-import it.maxmin.dao.jpa.it.step.common.StepErrorHelper;
-import it.maxmin.dao.jpa.it.step.context.ScenarioActionContext;
-import it.maxmin.dao.jpa.it.step.context.ScenarioContext;
-import it.maxmin.dao.jpa.it.step.context.ScenarioTransactionContext;
-import it.maxmin.dao.jpa.it.step.transaction.StepTransactionHelper;
-import it.maxmin.dao.jpa.it.step.transaction.StepTransactionManager;
+import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
+import it.maxmin.dao.jpa.it.common.StepErrorHelper;
+import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
+import it.maxmin.dao.jpa.it.context.ScenarioContext;
+import it.maxmin.dao.jpa.it.context.ScenarioTransactionContext;
+import it.maxmin.dao.jpa.it.transaction.StepTransactionHelper;
+import it.maxmin.dao.jpa.it.transaction.StepTransactionManager;
 import it.maxmin.dao.jpa.transaction.TransactionManager;
 
 @Import({ JpaDaoSpringContextCfg.class, ScenarioContext.class, ScenarioActionContext.class,

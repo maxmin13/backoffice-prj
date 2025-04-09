@@ -10,7 +10,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.step.common.LogScenarioUtil;
+import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 
 public class TransactionManager {
 

@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.it.step.common;
+package it.maxmin.dao.jpa.it.common;
 
 import java.text.MessageFormat;
 
@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import it.maxmin.dao.jpa.it.step.context.ScenarioContext;
+import it.maxmin.dao.jpa.it.context.ScenarioContext;
 
 public class LogScenarioUtil {
 	

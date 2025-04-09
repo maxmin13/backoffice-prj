@@ -1,8 +1,9 @@
-package it.maxmin.dao.jpa.it.step.config;
+package it.maxmin.dao.jpa.it.config;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import io.cucumber.spring.CucumberContextConfiguration;
+import it.maxmin.dao.jpa.config.JpaDaoSpringContextIntegrationTestCfg;
 
 @CucumberContextConfiguration
 @ContextConfiguration(classes = { JpaDaoSpringContextIntegrationTestCfg.class })

@@ -1,7 +1,7 @@
-package it.maxmin.dao.jpa.it.step.transaction;
+package it.maxmin.dao.jpa.it.transaction;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.it.step.constant.StepConstants.EXCEPTION;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.EXCEPTION;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.step.common.LogScenarioUtil;
-import it.maxmin.dao.jpa.it.step.context.ScenarioActionContext;
+import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
+import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
 import it.maxmin.dao.jpa.transaction.TransactionIsolation;
 import it.maxmin.dao.jpa.transaction.TransactionPropagation;
 

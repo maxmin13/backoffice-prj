@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.it.step.context;
+package it.maxmin.dao.jpa.it.context;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

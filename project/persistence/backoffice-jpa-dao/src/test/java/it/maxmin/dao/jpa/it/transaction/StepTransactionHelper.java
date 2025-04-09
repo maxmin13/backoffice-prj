@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.it.step.transaction;
+package it.maxmin.dao.jpa.it.transaction;
 
 import java.util.Optional;
 

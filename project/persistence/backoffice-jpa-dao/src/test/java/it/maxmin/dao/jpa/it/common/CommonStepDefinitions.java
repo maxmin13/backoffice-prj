@@ -1,10 +1,10 @@
-package it.maxmin.dao.jpa.it.step.common;
+package it.maxmin.dao.jpa.it.common;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.it.step.constant.StepConstants.EXCEPTION;
-import static it.maxmin.dao.jpa.it.step.constant.StepConstants.NOPE;
-import static it.maxmin.dao.jpa.it.step.constant.StepConstants.RESPONSE;
-import static it.maxmin.dao.jpa.it.step.constant.StepConstants.YES;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.EXCEPTION;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.NOPE;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.RESPONSE;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.YES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,8 +15,8 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.step.constant.StepError;
-import it.maxmin.dao.jpa.it.step.context.ScenarioActionContext;
+import it.maxmin.dao.jpa.it.constant.StepError;
+import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
 
 public class CommonStepDefinitions {
 

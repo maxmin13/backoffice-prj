@@ -1,10 +1,10 @@
-package it.maxmin.dao.jpa.it.step.common;
+package it.maxmin.dao.jpa.it.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Scenario;
-import it.maxmin.dao.jpa.it.step.transaction.StepTransactionManager;
+import it.maxmin.dao.jpa.it.transaction.StepTransactionManager;
 
 public class CleanTransactionScenarioHooks {
 

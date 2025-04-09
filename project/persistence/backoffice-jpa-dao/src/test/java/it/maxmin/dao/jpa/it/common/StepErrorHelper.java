@@ -1,8 +1,8 @@
-package it.maxmin.dao.jpa.it.step.common;
+package it.maxmin.dao.jpa.it.common;
 
 import java.util.Optional;
 
-import it.maxmin.dao.jpa.it.step.constant.StepError;
+import it.maxmin.dao.jpa.it.constant.StepError;
 
 public class StepErrorHelper {
 
