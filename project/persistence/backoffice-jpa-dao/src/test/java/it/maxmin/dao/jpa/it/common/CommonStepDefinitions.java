@@ -16,22 +16,22 @@ import io.cucumber.java.en.Then;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.constant.StepError;
-import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
+import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
 
 public class CommonStepDefinitions {
 
 	private MessageService messageService;
 	private StepErrorHelper stepErrorHelper;
 	private LogScenarioUtil logScenarioUtil;
-	private ScenarioActionContext scenarioActionContext;
+	private ScenarioItemContext scenarioItemContext;
 
 	@Autowired
 	public CommonStepDefinitions(MessageService messageService, StepErrorHelper stepErrorHelper, LogScenarioUtil logScenarioUtil,
-			ScenarioActionContext scenarioActionContext) {
+			ScenarioItemContext scenarioItemContext) {
 		this.messageService = messageService;
 		this.stepErrorHelper = stepErrorHelper;
 		this.logScenarioUtil = logScenarioUtil;
-		this.scenarioActionContext = scenarioActionContext;
+		this.scenarioItemContext = scenarioItemContext;
 	}
 
 	@Then("I check if a {string} error have been raised")
@@ -41,11 +41,11 @@ public class CommonStepDefinitions {
 		StepError stepError = stepErrorHelper.getStepError(description).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "step error")));
 		Class<?> expected = stepError.getExceptionClass();
-		scenarioActionContext.getItem(EXCEPTION).filter(ob -> ob.getClass().equals(expected)).ifPresentOrElse(ex -> {
-			scenarioActionContext.setItem(RESPONSE, YES);
+		scenarioItemContext.getItem(EXCEPTION).filter(ob -> ob.getClass().equals(expected)).ifPresentOrElse(ex -> {
+			scenarioItemContext.setItem(RESPONSE, YES);
 			logScenarioUtil.log("a {0} error has been raised", description);
 		}, () -> {
-			scenarioActionContext.setItem(RESPONSE, NOPE);
+			scenarioItemContext.setItem(RESPONSE, NOPE);
 
 			logScenarioUtil.log("no {0} error has been raised", description);
 		});
@@ -55,21 +55,21 @@ public class CommonStepDefinitions {
 	public void check_if_one_of_these_error_have_been_raised(DataTable errors) {
 		logScenarioUtil.log("checking if one of the described errors has been raised");
 		assertNotNull(errors);
-		scenarioActionContext.getItem(EXCEPTION).ifPresentOrElse(trownEx -> {
+		scenarioItemContext.getItem(EXCEPTION).ifPresentOrElse(trownEx -> {
 			errors.asLists().get(0).stream().map(errorDescription -> {
 				StepError stepError = stepErrorHelper.getStepError(errorDescription)
 						.orElseThrow(() -> new JpaDaoTestException(
 								messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "step error")));
 				return stepError.getClass();
 			}).filter(trownEx.getClass()::equals).findAny().ifPresentOrElse(ex -> {
-				scenarioActionContext.setItem(RESPONSE, YES);
+				scenarioItemContext.setItem(RESPONSE, YES);
 				logScenarioUtil.log("a {0} error has been raised", ex.getName());
 			}, () -> {
-				scenarioActionContext.setItem(RESPONSE, NOPE);
+				scenarioItemContext.setItem(RESPONSE, NOPE);
 				logScenarioUtil.log("none of the described errors has been raised");
 			});
 		}, () -> {
-			scenarioActionContext.setItem(RESPONSE, NOPE);
+			scenarioItemContext.setItem(RESPONSE, NOPE);
 			logScenarioUtil.log("no error has been raised");
 		});
 	}
@@ -77,11 +77,11 @@ public class CommonStepDefinitions {
 	@Then("I verify if the {string} action was successful")
 	public void check_action_success(String action) {
 		logScenarioUtil.log("checking {0} success", action);
-		scenarioActionContext.getItem(EXCEPTION).ifPresentOrElse(u -> {
-			scenarioActionContext.setItem(RESPONSE, NOPE);
+		scenarioItemContext.getItem(EXCEPTION).ifPresentOrElse(u -> {
+			scenarioItemContext.setItem(RESPONSE, NOPE);
 			logScenarioUtil.log("action {0} wasn''t successfull", action);
 		}, () -> {
-			scenarioActionContext.setItem(RESPONSE, YES);
+			scenarioItemContext.setItem(RESPONSE, YES);
 			logScenarioUtil.log("action {0} was successfull", action);
 		});
 	}
@@ -90,7 +90,7 @@ public class CommonStepDefinitions {
 	public void i_should_be_told(String expected) {
 		assertNotNull(expected);
 		logScenarioUtil.log("I should be told {0}", expected);
-		String response = (String) scenarioActionContext.getItem(RESPONSE).orElseThrow(
+		String response = (String) scenarioItemContext.getItem(RESPONSE).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "response")));
 		assertEquals(expected, response);
 		logScenarioUtil.log("I have been told {0}", expected);

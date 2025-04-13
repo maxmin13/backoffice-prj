@@ -12,16 +12,16 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 
 /**
- * {@link ScenarioActionContext} has the scope of a scenario. Cucumber creates a
+ * {@link ScenarioItemContext} has the scope of a scenario. Cucumber creates a
  * new instance of each step class for each scenario.
  */
 @Scope(value = "cucumber-glue", proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class ScenarioActionContext {
+public class ScenarioItemContext {
 
 	private Map<String, Object> items;
 
 	@Autowired
-	public ScenarioActionContext() {
+	public ScenarioItemContext() {
 		items = new HashMap<>();
 	}
 

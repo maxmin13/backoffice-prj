@@ -8,19 +8,19 @@ import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
-import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
+import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class DeleteUserStepDefinitions {
 
-	private ScenarioActionContext scenarioActionContext;
+	private ScenarioItemContext scenarioItemContext;
 	private MessageService messageService;
 	private LogScenarioUtil logScenarioUtil;
 	private UserDao userDao;
 
-	public DeleteUserStepDefinitions(ScenarioActionContext scenarioActionContext, MessageService messageService,
+	public DeleteUserStepDefinitions(ScenarioItemContext scenarioItemContext, MessageService messageService,
 			LogScenarioUtil logScenarioUtil, UserDao userDao) {
-		this.scenarioActionContext = scenarioActionContext;
+		this.scenarioItemContext = scenarioItemContext;
 		this.messageService = messageService;
 		this.logScenarioUtil = logScenarioUtil;
 		this.userDao = userDao;
@@ -29,7 +29,7 @@ public class DeleteUserStepDefinitions {
 	@When("I delete the user")
 	public void delete_user() {
 		logScenarioUtil.log("deleting user from database ...");
-		User user = (User) scenarioActionContext.getItem(USER).orElseThrow(
+		User user = (User) scenarioItemContext.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, USER)));
 		userDao.delete(user);
 	}

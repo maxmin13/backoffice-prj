@@ -21,35 +21,35 @@ import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
-import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
+import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class FindUserStepDefinitions {
 
 	private MessageService messageService;
-	private ScenarioActionContext scenarioActionContext;
+	private ScenarioItemContext scenarioItemContext;
 	private LogScenarioUtil logScenarioUtil;
 	private UserDao userDao;
 
-	public FindUserStepDefinitions(ScenarioActionContext scenarioActionContext, MessageService messageService,
+	public FindUserStepDefinitions(ScenarioItemContext scenarioItemContext, MessageService messageService,
 			LogScenarioUtil logScenarioUtil, UserDao userDao) {
 		this.messageService = messageService;
-		this.scenarioActionContext = scenarioActionContext;
+		this.scenarioItemContext = scenarioItemContext;
 		this.logScenarioUtil = logScenarioUtil;
 		this.userDao = userDao;
 	}
 
 	@Given("I search for the user by id in the database")
 	public void search_user_by_id() {
-		User user = (User) scenarioActionContext.getItem(USER).orElseThrow(
+		User user = (User) scenarioItemContext.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 		Long id = user.getId();
 		userDao.find(id).ifPresentOrElse(u -> {
-			scenarioActionContext.setItem(USER, u);
+			scenarioItemContext.setItem(USER, u);
 			logScenarioUtil.log("user {0} found by id", id);
 		}, () -> {
 			logScenarioUtil.log("user {0} not found by id", id);
-			scenarioActionContext.removeItem(USER);
+			scenarioItemContext.removeItem(USER);
 		});
 	}
 
@@ -58,26 +58,26 @@ public class FindUserStepDefinitions {
 		assertNotNull(accountName);
 		try {
 			userDao.findByAccountName(accountName).ifPresentOrElse(u -> {
-				scenarioActionContext.setItem(USER, u);
+				scenarioItemContext.setItem(USER, u);
 				logScenarioUtil.log("user {0} found by account name", accountName);
 			}, () -> {
 				logScenarioUtil.log("user {0} not found by account name", accountName);
-				scenarioActionContext.removeItem(USER);
+				scenarioItemContext.removeItem(USER);
 			});
 		}
 		catch (Exception e) {
 			logScenarioUtil.log("{0}", e);
-			scenarioActionContext.setItem(EXCEPTION, e);
+			scenarioItemContext.setItem(EXCEPTION, e);
 		}
 	}
 
 	@When("I check if the user {string} is there")
 	public void check_if_user_is_there(String userName) {
 		assertNotNull(userName);
-		scenarioActionContext.setItem(RESPONSE, NOPE);
-		scenarioActionContext.getItem(USER).ifPresent(u -> {
+		scenarioItemContext.setItem(RESPONSE, NOPE);
+		scenarioItemContext.getItem(USER).ifPresent(u -> {
 			if (userName.equals(((User) u).getAccountName())) {
-				scenarioActionContext.setItem(RESPONSE, YES);
+				scenarioItemContext.setItem(RESPONSE, YES);
 			}
 		});
 	}
@@ -93,7 +93,7 @@ public class FindUserStepDefinitions {
 		LocalDate birthDate = LocalDate.parse(data.get(0).get(3), formatter);
 		String departmentName = data.get(0).get(4);
 
-		User u = (User) scenarioActionContext.getItem(USER).orElseThrow(
+		User u = (User) scenarioItemContext.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 
 		assertEquals(accountName, u.getAccountName());

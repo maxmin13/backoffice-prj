@@ -8,14 +8,14 @@ import org.springframework.transaction.PlatformTransactionManager;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.common.StepErrorHelper;
-import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
+import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
 import it.maxmin.dao.jpa.it.context.ScenarioContext;
 import it.maxmin.dao.jpa.it.context.ScenarioTransactionContext;
+import it.maxmin.dao.jpa.it.context.StepTransactionManager;
 import it.maxmin.dao.jpa.it.transaction.StepTransactionHelper;
-import it.maxmin.dao.jpa.it.transaction.StepTransactionManager;
 import it.maxmin.dao.jpa.transaction.TransactionManager;
 
-@Import({ JpaDaoSpringContextCfg.class, ScenarioContext.class, ScenarioActionContext.class,
+@Import({ JpaDaoSpringContextCfg.class, ScenarioContext.class, ScenarioItemContext.class,
 		ScenarioTransactionContext.class })
 public class JpaDaoSpringContextIntegrationTestCfg {
 

@@ -5,29 +5,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import io.cucumber.java.After;
 import io.cucumber.java.Scenario;
 import it.maxmin.dao.jpa.api.repo.UserDao;
-import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
-import it.maxmin.dao.jpa.it.transaction.StepTransactionManager;
+import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
+import it.maxmin.dao.jpa.it.context.StepTransactionManager;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class CleanUserScenarioHooks {
 
 	private StepTransactionManager stepTransactionManager;
-	private ScenarioActionContext scenarioActionContext;
+	private ScenarioItemContext scenarioItemContext;
 	private LogScenarioUtil logScenarioUtil;
 	private UserDao userDao;
 
 	@Autowired
 	public CleanUserScenarioHooks(StepTransactionManager stepTransactionManager,
-			ScenarioActionContext scenarioActionContext, LogScenarioUtil logScenarioUtil, UserDao userDao) {
+			ScenarioItemContext scenarioItemContext, LogScenarioUtil logScenarioUtil, UserDao userDao) {
 		this.stepTransactionManager = stepTransactionManager;
-		this.scenarioActionContext = scenarioActionContext;
+		this.scenarioItemContext = scenarioItemContext;
 		this.logScenarioUtil = logScenarioUtil;
 		this.userDao = userDao;
 	}
 
 	@After(order = 1, value = "@deleteUsers")
 	public void cleanScenarioContext(Scenario scenario) {
-		scenarioActionContext.getItemsOfType(User.class).stream().forEach(user -> {
+		scenarioItemContext.getItemsOfType(User.class).stream().forEach(user -> {
 			String name = stepTransactionManager.createTx();
 			stepTransactionManager.startTx(name);
 			userDao.findByAccountName(user.getAccountName()).ifPresentOrElse(u -> {

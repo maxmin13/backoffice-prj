@@ -18,23 +18,23 @@ import it.maxmin.dao.jpa.api.repo.DepartmentDao;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
-import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
+import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
 import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class CreateUserStepDefinitions {
 
 	private LogScenarioUtil logScenarioUtil;
-	private ScenarioActionContext scenarioActionContext;
+	private ScenarioItemContext scenarioItemContext;
 	private MessageService messageService;
 	private UserDao userDao;
 	private DepartmentDao departmentDao;
 
 	@Autowired
-	public CreateUserStepDefinitions(ScenarioActionContext scenarioActionContext, MessageService messageService,
+	public CreateUserStepDefinitions(ScenarioItemContext scenarioItemContext, MessageService messageService,
 			LogScenarioUtil logScenarioUtil, UserDao userDao, DepartmentDao departmentDao) {
 		this.logScenarioUtil = logScenarioUtil;
-		this.scenarioActionContext = scenarioActionContext;
+		this.scenarioItemContext = scenarioItemContext;
 		this.messageService = messageService;
 		this.userDao = userDao;
 		this.departmentDao = departmentDao;
@@ -55,12 +55,12 @@ public class CreateUserStepDefinitions {
 				.withLastName(lastName).withDepartment(department);
 		logScenarioUtil.log("I want to create a user");
 		logScenarioUtil.log("{0}", user);
-		scenarioActionContext.setItem(USER, user);
+		scenarioItemContext.setItem(USER, user);
 	}
 	
 	@Given("I want to update the user") 
 	public void i_want_to_update_the_user() {	
-		User user = (User) scenarioActionContext.getItem(USER).orElseThrow(
+		User user = (User) scenarioItemContext.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));	
 		logScenarioUtil.log("I want to update the user");
 		logScenarioUtil.log("{0}", user);
@@ -75,7 +75,7 @@ public class CreateUserStepDefinitions {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMMM dd");
 		LocalDate birthDate = LocalDate.parse(data.get(0).get(3), formatter);
 
-		User user = (User) scenarioActionContext.getItem(USER).orElseThrow(
+		User user = (User) scenarioItemContext.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 
 		user.setAccountName(accountName);
@@ -86,18 +86,18 @@ public class CreateUserStepDefinitions {
 		try {
 			User updated = userDao.update(user);
 			// replace the managed entity
-			scenarioActionContext.setItem(USER, updated);
+			scenarioItemContext.setItem(USER, updated);
 			logScenarioUtil.log("updated user {0} in the database", updated);
 		}
 		catch (Exception e) {
 			logScenarioUtil.log("{0}", e);
-			scenarioActionContext.setItem(EXCEPTION, e);
+			scenarioItemContext.setItem(EXCEPTION, e);
 		}
 	}
 
 	@When("I create the user")
 	public void create_user() {
-		User user = (User) scenarioActionContext.getItem(USER).orElseThrow(
+		User user = (User) scenarioItemContext.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 		try {
 			userDao.create(user);
@@ -105,7 +105,7 @@ public class CreateUserStepDefinitions {
 		}
 		catch (Exception e) {
 			logScenarioUtil.log("{0}", e);
-			scenarioActionContext.setItem(EXCEPTION, e);
+			scenarioItemContext.setItem(EXCEPTION, e);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.it.transaction;
+package it.maxmin.dao.jpa.it.context;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.context.ScenarioTransactionContext;
 import it.maxmin.dao.jpa.transaction.Transaction;
 import it.maxmin.dao.jpa.transaction.TransactionIsolation;
 import it.maxmin.dao.jpa.transaction.TransactionManager;
