@@ -41,7 +41,7 @@ public class CreateUserStepDefinitions {
 	}
 
 	@Given("I want to create the following user")
-	public void build_user(DataTable dataTable) {
+	public void i_want_to_create_the_user(DataTable dataTable) {
 		List<List<String>> data = dataTable.asLists();
 		String accountName = data.get(0).get(0);
 		String firstName = data.get(0).get(1);
@@ -56,6 +56,14 @@ public class CreateUserStepDefinitions {
 		logScenarioUtil.log("I want to create a user");
 		logScenarioUtil.log("{0}", user);
 		scenarioActionContext.setItem(USER, user);
+	}
+	
+	@Given("I want to update the user") 
+	public void i_want_to_update_the_user() {	
+		User user = (User) scenarioActionContext.getItem(USER).orElseThrow(
+				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));	
+		logScenarioUtil.log("I want to update the user");
+		logScenarioUtil.log("{0}", user);
 	}
 
 	@When("I update the user")

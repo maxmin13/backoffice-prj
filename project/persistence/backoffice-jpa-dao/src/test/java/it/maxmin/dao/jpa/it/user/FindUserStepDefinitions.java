@@ -1,6 +1,7 @@
 package it.maxmin.dao.jpa.it.user;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.EXCEPTION;
 import static it.maxmin.dao.jpa.it.constant.StepConstants.NOPE;
 import static it.maxmin.dao.jpa.it.constant.StepConstants.RESPONSE;
 import static it.maxmin.dao.jpa.it.constant.StepConstants.USER;
@@ -22,6 +23,7 @@ import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioActionContext;
 import it.maxmin.model.jpa.dao.entity.User;
+
 public class FindUserStepDefinitions {
 
 	private MessageService messageService;
@@ -29,8 +31,8 @@ public class FindUserStepDefinitions {
 	private LogScenarioUtil logScenarioUtil;
 	private UserDao userDao;
 
-	public FindUserStepDefinitions(ScenarioActionContext scenarioActionContext, MessageService messageService, LogScenarioUtil logScenarioUtil,
-			UserDao userDao) {
+	public FindUserStepDefinitions(ScenarioActionContext scenarioActionContext, MessageService messageService,
+			LogScenarioUtil logScenarioUtil, UserDao userDao) {
 		this.messageService = messageService;
 		this.scenarioActionContext = scenarioActionContext;
 		this.logScenarioUtil = logScenarioUtil;
@@ -54,13 +56,19 @@ public class FindUserStepDefinitions {
 	@Given("I search for {string} user account name in the database")
 	public void search_user_by_account_name(String accountName) {
 		assertNotNull(accountName);
-		userDao.findByAccountName(accountName).ifPresentOrElse(u -> {
-			scenarioActionContext.setItem(USER, u);
-			logScenarioUtil.log("user {0} found by account name", accountName);
-		}, () -> {
-			logScenarioUtil.log("user {0} not found by account name", accountName);
-			scenarioActionContext.removeItem(USER);
-		});
+		try {
+			userDao.findByAccountName(accountName).ifPresentOrElse(u -> {
+				scenarioActionContext.setItem(USER, u);
+				logScenarioUtil.log("user {0} found by account name", accountName);
+			}, () -> {
+				logScenarioUtil.log("user {0} not found by account name", accountName);
+				scenarioActionContext.removeItem(USER);
+			});
+		}
+		catch (Exception e) {
+			logScenarioUtil.log("{0}", e);
+			scenarioActionContext.setItem(EXCEPTION, e);
+		}
 	}
 
 	@When("I check if the user {string} is there")

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioTransactionContext;
 import it.maxmin.dao.jpa.transaction.Transaction;
 import it.maxmin.dao.jpa.transaction.TransactionIsolation;
@@ -21,22 +20,18 @@ public class StepTransactionManager {
 	private TransactionManager transactionManager;
 	private ScenarioTransactionContext scenarioTransactionContext;
 	private MessageService messageService;
-	private LogScenarioUtil logScenarioUtil;
 
 	@Autowired
 	public StepTransactionManager(TransactionManager transactionManager,
-			ScenarioTransactionContext scenarioTransactionContext, MessageService messageService, LogScenarioUtil logScenarioUtil) {
+			ScenarioTransactionContext scenarioTransactionContext, MessageService messageService) {
 		this.transactionManager = transactionManager;
 		this.scenarioTransactionContext = scenarioTransactionContext;
 		this.messageService = messageService;
-		this.logScenarioUtil = logScenarioUtil;
 	}
 
 	public String createTx() {
 		Transaction transaction = transactionManager.createTx();
 		scenarioTransactionContext.setTransaction(transaction.getId(), transaction);
-		logScenarioUtil.log("created transaction {0} with propagation {1} and isolation {2}", transaction.getId(),
-				transaction.getPropagationBehaviour(), transaction.getIsolationLevel());
 		return transaction.getId();
 	}
 
@@ -45,8 +40,6 @@ public class StepTransactionManager {
 		assertNotNull(transactionIsolation);
 		Transaction transaction = transactionManager.createTx(transactionPropagation, transactionIsolation);
 		scenarioTransactionContext.setTransaction(transaction.getId(), transaction);
-		logScenarioUtil.log("created transaction {0} with propagation {1} and isolation {2}", transaction.getId(),
-				transaction.getPropagationBehaviour(), transaction.getIsolationLevel());
 		return transaction.getId();
 	}
 
@@ -55,7 +48,6 @@ public class StepTransactionManager {
 		Transaction transaction = scenarioTransactionContext.getTransaction(id).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
 		transactionManager.startTx(transaction);
-		logScenarioUtil.log("transaction {0} started", id);
 	}
 
 	public void commitTx(String id) {
@@ -70,7 +62,6 @@ public class StepTransactionManager {
 			throw e;
 		}
 		scenarioTransactionContext.removeTransaction(id);
-		logScenarioUtil.log("transaction {0} committed", id);
 	}
 
 	public void rollbackTx(String id) {
@@ -85,7 +76,6 @@ public class StepTransactionManager {
 			throw e;
 		}
 		scenarioTransactionContext.removeTransaction(id);
-		logScenarioUtil.log("transaction {0} rolled-back", id);
 	}
 
 	public List<Transaction> getPendingTransaction() {

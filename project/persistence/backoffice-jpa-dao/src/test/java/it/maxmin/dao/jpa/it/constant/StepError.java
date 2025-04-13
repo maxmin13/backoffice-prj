@@ -5,11 +5,13 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
 
+import jakarta.persistence.QueryTimeoutException;
+
 public enum StepError {
 
-	CONSTRAINT_VALIDATION_EXCEPTION("constraint validation violation", SQLIntegrityConstraintViolationException.class),
 	SQL_INTEGRITY_CONSTRAINT_VIOLATION_EXCEPTION("SQL integrity constraint violation", SQLIntegrityConstraintViolationException.class),
-	DATA_INTEGRITY_VIOLATION("data integrity violation", DataIntegrityViolationException.class),
+	DATA_INTEGRITY_VIOLATION_EXCEPTION("data integrity violation", DataIntegrityViolationException.class),
+	QUERY_TIMEOUT_EXCEPTION("query timeout", QueryTimeoutException.class),
 	JPA_SYSTEM_EXEPTION("JPA system", JpaSystemException.class);
 	
 	private String decription;

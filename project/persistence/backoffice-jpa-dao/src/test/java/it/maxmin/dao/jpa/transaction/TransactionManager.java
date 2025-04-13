@@ -15,6 +15,7 @@ import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 public class TransactionManager {
 
 	private static long identifer = 0;
+	private static final int TIMEOUT = 5;
 	private PlatformTransactionManager platformTransactionManager;
 	private LogScenarioUtil logScenarioUtil;
 
@@ -25,22 +26,19 @@ public class TransactionManager {
 	}
 
 	public Transaction createTx() {
-		String id = createID();
-		Transaction transaction = Transaction.newInstance().withId(id).withTimeout(300)
-				.withIsolationLevel(REPEATABLE_READ_ISO).withPropagationBehaviour(REQUIRED_PROPAGATION);
-		logScenarioUtil.log("created transaction {0} with propagation {1} and isolation {2}", id,
-				REQUIRED_PROPAGATION.getDescription(), REPEATABLE_READ_ISO.getDescription());
-		return transaction;
+		return createTx(REQUIRED_PROPAGATION, REPEATABLE_READ_ISO);
 	}
 
 	public Transaction createTx(TransactionPropagation transactionPropagation,
 			TransactionIsolation transactionIsolation) {
 		assertNotNull(transactionPropagation);
 		assertNotNull(transactionIsolation);
-		Transaction transaction = createTx();
-		transaction.withPropagationBehaviour(transactionPropagation).withIsolationLevel(transactionIsolation);
-		logScenarioUtil.log("set transaction {0} propagation {1} and isolation {2}", transaction.getId(),
-				transactionPropagation.getDescription(), transactionIsolation.getDescription());
+		String id = createID();
+		Transaction transaction = Transaction.newInstance().withId(id).withTimeout(TIMEOUT)
+				.withIsolationLevel(transactionIsolation).withPropagationBehaviour(transactionPropagation);
+		logScenarioUtil.log("created transaction {0}", transaction.getId());
+		logScenarioUtil.log("propagation behaviour {0}", transactionPropagation.getDescription());
+		logScenarioUtil.log("transaction isolation {0}", transactionIsolation.getDescription());
 		return transaction;
 	}
 

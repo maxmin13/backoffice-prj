@@ -99,6 +99,7 @@ public class Transaction {
 		return this;
 	}
 
+	// Set the timeout to apply, as number of seconds.
 	Transaction withTimeout(int timeout) {
 		transactionDefinition.setTimeout(timeout);
 		return this;

@@ -94,4 +94,12 @@ public class TransactionStepDefinitions {
 		}
 	}
 
+	@Given("I rollback all pending transactions")
+	public void rollback_database_pending_transactions() {		
+		stepTransactionManager.getPendingTransaction().forEach(tx -> {
+			logScenarioUtil.log("Rolling back transaction {0}", tx.getId());
+			rollback_database_transaction(tx.getId());
+		});
+	}
+
 }
