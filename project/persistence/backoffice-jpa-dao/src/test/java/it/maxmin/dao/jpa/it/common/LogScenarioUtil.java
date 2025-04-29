@@ -20,14 +20,20 @@ public class LogScenarioUtil {
 	}
 
 	public void log(String message, Object... params) {
-		StringBuffer bf = new StringBuffer();
-		bf.append("SCE(").append(scenarioContext.getScenarioName()).append("): ").append(message);
-		LOGGER.debug(MessageFormat.format(bf.toString(), params));
+		LOGGER.debug(format(message, params));
+	}
+	
+	public void warn(String message, Object... params) {
+		LOGGER.warn(format(message, params));
 	}
 	
 	public void error(String message, Object... params) {
+		LOGGER.error(format(message, params));
+	}
+	
+	private String format(String message, Object... params) {
 		StringBuffer bf = new StringBuffer();
 		bf.append("SCE(").append(scenarioContext.getScenarioName()).append("): ").append(message);
-		LOGGER.error(MessageFormat.format(bf.toString(), params));
+		return MessageFormat.format(bf.toString(), params);
 	}
 }

@@ -1,15 +1,16 @@
-package it.maxmin.dao.jpa.it.common;
+package it.maxmin.dao.jpa.it.common.hook;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Scenario;
 import it.maxmin.dao.jpa.api.repo.UserDao;
+import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
 import it.maxmin.dao.jpa.it.context.StepTransactionManager;
 import it.maxmin.model.jpa.dao.entity.User;
 
-public class CleanUserScenarioHooks {
+public class CleanUsersHook {
 
 	private StepTransactionManager stepTransactionManager;
 	private ScenarioItemContext scenarioItemContext;
@@ -17,8 +18,8 @@ public class CleanUserScenarioHooks {
 	private UserDao userDao;
 
 	@Autowired
-	public CleanUserScenarioHooks(StepTransactionManager stepTransactionManager,
-			ScenarioItemContext scenarioItemContext, LogScenarioUtil logScenarioUtil, UserDao userDao) {
+	public CleanUsersHook(StepTransactionManager stepTransactionManager, ScenarioItemContext scenarioItemContext,
+			LogScenarioUtil logScenarioUtil, UserDao userDao) {
 		this.stepTransactionManager = stepTransactionManager;
 		this.scenarioItemContext = scenarioItemContext;
 		this.logScenarioUtil = logScenarioUtil;
@@ -26,7 +27,7 @@ public class CleanUserScenarioHooks {
 	}
 
 	@After(order = 1, value = "@deleteUsers")
-	public void cleanScenarioContext(Scenario scenario) {
+	public void clean(Scenario scenario) {
 		scenarioItemContext.getItemsOfType(User.class).stream().forEach(user -> {
 			String name = stepTransactionManager.createTx();
 			stepTransactionManager.startTx(name);

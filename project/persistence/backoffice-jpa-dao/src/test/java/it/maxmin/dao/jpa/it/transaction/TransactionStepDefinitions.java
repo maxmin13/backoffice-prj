@@ -1,7 +1,8 @@
 package it.maxmin.dao.jpa.it.transaction;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.it.constant.StepConstants.EXCEPTION;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.COMMIT_ERROR;
+import static it.maxmin.dao.jpa.it.constant.StepConstants.ROLLBACK_ERROR;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
+import it.maxmin.dao.jpa.it.context.StepErrorManager;
 import it.maxmin.dao.jpa.it.context.StepTransactionManager;
 import it.maxmin.dao.jpa.transaction.TransactionIsolation;
 import it.maxmin.dao.jpa.transaction.TransactionPropagation;
@@ -21,17 +23,20 @@ import it.maxmin.dao.jpa.transaction.TransactionPropagation;
 public class TransactionStepDefinitions {
 
 	private StepTransactionManager stepTransactionManager;
-	private StepTransactionHelper stepTransactionHelper;
+	private FeatureTransactionHelper stepTransactionHelper;
+	private StepErrorManager stepErrorManager;
 	private ScenarioItemContext scenarioItemContext;
 	private MessageService messageService;
 	private LogScenarioUtil logScenarioUtil;
 
 	@Autowired
 	public TransactionStepDefinitions(ScenarioItemContext scenarioItemContext,
-			StepTransactionManager stepTransactionManager, StepTransactionHelper stepTransactionHelper,
-			MessageService messageService, LogScenarioUtil logScenarioUtil) {
+			StepTransactionManager stepTransactionManager, StepErrorManager stepErrorManager,
+			FeatureTransactionHelper stepTransactionHelper, MessageService messageService,
+			LogScenarioUtil logScenarioUtil) {
 		this.scenarioItemContext = scenarioItemContext;
 		this.stepTransactionManager = stepTransactionManager;
+		this.stepErrorManager = stepErrorManager;
 		this.stepTransactionHelper = stepTransactionHelper;
 		this.messageService = messageService;
 		this.logScenarioUtil = logScenarioUtil;
@@ -78,7 +83,7 @@ public class TransactionStepDefinitions {
 		}
 		catch (Exception e) {
 			logScenarioUtil.log("{0}", e);
-			scenarioItemContext.setItem(EXCEPTION, e.getCause());
+			stepErrorManager.addError(COMMIT_ERROR, e);
 		}
 	}
 
@@ -91,12 +96,12 @@ public class TransactionStepDefinitions {
 		}
 		catch (Exception e) {
 			logScenarioUtil.log("{0}", e);
-			scenarioItemContext.setItem(EXCEPTION, e.getCause());
+			stepErrorManager.addError(ROLLBACK_ERROR, e);
 		}
 	}
 
 	@Given("I rollback all pending transactions")
-	public void rollback_database_pending_transactions() {		
+	public void rollback_database_pending_transactions() {
 		stepTransactionManager.getPendingTransaction().forEach(tx -> {
 			logScenarioUtil.log("Rolling back transaction {0}", tx.getId());
 			rollback_database_transaction(tx.getId());

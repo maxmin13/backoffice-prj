@@ -6,18 +6,25 @@ import org.springframework.context.annotation.Import;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import it.maxmin.common.service.api.MessageService;
+import it.maxmin.dao.jpa.it.common.FeatureErrorHelper;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
-import it.maxmin.dao.jpa.it.common.StepErrorHelper;
-import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
 import it.maxmin.dao.jpa.it.context.ScenarioContext;
+import it.maxmin.dao.jpa.it.context.ScenarioErrorContext;
+import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
 import it.maxmin.dao.jpa.it.context.ScenarioTransactionContext;
+import it.maxmin.dao.jpa.it.context.StepErrorManager;
 import it.maxmin.dao.jpa.it.context.StepTransactionManager;
-import it.maxmin.dao.jpa.it.transaction.StepTransactionHelper;
+import it.maxmin.dao.jpa.it.transaction.FeatureTransactionHelper;
 import it.maxmin.dao.jpa.transaction.TransactionManager;
 
 @Import({ JpaDaoSpringContextCfg.class, ScenarioContext.class, ScenarioItemContext.class,
-		ScenarioTransactionContext.class })
+		ScenarioTransactionContext.class, ScenarioErrorContext.class })
 public class JpaDaoSpringContextIntegrationTestCfg {
+
+	@Bean("stepErrorManager")
+	public StepErrorManager stepErrorManager(ScenarioErrorContext scenarioErrorContext, MessageService messageService) {
+		return new StepErrorManager(scenarioErrorContext, messageService);
+	}
 
 	@Bean("transactionManager")
 	public TransactionManager transactionManager(PlatformTransactionManager platformTransactionManager,
@@ -33,13 +40,13 @@ public class JpaDaoSpringContextIntegrationTestCfg {
 	}
 
 	@Bean("stepTransactionHelper")
-	public StepTransactionHelper stepTransactionHelper() {
-		return new StepTransactionHelper();
+	public FeatureTransactionHelper stepTransactionHelper() {
+		return new FeatureTransactionHelper();
 	}
 
 	@Bean("stepErrorHelper")
-	public StepErrorHelper stepErrorHelper() {
-		return new StepErrorHelper();
+	public FeatureErrorHelper stepErrorHelper() {
+		return new FeatureErrorHelper();
 	}
 
 	@Bean("logScenarioUtil")

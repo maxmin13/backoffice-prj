@@ -1,7 +1,6 @@
 package it.maxmin.dao.jpa.it.common;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.it.constant.StepConstants.EXCEPTION;
 import static it.maxmin.dao.jpa.it.constant.StepConstants.NOPE;
 import static it.maxmin.dao.jpa.it.constant.StepConstants.RESPONSE;
 import static it.maxmin.dao.jpa.it.constant.StepConstants.YES;
@@ -15,38 +14,42 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.constant.StepError;
+import it.maxmin.dao.jpa.it.constant.FeatureError;
 import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
+import it.maxmin.dao.jpa.it.context.StepErrorManager;
 
-public class CommonStepDefinitions {
+public class CommonStepDefinitions<T extends Exception> {
 
 	private MessageService messageService;
-	private StepErrorHelper stepErrorHelper;
+	private FeatureErrorHelper featureErrorHelper;
 	private LogScenarioUtil logScenarioUtil;
 	private ScenarioItemContext scenarioItemContext;
+	private StepErrorManager stepErrorManager;
 
 	@Autowired
-	public CommonStepDefinitions(MessageService messageService, StepErrorHelper stepErrorHelper, LogScenarioUtil logScenarioUtil,
-			ScenarioItemContext scenarioItemContext) {
+	public CommonStepDefinitions(MessageService messageService, FeatureErrorHelper featureErrorHelper,
+			LogScenarioUtil logScenarioUtil, ScenarioItemContext scenarioItemContext,
+			StepErrorManager stepErrorManager) {
 		this.messageService = messageService;
-		this.stepErrorHelper = stepErrorHelper;
+		this.featureErrorHelper = featureErrorHelper;
 		this.logScenarioUtil = logScenarioUtil;
 		this.scenarioItemContext = scenarioItemContext;
+		this.stepErrorManager = stepErrorManager;
 	}
 
 	@Then("I check if a {string} error have been raised")
-	public void check_if_specific_error_have_been_raised(String description) {
+	public void check_if_specific_error_has_been_raised(String description) {
 		assertNotNull(description);
 		logScenarioUtil.log("checking if a {0} error has been raised", description);
-		StepError stepError = stepErrorHelper.getStepError(description).orElseThrow(
-				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "step error")));
-		Class<?> expected = stepError.getExceptionClass();
-		scenarioItemContext.getItem(EXCEPTION).filter(ob -> ob.getClass().equals(expected)).ifPresentOrElse(ex -> {
+		FeatureError featureError = featureErrorHelper.getFeatureError(description).orElseThrow(
+				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "feature error")));
+		Class expected = featureError.getExceptionClass();
+
+		stepErrorManager.getErrorByType(expected).ifPresentOrElse(er -> {
 			scenarioItemContext.setItem(RESPONSE, YES);
 			logScenarioUtil.log("a {0} error has been raised", description);
 		}, () -> {
 			scenarioItemContext.setItem(RESPONSE, NOPE);
-
 			logScenarioUtil.log("no {0} error has been raised", description);
 		});
 	}
@@ -55,35 +58,21 @@ public class CommonStepDefinitions {
 	public void check_if_one_of_these_error_have_been_raised(DataTable errors) {
 		logScenarioUtil.log("checking if one of the described errors has been raised");
 		assertNotNull(errors);
-		scenarioItemContext.getItem(EXCEPTION).ifPresentOrElse(trownEx -> {
-			errors.asLists().get(0).stream().map(errorDescription -> {
-				StepError stepError = stepErrorHelper.getStepError(errorDescription)
-						.orElseThrow(() -> new JpaDaoTestException(
-								messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "step error")));
-				return stepError.getClass();
-			}).filter(trownEx.getClass()::equals).findAny().ifPresentOrElse(ex -> {
-				scenarioItemContext.setItem(RESPONSE, YES);
-				logScenarioUtil.log("a {0} error has been raised", ex.getName());
-			}, () -> {
-				scenarioItemContext.setItem(RESPONSE, NOPE);
-				logScenarioUtil.log("none of the described errors has been raised");
-			});
-		}, () -> {
-			scenarioItemContext.setItem(RESPONSE, NOPE);
-			logScenarioUtil.log("no error has been raised");
-		});
+		errors.asLists().get(0).stream().forEach(this::check_if_specific_error_has_been_raised);
 	}
 
-	@Then("I verify if the {string} action was successful")
-	public void check_action_success(String action) {
-		logScenarioUtil.log("checking {0} success", action);
-		scenarioItemContext.getItem(EXCEPTION).ifPresentOrElse(u -> {
+	@Then("I check if an error has been raised")
+	public void check_if_an_error_has_been_raised() {
+		logScenarioUtil.log("checking if an error has been raised");
+		int size = stepErrorManager.getUnhandledErrors().size();
+
+		if (size == 0) {
 			scenarioItemContext.setItem(RESPONSE, NOPE);
-			logScenarioUtil.log("action {0} wasn''t successfull", action);
-		}, () -> {
+			logScenarioUtil.log("no error was raised");
+		} else {
 			scenarioItemContext.setItem(RESPONSE, YES);
-			logScenarioUtil.log("action {0} was successfull", action);
-		});
+			logScenarioUtil.log("an error has been raised");
+		}
 	}
 
 	@Then("I should be told {string}")

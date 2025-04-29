@@ -34,7 +34,8 @@ public class AddressDaoImpl implements AddressDao {
 
 	private static final String SELECT_ALL = ""
 			+ "SELECT DISTINCT a.Id AS AddressId, a.PostalCode AS PostalCode, a.Description AS Description, a.City AS City, a.Region AS Region, "
-			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName " + "      FROM Address a "
+			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName " 
+			+ "      FROM Address a "
 			+ "      INNER JOIN State s ON a.StateId = s.Id ";
 
 	@PersistenceContext

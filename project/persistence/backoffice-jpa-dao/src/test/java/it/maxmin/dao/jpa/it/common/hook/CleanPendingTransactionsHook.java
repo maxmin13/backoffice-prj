@@ -1,25 +1,26 @@
-package it.maxmin.dao.jpa.it.common;
+package it.maxmin.dao.jpa.it.common.hook;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Scenario;
+import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.StepTransactionManager;
 
-public class CleanTransactionScenarioHooks {
+public class CleanPendingTransactionsHook {
 
 	private StepTransactionManager stepTransactionManager;
 	private LogScenarioUtil logScenarioUtil;
 
 	@Autowired
-	public CleanTransactionScenarioHooks(StepTransactionManager stepTransactionManager,
+	public CleanPendingTransactionsHook(StepTransactionManager stepTransactionManager,
 			LogScenarioUtil logScenarioUtil) {
 		this.stepTransactionManager = stepTransactionManager;
 		this.logScenarioUtil = logScenarioUtil;
 	}
 
 	@After(order = 1000)
-	public void cleanScenarioContext(Scenario scenario) {
+	public void clean(Scenario scenario) {
 		stepTransactionManager.getPendingTransaction().forEach(tx -> {
 			logScenarioUtil.error("Found pending transaction {0}", tx.getId());
 			stepTransactionManager.rollbackTx(tx.getId());

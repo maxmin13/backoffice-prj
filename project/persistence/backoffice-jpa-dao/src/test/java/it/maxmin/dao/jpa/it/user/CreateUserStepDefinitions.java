@@ -1,7 +1,6 @@
 package it.maxmin.dao.jpa.it.user;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
-import static it.maxmin.dao.jpa.it.constant.StepConstants.EXCEPTION;
 import static it.maxmin.dao.jpa.it.constant.StepConstants.USER;
 
 import java.time.LocalDate;
@@ -19,6 +18,7 @@ import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
+import it.maxmin.dao.jpa.it.context.StepErrorManager;
 import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.User;
 
@@ -26,15 +26,18 @@ public class CreateUserStepDefinitions {
 
 	private LogScenarioUtil logScenarioUtil;
 	private ScenarioItemContext scenarioItemContext;
+	private StepErrorManager stepErrorManager;
 	private MessageService messageService;
 	private UserDao userDao;
 	private DepartmentDao departmentDao;
 
 	@Autowired
-	public CreateUserStepDefinitions(ScenarioItemContext scenarioItemContext, MessageService messageService,
-			LogScenarioUtil logScenarioUtil, UserDao userDao, DepartmentDao departmentDao) {
+	public CreateUserStepDefinitions(ScenarioItemContext scenarioItemContext, StepErrorManager stepErrorManager,
+			MessageService messageService, LogScenarioUtil logScenarioUtil, UserDao userDao,
+			DepartmentDao departmentDao) {
 		this.logScenarioUtil = logScenarioUtil;
 		this.scenarioItemContext = scenarioItemContext;
+		this.stepErrorManager = stepErrorManager;
 		this.messageService = messageService;
 		this.userDao = userDao;
 		this.departmentDao = departmentDao;
@@ -57,11 +60,11 @@ public class CreateUserStepDefinitions {
 		logScenarioUtil.log("{0}", user);
 		scenarioItemContext.setItem(USER, user);
 	}
-	
-	@Given("I want to update the user") 
-	public void i_want_to_update_the_user() {	
+
+	@Given("I want to update the user")
+	public void i_want_to_update_the_user() {
 		User user = (User) scenarioItemContext.getItem(USER).orElseThrow(
-				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));	
+				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 		logScenarioUtil.log("I want to update the user");
 		logScenarioUtil.log("{0}", user);
 	}
@@ -88,10 +91,9 @@ public class CreateUserStepDefinitions {
 			// replace the managed entity
 			scenarioItemContext.setItem(USER, updated);
 			logScenarioUtil.log("updated user {0} in the database", updated);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logScenarioUtil.log("{0}", e);
-			scenarioItemContext.setItem(EXCEPTION, e);
+			stepErrorManager.addError("insert error", e);
 		}
 	}
 
@@ -102,10 +104,9 @@ public class CreateUserStepDefinitions {
 		try {
 			userDao.create(user);
 			logScenarioUtil.log("inserted new user {0} in the database", user);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logScenarioUtil.log("{0}", e);
-			scenarioItemContext.setItem(EXCEPTION, e);
+			stepErrorManager.addError("update error", e);
 		}
 	}
 

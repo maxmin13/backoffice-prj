@@ -43,7 +43,7 @@ public class JpaDaoSpringContextCfg {
 		// Hibenate compliance to JPA spec
 		jpaProperties.put("hibernate.jpa.compliance.proxy", true);
 		jpaProperties.put("hibernate.jpa.compliance.closed", true);
-		jpaProperties.put("hibernate.jpa.compliance.query", false);
+		jpaProperties.put("hibernate.jpa.compliance.query", true);
 		jpaProperties.put("hibernate.jpa.compliance.transaction", true);
 		return jpaProperties;
 	}

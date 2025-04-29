@@ -5,12 +5,12 @@ import java.util.Optional;
 import it.maxmin.dao.jpa.transaction.TransactionIsolation;
 import it.maxmin.dao.jpa.transaction.TransactionPropagation;
 
-public class StepTransactionHelper {
+public class FeatureTransactionHelper {
 
-	public Optional<TransactionIsolation> getTransactionIsolation(String description) {
+	public Optional<TransactionIsolation> getTransactionIsolation(String featureDescription) {
 		TransactionIsolation transactionIsolation = null;
 		for (TransactionIsolation isolation : TransactionIsolation.values()) {
-			if (isolation.getDescription().equals(description)) {
+			if (isolation.getDescription().equals(featureDescription)) {
 				transactionIsolation = isolation;
 				break;
 			}
@@ -18,10 +18,10 @@ public class StepTransactionHelper {
 		return Optional.ofNullable(transactionIsolation);
 	}
 
-	public Optional<TransactionPropagation> getTransactionPropagation(String description) {
+	public Optional<TransactionPropagation> getTransactionPropagation(String featureDescription) {
 		TransactionPropagation transactionPropagation = null;
 		for (TransactionPropagation propagation : TransactionPropagation.values()) {
-			if (propagation.getDescription().equals(description)) {
+			if (propagation.getDescription().equals(featureDescription)) {
 				transactionPropagation = propagation;
 				break;
 			}

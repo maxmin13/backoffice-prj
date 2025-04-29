@@ -15,7 +15,7 @@ import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 public class TransactionManager {
 
 	private static long identifer = 0;
-	private static final int TIMEOUT = 5;
+	private static final int TRANSACTION_TIMEOUT = 65;
 	private PlatformTransactionManager platformTransactionManager;
 	private LogScenarioUtil logScenarioUtil;
 
@@ -34,7 +34,7 @@ public class TransactionManager {
 		assertNotNull(transactionPropagation);
 		assertNotNull(transactionIsolation);
 		String id = createID();
-		Transaction transaction = Transaction.newInstance().withId(id).withTimeout(TIMEOUT)
+		Transaction transaction = Transaction.newInstance().withId(id).withTimeout(TRANSACTION_TIMEOUT)
 				.withIsolationLevel(transactionIsolation).withPropagationBehaviour(transactionPropagation);
 		logScenarioUtil.log("created transaction {0}", transaction.getId());
 		logScenarioUtil.log("propagation behaviour {0}", transactionPropagation.getDescription());
@@ -49,8 +49,7 @@ public class TransactionManager {
 					.getTransaction(transaction.getTransactionDefinition());
 			transaction.withTransactionStatus(transactionStatus);
 			logScenarioUtil.log("transaction {0} started", transaction.getId());
-		}
-		catch (TransactionException e) {
+		} catch (TransactionException e) {
 			throw new JpaDaoTestException("start transaction error", e);
 		}
 	}
@@ -60,8 +59,7 @@ public class TransactionManager {
 		try {
 			platformTransactionManager.commit(transaction.getTransactionStatus());
 			logScenarioUtil.log("transaction {0} committed", transaction.getId());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new JpaDaoTestException("commit transaction error", e);
 		}
 	}
@@ -71,8 +69,7 @@ public class TransactionManager {
 		try {
 			platformTransactionManager.rollback(transaction.getTransactionStatus());
 			logScenarioUtil.log("transaction {0} rolled-back", transaction.getId());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new JpaDaoTestException("rollback transaction error", e);
 		}
 	}

@@ -40,6 +40,10 @@ public class ScenarioItemContext {
 		items.remove(name);
 	}
 
+	public List<Object> getItems() {
+		return items.values().stream().toList();
+	}
+	
 	public <T extends Object> List<T> getItemsOfType(Class<T> itemClass) {
 		assertNotNull(itemClass);
 		return items.values().stream().filter(item -> itemClass.isAssignableFrom(item.getClass())).map(itemClass::cast)
