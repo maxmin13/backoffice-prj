@@ -46,51 +46,51 @@ public class Transaction {
 	public TransactionPropagation getPropagationBehaviour() {
 		int propagation = transactionDefinition.getPropagationBehavior();
 		return switch (propagation) {
-		case PROPAGATION_REQUIRED -> {
-			yield REQUIRED_PROPAGATION;
-		}
-		case PROPAGATION_SUPPORTS -> {
-			yield SUPPORTS_PROPAGATION;
-		}
-		case PROPAGATION_MANDATORY -> {
-			yield MANDATORY_PROPAGATION;
-		}
-		case PROPAGATION_REQUIRES_NEW -> {
-			yield REQUIRES_NEW_PROPAGATION;
-		}
-		case PROPAGATION_NOT_SUPPORTED -> {
-			yield NOT_SUPPORTED_PROPAGATION;
-		}
-		case PROPAGATION_NEVER -> {
-			yield NEVER_PROPAGATION;
-		}
-		case PROPAGATION_NESTED -> {
-			yield NESTED_PROPAGATION;
-		}
-		default -> {
-			throw new IllegalArgumentException(MessageFormat.format("Unexpected value {0}", propagation));
-		}
+			case PROPAGATION_REQUIRED -> {
+				yield REQUIRED_PROPAGATION;
+			}
+			case PROPAGATION_SUPPORTS -> {
+				yield SUPPORTS_PROPAGATION;
+			}
+			case PROPAGATION_MANDATORY -> {
+				yield MANDATORY_PROPAGATION;
+			}
+			case PROPAGATION_REQUIRES_NEW -> {
+				yield REQUIRES_NEW_PROPAGATION;
+			}
+			case PROPAGATION_NOT_SUPPORTED -> {
+				yield NOT_SUPPORTED_PROPAGATION;
+			}
+			case PROPAGATION_NEVER -> {
+				yield NEVER_PROPAGATION;
+			}
+			case PROPAGATION_NESTED -> {
+				yield NESTED_PROPAGATION;
+			}
+			default -> {
+				throw new IllegalArgumentException(MessageFormat.format("Unexpected value {0}", propagation));
+			}
 		};
 	}
 
 	public TransactionIsolation getIsolationLevel() {
 		int isolation = transactionDefinition.getIsolationLevel();
 		return switch (isolation) {
-		case ISOLATION_READ_UNCOMMITTED -> {
-			yield READ_UNCOMMITED_ISO;
-		}
-		case ISOLATION_READ_COMMITTED -> {
-			yield READ_COMMITTED_ISO;
-		}
-		case ISOLATION_REPEATABLE_READ -> {
-			yield REPEATABLE_READ_ISO;
-		}
-		case ISOLATION_SERIALIZABLE -> {
-			yield SERIALIZABLE;
-		}
-		default -> {
-			throw new IllegalArgumentException(MessageFormat.format("Unexpected value {0}", isolation));
-		}
+			case ISOLATION_READ_UNCOMMITTED -> {
+				yield READ_UNCOMMITED_ISO;
+			}
+			case ISOLATION_READ_COMMITTED -> {
+				yield READ_COMMITTED_ISO;
+			}
+			case ISOLATION_REPEATABLE_READ -> {
+				yield REPEATABLE_READ_ISO;
+			}
+			case ISOLATION_SERIALIZABLE -> {
+				yield SERIALIZABLE;
+			}
+			default -> {
+				throw new IllegalArgumentException(MessageFormat.format("Unexpected value {0}", isolation));
+			}
 		};
 	}
 

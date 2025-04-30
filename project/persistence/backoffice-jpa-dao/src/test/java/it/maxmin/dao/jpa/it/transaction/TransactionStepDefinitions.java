@@ -4,8 +4,6 @@ import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_
 import static it.maxmin.dao.jpa.it.constant.StepConstants.COMMIT_ERROR;
 import static it.maxmin.dao.jpa.it.constant.StepConstants.ROLLBACK_ERROR;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.cucumber.datatable.DataTable;
@@ -23,7 +21,7 @@ import it.maxmin.dao.jpa.transaction.TransactionPropagation;
 public class TransactionStepDefinitions {
 
 	private StepTransactionManager stepTransactionManager;
-	private FeatureTransactionHelper stepTransactionHelper;
+	private FeatureTransactionHelper featureTransactionHelper;
 	private StepErrorManager stepErrorManager;
 	private ScenarioItemContext scenarioItemContext;
 	private MessageService messageService;
@@ -32,12 +30,12 @@ public class TransactionStepDefinitions {
 	@Autowired
 	public TransactionStepDefinitions(ScenarioItemContext scenarioItemContext,
 			StepTransactionManager stepTransactionManager, StepErrorManager stepErrorManager,
-			FeatureTransactionHelper stepTransactionHelper, MessageService messageService,
+			FeatureTransactionHelper featureTransactionHelper, MessageService messageService,
 			LogScenarioUtil logScenarioUtil) {
 		this.scenarioItemContext = scenarioItemContext;
 		this.stepTransactionManager = stepTransactionManager;
 		this.stepErrorManager = stepErrorManager;
-		this.stepTransactionHelper = stepTransactionHelper;
+		this.featureTransactionHelper = featureTransactionHelper;
 		this.messageService = messageService;
 		this.logScenarioUtil = logScenarioUtil;
 	}
@@ -51,16 +49,16 @@ public class TransactionStepDefinitions {
 	@Given("I create a database transaction")
 	public void create_a_database_transaction(DataTable transaction) {
 
-		List<List<String>> data = transaction.asLists();
-		String txName = data.get(0).get(0);
-		String txIsolation = data.get(0).get(1);
-		String txPropagation = data.get(0).get(2);
+		FeatureTransaction data = featureTransactionHelper.buildTransaction(transaction);
+		String txName = data.getName();
+		String txIsolation = data.getIsolation();
+		String txPropagation = data.getPropagation();
 
-		TransactionIsolation transactionIsolation = stepTransactionHelper.getTransactionIsolation(txIsolation)
+		TransactionIsolation transactionIsolation = featureTransactionHelper.getTransactionIsolation(txIsolation)
 				.orElseThrow(() -> new JpaDaoTestException(
 						messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction isolation")));
-		TransactionPropagation transactionPropagation = stepTransactionHelper.getTransactionPropagation(txPropagation)
-				.orElseThrow(() -> new JpaDaoTestException(
+		TransactionPropagation transactionPropagation = featureTransactionHelper
+				.getTransactionPropagation(txPropagation).orElseThrow(() -> new JpaDaoTestException(
 						messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction propagation")));
 
 		String id = stepTransactionManager.createTx(transactionPropagation, transactionIsolation);

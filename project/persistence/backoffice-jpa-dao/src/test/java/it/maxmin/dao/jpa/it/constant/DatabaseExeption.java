@@ -7,7 +7,7 @@ import org.springframework.orm.jpa.JpaSystemException;
 
 import jakarta.persistence.QueryTimeoutException;
 
-public enum FeatureError {
+public enum DatabaseExeption {
 
 	SQL_INTEGRITY_CONSTRAINT_VIOLATION_EXCEPTION("SQL integrity constraint violation",
 			SQLIntegrityConstraintViolationException.class),
@@ -18,7 +18,7 @@ public enum FeatureError {
 	private String decription;
 	private Class<? extends Exception> clazz;
 
-	private FeatureError(String description, Class<? extends Exception> clazz) {
+	private DatabaseExeption(String description, Class<? extends Exception> clazz) {
 		this.decription = description;
 		this.clazz = clazz;
 	}

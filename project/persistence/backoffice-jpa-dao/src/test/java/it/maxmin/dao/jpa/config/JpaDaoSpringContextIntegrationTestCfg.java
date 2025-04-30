@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import it.maxmin.common.service.api.MessageService;
+import it.maxmin.dao.jpa.api.repo.DepartmentDao;
 import it.maxmin.dao.jpa.it.common.FeatureErrorHelper;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioContext;
@@ -15,6 +16,7 @@ import it.maxmin.dao.jpa.it.context.ScenarioTransactionContext;
 import it.maxmin.dao.jpa.it.context.StepErrorManager;
 import it.maxmin.dao.jpa.it.context.StepTransactionManager;
 import it.maxmin.dao.jpa.it.transaction.FeatureTransactionHelper;
+import it.maxmin.dao.jpa.it.user.FeatureUserHelper;
 import it.maxmin.dao.jpa.transaction.TransactionManager;
 
 @Import({ JpaDaoSpringContextCfg.class, ScenarioContext.class, ScenarioItemContext.class,
@@ -39,13 +41,18 @@ public class JpaDaoSpringContextIntegrationTestCfg {
 		return new StepTransactionManager(transactionManager, scenarioTransactionContext, messageService);
 	}
 
-	@Bean("stepTransactionHelper")
-	public FeatureTransactionHelper stepTransactionHelper() {
+	@Bean("featureTransactionHelper")
+	public FeatureTransactionHelper featureTransactionHelper() {
 		return new FeatureTransactionHelper();
 	}
 
-	@Bean("stepErrorHelper")
-	public FeatureErrorHelper stepErrorHelper() {
+	@Bean("featureUserHelper")
+	public FeatureUserHelper featureUserHelper(DepartmentDao departmentDao, MessageService messageService) {
+		return new FeatureUserHelper(departmentDao, messageService);
+	}
+
+	@Bean("featureErrorHelper")
+	public FeatureErrorHelper featureErrorHelper() {
 		return new FeatureErrorHelper();
 	}
 

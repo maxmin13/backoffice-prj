@@ -8,10 +8,6 @@ import static it.maxmin.dao.jpa.it.constant.StepConstants.YES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -29,15 +25,17 @@ public class FindUserStepDefinitions {
 	private MessageService messageService;
 	private ScenarioItemContext scenarioItemContext;
 	private StepErrorManager stepErrorManager;
+	private FeatureUserHelper featureUserHelper;
 	private LogScenarioUtil logScenarioUtil;
 	private UserDao userDao;
 
 	public FindUserStepDefinitions(ScenarioItemContext scenarioItemContext, MessageService messageService,
-			StepErrorManager stepErrorManager,
-			LogScenarioUtil logScenarioUtil, UserDao userDao) {
+			StepErrorManager stepErrorManager, FeatureUserHelper featureUserHelper, LogScenarioUtil logScenarioUtil,
+			UserDao userDao) {
 		this.messageService = messageService;
 		this.scenarioItemContext = scenarioItemContext;
 		this.stepErrorManager = stepErrorManager;
+		this.featureUserHelper = featureUserHelper;
 		this.logScenarioUtil = logScenarioUtil;
 		this.userDao = userDao;
 	}
@@ -67,8 +65,7 @@ public class FindUserStepDefinitions {
 				logScenarioUtil.log("user {0} not found by account name", accountName);
 				scenarioItemContext.removeItem(USER);
 			});
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logScenarioUtil.log("{0}", e);
 			stepErrorManager.addError("find user by account name error", e);
 		}
@@ -88,22 +85,15 @@ public class FindUserStepDefinitions {
 	@Then("the user should be")
 	public void the_user_should_be(DataTable user) {
 		assertNotNull(user);
-		List<List<String>> data = user.asLists();
-		String accountName = data.get(0).get(0);
-		String firstName = data.get(0).get(1);
-		String lastName = data.get(0).get(2);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMMM dd");
-		LocalDate birthDate = LocalDate.parse(data.get(0).get(3), formatter);
-		String departmentName = data.get(0).get(4);
-
+		User data = featureUserHelper.buildUser(user);
 		User u = (User) scenarioItemContext.getItem(USER).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 
-		assertEquals(accountName, u.getAccountName());
-		assertEquals(firstName, u.getFirstName());
-		assertEquals(lastName, u.getLastName());
-		assertEquals(birthDate, u.getBirthDate());
-		assertEquals(departmentName, u.getDepartment().getName());
+		assertEquals(data.getAccountName(), u.getAccountName());
+		assertEquals(data.getFirstName(), u.getFirstName());
+		assertEquals(data.getLastName(), u.getLastName());
+		assertEquals(data.getBirthDate(), u.getBirthDate());
+		assertEquals(data.getDepartment().getName(), u.getDepartment().getName());
 
 		logScenarioUtil.log("the user is as expected");
 	}

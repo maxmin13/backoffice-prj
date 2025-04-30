@@ -14,7 +14,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
-import it.maxmin.dao.jpa.it.constant.FeatureError;
+import it.maxmin.dao.jpa.it.constant.DatabaseExeption;
 import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
 import it.maxmin.dao.jpa.it.context.StepErrorManager;
 
@@ -38,19 +38,19 @@ public class CommonStepDefinitions<T extends Exception> {
 	}
 
 	@Then("I check if a {string} error have been raised")
-	public void check_if_specific_error_has_been_raised(String description) {
-		assertNotNull(description);
-		logScenarioUtil.log("checking if a {0} error has been raised", description);
-		FeatureError featureError = featureErrorHelper.getFeatureError(description).orElseThrow(
+	public void check_if_specific_error_has_been_raised(String error) {
+		assertNotNull(error);
+		logScenarioUtil.log("checking if a {0} error has been raised", error);
+		DatabaseExeption featureError = featureErrorHelper.getDatabaseError(error).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "feature error")));
 		Class expected = featureError.getExceptionClass();
 
 		stepErrorManager.getErrorByType(expected).ifPresentOrElse(er -> {
 			scenarioItemContext.setItem(RESPONSE, YES);
-			logScenarioUtil.log("a {0} error has been raised", description);
+			logScenarioUtil.log("a {0} error has been raised", error);
 		}, () -> {
 			scenarioItemContext.setItem(RESPONSE, NOPE);
-			logScenarioUtil.log("no {0} error has been raised", description);
+			logScenarioUtil.log("no {0} error has been raised", error);
 		});
 	}
 
@@ -58,7 +58,7 @@ public class CommonStepDefinitions<T extends Exception> {
 	public void check_if_one_of_these_error_have_been_raised(DataTable errors) {
 		logScenarioUtil.log("checking if one of the described errors has been raised");
 		assertNotNull(errors);
-		errors.asLists().get(0).stream().forEach(this::check_if_specific_error_has_been_raised);
+		featureErrorHelper.buildErrors(errors).forEach(this::check_if_specific_error_has_been_raised);
 	}
 
 	@Then("I check if an error has been raised")
