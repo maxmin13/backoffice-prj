@@ -17,12 +17,14 @@ Feature: verify read uncommitted transaction isolation level
       | trx1 | repeatable read | requires new |
       And I start the transaction 'trx1'     
      Then I update the user
-       | maxmin13 | Max2 | Min2 | 1999 September 23 |
+       | maxmin13 | Max2 | Min2 | 1999 September 23 | Legal |
      Then I commit the transaction 'trx1'
-     #When I check if the user 'maxmin13' is there
-     #Then I should be told 'yes'  
-      #And the user should be
-      #| maxmin13 | Max2 | Min2 | 1999 September 23 | Legal | 
+     When I check if an error has been raised
+     Then I should be told 'nope' 
+     When I check if the user 'maxmin13' is there
+     Then I should be told 'yes'  
+      And the user should be
+       | maxmin13 | Max2 | Min2 | 1999 September 23 | Legal | 
       
     #Given I create a database transaction
       #| trx2 | read uncommitted | requires new |
