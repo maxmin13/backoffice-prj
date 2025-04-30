@@ -35,9 +35,8 @@ public class StepErrorManager {
 	 */
 	public Optional<Exception> getErrorByType(Class<Exception> clazz) {
 		assertNotNull(clazz);
-		Predicate<Throwable> classIsEqual = error -> clazz.equals(error.getCause().getClass());
-		List<Throwable> errors = scenarioErrorContext.getErrors().stream().filter(classIsEqual).map(Throwable::getCause)
-				.toList();
+		Predicate<Throwable> classIsEqual = error -> clazz.equals(error.getClass());
+		List<Exception> errors = scenarioErrorContext.getErrors().stream().filter(classIsEqual).toList();
 		Optional<Exception> opt = switch (errors.size()) {
 			case 0 -> {
 				yield Optional.empty();
@@ -46,8 +45,8 @@ public class StepErrorManager {
 				Exception ex = (Exception) errors.get(0);
 				yield Optional.of(ex);
 			}
-			default ->
-				throw new JpaDaoTestException(messageService.getMessage(ERROR_MORE_THAN_ONE_OBJECT_FOUND_MSG, clazz));
+			default -> throw new JpaDaoTestException(
+					messageService.getMessage(ERROR_MORE_THAN_ONE_OBJECT_FOUND_MSG, "error by type"));
 		};
 		scenarioErrorContext.getErrors().removeIf(classIsEqual);
 		return opt;

@@ -51,9 +51,11 @@ public class UserDaoImpl implements UserDao {
 	public Optional<User> findByAccountName(String accountName) {
 		notNull(accountName, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "account name"));
 		try {
-			return Optional.of(em.createNamedQuery("User.findByAccountName", User.class)// .setFlushMode(COMMIT)
+			// the cache is flushed before execution.
+			return Optional.of(em.createNamedQuery("User.findByAccountName", User.class)
 					.setParameter("accountName", accountName).getSingleResult());
-		} catch (NoResultException e) {
+		}
+		catch (NoResultException e) {
 			return Optional.empty();
 		}
 	}
@@ -76,7 +78,8 @@ public class UserDaoImpl implements UserDao {
 			LOGGER.info("Inserting new user ...");
 			em.persist(user);
 			LOGGER.info("User created with id: {}", user.getId());
-		} else {
+		}
+		else {
 			throw new IllegalArgumentException(messageService.getMessage(ERROR_FIELD_NULL_MSG, "id"));
 		}
 	}

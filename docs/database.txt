@@ -29,12 +29,12 @@ https://stackoverflow.com/questions/41825832/how-to-show-transaction-isolation-l
 
 mariadb -u root -p'rootpwd' -h 172.18.0.2 -P 3306 -D backofficedb
 
-update User set FirstName='max', LastName='min' where AccountName='maxmin13';
+Select * from User where AccountName='maxmin13';
+update User set FirstName='Max2', LastName='Min2' where AccountName='maxmin13';
 
 set autocommit=0;
 
-
-SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
 SELECT @@transaction_ISOLATION;
 
 SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;

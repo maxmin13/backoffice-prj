@@ -53,28 +53,26 @@ public class StepTransactionManager {
 		assertNotNull(id);
 		Transaction transaction = scenarioTransactionContext.getTransaction(id).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
+		scenarioTransactionContext.removeTransaction(id);
 		try {
 			transactionManager.commitTx(transaction);
 		}
-		catch (JpaDaoTestException e) {
-			scenarioTransactionContext.removeTransaction(id);
+		catch (Exception e) {
 			throw e;
 		}
-		scenarioTransactionContext.removeTransaction(id);
 	}
 
 	public void rollbackTx(String id) {
 		assertNotNull(id);
 		Transaction transaction = scenarioTransactionContext.getTransaction(id).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
+		scenarioTransactionContext.removeTransaction(id);
 		try {
 			transactionManager.rollbackTx(transaction);
 		}
-		catch (JpaDaoTestException e) {
-			scenarioTransactionContext.removeTransaction(id);
+		catch (Exception e) {
 			throw e;
 		}
-		scenarioTransactionContext.removeTransaction(id);
 	}
 
 	public List<Transaction> getPendingTransaction() {
