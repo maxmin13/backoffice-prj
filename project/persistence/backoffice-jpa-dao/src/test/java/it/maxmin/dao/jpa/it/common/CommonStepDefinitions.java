@@ -16,7 +16,7 @@ import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.constant.DatabaseExeption;
 import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
-import it.maxmin.dao.jpa.it.context.StepErrorManager;
+import it.maxmin.dao.jpa.it.error.StepErrorManager;
 
 public class CommonStepDefinitions<T extends Exception> {
 
@@ -37,6 +37,7 @@ public class CommonStepDefinitions<T extends Exception> {
 		this.stepErrorManager = stepErrorManager;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Then("I check if a {string} error have been raised")
 	public void check_if_specific_error_has_been_raised(String error) {
 		assertNotNull(error);
@@ -44,7 +45,6 @@ public class CommonStepDefinitions<T extends Exception> {
 		DatabaseExeption featureError = featureErrorHelper.getDatabaseError(error).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "feature error")));
 		Class expected = featureError.getExceptionClass();
-
 		stepErrorManager.getErrorByType(expected).ifPresentOrElse(er -> {
 			scenarioItemContext.setItem(RESPONSE, YES);
 			logScenarioUtil.log("a {0} error has been raised", error);
@@ -69,7 +69,8 @@ public class CommonStepDefinitions<T extends Exception> {
 		if (size == 0) {
 			scenarioItemContext.setItem(RESPONSE, NOPE);
 			logScenarioUtil.log("no error was raised");
-		} else {
+		}
+		else {
 			scenarioItemContext.setItem(RESPONSE, YES);
 			logScenarioUtil.log("an error has been raised");
 		}

@@ -7,7 +7,7 @@ import io.cucumber.java.Scenario;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
-import it.maxmin.dao.jpa.it.context.StepTransactionManager;
+import it.maxmin.dao.jpa.it.transaction.StepTransactionManager;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class CleanUsersHook {

@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.it.context;
+package it.maxmin.dao.jpa.it.error;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_MORE_THAN_ONE_OBJECT_FOUND_MSG;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
+import it.maxmin.dao.jpa.it.context.ScenarioErrorContext;
 
 public class StepErrorManager {
 

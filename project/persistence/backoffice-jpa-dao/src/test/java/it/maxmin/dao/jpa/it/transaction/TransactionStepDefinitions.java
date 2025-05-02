@@ -13,8 +13,7 @@ import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
-import it.maxmin.dao.jpa.it.context.StepErrorManager;
-import it.maxmin.dao.jpa.it.context.StepTransactionManager;
+import it.maxmin.dao.jpa.it.error.StepErrorManager;
 import it.maxmin.dao.jpa.transaction.TransactionIsolation;
 import it.maxmin.dao.jpa.transaction.TransactionPropagation;
 

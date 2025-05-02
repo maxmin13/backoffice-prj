@@ -14,7 +14,7 @@ import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
-import it.maxmin.dao.jpa.it.context.StepErrorManager;
+import it.maxmin.dao.jpa.it.error.StepErrorManager;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class CreateUserStepDefinitions {

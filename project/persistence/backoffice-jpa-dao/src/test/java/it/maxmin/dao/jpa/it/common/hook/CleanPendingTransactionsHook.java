@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import io.cucumber.java.After;
 import io.cucumber.java.Scenario;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
-import it.maxmin.dao.jpa.it.context.StepTransactionManager;
+import it.maxmin.dao.jpa.it.transaction.StepTransactionManager;
 
 public class CleanPendingTransactionsHook {
 

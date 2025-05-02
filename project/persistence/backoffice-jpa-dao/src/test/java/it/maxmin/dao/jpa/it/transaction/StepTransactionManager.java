@@ -1,4 +1,4 @@
-package it.maxmin.dao.jpa.it.context;
+package it.maxmin.dao.jpa.it.transaction;
 
 import static it.maxmin.common.constant.MessageConstants.ERROR_OBJECT_NOT_FOUND_MSG;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
+import it.maxmin.dao.jpa.it.context.ScenarioTransactionContext;
 import it.maxmin.dao.jpa.transaction.Transaction;
 import it.maxmin.dao.jpa.transaction.TransactionIsolation;
 import it.maxmin.dao.jpa.transaction.TransactionManager;
@@ -54,12 +55,7 @@ public class StepTransactionManager {
 		Transaction transaction = scenarioTransactionContext.getTransaction(id).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
 		scenarioTransactionContext.removeTransaction(id);
-		try {
-			transactionManager.commitTx(transaction);
-		}
-		catch (Exception e) {
-			throw e;
-		}
+		transactionManager.commitTx(transaction);
 	}
 
 	public void rollbackTx(String id) {
@@ -67,12 +63,7 @@ public class StepTransactionManager {
 		Transaction transaction = scenarioTransactionContext.getTransaction(id).orElseThrow(
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "transaction")));
 		scenarioTransactionContext.removeTransaction(id);
-		try {
-			transactionManager.rollbackTx(transaction);
-		}
-		catch (Exception e) {
-			throw e;
-		}
+		transactionManager.rollbackTx(transaction);
 	}
 
 	public List<Transaction> getPendingTransaction() {

@@ -53,7 +53,7 @@ public class JpaDaoSpringContextCfg {
 		return new HibernateJpaVendorAdapter();
 	}
 
-	@Bean
+	@Bean(name = "entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		var factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setPackagesToScan("it.maxmin.model.jpa.dao.entity");

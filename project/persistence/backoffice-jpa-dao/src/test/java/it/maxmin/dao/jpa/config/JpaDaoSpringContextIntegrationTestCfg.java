@@ -3,19 +3,21 @@ package it.maxmin.dao.jpa.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.DepartmentDao;
+import it.maxmin.dao.jpa.cache.JpaCacheManager;
 import it.maxmin.dao.jpa.it.common.FeatureErrorHelper;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioContext;
 import it.maxmin.dao.jpa.it.context.ScenarioErrorContext;
 import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
 import it.maxmin.dao.jpa.it.context.ScenarioTransactionContext;
-import it.maxmin.dao.jpa.it.context.StepErrorManager;
-import it.maxmin.dao.jpa.it.context.StepTransactionManager;
+import it.maxmin.dao.jpa.it.error.StepErrorManager;
 import it.maxmin.dao.jpa.it.transaction.FeatureTransactionHelper;
+import it.maxmin.dao.jpa.it.transaction.StepTransactionManager;
 import it.maxmin.dao.jpa.it.user.FeatureUserHelper;
 import it.maxmin.dao.jpa.transaction.TransactionManager;
 
@@ -61,4 +63,8 @@ public class JpaDaoSpringContextIntegrationTestCfg {
 		return new LogScenarioUtil(scenarioContext);
 	}
 
+	@Bean("jpaCacheManager")
+	public JpaCacheManager jpaCacheManager(LocalContainerEntityManagerFactoryBean entityManagerFactory) {
+		return new JpaCacheManager(entityManagerFactory);
+	}
 }
