@@ -1,6 +1,8 @@
 @transaction
 Feature: verify transaction isolation levels
-  Connect to the database with different transaction isolation levels 
+  Connect to the database with different transaction isolation levels.
+  Update an entity in a open transaction, 
+  flush the changes to the database by executing a Query on the entity. 
 
   @deleteUsers
   Scenario: verify 'read uncommitted', 'read committed', 'repeatable read', 'serializable' transaction isolation levels
@@ -20,7 +22,7 @@ Feature: verify transaction isolation levels
       And I start the transaction 'trx1'     
      Then I update the user
         | maxmin13 | Max2 | Min2 | 1999 September 23 | Legal |
-      And I flush the application cache
+      And I search for 'maxmin13' user account name in the database
      When I check if the user 'maxmin13' is there
      Then I should be told 'yes'  
       And the user should be

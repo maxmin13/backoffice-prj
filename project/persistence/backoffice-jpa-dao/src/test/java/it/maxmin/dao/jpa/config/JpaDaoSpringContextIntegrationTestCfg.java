@@ -3,12 +3,10 @@ package it.maxmin.dao.jpa.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.api.repo.DepartmentDao;
-import it.maxmin.dao.jpa.cache.JpaCacheManager;
 import it.maxmin.dao.jpa.it.common.FeatureErrorHelper;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioContext;
@@ -63,8 +61,4 @@ public class JpaDaoSpringContextIntegrationTestCfg {
 		return new LogScenarioUtil(scenarioContext);
 	}
 
-	@Bean("jpaCacheManager")
-	public JpaCacheManager jpaCacheManager(LocalContainerEntityManagerFactoryBean entityManagerFactory) {
-		return new JpaCacheManager(entityManagerFactory);
-	}
 }

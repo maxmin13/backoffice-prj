@@ -51,7 +51,7 @@ public class UserDaoImpl implements UserDao {
 	public Optional<User> findByAccountName(String accountName) {
 		notNull(accountName, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "account name"));
 		try {
-			// the cache is flushed before execution.
+			// Hibernate primary cache is flushed before execution.
 			return Optional.of(em.createNamedQuery("User.findByAccountName", User.class)
 					.setParameter("accountName", accountName).getSingleResult());
 		}
