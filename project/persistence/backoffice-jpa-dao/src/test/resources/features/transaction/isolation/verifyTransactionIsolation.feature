@@ -1,8 +1,7 @@
 @transaction
 Feature: verify transaction isolation levels
   Connect to the database with different transaction isolation levels.
-  Update an entity in a open transaction, 
-  flush the changes to the database by executing a Query on the entity. 
+  Update an entity in a open transaction, the changes are flushed to the database by executing a 'Query'.
 
   @deleteUsers
   Scenario: verify 'read uncommitted', 'read committed', 'repeatable read', 'serializable' transaction isolation levels
