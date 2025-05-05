@@ -5,15 +5,17 @@ import java.text.MessageFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import it.maxmin.dao.jpa.it.context.ScenarioContext;
 
+@Component
 public class LogScenarioUtil {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(LogScenarioUtil.class);
-	
+
 	private ScenarioContext scenarioContext;
-	
+
 	@Autowired
 	public LogScenarioUtil(ScenarioContext scenarioContext) {
 		this.scenarioContext = scenarioContext;
@@ -22,15 +24,15 @@ public class LogScenarioUtil {
 	public void log(String message, Object... params) {
 		LOGGER.debug(format(message, params));
 	}
-	
+
 	public void warn(String message, Object... params) {
 		LOGGER.warn(format(message, params));
 	}
-	
+
 	public void error(String message, Object... params) {
 		LOGGER.error(format(message, params));
 	}
-	
+
 	private String format(String message, Object... params) {
 		StringBuffer bf = new StringBuffer();
 		bf.append("SCE(").append(scenarioContext.getScenarioName()).append("): ").append(message);

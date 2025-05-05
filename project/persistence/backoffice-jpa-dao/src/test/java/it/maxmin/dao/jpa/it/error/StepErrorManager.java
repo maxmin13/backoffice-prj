@@ -8,11 +8,13 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import it.maxmin.common.service.api.MessageService;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.dao.jpa.it.context.ScenarioErrorContext;
 
+@Component
 public class StepErrorManager {
 
 	private ScenarioErrorContext scenarioErrorContext;

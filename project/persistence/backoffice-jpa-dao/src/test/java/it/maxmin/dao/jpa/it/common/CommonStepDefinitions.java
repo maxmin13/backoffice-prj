@@ -46,10 +46,10 @@ public class CommonStepDefinitions<T extends Exception> {
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "feature error")));
 		Class expected = featureError.getExceptionClass();
 		stepErrorManager.getErrorByType(expected).ifPresentOrElse(er -> {
-			scenarioItemContext.setItem(RESPONSE, YES);
+			scenarioItemContext.addItem(RESPONSE, YES);
 			logScenarioUtil.log("a {0} error has been raised", error);
 		}, () -> {
-			scenarioItemContext.setItem(RESPONSE, NOPE);
+			scenarioItemContext.addItem(RESPONSE, NOPE);
 			logScenarioUtil.log("no {0} error has been raised", error);
 		});
 	}
@@ -67,11 +67,11 @@ public class CommonStepDefinitions<T extends Exception> {
 		int size = stepErrorManager.getUnhandledErrors().size();
 
 		if (size == 0) {
-			scenarioItemContext.setItem(RESPONSE, NOPE);
+			scenarioItemContext.addItem(RESPONSE, NOPE);
 			logScenarioUtil.log("no error was raised");
 		}
 		else {
-			scenarioItemContext.setItem(RESPONSE, YES);
+			scenarioItemContext.addItem(RESPONSE, YES);
 			logScenarioUtil.log("an error has been raised");
 		}
 	}

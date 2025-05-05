@@ -6,6 +6,9 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class JpaDataSourceTestUtil {
 
 	public void testDataSource(DataSource dataSource) throws SQLException {

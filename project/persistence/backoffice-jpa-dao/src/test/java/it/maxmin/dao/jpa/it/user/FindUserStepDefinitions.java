@@ -46,7 +46,7 @@ public class FindUserStepDefinitions {
 				() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
 		Long id = user.getId();
 		userDao.find(id).ifPresentOrElse(u -> {
-			scenarioItemContext.setItem(USER, u);
+			scenarioItemContext.addItem(USER, u);
 			logScenarioUtil.log("user {0} found by id", id);
 		}, () -> {
 			logScenarioUtil.log("user {0} not found by id", id);
@@ -59,7 +59,7 @@ public class FindUserStepDefinitions {
 		assertNotNull(accountName);
 		try {
 			userDao.findByAccountName(accountName).ifPresentOrElse(u -> {
-				scenarioItemContext.setItem(USER, u);
+				scenarioItemContext.addItem(USER, u);
 				logScenarioUtil.log("user {0} found by account name", accountName);
 			}, () -> {
 				logScenarioUtil.log("user {0} not found by account name", accountName);
@@ -74,10 +74,10 @@ public class FindUserStepDefinitions {
 	@When("I check if the user {string} is there")
 	public void check_if_user_is_there(String userName) {
 		assertNotNull(userName);
-		scenarioItemContext.setItem(RESPONSE, NOPE);
+		scenarioItemContext.addItem(RESPONSE, NOPE);
 		scenarioItemContext.getItem(USER).ifPresent(u -> {
 			if (userName.equals(((User) u).getAccountName())) {
-				scenarioItemContext.setItem(RESPONSE, YES);
+				scenarioItemContext.addItem(RESPONSE, YES);
 			}
 		});
 	}

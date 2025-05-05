@@ -5,6 +5,7 @@ import java.sql.Driver;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,7 +14,6 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import ch.vorburger.mariadb4j.springframework.MariaDB4jSpringService;
-import it.maxmin.dao.jpa.common.JpaDataSourceTestUtil;
 import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 
 /**
@@ -23,7 +23,8 @@ import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 
 @Configuration
 @Import(JpaDaoSpringContextCfg.class)
-public class JpaDaoSpringContextUnitTestCfg {
+@ComponentScan(basePackages = { "it.maxmin.dao.jpa.common" })
+public class JpaDaoUnitTestCfg {
 
 	@Bean
 	public MariaDB4jSpringService mariaDB4jSpringService() {
@@ -31,14 +32,15 @@ public class JpaDaoSpringContextUnitTestCfg {
 	}
 
 	/**
-	 *  overrides {@link JndiDataSourceCfg} dataSource() method
-	 * */
+	 * overrides {@link JndiDataSourceCfg} dataSource() method
+	 */
 	@SuppressWarnings("unchecked")
 	@Bean
 	public DataSource dataSource(MariaDB4jSpringService mariaDB4jSpringService) {
 		try {
 			mariaDB4jSpringService.getDB().createDB("testDB");
-		} catch (ManagedProcessException e) {
+		}
+		catch (ManagedProcessException e) {
 			throw new JpaDaoTestException("Error creating the data source", e);
 		}
 
@@ -48,7 +50,8 @@ public class JpaDaoSpringContextUnitTestCfg {
 		Class<? extends Driver> driver;
 		try {
 			driver = (Class<? extends Driver>) Class.forName("org.mariadb.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e) {
 			throw new JpaDaoTestException("Error loading DB driver", e);
 		}
 		ds.setDriverClass(driver);
@@ -59,13 +62,8 @@ public class JpaDaoSpringContextUnitTestCfg {
 	}
 
 	@Bean
-	public JpaDataSourceTestUtil dataSourceTestUtil() {
-		return new JpaDataSourceTestUtil();
-	}
-
-	@Bean
 	public NamedParameterJdbcTemplate jdbcTemplate(DataSource dataSource) {
 		return new NamedParameterJdbcTemplate(dataSource);
 	}
-	
+
 }

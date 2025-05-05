@@ -42,7 +42,7 @@ public class CreateUserStepDefinitions {
 		User data = featureUserHelper.buildUser(user);
 		logScenarioUtil.log("I want to create a user");
 		logScenarioUtil.log("{0}", user);
-		scenarioItemContext.setItem(USER, data);
+		scenarioItemContext.addItem(USER, data);
 	}
 
 	@When("I create the user")
@@ -55,7 +55,7 @@ public class CreateUserStepDefinitions {
 		}
 		catch (Exception e) {
 			logScenarioUtil.log("{0}", e);
-			stepErrorManager.addError("update error", e);
+			stepErrorManager.addError("create error", e);
 		}
 	}
 

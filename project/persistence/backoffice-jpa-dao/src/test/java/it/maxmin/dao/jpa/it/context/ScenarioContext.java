@@ -1,9 +1,10 @@
 package it.maxmin.dao.jpa.it.context;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
 import io.cucumber.java.Scenario;
 
@@ -11,7 +12,8 @@ import io.cucumber.java.Scenario;
  * {@link ScenarioContext} has the scope of a scenario. Cucumber creates a new
  * instance of each step class for each scenario.
  */
-@Scope(value = "cucumber-glue", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Component
+@Scope(value = "cucumber-glue", proxyMode = TARGET_CLASS)
 public class ScenarioContext {
 
 	private Scenario scenario;

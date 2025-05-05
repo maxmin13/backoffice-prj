@@ -62,7 +62,7 @@ public class UpdateUserStepDefinitions {
 		try {
 			User updated = userDao.update(u);
 			// replace the managed entity
-			scenarioItemContext.setItem(USER, updated);
+			scenarioItemContext.addItem(USER, updated);
 			logScenarioUtil.log("updated user {0} in the database", updated);
 		}
 		catch (Exception e) {

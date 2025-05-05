@@ -14,10 +14,10 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import it.maxmin.dao.jpa.api.repo.UserDao;
-import it.maxmin.dao.jpa.config.JpaDaoSpringContextUnitTestCfg;
+import it.maxmin.dao.jpa.config.JpaDaoUnitTestCfg;
 import it.maxmin.model.jpa.dao.entity.User;
 
-@SpringJUnitConfig(classes = { JpaDaoSpringContextUnitTestCfg.class })
+@SpringJUnitConfig(classes = { JpaDaoUnitTestCfg.class })
 @Sql(scripts = { "classpath:database/up/1_create_database.up.sql", "classpath:database/up/2_accountstatus.up.sql",
 		"classpath:database/up/2_accounttype.up.sql", "classpath:database/up/2_department.up.sql",
 		"classpath:database/up/2_role.up.sql", "classpath:database/up/2_state.up.sql",

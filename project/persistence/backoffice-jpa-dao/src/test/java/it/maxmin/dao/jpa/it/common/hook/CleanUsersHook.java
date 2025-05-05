@@ -7,20 +7,21 @@ import io.cucumber.java.Scenario;
 import it.maxmin.dao.jpa.api.repo.UserDao;
 import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioItemContext;
-import it.maxmin.dao.jpa.it.transaction.StepTransactionManager;
+import it.maxmin.dao.jpa.transaction.Transaction;
+import it.maxmin.dao.jpa.transaction.TransactionManager;
 import it.maxmin.model.jpa.dao.entity.User;
 
 public class CleanUsersHook {
 
-	private StepTransactionManager stepTransactionManager;
+	private TransactionManager transactionManager;
 	private ScenarioItemContext scenarioItemContext;
 	private LogScenarioUtil logScenarioUtil;
 	private UserDao userDao;
 
 	@Autowired
-	public CleanUsersHook(StepTransactionManager stepTransactionManager, ScenarioItemContext scenarioItemContext,
+	public CleanUsersHook(TransactionManager transactionManager, ScenarioItemContext scenarioItemContext,
 			LogScenarioUtil logScenarioUtil, UserDao userDao) {
-		this.stepTransactionManager = stepTransactionManager;
+		this.transactionManager = transactionManager;
 		this.scenarioItemContext = scenarioItemContext;
 		this.logScenarioUtil = logScenarioUtil;
 		this.userDao = userDao;
@@ -29,13 +30,13 @@ public class CleanUsersHook {
 	@After(order = 1, value = "@deleteUsers")
 	public void clean(Scenario scenario) {
 		scenarioItemContext.getItemsOfType(User.class).stream().forEach(user -> {
-			String name = stepTransactionManager.createTx();
-			stepTransactionManager.startTx(name);
+			Transaction transaction = transactionManager.createTx();
+			transactionManager.startTx(transaction);
 			userDao.findByAccountName(user.getAccountName()).ifPresentOrElse(u -> {
 				userDao.delete(u);
-				stepTransactionManager.commitTx(name);
+				transactionManager.commitTx(transaction);
 				logScenarioUtil.log("Deleted user {0} ", u);
-			}, () -> stepTransactionManager.rollbackTx(name));
+			}, () -> transactionManager.rollbackTx(transaction));
 		});
 	}
 

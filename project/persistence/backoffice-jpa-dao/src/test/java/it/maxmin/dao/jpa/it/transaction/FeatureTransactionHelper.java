@@ -5,10 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import io.cucumber.datatable.DataTable;
 import it.maxmin.dao.jpa.transaction.TransactionIsolation;
 import it.maxmin.dao.jpa.transaction.TransactionPropagation;
 
+@Component
 public class FeatureTransactionHelper {
 
 	public Optional<TransactionIsolation> getTransactionIsolation(String featureDescription) {

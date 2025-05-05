@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import io.cucumber.datatable.DataTable;
 import it.maxmin.common.service.api.MessageService;
@@ -16,6 +17,7 @@ import it.maxmin.dao.jpa.exception.JpaDaoTestException;
 import it.maxmin.model.jpa.dao.entity.Department;
 import it.maxmin.model.jpa.dao.entity.User;
 
+@Component
 public class FeatureUserHelper {
 
 	private MessageService messageService;
