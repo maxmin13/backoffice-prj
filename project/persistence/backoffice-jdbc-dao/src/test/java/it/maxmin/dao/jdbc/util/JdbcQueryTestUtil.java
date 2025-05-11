@@ -105,7 +105,8 @@ public class JdbcQueryTestUtil {
 		Number key = result.getKey();
 		if (key != null) {
 			user.setId(key.longValue());
-		} else {
+		}
+		else {
 			throw new JdbcDaoTestException("User key not generated");
 		}
 
@@ -148,7 +149,6 @@ public class JdbcQueryTestUtil {
 				BeanPropertyRowMapper.newInstance(PojoAddress.class));
 		return addresses.isEmpty() ? Optional.empty() : Optional.of(addresses.get(0));
 	}
-	
 
 	public Optional<PojoAddress> selectAddressByUserIdPostalCode(Long userId, String postalCode) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
@@ -172,7 +172,7 @@ public class JdbcQueryTestUtil {
 
 	public PojoAddress insertAddress(PojoAddress address) {
 		notNull(address, ERROR_ADDRESS_NOT_NULL_MSG);
-		
+
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		simpleJdbcInsert.usingGeneratedKeyColumns("Id");
 		simpleJdbcInsert.usingColumns("Description", "City", "Region", "PostalCode", "StateId");
@@ -182,7 +182,8 @@ public class JdbcQueryTestUtil {
 		Number key = result.getKey();
 		if (key != null) {
 			address.setId(key.longValue());
-		} else {
+		}
+		else {
 			throw new JdbcDaoTestException("Address key not generated");
 		}
 
@@ -255,7 +256,8 @@ public class JdbcQueryTestUtil {
 				Files.readAllLines(Paths.get("src/test/resources/database/" + script)).stream()
 						.filter(line -> !line.trim().isEmpty()).toList()
 						.forEach(jdbcTemplate.getJdbcTemplate()::update);
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				throw new JdbcDaoTestException("Error running DB scripts", e);
 			}
 		}

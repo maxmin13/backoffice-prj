@@ -1,4 +1,0 @@
-INSERT INTO Transaction (AccountId, TransactionTypeId, Amount) VALUES ((SELECT Id FROM Account WHERE AccountNumber = '123456789'), (SELECT Id FROM TransactionType WHERE Type = 'PAYMENT'), 32.1);
-INSERT INTO Transaction (AccountId, TransactionTypeId, Amount) VALUES ((SELECT Id FROM Account WHERE AccountNumber = '123456789'), (SELECT Id FROM TransactionType WHERE Type = 'INTERNATIONAL_PAYMENT'), 45);
-INSERT INTO Transaction (AccountId, TransactionTypeId, Amount) VALUES ((SELECT Id FROM Account WHERE AccountNumber = '123456789'), (SELECT Id FROM TransactionType WHERE Type = 'LOAN_PAYMENT'), 100);
-INSERT INTO Transaction (AccountId, TransactionTypeId, Amount) VALUES ((SELECT Id FROM Account WHERE AccountNumber = '567856785'), (SELECT Id FROM TransactionType WHERE Type = 'PAYMENT'), 50.8);

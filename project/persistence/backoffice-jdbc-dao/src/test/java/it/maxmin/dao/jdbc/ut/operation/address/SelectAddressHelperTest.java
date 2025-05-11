@@ -194,8 +194,7 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 		LOGGER.info("running test selectAddressByPostalCodeWithNoUser");
 
 		// delete all the users
-		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql",
-				"2_user.down.sql" };
+		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		PojoAddress address = jdbcQueryTestUtil.selectAddressByPostalCode("30010")
@@ -298,8 +297,7 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 		LOGGER.info("running test selectAddressByUserIdAndPostalCodeWithNoUser");
 
 		// delete all the users
-		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql",
-				"2_user.down.sql" };
+		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		PojoAddress address = jdbcQueryTestUtil.selectAddressByPostalCode("30010")
@@ -320,7 +318,7 @@ class SelectAddressHelperTest extends JdbcBaseTestDao {
 	void selectAddressByUserIdAndPostalCode() {
 
 		LOGGER.info("running test selectAddressByUserIdAndPostalCode");
-		
+
 		PojoUser user = jdbcQueryTestUtil.selectUserByAccountName("maxmin13")
 				.orElseThrow(() -> new JdbcDaoTestException(ERROR_USER_NOT_FOUND_MSG));
 

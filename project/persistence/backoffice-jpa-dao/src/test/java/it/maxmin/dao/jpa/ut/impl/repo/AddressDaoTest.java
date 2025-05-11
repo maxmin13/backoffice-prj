@@ -1,4 +1,4 @@
-	package it.maxmin.dao.jpa.ut.impl.repo;
+package it.maxmin.dao.jpa.ut.impl.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,11 +18,11 @@ import it.maxmin.dao.jpa.config.JpaDaoUnitTestCfg;
 import it.maxmin.model.jpa.dao.entity.Address;
 
 @SpringJUnitConfig(classes = { JpaDaoUnitTestCfg.class })
-@Sql(scripts = { "classpath:database/up/1_create_database.up.sql", "classpath:database/up/2_accountstatus.up.sql",
-		"classpath:database/up/2_accounttype.up.sql", "classpath:database/up/2_department.up.sql",
-		"classpath:database/up/2_role.up.sql", "classpath:database/up/2_state.up.sql",
-		"classpath:database/up/2_transactiontype.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = { "classpath:database/down/1_create_database.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
+@Sql(scripts = { "classpath:database/up/1_create_database.up.sql", "classpath:database/up/2_department.up.sql",
+		"classpath:database/up/2_role.up.sql",
+		"classpath:database/up/2_state.up.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {
+		"classpath:database/down/1_create_database.down.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class AddressDaoTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AddressDaoTest.class);
@@ -49,6 +49,5 @@ class AddressDaoTest {
 
 		assertEquals(0, users.size());
 	}
-	
 
 }

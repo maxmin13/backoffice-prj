@@ -1,9 +1,5 @@
-
 [mariadb]
-## transaction-isolation = READ-UNCOMMITED
-## transaction-isolation = READ-COMMITED
 transaction-isolation = REPEATABLE-READ
-## transaction-isolation = SERIALIZABLE
 
 general_log=1
 log_error=/var/lib/mysql/log/mariadb.log

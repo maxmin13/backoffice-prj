@@ -105,8 +105,7 @@ class InsertUserTest extends JdbcBaseTestDao {
 		LOGGER.info("running test execute");
 
 		// delete all users
-		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql",
-				"2_user.down.sql" };
+		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		User carl = User.newInstance().withAccountName("carl23").withBirthDate(LocalDate.of(1982, 9, 1))

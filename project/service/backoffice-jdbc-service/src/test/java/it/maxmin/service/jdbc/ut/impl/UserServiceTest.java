@@ -250,7 +250,8 @@ class UserServiceTest extends JdbcBaseTestDao {
 
 		// prepare the user for the update
 		UserDto franco = UserDto.newInstance(maxmin.getAccountName(), "Franco", "Franchi", LocalDate.of(1940, 9, 11),
-				DepartmentDto.newInstance(legalDepartment.getName()), null, Set.of(RoleDto.newInstance(ADMINISTRATOR.getName())));
+				DepartmentDto.newInstance(legalDepartment.getName()), null,
+				Set.of(RoleDto.newInstance(ADMINISTRATOR.getName())));
 
 		// run the test
 		userService.updateUser(franco);
@@ -300,8 +301,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 		LOGGER.info("running test createUserTest");
 
 		// delete all the users
-		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql",
-				"2_user.down.sql" };
+		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// find an existing address
@@ -371,8 +371,7 @@ class UserServiceTest extends JdbcBaseTestDao {
 		LOGGER.info("running test createUserWithError");
 
 		// delete all the users
-		String[] scripts = { "2_transaction.down.sql", "2_account.down.sql", "2_useraddress.down.sql",
-				"2_user.down.sql" };
+		String[] scripts = { "2_useraddress.down.sql", "2_user.down.sql" };
 		jdbcQueryTestUtil.runDBScripts(scripts);
 
 		// find an existing address

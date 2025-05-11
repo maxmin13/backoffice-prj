@@ -43,14 +43,14 @@ class UserSequenceGeneratorTest {
 	private EntityTransaction tx;
 
 	@BeforeEach
-	public void init() {
+	void init() {
 		em = emf.createEntityManager();
 		tx = em.getTransaction();
 		tx.begin();
 	}
 
 	@AfterEach
-	public void clear() {
+	void clear() {
 		tx.commit();
 		if (em.isOpen()) {
 			em.close();
