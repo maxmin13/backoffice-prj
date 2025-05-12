@@ -69,6 +69,12 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
+	public void refresh(User user) {
+		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
+		em.refresh(user);
+	}
+
+	@Override
 	public void create(User user) {
 		notNull(user, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "user"));
 		notNull(user.getDepartment(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "department"));

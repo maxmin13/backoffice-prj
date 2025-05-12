@@ -65,9 +65,23 @@ public class FindUserStepDefinitions {
 				logScenarioUtil.log("user {0} not found by account name", accountName);
 				scenarioItemContext.removeItem(USER);
 			});
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			logScenarioUtil.log("{0}", e);
 			stepErrorManager.addError("find user by account name error", e);
+		}
+	}
+
+	@Given("I refresh the user")
+	public void refresh_user() {
+		try {
+			User user = (User) scenarioItemContext.getItem(USER).orElseThrow(
+					() -> new JpaDaoTestException(messageService.getMessage(ERROR_OBJECT_NOT_FOUND_MSG, "user")));
+			userDao.refresh(user);
+		}
+		catch (Exception e) {
+			logScenarioUtil.log("{0}", e);
+			stepErrorManager.addError("refresh user in the persistent content error", e);
 		}
 	}
 

@@ -15,6 +15,8 @@ public interface UserDao {
 
 	List<User> findAll();
 
+	void refresh(User user);
+
 	void create(User user);
 
 	User update(User user);

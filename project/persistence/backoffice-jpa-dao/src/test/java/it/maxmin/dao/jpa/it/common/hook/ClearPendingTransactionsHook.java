@@ -8,14 +8,14 @@ import it.maxmin.dao.jpa.it.common.LogScenarioUtil;
 import it.maxmin.dao.jpa.it.context.ScenarioTransactionContext;
 import it.maxmin.dao.jpa.transaction.TransactionManager;
 
-public class CleanPendingTransactionsHook {
+public class ClearPendingTransactionsHook {
 
 	private TransactionManager transactionManager;
 	private ScenarioTransactionContext scenarioTransactionContext;
 	private LogScenarioUtil logScenarioUtil;
 
 	@Autowired
-	public CleanPendingTransactionsHook(TransactionManager transactionManager,
+	public ClearPendingTransactionsHook(TransactionManager transactionManager,
 			ScenarioTransactionContext scenarioTransactionContext, LogScenarioUtil logScenarioUtil) {
 		this.transactionManager = transactionManager;
 		this.scenarioTransactionContext = scenarioTransactionContext;
