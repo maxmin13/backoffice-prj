@@ -13,12 +13,15 @@ import org.springframework.transaction.TransactionStatus;
 public class TransactionManager {
 
 	private static long identifier = 0;
-	private static final int TRANSACTION_TIMEOUT = 10;
 	private PlatformTransactionManager platformTransactionManager;
 
+	private TransactionProperty transactionProperty;
+
 	@Autowired
-	public TransactionManager(PlatformTransactionManager platformTransactionManager) {
+	public TransactionManager(PlatformTransactionManager platformTransactionManager,
+			TransactionProperty transactionProperty) {
 		this.platformTransactionManager = platformTransactionManager;
+		this.transactionProperty = transactionProperty;
 	}
 
 	public Transaction createTx() {
@@ -30,7 +33,7 @@ public class TransactionManager {
 		assertNotNull(transactionPropagation);
 		assertNotNull(transactionIsolation);
 		String id = createID();
-		return Transaction.newInstance().withId(id).withTimeout(TRANSACTION_TIMEOUT)
+		return Transaction.newInstance().withId(id).withTimeout(transactionProperty.getTimeout())
 				.withIsolationLevel(transactionIsolation).withPropagationBehaviour(transactionPropagation);
 	}
 

@@ -1,0 +1,4 @@
+---
+database:
+   transaction:
+     timeout: 10
