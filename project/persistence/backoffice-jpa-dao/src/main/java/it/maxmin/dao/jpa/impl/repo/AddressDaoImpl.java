@@ -34,8 +34,7 @@ public class AddressDaoImpl implements AddressDao {
 
 	private static final String SELECT_ALL = ""
 			+ "SELECT DISTINCT a.Id AS AddressId, a.PostalCode AS PostalCode, a.Description AS Description, a.City AS City, a.Region AS Region, "
-			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName " 
-			+ "      FROM Address a "
+			+ "          s.Id as StateId, s.Code AS StateCode, s.Name AS StateName " + "      FROM Address a "
 			+ "      INNER JOIN State s ON a.StateId = s.Id ";
 
 	@PersistenceContext
@@ -50,7 +49,7 @@ public class AddressDaoImpl implements AddressDao {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Address> find(Long id) {
-		notNull(id, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address id"));
+		notNull(id, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address ID"));
 		try {
 			return Optional.of(
 					em.createNamedQuery("Address.findById", Address.class).setParameter("id", id).getSingleResult());
@@ -82,7 +81,7 @@ public class AddressDaoImpl implements AddressDao {
 					.withDescription(description).withCity(city).withRegion(region));
 
 			var stateCode = tuple.get("StateCode", String.class);
-			var stateName = tuple.get("stateName", String.class);
+			var stateName = tuple.get("StateName", String.class);
 			var state = State.newInstance().withCode(stateCode).withName(stateName);
 
 			Objects.requireNonNull(address).withState(state);
@@ -96,9 +95,9 @@ public class AddressDaoImpl implements AddressDao {
 		notNull(address, messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "address"));
 		notNull(address.getState(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "state"));
 		if (address.getId() == null) {
-			LOGGER.info("Inserting new address ...");
+			LOGGER.info("inserting new address ...");
 			em.persist(address);
-			LOGGER.info("User created with id: {}", address.getId());
+			LOGGER.info("user created with id: {}", address.getId());
 		}
 		else {
 			throw new IllegalArgumentException(messageService.getMessage(ERROR_FIELD_NULL_MSG, "id"));
@@ -115,9 +114,9 @@ public class AddressDaoImpl implements AddressDao {
 		notNull(address.getId(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "id"));
 		notNull(address.getState(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "state"));
 
-		LOGGER.info("Updating new address ...");
+		LOGGER.info("updating new address ...");
 		Address a = em.merge(address);
-		LOGGER.info("Address saved with id: {}", address.getId());
+		LOGGER.info("address saved with ID: {}", address.getId());
 		return a;
 	}
 

@@ -81,9 +81,9 @@ public class UserDaoImpl implements UserDao {
 		notNull(user.getAddresses(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "addresses"));
 		notNull(user.getRoles(), messageService.getMessage(ERROR_FIELD_NOT_NULL_MSG, "roles"));
 		if (user.getId() == null) {
-			LOGGER.info("Inserting new user ...");
+			LOGGER.info("inserting new user ...");
 			em.persist(user);
-			LOGGER.info("User created with id: {}", user.getId());
+			LOGGER.info("user created with ID: {}", user.getId());
 		}
 		else {
 			throw new IllegalArgumentException(messageService.getMessage(ERROR_FIELD_NULL_MSG, "id"));
@@ -104,15 +104,15 @@ public class UserDaoImpl implements UserDao {
 
 		LOGGER.info("Updating new user ...");
 		User u = em.merge(user);
-		LOGGER.info("User saved with id: {}", user.getId());
+		LOGGER.info("user saved with ID: {}", user.getId());
 		return u;
 	}
 
 	@Override
 	public void delete(User user) {
-		LOGGER.info("Removing user {}", user);
+		LOGGER.info("removing user {}", user);
 		em.remove(user);
-		LOGGER.info("User removed");
+		LOGGER.info("user removed");
 	}
 
 }

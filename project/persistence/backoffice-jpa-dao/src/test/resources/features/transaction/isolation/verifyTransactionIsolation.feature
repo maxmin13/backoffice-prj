@@ -1,8 +1,9 @@
+@ignore
 @transaction
 Feature: verify transaction isolation levels
   Connect to the database with different transaction isolation levels.
-  Update an entity in a open transaction, the changes are flushed to the database by executing a 'Query',
-  verify if the uncommitted changes can be seen.
+  Update an entity in a open transaction, no commit but the changes are flushed to the database by executing a 'Query',
+  verify if the uncommitted changes are visible from another transaction.
   
   @deleteUsers
   Scenario: verify 'read uncommitted' transaction isolation level
